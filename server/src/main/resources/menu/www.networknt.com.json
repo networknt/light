@@ -1,0 +1,86 @@
+[
+    {
+        "label": "Admin",
+        "path": "/admin",
+        "tpl": "",
+        "ctrl": "AdminCtrl",
+        "left": true,
+        "login": true,
+        "order": 10,
+        "nodes": [
+            {
+                "label": "Form Admin",
+                "path": "/formAdmin",
+                "ctrl": "FormCtrl"
+            },
+            {
+                "label": "Rule Admin",
+                "path": "/ruleAdmin",
+                "ctrl": "RuleCtrl"
+            },
+            {
+                "label": "Menu Admin",
+                "path": "/menuAdmin",
+                "ctrl": "MenuCtrl"
+            }
+        ]
+    },
+    {
+        "label": "Product",
+        "path": "/form/com.networknt.light.product",
+        "tpl": "templates/form.html",
+        "ctrl": "ProductCtrl",
+        "left": true,
+        "order": 20
+    },
+    {
+        "label": "Blog",
+        "path": "/form/com.networknt.light.blog",
+        "tpl": "templates/form.html",
+        "ctrl": "BlogCtrl",
+        "left": true,
+        "order": 30
+    },
+    {
+        "label": "Forum",
+        "path": "/form/com.networknt.light.forum",
+        "tpl": "templates/form.html",
+        "ctrl": "ForumCtrl",
+        "left": true,
+        "order": 40
+    },
+    {
+        "label": "Search",
+        "path": "/form/com.networknt.light.search",
+        "tpl": "templates/form.html",
+        "ctrl": "SearchCtrl",
+        "left": true,
+        "order": 50
+    },
+    {
+        "label": "Log Out",
+        "path": "/",
+        "click": "logOut()",
+        "left": false,
+        "login": true,
+        "order": 60
+    },
+    {
+        "label": "Log In",
+        "path": "/signin",
+        "tpl": "templates/form.html",
+        "ctrl": "signinCtrl",
+        "left": false,
+        "login": false,
+        "order": 70
+    },
+    {
+        "label": "Sign Up",
+        "path": "/form/com.networknt.light.user.signup",
+        "tpl": "templates/form.html",
+        "ctrl": "FormCtrl",
+        "left": false,
+        "login": false,
+        "order": 80
+    }
+]

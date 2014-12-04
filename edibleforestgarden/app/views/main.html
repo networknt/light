@@ -1,0 +1,53 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="toggleDetail()"><i class="glyphicon glyphicon-book"></i>Summary</button>
+            </div>
+            <div class="pull-right" ng-if="global.isLogin">
+                <button class="btn btn-info" ng-click="post()"><i class="glyphicon glyphicon-edit"></i>Post</button>
+            </div>
+            <tabset>
+                <tab heading="Recent">
+                    <h1>Feeds</h1>
+                    <h4>{{feeds.length}} remain</h4>
+                    <pagination total-items="page.totalItems" items-per-page="page.numPerPage" ng-model="page.currentPage" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
+                    <ul>
+                        <li ng-repeat="feed in filteredFeeds">{{feed.requestId}}</li>
+                    </ul>
+                    <pagination total-items="page.totalItems" items-per-page="page.numPerPage" ng-model="page.currentPage" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
+                    <pre>Page: {{page.currentPage}} / {{page.numPages}}</pre>
+                </tab>
+                <tab heading="Hot">
+                    <div>This is tab hot</div>
+                </tab>
+                <tab heading="Updated">
+                    <div>This is tab updated</div>
+                </tab>
+                <tab heading="My posts" ng-if="global.isLogin">
+                    <div>This is tab my posts</div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <ul class="inner list-inline">
+                        <li>Total visits：{{global.visitors}}</li>
+                        <li>Total articles: {{global.articles}}</li>
+                        <li>Total comments: {{global.comments}}</li>
+                        <li>Total members：{{global.users}}</li>
+                        <li>Online users：{{global.onlineNum}}</li>
+                        <li>Online members：{{global.onlineUsers}}</li>
+                        <li>Max online users：{{global.maxOnlineNum}}</li>
+                        <li>Online Since：{{global.maxOnlineTime  | date:'yy-MM-dd HH:mm'}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- /container -->

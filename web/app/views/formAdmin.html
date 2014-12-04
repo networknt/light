@@ -1,0 +1,55 @@
+<style type="text/css">
+
+    body,html {
+        min-height: 1400px;
+    }
+
+    .alert .form-group {
+        margin-bottom: 0px;
+    }
+
+    .red {
+        border: 1px solid red;
+        background: #fee;
+    }
+
+    .ace_editor { font-size: 20px !important;}
+    .form {  height: 400px;  }
+    .action { height: 200px; }
+    .schema {  height: 800px;  }
+</style>
+
+<div class="col-md-12">
+  <h1>Schema Form Admin</h1>
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>The Generated Form</h3>
+      <form name="ngform" ng-submit="submitForm(ngform, modelData)">
+        <div sf-model="modelData" sf-form="form" sf-schema="schema"></div>
+        <div ng-repeat="act in action">
+            <input type="submit" ng-click="setButtonIndex($index)" class="btn btn-primary pull-right" value="{{act.title}}">
+        </div>
+      </form>
+        
+      <h3>Model</h3>
+      <pre ng-cloak>{{pretty()}}</pre>
+      <div class="col-xs-3 col-md-3"><input type="submit" value="Save Model" ng-click="saveModel()" class="btn btn-primary btn-block"></div>
+    </div>
+    <div class="col-sm-8">
+      <h3>Select Form</h3>
+      <div class="form-group">
+        <select class="form-control" id="selectTest"
+                ng-model="selectedForm"
+                ng-options="obj for obj in forms">
+        </select>
+      </div>
+      <h3>Form</h3>
+      <div ui-ace="{ theme: 'eclipse',mode:'json'}" ng-class="{red: !itParsesForm}" ng-model="formJson" class="form-control form"></div>
+      <h3>Action</h3>
+      <div ui-ace="{ theme: 'eclipse',mode:'json'}" ng-class="{red: !itParsesAction}" ng-model="actionJson" class="form-control action"></div>
+      <h3>Schema</h3>
+      <div ui-ace="{ theme: 'eclipse',mode:'json'}" ng-class="{red: !itParsesSchema}" ng-model="schemaJson" class="form-control schema"></div>
+      <div class="col-xs-2 col-md-2"><input type="submit" value="Save Schema" ng-click="submitSchema()" class="btn btn-primary btn-block"></div>
+    </div>
+  </div>
+</div>

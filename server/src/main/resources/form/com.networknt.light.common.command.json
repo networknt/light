@@ -1,0 +1,77 @@
+{
+    "category": "form",
+    "name": "impForm",
+    "readOnly": false,
+    "data": {
+        "id": "com.networknt.light.common.command",
+        "schema": {
+            "type": "object",
+            "title": "Command",
+            "required": ["name", "data"],
+            "properties": {
+                "host": {
+                    "title": "Host",
+                    "type": "string",
+                    "enum": [
+                        "www.networknt.com",
+                        "injector"
+                    ]
+                },
+                "app": {
+                    "title": "App",
+                    "type": "string",
+                    "enum": [
+                        "main",
+                        "forum",
+                        "blog",
+                        "shopping"
+                    ]
+                },
+                "category": {
+                    "title": "Category",
+                    "type": "string",
+                    "enum": [
+                        "user",
+                        "form"
+                    ]
+                },
+                "readOnly": {
+                    "title": "ReadOnly",
+                    "type": "boolean",
+                    "default": false
+                },
+                "name": {
+                    "title": "Name",
+                    "type": "string",
+                    "enum": [
+                        "getForm",
+                        "addForm",
+                        "delForm",
+                        "updForm",
+                        "getFormList"
+                    ]
+                },
+                "data": {
+                    "title": "Data",
+                    "type": "string"
+                }
+            }
+        },
+        "form": [
+            "host",
+            "app",
+            "category",
+            "readOnly",
+            "name",
+            {
+                "key": "data",
+                "type": "textarea"
+            },
+            {
+                "type": "submit",
+                "style": "btn-info",
+                "title": "Submit"
+            }
+        ]
+    }
+}

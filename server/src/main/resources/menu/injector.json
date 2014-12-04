@@ -1,0 +1,83 @@
+[
+    {
+        "label": "Admin",
+        "path": "/admin",
+        "tpl": "",
+        "ctrl": "AdminCtrl",
+        "left": true,
+        "login": true,
+        "order": 10,
+        "nodes": [
+            {
+                "label": "Form Admin",
+                "path": "/formAdmin",
+                "ctrl": "FormCtrl",
+                "order": 10
+            },
+            {
+                "label": "Rule Admin",
+                "path": "/ruleAdmin",
+                "ctrl": "RuleCtrl",
+                "order": 20
+            },
+            {
+                "label": "Menu Admin",
+                "path": "/menuAdmin",
+                "ctrl": "MenuCtrl",
+                "order": 30
+            }
+        ]
+    },
+    {
+        "label": "Feed",
+        "path": "/feed",
+        "tpl": "",
+        "ctrl": "FeedCtrl",
+        "left": true,
+        "login": true,
+        "order": 20,
+        "nodes": [
+            {
+                "label": "ClassFeed",
+                "path": "/form/com.cibc.rop.class.feed",
+                "tpl": "templates/form.html",
+                "ctrl": "FormCtrl",
+                "order": 10
+            },
+            {
+                "label": "COPS",
+                "path": "/form/com.cibc.rop.cops.feed",
+                "tpl": "templates/form.html",
+                "ctrl": "FormCtrl",
+                "order": 20
+            }
+        ]
+    },
+    {
+        "label": "Log Out",
+        "path": "/",
+        "click": "logOut()",
+        "left": false,
+        "login": true,
+        "order": 30
+    },
+    {
+        "label": "Log In",
+        "path": "/signin",
+        "tpl": "templates/form.html",
+        "ctrl": "signinCtrl",
+        "left": false,
+        "login": false,
+        "order": 40
+    },
+    {
+        "label": "Sign Up",
+        "path": "/form/com.networknt.light.user.signup",
+        "tpl": "templates/form.html",
+        "ctrl": "FormCtrl",
+        "left": false,
+        "login": false,
+        "order": 50
+    }
+]
+

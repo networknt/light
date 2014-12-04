@@ -1,0 +1,255 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('menuAdminHomeCtrl', ['$scope', '$http', '$location', 'modelDataService', 'toaster', function ($scope, $http, $location, modelDataService, toaster) {
+        $scope.getAllMenu = {
+            category : 'menu',
+            name : 'getAllMenu',
+            readOnly: true
+        };
+
+        $scope.delMenu = {
+            category : 'menu',
+            name : 'delMenu',
+            readOnly: false
+        };
+
+        $scope.delMenuItem = {
+            category : 'menu',
+            name : 'delMenuItem',
+            readOnly: false
+        };
+
+        $scope.menus = [];
+        $scope.menuItems = [];
+
+        $scope.menuHeaders = [
+            {
+                title: 'Delete',
+                value: 'delete'
+            },
+            {
+                title: 'Host',
+                value: 'host'
+            },
+            {
+                title: 'Create User Id',
+                value: 'createUserId'
+            },
+            {
+                title: 'Create Date',
+                value: 'createDate'
+            },
+            {
+                title: 'Update User Id',
+                value: 'updateUserId'
+            },
+            {
+                title: 'Update Date',
+                value: 'updateDate'
+            }
+        ];
+        $scope.menuItemHeaders = [
+            {
+                title: 'Delete',
+                value: 'delete'
+            },
+            {
+                title: 'Label',
+                value: 'label'
+            },
+            {
+                title: 'Host',
+                value: 'host'
+            },
+            {
+                title: 'Path',
+                value: 'path'
+            },
+            {
+                title: 'Click',
+                value: 'click'
+            },
+            {
+                title: 'Template',
+                value: 'tpl'
+            },
+            {
+                title: 'Controller',
+                value: 'ctrl'
+            },
+            {
+                title: 'Position Left',
+                value: 'left'
+            },
+            {
+                title: 'Roles',
+                value: 'roles'
+            },
+            {
+                title: 'Create User Id',
+                value: 'createUserId'
+            },
+            {
+                title: 'Create Date',
+                value: 'createDate'
+            },
+            {
+                title: 'Update User Id',
+                value: 'updateUserId'
+            },
+            {
+                title: 'Update Date',
+                value: 'updateDate'
+            }
+        ];
+
+        $scope.sort = {
+            sortDir : 'desc',
+            sortedBy : 'updateDate'
+        };
+        $scope.menuFilter = {};
+        $scope.menuItemFilter = {};
+
+        //call back function that we passed to our custom directive sortBy, will be called when clicking on any field to sort
+        $scope.onSort = function (sortedBy, sortDir) {
+            $scope.sort.sortDir = sortDir;
+            $scope.sort.sortedBy = sortedBy;
+        };
+
+        $scope.addMenu = function () {
+            $location.path("/form/com.networknt.light.menu.addMenu");
+        }
+
+        $scope.addMenuItem = function () {
+            $location.path("/form/com.networknt.light.menu.addMenuItem");
+        }
+
+        $scope.deleteMenu = function(menu) {
+            $scope.delMenu.data = menu;
+            $http.post('api/rs', $scope.delMenu)
+                    .success(function (data, status, headers, config) {
+                        $scope.menus.splice($scope.menus.indexOf(menu), 1);
+                        $scope.fetchResult(); // when delete a host, all the menuItems belong to the host will be deleted.
+                        toaster.pop('success', status, data, 3000);
+                    })
+        };
+
+        $scope.deleteMenuItem = function(menuItem) {
+            $scope.delMenuItem.data = menuItem;
+            $http.post('api/rs', $scope.delMenuItem)
+                    .success(function (data, status, headers, config) {
+                        $scope.menuItems.splice($scope.menuItems.indexOf(menuItem), 1);
+                        toaster.pop('success', status, data, 3000);
+                    })
+        };
+
+        $scope.updateMenu = function(menu) {
+            console.log("menu to be passed", menu);
+            modelDataService.setModelData(menu);
+            $location.path("/form/com.networknt.light.menu.updateMenu");
+        };
+
+        $scope.updateMenuItem = function(menuItem) {
+            modelDataService.setModelData(menuItem);
+            $location.path("/form/com.networknt.light.menu.updateMenuItem");
+        };
+
+        //The function that is responsible of fetching the result from the server and setting the grid to the new result
+        $scope.fetchResult = function () {
+            $http.post('api/rs', $scope.getAllMenu)
+                    .success(function (result, status, headers, config) {
+                        $scope.menus = result.menus;
+                        $scope.menuItems = result.menuItems;
+                        //console.log('menus', $scope.menus);
+                        //console.log('menuItems', $scope.menuItems);
+                    })
+        };
+        $scope.fetchResult();
+
+    }]);
+</script>
+<div class="container" ng-controller="menuAdminHomeCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="addMenu()"><i class="glyphicon glyphicon-edit"></i>Add Menu</button>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="addMenuItem()"><i class="glyphicon glyphicon-edit"></i>Add Menu Item</button>
+            </div>
+            <tabset>
+                <tab heading="Host Menu">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="header in menuHeaders">
+                                <sort-by onsort="onSort" sortdir="sort.sortDir" sortedby="sort.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuFilter.host" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuFilter.createUserId" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuFilter.createDate" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuFilter.updateUserId" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuFilter.updateDate" type="text" /></td>
+                        </tr>
+                        <tr ng-repeat="menu in menus | filter: menuFilter | orderBy: sort.sortedBy">
+                            <td><a href ng-click="deleteMenu(menu)">Delete</a></td>
+                            <td><a href ng-click="updateMenu(menu)">{{menu.host}}</a></td>
+                            <td>{{menu.createUserId}}</td>
+                            <td>{{menu.createDate}}</td>
+                            <td>{{menu.updateUserId}}</td>
+                            <td>{{menu.updateDate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tab>
+                <tab heading="Menu Items">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="header in menuItemHeaders">
+                                <sort-by onsort="onSort" sortdir="sort.sortDir" sortedby="sort.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.label" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.host" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.path" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.click" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.tpl" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.ctrl" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.left" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.roles" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.createUserId" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.createDate" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.updateUserId" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.updateDate" type="text" /></td>
+                        </tr>
+                        <tr ng-repeat="menuItem in menuItems | filter: menuItemFilter | orderBy: sort.sortedBy">
+                            <td><a href ng-click="deleteMenuItem(menuItem)">Delete</a></td>
+                            <td><a href ng-click="updateMenuItem(menuItem)">{{menuItem.label}}</a></td>
+                            <td>{{menuItem.host}}</td>
+                            <td>{{menuItem.path}}</td>
+                            <td>{{menuItem.click}}</td>
+                            <td>{{menuItem.tpl}}</td>
+                            <td>{{menuItem.ctrl}}</td>
+                            <td>{{menuItem.left}}</td>
+                            <td>{{menuItem.roles}}</td>
+                            <td>{{menuItem.createUserId}}</td>
+                            <td>{{menuItem.createDate}}</td>
+                            <td>{{menuItem.updateUserId}}</td>
+                            <td>{{menuItem.updateDate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>

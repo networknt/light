@@ -1,0 +1,29 @@
+{
+    "category": "form",
+    "name": "impForm",
+    "readOnly": false,
+    "data": {
+        "id": "com.networknt.light.role.update",
+        "action" : [{
+            "category" : "role",
+            "name" : "updRole",
+            "readOnly": false,
+            "title": "Submit",
+            "success" : "/page/com.networknt.light.role.admin.home"
+        }],
+        "schema": {
+            "type": "object",
+            "title": "Role",
+            "required": ["desc"],
+            "properties": {
+                "desc": {
+                    "title": "Description",
+                    "type": "string"
+                }
+            }
+        },
+        "form": [
+            "desc"
+        ]
+    }
+}

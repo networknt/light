@@ -1,0 +1,36 @@
+{
+    "category": "form",
+    "name": "impForm",
+    "readOnly": false,
+    "data": {
+        "id": "com.networknt.light.rule.update",
+        "action" : [{
+            "category" : "rule",
+            "name" : "updRule",
+            "readOnly": false,
+            "title": "Submit",
+            "success" : "/page/com.networknt.light.rule.admin.home"
+        }],
+        "schema": {
+            "type": "object",
+            "title": "Rule",
+            "required": ["sourceCode"],
+            "properties": {
+                "sourceCode": {
+                    "title": "Source Code",
+                    "type": "string"
+                }
+            }
+        },
+        "form": [
+            {
+                "key": "sourceCode",
+                "type": "ace",
+                "aceOptions": {
+                    "theme": "eclipse",
+                    "mode" : "java"
+                }
+            }
+        ]
+    }
+}

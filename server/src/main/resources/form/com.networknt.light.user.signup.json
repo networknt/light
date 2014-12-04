@@ -1,0 +1,64 @@
+{
+    "category": "form",
+    "name": "impForm",
+    "readOnly": false,
+    "data": {
+        "id": "com.networknt.light.user.signup",
+        "action" : [{
+            "category" : "user",
+            "name" : "signUpUser",
+            "readOnly": false,
+            "title" : "Register"
+        }],
+        "schema": {
+            "type": "object",
+            "required": ["userId", "email", "password", "password_confirm"],
+            "title": "Sign Up",
+            "properties": {
+                "userId": {
+                    "title": "User Id",
+                    "type": "string",
+                    "description": "User Id can be used to log in."
+                },
+                "email": {
+                    "title": "Email",
+                    "type": "string",
+                    "description": "Email can be used to log in."
+                },
+                "password": {
+                    "title": "Password",
+                    "type": "string"
+                },
+                "passwordConfirm": {
+                    "title": "Password Confirmation",
+                    "type": "string"
+                },
+                "firstName": {
+                    "title": "First Name",
+                    "type": "string"
+                },
+                "lastName": {
+                    "title": "Last Name",
+                    "type": "string"
+                }
+            }
+        },
+        "form": [
+            "userId",
+            {
+                "key": "email",
+                "type": "email"
+            },
+            {
+                "key": "password",
+                "type": "password"
+            },
+            {
+                "key": "passwordConfirm",
+                "type": "password"
+            },
+            "firstName",
+            "lastName"
+        ]
+    }
+}

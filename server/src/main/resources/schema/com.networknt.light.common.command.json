@@ -1,0 +1,22 @@
+{
+    "type": "object",
+    "title": "Command",
+    "required": ["name", "data"],
+    "properties": {
+        "name":  {
+            "title": "Name",
+            "type": "string",
+            "enum": [
+                "getForm",
+                "addForm",
+                "delForm",
+                "updForm",
+                "getFormList"
+            ]
+        },
+        "data":  {
+            "title": "Data",
+            "type": "string"
+        }
+    }
+}

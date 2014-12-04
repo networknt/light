@@ -1,0 +1,83 @@
+{
+    "category": "form",
+    "name": "impForm",
+    "readOnly": false,
+    "data": {
+        "id": "com.networknt.light.menu.addMenuItem",
+        "action" : [{
+            "category" : "menu",
+            "name" : "addMenuItem",
+            "readOnly": false,
+            "title": "Submit",
+            "success" : "/page/com.networknt.light.menu.admin.home"
+        }],
+        "schema": {
+            "type": "object",
+            "title": "Menu Item",
+            "required": ["label"],
+            "properties": {
+                "label" : {
+                    "title": "Label",
+                    "type": "string"
+                },
+                "host": {
+                    "title": "Host",
+                    "type": "string"
+                },
+                "path": {
+                    "title": "Path",
+                    "type": "string"
+                },
+                "click": {
+                    "title": "Click",
+                    "type": "string"
+                },
+                "tpl": {
+                    "title": "Template",
+                    "type": "string"
+                },
+                "ctrl": {
+                    "title": "Controller",
+                    "type": "string"
+                },
+                "left": {
+                    "title": "Position Left",
+                    "type": "boolean"
+                },
+                "roles": {
+                    "title": "Roles",
+                    "type": "array",
+                    "format": "strapselect"
+                },
+                "menuItems": {
+                    "type": "array",
+                    "title": "Menu Items",
+                    "format": "strapselect"
+                }
+            }
+        },
+        "form": [
+            "label",
+            "host",
+            "path",
+            "click",
+            "tpl",
+            "ctrl",
+            "left",
+            {
+                "key": "roles",
+                "options": {
+                    "category": "role",
+                    "name": "getRoleDropdown"
+                }
+            },
+            {
+                "key": "menuItems",
+                "options": {
+                    "category": "menu",
+                    "name": "getAllMenuItem"
+                }
+            }
+        ]
+    }
+}
