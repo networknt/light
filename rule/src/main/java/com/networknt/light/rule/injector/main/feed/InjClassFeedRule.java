@@ -1,7 +1,5 @@
 package com.networknt.light.rule.injector.main.feed;
 
-import com.cibc.rop.data.ClassDataFeed;
-import com.cibc.rop.data.IDataFeed;
 import com.networknt.light.rule.Rule;
 
 import java.util.ArrayList;
@@ -23,8 +21,10 @@ public class InjClassFeedRule extends ClassFeedRule implements Rule {
             inputMap.put("responseCode",401);
         } else {
             // now we need to construct the bean and send to the queue.
+            /*
             IDataFeed dataFeed = new ClassDataFeed();
             send(dataFeed, data);
+            */
             // data has been enriched with requestId, dataFeedType and LoanNumber etc.
             // now we need to remove all the orientdb attributes in order to save again.
             data.remove("@type");

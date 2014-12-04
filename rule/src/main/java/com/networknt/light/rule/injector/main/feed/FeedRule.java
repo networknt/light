@@ -1,6 +1,5 @@
 package com.networknt.light.rule.injector.main.feed;
 
-import com.cibc.rop.data.IDataFeed;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.rule.Rule;
@@ -19,7 +18,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
@@ -276,6 +274,7 @@ public abstract class FeedRule implements Rule {
         }
         return value;
     }
+    /*
 
     void sendToQueue(String env, IDataFeed dataFeed) throws Exception {
         Map<String, Object> injectorEnvMap = ServiceLocator.getInstance().getInjectorEnvMap();
@@ -302,4 +301,5 @@ public abstract class FeedRule implements Rule {
             e.printStackTrace();
         }
     }
+    */
 }

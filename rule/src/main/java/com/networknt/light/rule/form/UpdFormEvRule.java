@@ -3,7 +3,6 @@ package com.networknt.light.rule.form;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
-import com.hazelcast.core.HazelcastInstance;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;

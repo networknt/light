@@ -1,6 +1,5 @@
 package com.networknt.light.rule.injector.main.feed;
 
-import com.cibc.rop.data.IDataFeed;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 
@@ -18,7 +17,7 @@ public abstract class ClassFeedRule extends FeedRule implements Rule {
         long num = DbService.incrementCounter("injector.loanNumber");
         return "" + num;
     }
-
+    /*
     public void send(IDataFeed dataFeed, Map<String, Object> fields) throws Exception {
         // the fields coming from UI has a lot more elements then need by inject. create a copy
         // for injector so that we don't need to worry about it if new element is added.
@@ -96,5 +95,6 @@ public abstract class ClassFeedRule extends FeedRule implements Rule {
         // send the dataFeed here.
         sendToQueue((String)fields.get("environment"), dataFeed);
     }
+    */
 
 }
