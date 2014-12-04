@@ -34,22 +34,6 @@
             <artifactId>jackson-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.cibc.gow</groupId>
-            <artifactId>gow-rop-common</artifactId>
-            <version>14.3.0.0.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>weblogic</groupId>
-            <artifactId>wljmsclient</artifactId>
-            <version>10.3.6</version>
-        </dependency>
-        <dependency>
-            <groupId>weblogic</groupId>
-            <artifactId>wlclient</artifactId>
-            <version>10.3.6</version>
-        </dependency>
-
         <!-- Test Dependencies -->
         <dependency>
             <groupId>junit</groupId>
