@@ -16,6 +16,8 @@ import io.undertow.server.handlers.form.FormParserFactory;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
 import net.oauth.jsontoken.JsonToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -25,6 +27,8 @@ import java.util.regex.Pattern;
  * Created by steve on 08/08/14.
  */
 public class RestHandler implements HttpHandler {
+    static final Logger logger = LoggerFactory.getLogger(RestHandler.class);
+
     public RestHandler() {
     }
 
@@ -37,7 +41,7 @@ public class RestHandler implements HttpHandler {
 
         exchange.startBlocking();
         String json = new Scanner(exchange.getInputStream(),"UTF-8").useDelimiter("\\A").next();
-        System.out.println("json = " + json);
+        logger.debug("request json = {}", json);
         // TODO validate with json schema to make sure the input json is valid. return an error message otherwise.
         // you need to get the schema from db again for the one sent from browser might be modified.
 
@@ -138,11 +142,11 @@ public class RestHandler implements HttpHandler {
             // there is an error
             exchange.setResponseCode(responseCode);
             result = (String)jsonMap.get("error");
-            System.out.println("error " + result);
+            logger.debug("response error: {}", result);
         } else {
             //  no error
             result = (String)jsonMap.get("result");
-            System.out.println("result " + result);
+            logger.debug("response success: {} ", result);
         }
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
         if(result != null) {

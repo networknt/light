@@ -9,6 +9,7 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.jboss.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +19,7 @@ import java.util.List;
  * Created by husteve on 9/4/2014.
  */
 public class InitDatabase {
-    private static final Logger logger = Logger.getLogger(LightServer.class);
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(InitDatabase.class);
 
     public static void main(final String[] args) {
         initDb();
@@ -943,7 +944,6 @@ public class InitDatabase {
             }
             if (schema.existsClass("Event")) {
                 for (ODocument doc : db.browseClass("Event")) {
-                    System.out.println("json = " + doc.toJSON());
                     doc.delete();
                 }
             }
@@ -1374,7 +1374,7 @@ public class InitDatabase {
             db.close();
         }
 
-        System.out.println("Done refresh doc...");
+        logger.debug("Done refreshing db");
     }
 
     static void listClass() {
