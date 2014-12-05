@@ -1073,7 +1073,7 @@ public class InitDatabase {
             m_pageAdmin.field("id", "pageAdmin");
             m_pageAdmin.field("label", "Page Admin");
             m_pageAdmin.field("path", "/page/com.networknt.light.page.admin.home");
-            m_pageAdmin.field("tpl", "templates/page.html");
+            m_pageAdmin.field("tpl", "views/page.html");
             m_pageAdmin.field("ctrl", "pageCtrl");
             m_pageAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_pageAdmin.field("createDate", new java.util.Date());
@@ -1083,7 +1083,7 @@ public class InitDatabase {
             m_formAdmin.field("id", "formAdmin");
             m_formAdmin.field("label", "Form Admin");
             m_formAdmin.field("path", "/page/com.networknt.light.form.admin.home");
-            m_formAdmin.field("tpl", "templates/page.html");
+            m_formAdmin.field("tpl", "views/page.html");
             m_formAdmin.field("ctrl", "pageCtrl");
             m_formAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_formAdmin.field("createDate", new java.util.Date());
@@ -1093,7 +1093,7 @@ public class InitDatabase {
             m_ruleAdmin.field("id", "ruleAdmin");
             m_ruleAdmin.field("label", "Rule Admin");
             m_ruleAdmin.field("path", "/page/com.networknt.light.rule.admin.home");
-            m_ruleAdmin.field("tpl", "templates/page.html");
+            m_ruleAdmin.field("tpl", "views/page.html");
             m_ruleAdmin.field("ctrl", "pageCtrl");
             m_ruleAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_ruleAdmin.field("createDate", new java.util.Date());
@@ -1103,7 +1103,7 @@ public class InitDatabase {
             m_menuAdmin.field("id", "menuAdmin");
             m_menuAdmin.field("label", "Menu Admin");
             m_menuAdmin.field("path", "/page/com.networknt.light.menu.admin.home");
-            m_menuAdmin.field("tpl", "templates/page.html");
+            m_menuAdmin.field("tpl", "views/page.html");
             m_menuAdmin.field("ctrl", "pageCtrl");
             m_menuAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_menuAdmin.field("createDate", new java.util.Date());
@@ -1122,7 +1122,7 @@ public class InitDatabase {
             m_forumAdmin.field("id", "forumAdmin");
             m_forumAdmin.field("label", "Forum Admin");
             m_forumAdmin.field("path", "/page/com.networknt.light.forum.admin.home");
-            m_forumAdmin.field("tpl", "templates/page.html");
+            m_forumAdmin.field("tpl", "views/page.html");
             m_forumAdmin.field("ctrl", "pageCtrl");
             m_forumAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_forumAdmin.field("createDate", new java.util.Date());
@@ -1132,7 +1132,7 @@ public class InitDatabase {
             m_blogAdmin.field("id", "blogAdmin");
             m_blogAdmin.field("label", "Blog Admin");
             m_blogAdmin.field("path", "/page/com.networknt.light.blog.admin.home");
-            m_blogAdmin.field("tpl", "templates/page.html");
+            m_blogAdmin.field("tpl", "views/page.html");
             m_blogAdmin.field("ctrl", "pageCtrl");
             m_blogAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_blogAdmin.field("createDate", new java.util.Date());
@@ -1142,7 +1142,7 @@ public class InitDatabase {
             m_newsAdmin.field("id", "newsAdmin");
             m_newsAdmin.field("label", "News Admin");
             m_newsAdmin.field("path", "/page/com.networknt.light.news.admin.home");
-            m_newsAdmin.field("tpl", "templates/page.html");
+            m_newsAdmin.field("tpl", "views/page.html");
             m_newsAdmin.field("ctrl", "pageCtrl");
             m_newsAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_newsAdmin.field("createDate", new java.util.Date());
@@ -1152,7 +1152,7 @@ public class InitDatabase {
             m_userAdmin.field("id", "userAdmin");
             m_userAdmin.field("label", "User Admin");
             m_userAdmin.field("path", "/page/com.networknt.light.user.admin.home");
-            m_userAdmin.field("tpl", "templates/page.html");
+            m_userAdmin.field("tpl", "views/page.html");
             m_userAdmin.field("ctrl", "pageCtrl");
             m_userAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_userAdmin.field("createDate", new java.util.Date());
@@ -1162,7 +1162,7 @@ public class InitDatabase {
             m_roleAdmin.field("id", "roleAdmin");
             m_roleAdmin.field("label", "Role Admin");
             m_roleAdmin.field("path", "/page/com.networknt.light.role.admin.home");
-            m_roleAdmin.field("tpl", "templates/page.html");
+            m_roleAdmin.field("tpl", "views/page.html");
             m_roleAdmin.field("ctrl", "pageCtrl");
             m_roleAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_roleAdmin.field("createDate", new java.util.Date());
@@ -1196,7 +1196,7 @@ public class InitDatabase {
             m_feedClass.field("id", "classFeed");
             m_feedClass.field("label", "CLASS Feed");
             m_feedClass.field("path", "/form/com.cibc.rop.class.feed");
-            m_feedClass.field("tpl", "templates/form.html");
+            m_feedClass.field("tpl", "views/form.html");
             m_feedClass.field("ctrl", "FormCtrl");
             m_feedClass.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_feedClass.field("createDate", new java.util.Date());
@@ -1206,7 +1206,7 @@ public class InitDatabase {
             m_feedCops.field("id", "copsFeed");
             m_feedCops.field("label", "COPS Feed");
             m_feedCops.field("path", "/form/com.cibc.rop.cops.feed");
-            m_feedCops.field("tpl", "templates/form.html");
+            m_feedCops.field("tpl", "views/form.html");
             m_feedCops.field("ctrl", "FormCtrl");
             m_feedCops.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_feedCops.field("createDate", new java.util.Date());
@@ -1242,7 +1242,7 @@ public class InitDatabase {
             m_logIn.field("id", "logIn");
             m_logIn.field("label", "Log In");
             m_logIn.field("path", "/signin");
-            m_logIn.field("tpl", "templates/form.html");
+            m_logIn.field("tpl", "views/form.html");
             m_logIn.field("ctrl", "signinCtrl");
             m_logIn.field("left", false);
             m_logIn.field("roles", "anonymous");
@@ -1254,7 +1254,7 @@ public class InitDatabase {
             m_blog.field("id", "blog");
             m_blog.field("label", "Blog");
             m_blog.field("path", "/page/com.networknt.light.blog.home");
-            m_blog.field("tpl", "templates/page.html");
+            m_blog.field("tpl", "views/page.html");
             m_blog.field("ctrl", "pageCtrl");
             m_blog.field("left", true);
             m_blog.field("roles", "user,blogAdmin,admin,owner");
@@ -1266,7 +1266,7 @@ public class InitDatabase {
             m_news.field("id", "news");
             m_news.field("label", "News");
             m_news.field("path", "/news");
-            m_news.field("tpl", "templates/news.html");
+            m_news.field("tpl", "views/news.html");
             m_news.field("ctrl", "NewsCtrl");
             m_news.field("left", true);
             m_news.field("roles", "user,newsAdmin,admin,owner");
@@ -1278,7 +1278,7 @@ public class InitDatabase {
             m_forum.field("id", "forum");
             m_forum.field("label", "Forum");
             m_forum.field("path", "/forum");
-            m_forum.field("tpl", "templates/forum.html");
+            m_forum.field("tpl", "views/forum.html");
             m_forum.field("ctrl", "forumCtrl");
             m_forum.field("left", true);
             m_forum.field("roles", "user,forumAdmin,admin,owner");
@@ -1290,7 +1290,7 @@ public class InitDatabase {
             m_product.field("id", "product");
             m_product.field("label", "Product");
             m_product.field("path", "/product");
-            m_product.field("tpl", "templates/product.html");
+            m_product.field("tpl", "views/product.html");
             m_product.field("ctrl", "ProductCtrl");
             m_product.field("left", true);
             m_product.field("roles", "user,prodAdmin,admin,owner");
@@ -1302,7 +1302,7 @@ public class InitDatabase {
             m_signUp.field("id", "signUp");
             m_signUp.field("label", "Sign Up");
             m_signUp.field("path", "/form/com.networknt.light.user.signup");
-            m_signUp.field("tpl", "templates/form.html");
+            m_signUp.field("tpl", "views/form.html");
             m_signUp.field("ctrl", "FormCtrl");
             m_signUp.field("left", false);
             m_signUp.field("roles", "anonymous");

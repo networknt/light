@@ -3,7 +3,7 @@
  */
 angular.module('lightApp').directive('sortBy', function () {
     return {
-        templateUrl: 'templates/sort-by.html',
+        templateUrl: 'views/sort-by.html',
         restrict: 'E',
         transclude: true,
         replace: true,

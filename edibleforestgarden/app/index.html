@@ -43,7 +43,7 @@
                 <!-- This is the nav menu for desktop -->
                 <nav class="hidden-xs">
                     <ul class="nav navbar-nav">
-                        <li ng-repeat="node in tree | filter:hasAccess | filter: {left: true}"  class="dropdown" dropdown>
+                        <li ng-repeat="node in tree | filter:hasAccess | filter: {left: true}"  dropdown>
                             <a ng-if="node.hasOwnProperty('menuItems')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
                             <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed(); {{node.click}}">{{node.label}}</a>
                             <ul class="dropdown-menu">
@@ -60,7 +60,7 @@
                 <!-- This is the nav menu for phone the only difference is class and collapse -->
                 <nav class="visible-xs" collapse="!menuSettings.isCollapsed">
                     <ul class="nav navbar-nav">
-                        <li ng-repeat="node in tree | filter:hasAccess | filter: { left: true}"  class="dropdown" dropdown>
+                        <li ng-repeat="node in tree | filter:hasAccess | filter: { left: true}"  dropdown>
                             <a ng-if="node.hasOwnProperty('menuItems')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
                             <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed(); {{node.click}}">{{node.label}}</a>
                             <ul class="dropdown-menu">
@@ -143,8 +143,6 @@
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/ui-bootstrap-custom-tpls-0.12.0.js"></script>
-    <!--<script src="scripts/ui-bootstrap-tpls-0.11.0.js"></script>-->
-    <!--<script src="scripts/ui-bootstrap-tpls-0.12.0.js"></script>-->
     <script src="scripts/toaster.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/locale_en-us.js"></script>

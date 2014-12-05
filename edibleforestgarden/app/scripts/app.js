@@ -53,15 +53,15 @@ var lightApp = angular.module('lightApp', [
         controller: 'MainCtrl'
       })
       .when('/signin', {
-        templateUrl: 'templates/form.html',
+        templateUrl: 'views/form.html',
         controller: 'signinCtrl'
       })
       .when('/form/:id/:parentId?', {
-        templateUrl: 'templates/form.html',
+        templateUrl: 'views/form.html',
         controller: 'formCtrl'
       })
       .when('/page/:id', {
-        templateUrl: 'templates/page.html',
+        templateUrl: 'views/page.html',
         controller: 'pageCtrl'
       })
       .when('/formAdmin', {
@@ -73,11 +73,11 @@ var lightApp = angular.module('lightApp', [
         controller: 'MenuAdminCtrl'
       })
       .when('/forum', {
-        templateUrl: 'templates/forum.html',
+        templateUrl: 'views/forum.html',
         controller: 'forumCtrl'
       })
       .when('/blog', {
-        templateUrl: 'templates/blog.html',
+        templateUrl: 'views/blog.html',
         controller: "BlogCtrl"
       })
       .otherwise({

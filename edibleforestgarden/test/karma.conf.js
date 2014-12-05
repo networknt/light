@@ -35,7 +35,7 @@ module.exports = function(config) {
       'bower_components/pickadate/lib/picker.js',
       'bower_components/bootstrap/dist/js/bootstrap.js',
       'bower_components/angular-ui-ace/ui-ace.js',
-      'app/scripts/ui-bootstrap-tpls-0.11.0.js',
+      'app/scripts/ui-bootstrap-custom-tpls-0.12.0.js',
       'app/scripts/app.js',
       'app/scripts/services/formService.js',
       'app/scripts/controllers/main.js',
@@ -76,7 +76,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_INFO
 
     // Uncomment the following lines if you are using grunt's server to run the tests
     // proxies: {
