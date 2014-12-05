@@ -18,7 +18,8 @@ import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.form.EagerFormParsingHandler;
 import io.undertow.server.handlers.resource.FileResourceManager;
 import io.undertow.util.Headers;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
@@ -31,13 +32,15 @@ import static io.undertow.Handlers.websocket;
 
 
 public class LightServer {
-    private static final Logger logger = Logger.getLogger(LightServer.class);
+
+    static final Logger logger = LoggerFactory.getLogger(LightServer.class);
 
     static protected boolean shutdownRequested = false;
     public static final Pattern WEBSOCKET_ALLOWED_ORIGIN_HEADER = Pattern.compile("^https?://(localhost|127\\.\\d+\\.\\d+\\.\\d+):\\d+$");
     static Undertow server = null;
 
     public static void main(final String[] args) {
+        logger.debug("server start");
         // add shutdown hook here.
         addDaemonShutdownHook();
         start();
@@ -101,7 +104,7 @@ public class LightServer {
     static public void shutdown()
     {
         stop();
-        System.out.println("Cleaning up before system shutdown");
+        logger.debug("Cleaning up before system shutdown");
     }
 
     static protected void addDaemonShutdownHook()
