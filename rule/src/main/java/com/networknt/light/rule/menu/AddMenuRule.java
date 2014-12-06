@@ -2,7 +2,10 @@ package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.blog.AbstractBlogRule;
+import com.networknt.light.server.DbService;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,15 +24,16 @@ public class AddMenuRule extends AbstractMenuRule implements Rule {
         } else {
             Map<String, Object> user = (Map<String, Object>)payload.get("user");
             List roles = (List)user.get("roles");
-            if(!roles.contains("owner") && !roles.contains("menuAdmin") && !roles.contains("admin")) {
-                error = "Role owner or admin or menuAdmin is required to add menu";
+            // this is the owner that adding menu for another site. let it go.
+            if(!roles.contains("owner")) {
+                error = "Role owner is required to add menu";
                 inputMap.put("responseCode", 401);
             } else {
-                String host = (String)user.get("host");
-                if(host != null && !host.equals(data.get("host"))) {
-                    error = "User can only add menu for host: " + host;
-                    inputMap.put("responseCode", 401);
+                if(user.get("host") != null) {
+                    error = "Role owner should not have host in his/her profile";
+                    inputMap.put("responseCode", 400);
                 } else {
+                    String host = (String)data.get("host");
                     String json = getMenu((String)data.get("host"));
                     if(json != null) {
                         error = "Menu for the host exists";
@@ -38,9 +42,29 @@ public class AddMenuRule extends AbstractMenuRule implements Rule {
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
-                        eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                        eventData.put("host", host);
                         eventData.put("createDate", new java.util.Date());
                         eventData.put("createUserId", user.get("userId"));
+
+                        // make sure all menuItems exist if there are any.
+                        List<String> menuItemRids = (List<String>)data.get("menuItems");
+                        if(menuItemRids != null && menuItemRids.size() > 0) {
+                            List<String> menuItemIds = new ArrayList<String>();
+                            for(String menuItemRid: menuItemRids) {
+                                if(menuItemRid != null) {
+                                    ODocument menuItem = DbService.getODocumentByRid(menuItemRid);
+                                    if(menuItem == null) {
+                                        error = "MenuItem with @rid " + menuItemRid + " cannot be found.";
+                                        inputMap.put("responseCode", 404);
+                                        break;
+                                    } else {
+                                        menuItemIds.add(menuItem.field("id"));
+                                    }
+                                }
+                            }
+                            eventData.put("menuItems", menuItemIds);
+                        }
+
                     }
                 }
             }

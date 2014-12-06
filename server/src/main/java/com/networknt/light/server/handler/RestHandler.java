@@ -104,8 +104,13 @@ public class RestHandler implements HttpHandler {
             if(data == null) {
                 data = new HashMap<String, Object>();
                 jsonMap.put("data", data);
+                data.put("host", host);
+            } else {
+                // do not replace host as it might be owner doing something for one host from another.
+                if(data.get("host") == null) {
+                    data.put("host", host);
+                }
             }
-            data.put("host", host);
         }
 
         boolean readOnly = (boolean)jsonMap.get("readOnly");

@@ -118,17 +118,31 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
             menu.field("host", data.get("host"));
             menu.field("createDate", data.get("createDate"));
             menu.field("createUserId", data.get("createUserId"));
+            List<String> menuItemIds = (List<String>)data.get("menuItems");
+            if(menuItemIds != null && menuItemIds.size() > 0) {
+                List menuItems = new ArrayList<ODocument>();
+                OIndex<?> menuItemIdIdx = db.getMetadata().getIndexManager().getIndex("MenuItem.id");
+                for(String menuItemId: menuItemIds) {
+                    // this is a unique index, so it retrieves a OIdentifiable
+                    OIdentifiable oid = (OIdentifiable) menuItemIdIdx.get(menuItemId);
+                    if (oid != null) {
+                        ODocument menuItem = (ODocument)oid.getRecord();
+                        menuItems.add(menuItem);
+                    }
+                }
+                menu.field("menuItems", menuItems);
+            }
             menu.save();
             db.commit();
             Map<String, Object> menuMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("menuMap");
             ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
             if(cache == null) {
                 cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                        .maximumWeightedCapacity(1000)
+                        .maximumWeightedCapacity(100)
                         .build();
                 menuMap.put("cache", cache);
             }
-            json = menu.toJSON();
+            json = menu.toJSON("fetchPlan:*:2");
             cache.put(data.get("host"), json);
         } catch (Exception e) {
             db.rollback();
