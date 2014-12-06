@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by husteve on 8/1/14.
  */
 public class ServiceLocator {
+    static final Logger logger = LoggerFactory.getLogger(ServiceLocator.class);
 
     ObjectMapper mapper = new ObjectMapper();
     Map<String, String> serverMap = null;
@@ -117,7 +120,7 @@ public class ServiceLocator {
                                 new TypeReference<HashMap<String, String>>() {
                                 });
                     } catch (IOException ioe) {
-                        ioe.printStackTrace();
+                        logger.error("Exception:", ioe);
                     }
                 }
             }
@@ -133,7 +136,7 @@ public class ServiceLocator {
                                 new TypeReference<HashMap<String, Object>>() {
                                 });
                     } catch (IOException ioe) {
-                        ioe.printStackTrace();
+                        logger.error("Exception:", ioe);
                     }
                 }
             }
@@ -149,7 +152,7 @@ public class ServiceLocator {
                                 new TypeReference<HashMap<String, Object>>() {
                                 });
                     } catch (IOException ioe) {
-                        ioe.printStackTrace();
+                        logger.error("Exception:", ioe);
                     }
                 }
             }

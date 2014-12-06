@@ -40,7 +40,7 @@ public class LightServer {
     static Undertow server = null;
 
     public static void main(final String[] args) {
-        logger.debug("server start");
+        logger.info("server starts");
         // add shutdown hook here.
         addDaemonShutdownHook();
         start();
@@ -104,7 +104,7 @@ public class LightServer {
     static public void shutdown()
     {
         stop();
-        logger.debug("Cleaning up before system shutdown");
+        logger.info("Cleaning up before server shutdown");
     }
 
     static protected void addDaemonShutdownHook()

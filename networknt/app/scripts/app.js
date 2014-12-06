@@ -78,7 +78,7 @@ var lightApp = angular.module('lightApp', [
       })
       .when('/blog', {
         templateUrl: 'views/blog.html',
-        controller: 'BlogCtrl'
+        controller: "BlogCtrl"
       })
       .otherwise({
         redirectTo: '/'

@@ -2,9 +2,8 @@ package com.networknt.light.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.util.ServiceLocator;
-import com.networknt.light.util.Util;
+
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OClass;
@@ -14,6 +13,8 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,8 @@ import java.util.Set;
  * Created by husteve on 8/25/2014.
  */
 public class DbService {
+    static final Logger logger = LoggerFactory.getLogger(DbService.class);
+
     public static void persistEvent(Map<String, Object> eventMap) throws Exception {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
@@ -42,7 +45,7 @@ public class DbService {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();
@@ -56,7 +59,7 @@ public class DbService {
             ODocument lastDoc = (ODocument)list.get(0);
             return (Long) lastDoc.field("value");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();
@@ -105,12 +108,13 @@ public class DbService {
         if(whereClause != null && whereClause.length() > 0) {
             sql.append(whereClause);
         }
-        System.out.println("sql=" + sql);
+        logger.debug("sql={}", sql);
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             count = ((ODocument)db.query(new OSQLSynchQuery<ODocument>(sql.toString())).get(0)).field("count");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            throw e;
         } finally {
             db.close();
         }
@@ -138,7 +142,7 @@ public class DbService {
             sql.append(" SKIP ").append((pageNo - 1) * pageSize);
             sql.append(" LIMIT ").append(pageSize);
         }
-        System.out.println("sql=" + sql);
+        logger.debug("sql={}", sql);
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql.toString());
@@ -147,7 +151,8 @@ public class DbService {
                 json = OJSONWriter.listToJSON(list, null);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            throw e;
         } finally {
             db.close();
         }
@@ -163,7 +168,7 @@ public class DbService {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();
@@ -177,7 +182,8 @@ public class DbService {
         try {
             doc = db.load(new ORecordId(rid));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            throw e;
         } finally {
             db.close();
         }
@@ -191,7 +197,8 @@ public class DbService {
             ODocument doc = db.load(new ORecordId(rid));
             if(doc != null) json = doc.toJSON();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            throw e;
         } finally {
             db.close();
         }
@@ -209,7 +216,8 @@ public class DbService {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            throw e;
         } finally {
             db.close();
         }
@@ -232,7 +240,7 @@ public class DbService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();

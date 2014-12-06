@@ -10,9 +10,7 @@
 angular.module('lightApp')
     .controller('mainCtrl', ['$scope', '$http', function ($scope, $http) {
 
-        var getFeedPost = {
-            host: 'injector',
-            app: 'main',
+        var getRecentPost = {
             category : 'feed',
             name : 'getFeed',
             readOnly: true,
