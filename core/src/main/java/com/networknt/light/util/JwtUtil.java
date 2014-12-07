@@ -69,7 +69,7 @@ public class JwtUtil {
         token.setAudience("networknt.com");
         token.setParam("typ", "networknt.com/auth/v1");
         token.setIssuedAt(Instant.now());
-        token.setExpiration(Instant.now().plusSeconds(3600*24));  // 1 day
+        token.setExpiration(Instant.now().plusSeconds(3600));  // 1 hour
         // TODO test only
         //token.setExpiration(Instant.now().plusSeconds(60));  // 1 minute
 

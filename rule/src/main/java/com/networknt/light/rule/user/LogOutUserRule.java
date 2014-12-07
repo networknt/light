@@ -19,6 +19,8 @@ public class LogOutUserRule extends AbstractUserRule implements Rule {
         String rid = (String) data.get("@rid");
         String error = null;
 
+        // TODO logout should remove the refresh token in credential database.
+
         // TODO check the token is valid and if the user exist.
         ODocument user = DbService.getODocumentByRid(rid);
         if(user == null) {

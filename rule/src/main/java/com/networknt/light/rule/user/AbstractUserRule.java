@@ -312,13 +312,18 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
                     credential.field("loginDate", data.get("loginDate"));
                     String hashedRefreshToken = (String)data.get("hashedRefreshToken");
                     if(hashedRefreshToken != null) {
-                        credential.field("refreshToken", hashedRefreshToken);
-                        credential.field("issueDate", data.get("issueDate"));
-                        credential.field("expireDate", data.get("expireDate"));
-                    } else {
-                        credential.removeField("refreshToken");
-                        credential.removeField("issueDate");
-                        credential.removeField("expireDate");
+                        List refreshTokens = credential.field("refreshTokens");
+                        if(refreshTokens != null) {
+                            // max refresh tokens for user is 10. max 10 devices.
+                            if(refreshTokens.size() >= 10) {
+                                refreshTokens.remove(0);
+                            }
+                            refreshTokens.add(hashedRefreshToken);
+                        } else {
+                            refreshTokens = new ArrayList<String>();
+                            refreshTokens.add(hashedRefreshToken);
+                        }
+                        credential.field("refreshTokens", refreshTokens);
                     }
                     credential.save();
                     db.commit();
@@ -434,7 +439,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         String sql = "SELECT id FROM Role";
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
             List<ODocument> list = db.command(query).execute();
             if(list.size() > 0) {
                 roles = new ArrayList<String>();
@@ -511,7 +516,19 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
     }
 
     boolean checkRefreshToken(ODocument credential, String refreshToken) throws Exception {
-        String storedRefreshToken = (String) credential.field("refreshToken");
-        return HashUtil.validatePassword(refreshToken, storedRefreshToken);
+        boolean result = false;
+        if(credential != null && refreshToken != null) {
+            List<String> refreshTokens = credential.field("refreshTokens");
+            if(refreshTokens != null && refreshTokens.size() > 0) {
+                String hashedRefreshToken = HashUtil.md5(refreshToken);
+                for(String token: refreshTokens) {
+                    if(hashedRefreshToken.equals(token)) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

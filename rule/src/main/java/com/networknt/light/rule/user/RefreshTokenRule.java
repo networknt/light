@@ -30,8 +30,7 @@ public class RefreshTokenRule extends AbstractUserRule implements Rule {
             ODocument user = getUserByUserId(userId);
             if(user != null) {
                 ODocument credential = (ODocument) user.field("credential");
-                java.util.Date expireDate = (java.util.Date) credential.field("expireDate");
-                if (expireDate.after(new java.util.Date()) && checkRefreshToken(credential, refreshToken)) {
+                if (checkRefreshToken(credential, refreshToken)) {
                     String jwt = generateToken(user);
                     if (jwt != null) {
                         Map<String, String> tokens = new HashMap<String, String>();

@@ -43,11 +43,8 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
                         // generate refreshToken
                         String refreshToken = HashUtil.generateUUID();
                         tokens.put("refreshToken", refreshToken);
-                        String hashedRefreshToken = HashUtil.generateStorngPasswordHash(refreshToken);
+                        String hashedRefreshToken = HashUtil.md5(refreshToken);
                         eventData.put("hashedRefreshToken", hashedRefreshToken);
-                        eventData.put("issueDate", new java.util.Date());
-                        Instant expireDate = Instant.now().plusSeconds(60*60*24*365); // default to 1 year.
-                        eventData.put("expireDate", java.util.Date.from(expireDate));
                     }
                     inputMap.put("result", mapper.writeValueAsString(tokens));
                     eventData.put("userId", user.field("userId"));
