@@ -71,6 +71,7 @@
 
         $scope.submitSchema = function() {
             console.log('submitSchema is called');
+            $scope.addFormPost.data.id = $scope.id;
             $scope.addFormPost.data.schema = $scope.schema;
             $scope.addFormPost.data.form = $scope.form;
             $scope.addFormPost.data.action = $scope.action;
