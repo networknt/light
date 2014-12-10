@@ -73,8 +73,8 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             form.field("schema", data.get("schema"));
             form.field("form", data.get("form"));
             if(data.get("modelData") != null) form.field("modelData", data.get("modelData"));
-            form.field("createDate", data.get("updateDate"));
-            form.field("createUserId", data.get("updateUserId"));
+            form.field("createDate", data.get("createDate"));
+            form.field("createUserId", data.get("createUserId"));
             form.save();
             db.commit();
             json = form.toJSON();
