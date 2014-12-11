@@ -25,7 +25,7 @@ public class ExportDatabase {
                 }
             };
 
-            ODatabaseExport export = new ODatabaseExport(db, "/temp/export", listener);
+            ODatabaseExport export = new ODatabaseExport(db, "/tmp/export", listener);
             export.exportDatabase();
             export.close();
         } catch(IOException ioe) {

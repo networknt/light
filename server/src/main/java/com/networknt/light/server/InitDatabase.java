@@ -971,6 +971,11 @@ public class InitDatabase {
             user.field("desc", "logged in user who can do certain things");
             user.save();
 
+            ODocument dbAdmin = new ODocument(schema.getClass("Role"));
+            dbAdmin.field("id", "dbAdmin");
+            dbAdmin.field("desc", "admin database objects for the host");
+            dbAdmin.save();
+
             ODocument userAdmin = new ODocument(schema.getClass("Role"));
             userAdmin.field("id", "userAdmin");
             userAdmin.field("desc", "admin users for the host");
