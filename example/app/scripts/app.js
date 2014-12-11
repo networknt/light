@@ -24,7 +24,6 @@ var lightApp = angular.module('lightApp', [
     'hc.marked',
     'toaster',
     'schemaForm-marked',
-    'pascalprecht.translate',
     'mgcrea.ngStrap.helpers.dimensions',
     'mgcrea.ngStrap.helpers.parseOptions',
     'mgcrea.ngStrap.tooltip',
