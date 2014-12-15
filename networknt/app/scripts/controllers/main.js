@@ -11,39 +11,23 @@ angular.module('lightApp')
     .controller('mainCtrl', ['$scope', '$http', function ($scope, $http) {
 
         var getRecentPost = {
-            category : 'feed',
-            name : 'getFeed',
+            category : 'post',
+            name : 'getRecentPost',
             readOnly: true,
             data : {}
         };
 
-        $scope.page = { maxSize: 5, currentPage: 1, numPerPage: 10, totalItems: 20, numPages: 0 }
-        $scope.feeds = [];
+        $scope.forumPosts = [];
+        $scope.newsPosts = [];
+        $scope.blogPosts = [];
 
-        $http.post('api/rs', getFeedPost)
+        $http.post('api/rs', getRecentPost)
             .success(function(result, status, headers, config) {
                 console.log(result);
-                $scope.feeds = result.data;
+                $scope.forumPosts = result.forumPosts;
+                $scope.newsPosts = result.newsPosts;
+                $scope.blogPosts = result.blogPosts;
 
-                $scope.page.totalItems = $scope.feeds.length;
-                console.log($scope.page.totalItems);
-                $scope.page.numPages = function () {
-                    return Math.ceil($scope.feeds.length / $scope.page.numPerPage);
-                };
-
-                console.log($scope.feeds);
-
-            }).error(function(data, status, headers, config) {
-
-            }
-        );
-
-
-        $scope.pageChanged = function() {
-            console.log('Page changed to: ' + $scope.page.currentPage);
-            var begin = (($scope.page.currentPage - 1) * $scope.page.numPerPage)
-                , end = begin + $scope.page.numPerPage;
-            $scope.filteredFeeds = $scope.feeds.slice(begin, end);
-        };
+            });
 
     }]);

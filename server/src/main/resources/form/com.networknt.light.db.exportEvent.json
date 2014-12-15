@@ -1,0 +1,30 @@
+{
+    "category": "form",
+    "name": "impForm",
+    "readOnly": false,
+    "data": {
+        "id": "com.networknt.light.db.exportEvent",
+        "version": 1,
+        "action" : [{
+            "category" : "db",
+            "name" : "exportEvent",
+            "readOnly": true,
+            "title": "Export",
+            "success" : "/page/com.networknt.light.db.admin.home"
+        }],
+        "schema": {
+            "type": "object",
+            "title": "Export",
+            "required": ["path"],
+            "properties": {
+                "path": {
+                    "title": "Path for export file",
+                    "type": "string"
+                }
+            }
+        },
+        "form": [
+            "path"
+        ]
+    }
+}

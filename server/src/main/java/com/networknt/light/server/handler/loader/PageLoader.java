@@ -24,23 +24,35 @@ import java.util.Scanner;
 public class PageLoader extends Loader {
     static public String pageFolder = "page";
 
-    public static void loadPage() throws Exception {
-        File folder = getFileFromResourceFolder(pageFolder);
-        if(folder != null) {
-            LightServer.start();
-            httpclient = HttpClients.createDefault();
-            // login as owner here
-            login();
-            File[] listOfFiles = folder.listFiles();
-            for (int i = 0; i < listOfFiles.length; i++) {
-                loadPageFile(listOfFiles[i]);
+    public static void main(String[] args) {
+        try {
+            String host = args[0];
+            String userId = args[1];
+            String password = args[2];
+            if(host == null || userId == null || password == null) {
+                System.out.println("host, userId and password are required");
+                System.exit(1);
             }
-            httpclient.close();
-
+            File folder = getFileFromResourceFolder(pageFolder);
+            if(folder != null) {
+                LightServer.start();
+                httpclient = HttpClients.createDefault();
+                // login as owner here
+                login(host, userId, password);
+                File[] listOfFiles = folder.listFiles();
+                for (int i = 0; i < listOfFiles.length; i++) {
+                    loadPageFile(host, listOfFiles[i]);
+                }
+                httpclient.close();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
             LightServer.stop();
         }
     }
-    private static void loadPageFile(File file) {
+
+    private static void loadPageFile(String host, File file) {
         Scanner scan = null;
         try {
             scan = new Scanner(file, Loader.encoding);
@@ -56,7 +68,7 @@ public class PageLoader extends Loader {
             data.put("id", id);
             data.put("content", content);
             inputMap.put("data", data);
-            HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+            HttpPost httpPost = new HttpPost("http://" + host + ":8080/api/rs");
             httpPost.addHeader("Authorization", "Bearer " + jwt);
             StringEntity input = new StringEntity(ServiceLocator.getInstance().getMapper().writeValueAsString(inputMap));
             input.setContentType("application/json");
@@ -64,7 +76,7 @@ public class PageLoader extends Loader {
             CloseableHttpResponse response = httpclient.execute(httpPost);
 
             try {
-                System.out.println(response.getStatusLine());
+                System.out.println("Page: " + file.getAbsolutePath() + " is loaded with status " + response.getStatusLine());
                 HttpEntity entity = response.getEntity();
                 BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
                 String json = "";
@@ -72,7 +84,7 @@ public class PageLoader extends Loader {
                 while ((line = rd.readLine()) != null) {
                     json = json + line;
                 }
-                System.out.println("json = " + json);
+                //System.out.println("json = " + json);
                 EntityUtils.consume(entity);
             } finally {
                 response.close();

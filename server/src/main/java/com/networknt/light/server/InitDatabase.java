@@ -231,6 +231,8 @@ public class InitDatabase {
                 schema.dropClass("Event");
             }
             OClass event = schema.createClass("Event");
+            event.createProperty("id", OType.LONG);
+            event.createProperty("version", OType.INTEGER);
             event.createProperty("host", OType.STRING);
             event.createProperty("app", OType.STRING);
             event.createProperty("category", OType.STRING);
@@ -238,6 +240,7 @@ public class InitDatabase {
             event.createProperty("createDate", OType.DATETIME);
             event.createProperty("createUserId", OType.STRING);
             event.createProperty("data", OType.EMBEDDEDMAP);
+            event.createIndex("eventIdVersionIdx", OClass.INDEX_TYPE.UNIQUE, "id", "version");
             schema.save();
         } catch (Exception e) {
             e.printStackTrace();
@@ -260,10 +263,8 @@ public class InitDatabase {
             rule.createProperty("ruleClass", OType.STRING);
             rule.createProperty("host", OType.STRING);
             rule.createProperty("sourceCode", OType.STRING);
-            rule.createProperty("createUserRid", OType.STRING);
             rule.createProperty("createUserId", OType.STRING);
             rule.createProperty("createDate", OType.DATETIME);
-            rule.createProperty("updateUserRid", OType.STRING);
             rule.createProperty("updateUserId", OType.STRING);
             rule.createProperty("updateDate", OType.DATETIME);
             rule.createIndex("Rule.ruleClass", OClass.INDEX_TYPE.UNIQUE, "ruleClass");
@@ -1114,6 +1115,16 @@ public class InitDatabase {
             m_menuAdmin.field("createDate", new java.util.Date());
             m_menuAdmin.save();
 
+            ODocument m_dbAdmin = new ODocument(schema.getClass("MenuItem"));
+            m_dbAdmin.field("id", "dbAdmin");
+            m_dbAdmin.field("label", "DB Admin");
+            m_dbAdmin.field("path", "/page/com.networknt.light.db.admin.home");
+            m_dbAdmin.field("tpl", "views/page.html");
+            m_dbAdmin.field("ctrl", "pageCtrl");
+            m_dbAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            m_dbAdmin.field("createDate", new java.util.Date());
+            m_dbAdmin.save();
+
             ODocument m_productAdmin = new ODocument(schema.getClass("MenuItem"));
             m_productAdmin.field("id", "productAdmin");
             m_productAdmin.field("label", "Product Admin");
@@ -1177,6 +1188,7 @@ public class InitDatabase {
             menuItems.add(m_ruleAdmin);
             menuItems.add(m_roleAdmin);
             menuItems.add(m_userAdmin);
+            menuItems.add(m_dbAdmin);
             menuItems.add(m_menuAdmin);
             menuItems.add(m_formAdmin);
             menuItems.add(m_pageAdmin);

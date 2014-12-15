@@ -4,6 +4,7 @@
     "readOnly": false,
     "data": {
         "id": "com.networknt.light.config.update",
+        "version": 1,
         "action" : [{
             "category" : "config",
             "name" : "updConfig",

@@ -4,6 +4,7 @@
     "readOnly": false,
     "data": {
         "id": "com.networknt.light.forum.update",
+        "version": 1,
         "action" : [{
             "category" : "forum",
             "name" : "updForum",

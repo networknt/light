@@ -4,6 +4,7 @@
     "readOnly": false,
     "data": {
         "id": "com.networknt.light.common.command",
+        "version": 1,
         "schema": {
             "type": "object",
             "title": "Command",

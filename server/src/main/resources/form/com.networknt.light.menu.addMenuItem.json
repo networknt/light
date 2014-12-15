@@ -4,6 +4,7 @@
     "readOnly": false,
     "data": {
         "id": "com.networknt.light.menu.addMenuItem",
+        "version": 1,
         "action" : [{
             "category" : "menu",
             "name" : "addMenuItem",
@@ -14,8 +15,12 @@
         "schema": {
             "type": "object",
             "title": "Menu Item",
-            "required": ["label"],
+            "required": ["id", "label"],
             "properties": {
+                "id" : {
+                    "title": "Id",
+                    "type": "string"
+                },
                 "label" : {
                     "title": "Label",
                     "type": "string"
@@ -57,6 +62,7 @@
             }
         },
         "form": [
+            "id",
             "label",
             "host",
             "path",

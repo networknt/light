@@ -4,6 +4,7 @@
     "readOnly": false,
     "data": {
         "id": "com.cibc.rop.class.feed",
+        "version": 1,
         "action" : [
             {
                 "host" : "injector",

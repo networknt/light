@@ -126,7 +126,7 @@ public class LightServer {
                 Map<String, Object> jsonMap = mapper.readValue(event.toJSON(),
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                RuleEngine.getInstance().executeRule(Util.getCommandRuleClass(jsonMap), jsonMap);
+                RuleEngine.getInstance().executeRule(Util.getEventRuleId(jsonMap), jsonMap);
             }
         } catch (Exception e) {
             e.printStackTrace();

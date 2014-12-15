@@ -39,18 +39,18 @@ public class Loader {
             return file;
         }
     }
-    protected static void login() throws Exception {
+    protected static void login(String host, String userId, String password) throws Exception {
         Map<String, Object> inputMap = new HashMap<String, Object>();
         inputMap.put("category", "user");
         inputMap.put("name", "signInUser");
         inputMap.put("readOnly", false);
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put("userIdEmail", "stevehu");
-        data.put("password", "123456");
+        data.put("userIdEmail", userId);
+        data.put("password", password);
         data.put("rememberMe", true);
         inputMap.put("data", data);
 
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://" + host + ":8080/api/rs");
         StringEntity input = new StringEntity(ServiceLocator.getInstance().getMapper().writeValueAsString(inputMap));
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -77,7 +77,6 @@ public class Loader {
         } finally {
             response.close();
         }
-
     }
 
 }

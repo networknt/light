@@ -2,6 +2,7 @@
     "category": "form",
     "name": "impForm",
     "readOnly": false,
+    "version": 1,
     "data": {
         "id": "com.networknt.light.user.signup",
         "action" : [{

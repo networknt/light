@@ -1,0 +1,60 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('dbAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+
+        $scope.execCommand = {
+            category : 'db',
+            name : 'cmdDb',
+            readOnly: false,
+            data: {}
+        };
+
+        $scope.exportEvent = {
+            category : 'db',
+            name : 'expEvent',
+            readOnly: true,
+            data: {}
+        };
+        $scope.replayEvent = {
+            category : 'db',
+            name : 'delPage',
+            readOnly: true,
+            data: {}
+        };
+
+        $scope.exportEvent = function() {
+            console.log("go to exportEvent form");
+            $location.path('/form/com.networknt.light.db.exportEvent');
+        };
+
+        $scope.execCommand = function() {
+            $location.path('/form/com.networknt.light.db.execCommand');
+        };
+
+        $scope.replayEvent = function() {
+            $location.path('/form/com.networknt.light.db.replayEvent');
+        };
+
+    }]);
+</script>
+<div class="container" ng-controller="dbAdminHomeCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <tabset>
+                <tab heading="Event">
+                    <h1>Event</h1>
+                    <a ng-click="execCommand()" href="">Exec Command</a>
+                    <a ng-click="exportEvent()" href="">Export Event</a>
+                    <a ng-click="replayEvent()" href="">Replay Event</a>
+                </tab>
+                <tab heading="Database Statistic">
+                    <table class="table table-striped">
+                    </table>
+                </tab>
+                <tab heading="Bookmark">
+                    <table class="table table-striped">
+                    </table>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div> <!-- /container -->
