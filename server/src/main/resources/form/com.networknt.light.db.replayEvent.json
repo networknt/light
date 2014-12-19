@@ -1,0 +1,38 @@
+{
+    "category": "form",
+    "name": "impForm",
+    "readOnly": false,
+    "data": {
+        "id": "com.networknt.light.db.replayEvent",
+        "version": 1,
+        "action" : [{
+            "category" : "db",
+            "name" : "replayEvent",
+            "readOnly": true,
+            "title": "Replay Event",
+            "success" : "/page/com.networknt.light.db.admin.home"
+        }],
+        "schema": {
+            "type": "object",
+            "title": "Upload Event File",
+            "required": ["event"],
+            "properties": {
+                "event": {
+                    "title": "Event",
+                    "type": "'object",
+                    "format": "ngflow",
+                    "description": "Only json is allowd"
+                }
+            }
+        },
+        "form": [
+            {
+                "key": "event",
+                "flowOptions": {
+                    "dropEnabled": false,
+                    "fileSuccess": "uploaded()"
+                }
+            }
+        ]
+    }
+}

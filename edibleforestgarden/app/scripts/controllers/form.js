@@ -39,6 +39,10 @@ angular.module('lightApp').controller('formCtrl', ['$scope', '$routeParams', '$h
         $scope.buttonIndex = index;
     }
 
+    $scope.uploaded = function(){
+        alert('done');
+    };
+
     $scope.submitForm = function(form, model) {
         // First we broadcast an event so all fields validate themselves
         $scope.$broadcast('schemaFormValidate');

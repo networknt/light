@@ -124,7 +124,7 @@ public class RestHandler implements HttpHandler {
         if(readOnly) {
             // get data from memory and return it, it call a command rule to get the data and result will be in the jsonMap as "result" key
             // call the right rule to execute the command, return error code and message if validation fails.
-            RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), (Integer)jsonMap.get("version"), jsonMap);
+            RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
         } else {
             // this is a update command or impacting to external system.
             // TODO validate version number in itself and dependencies to make sure the event is valid. Reject it back if not.

@@ -30,7 +30,8 @@ var lightApp = angular.module('lightApp', [
     'mgcrea.ngStrap.tooltip',
     'mgcrea.ngStrap.select',
     'angular-loading-bar',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'schemaForm-ngflow'
 ])
 .config(['$httpProvider',
     function ($httpProvider) {
@@ -91,6 +92,20 @@ var lightApp = angular.module('lightApp', [
     uiTreeFilterSettingsProvider.descendantCollection = "children";
 })
 */
+.config(['flowFactoryProvider', function (flowFactoryProvider) {
+    flowFactoryProvider.defaults = {
+        target: '/schema-form-ngflow/example.html',
+        permanentErrors: [404, 500, 501],
+        maxChunkRetries: 1,
+        chunkRetryInterval: 5000,
+        simultaneousUploads: 4,
+        testChunks: false,
+        singleFile: true
+    };
+    flowFactoryProvider.on('catchAll', function (event) {
+        console.log('catchAll', arguments);
+    });
+}])
 .run(['authService', function (authService) {
         authService.fillAuthData();
         //authService.logOut();
