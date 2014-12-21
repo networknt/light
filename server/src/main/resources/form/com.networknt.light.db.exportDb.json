@@ -3,11 +3,11 @@
     "name": "impForm",
     "readOnly": false,
     "data": {
-        "id": "com.networknt.light.db.exportEvent",
+        "id": "com.networknt.light.db.exportDb",
         "version": 1,
         "action" : [{
             "category" : "db",
-            "name" : "exportEvent",
+            "name" : "exportDb",
             "readOnly": true,
             "title": "Export",
             "success" : "/page/com.networknt.light.db.admin.home"

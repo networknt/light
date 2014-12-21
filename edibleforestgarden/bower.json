@@ -18,7 +18,9 @@
     "angular-schema-form": "~0.7.6",
     "angular-strap": "~2.1.3",
     "schema-form-ngflow": "chengz/schema-form-ngflow",
-    "angular-loading-bar": "~0.6.0"
+    "angular-loading-bar": "~0.6.0",
+    "angular-schema-form-file-reader": "~0.1.1",
+    "schema-form-datetimepicker": "chengz/schema-form-datetimepicker"
   },
   "devDependencies": {
     "angular-mocks": "1.2.21",

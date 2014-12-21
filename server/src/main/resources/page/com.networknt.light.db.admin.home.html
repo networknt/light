@@ -3,27 +3,34 @@
 
         $scope.execCommand = {
             category : 'db',
-            name : 'cmdDb',
+            name : 'execCommand',
             readOnly: false,
             data: {}
         };
 
-        $scope.exportEvent = {
+        $scope.exportDb = {
             category : 'db',
-            name : 'expEvent',
+            name : 'exportDb',
             readOnly: true,
             data: {}
         };
         $scope.replayEvent = {
             category : 'db',
-            name : 'delPage',
+            name : 'replayEvent',
+            readOnly: false,
+            data: {}
+        };
+
+        $scope.downloadEvent = {
+            category : 'db',
+            name : 'downloadEvent',
             readOnly: true,
             data: {}
         };
 
-        $scope.exportEvent = function() {
-            console.log("go to exportEvent form");
-            $location.path('/form/com.networknt.light.db.exportEvent');
+        $scope.exportDb = function() {
+            console.log("go to exportDb form");
+            $location.path('/form/com.networknt.light.db.exportDb');
         };
 
         $scope.execCommand = function() {
@@ -34,6 +41,10 @@
             $location.path('/form/com.networknt.light.db.replayEvent');
         };
 
+        $scope.downloadEvent = function() {
+            $location.path('/form/com.networknt.light.db.downloadEvent');
+        };
+
     }]);
 </script>
 <div class="container" ng-controller="dbAdminHomeCtrl">
@@ -42,9 +53,10 @@
             <tabset>
                 <tab heading="Event">
                     <h1>Event</h1>
-                    <a ng-click="execCommand()" href="">Exec Command</a>
-                    <a ng-click="exportEvent()" href="">Export Event</a>
-                    <a ng-click="replayEvent()" href="">Replay Event</a>
+                    <p><a ng-click="exportDb()" href="">Export Database</a></p>
+                    <p><a ng-click="execCommand()" href="">Exec Commands</a></p>
+                    <p><a ng-click="downloadEvent()" href="">Download Events</a></p>
+                    <p><a ng-click="replayEvent()" href="">Replay Events</a></p>
                 </tab>
                 <tab heading="Database Statistic">
                     <table class="table table-striped">

@@ -26,7 +26,8 @@
     "angular-ui-tree-filter": "~0.1.0",
     "angular-ui-tree": "~2.1.5",
     "angular-ui-utils": "~0.1.1",
-    "angular-schema-form-strapselect": "~0.1.0"
+    "angular-schema-form-strapselect": "~0.1.0",
+    "schema-form-datetimepicker": "chengz/schema-form-datetimepicker"
   },
   "devDependencies": {
     "angular-mocks": "1.2.21",

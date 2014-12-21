@@ -1,0 +1,47 @@
+{
+    "category": "form",
+    "name": "impForm",
+    "readOnly": false,
+    "data": {
+        "id": "com.networknt.light.db.downloadEvent",
+        "version": 1,
+        "action" : [{
+            "category" : "db",
+            "name" : "downloadEvent",
+            "readOnly": true,
+            "title": "Download Events",
+            "success" : "/page/com.networknt.light.db.admin.home"
+        }],
+        "schema": {
+            "type": "object",
+            "title": "Download Events",
+            "required": ["event_from_date", "event_from_time", "event_to_date", "event_to_time"],
+            "properties": {
+                "event_from_date": {
+                    "title": "Event From Date",
+                    "type": "object",
+                    "format": "datetimepicker"
+                },
+                "event_to_date": {
+                    "title": "Event To Date",
+                    "type": "object",
+                    "format": "datetimepicker"
+                }
+            }
+        },
+        "form": [
+            {
+                "key": "event_from_date",
+                "options": {
+                    "autoclose": 1
+                }
+            },
+            {
+                "key": "event_to_date",
+                "options": {
+                    "autoclose": 1
+                }
+            }
+        ]
+    }
+}

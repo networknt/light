@@ -29,7 +29,10 @@ var lightApp = angular.module('lightApp', [
     'mgcrea.ngStrap.tooltip',
     'mgcrea.ngStrap.select',
     'angular-loading-bar',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'schemaForm-datepicker',
+    'schemaForm-datetimepicker',
+    'schemaForm-timepicker'
 ])
 .config(['$httpProvider',
     function ($httpProvider) {
