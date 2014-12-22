@@ -16,10 +16,7 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by husteve on 8/25/2014.
@@ -78,18 +75,28 @@ public class DbService {
                 if(("pageNo").equals(key) || "pageSize".equals(key) || ("sortDir").equals(key) || "sortedBy".equals(key)) {
                     continue;
                 } else {
-                    String filterColumn = key;
                     Object filterValue = criteria.get(key);
                     if(filterValue != null && filterValue.toString().length() > 0) {
                         if(firstFilter) {
-                            sb.append(" WHERE ").append(filterColumn);
+                            sb.append(" WHERE ");
                             firstFilter = false;
                         } else {
-                            sb.append(" AND ").append(filterColumn);
+                            sb.append(" AND ");
                         }
                         if(filterValue instanceof String) {
-                            sb.append(" = '").append(filterValue).append("'");
+                            // if key ends with DateFrom or DateTo then we need to treat it as Date
+                            if(key.endsWith("DateFrom")) {
+                                sb.append(key.substring(0, key.length() - 4));
+                                sb.append(" >= date('").append(filterValue).append("')");
+                            } else if(key.endsWith("DateTo")) {
+                                sb.append(key.substring(0, key.length() - 2));
+                                sb.append(" <= date('").append(filterValue).append("')");
+                            } else  {
+                                sb.append(key);
+                                sb.append(" = '").append(filterValue).append("'");
+                            }
                         } else {
+                            sb.append(key);
                             sb.append(" = ").append(filterValue);
                         }
                     }

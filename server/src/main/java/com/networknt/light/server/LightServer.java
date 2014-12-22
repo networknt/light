@@ -18,6 +18,7 @@ import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.form.EagerFormParsingHandler;
 import io.undertow.server.handlers.resource.FileResourceManager;
 import io.undertow.util.Headers;
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import static io.undertow.Handlers.resource;
@@ -54,6 +56,10 @@ public class LightServer {
         ODatabaseDocumentTx db = new ODatabaseDocumentTx(ServiceLocator.getInstance().getDbUrl());
         if(!db.exists()) {
             db.create();
+            db.getStorage().getConfiguration().dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+            db.getStorage().getConfiguration().setTimeZone(TimeZone.getTimeZone("UTC"));
+            db.getStorage().getConfiguration().update();
+            db.close();
             InitDatabase.initDb();
         }
         // replay all the event to create memory image.

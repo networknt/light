@@ -9,20 +9,19 @@
             "category" : "db",
             "name" : "downloadEvent",
             "readOnly": true,
-            "title": "Download Events",
-            "success" : "/page/com.networknt.light.db.admin.home"
+            "title": "Download Events"
         }],
         "schema": {
             "type": "object",
             "title": "Download Events",
-            "required": ["event_from_date", "event_from_time", "event_to_date", "event_to_time"],
+            "required": ["createDateFrom"],
             "properties": {
-                "event_from_date": {
+                "createDateFrom": {
                     "title": "Event From Date",
                     "type": "object",
                     "format": "datetimepicker"
                 },
-                "event_to_date": {
+                "createDateTo": {
                     "title": "Event To Date",
                     "type": "object",
                     "format": "datetimepicker"
@@ -31,13 +30,13 @@
         },
         "form": [
             {
-                "key": "event_from_date",
+                "key": "createDateFrom",
                 "options": {
                     "autoclose": 1
                 }
             },
             {
-                "key": "event_to_date",
+                "key": "createDateTo",
                 "options": {
                     "autoclose": 1
                 }
