@@ -10,9 +10,9 @@
 angular.module('lightApp')
     .controller('mainCtrl', ['$scope', '$http', function ($scope, $http) {
 
-        var getRecentPost = {
+        var getRecentPosts = {
             category : 'post',
-            name : 'getRecentPost',
+            name : 'getRecentPosts',
             readOnly: true,
             data : {}
         };
@@ -21,13 +21,12 @@ angular.module('lightApp')
         $scope.newsPosts = [];
         $scope.blogPosts = [];
 
-        $http.post('api/rs', getRecentPost)
+        $http.post('api/rs', getRecentPosts)
             .success(function(result, status, headers, config) {
                 console.log(result);
                 $scope.forumPosts = result.forumPosts;
                 $scope.newsPosts = result.newsPosts;
                 $scope.blogPosts = result.blogPosts;
-
             });
 
     }]);

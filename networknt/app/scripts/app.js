@@ -25,10 +25,8 @@ var lightApp = angular.module('lightApp', [
     'toaster',
     'schemaForm-marked',
     'pascalprecht.translate',
-    'mgcrea.ngStrap.helpers.dimensions',
-    'mgcrea.ngStrap.helpers.parseOptions',
-    'mgcrea.ngStrap.tooltip',
-    'mgcrea.ngStrap.select',
+    'mgcrea.ngStrap',
+    'schemaForm-datetimepicker',
     'angular-loading-bar',
     'LocalStorageModule'
 ])
@@ -78,7 +76,7 @@ var lightApp = angular.module('lightApp', [
       })
       .when('/blog', {
         templateUrl: 'views/blog.html',
-        controller: "BlogCtrl"
+        controller: 'BlogCtrl'
       })
       .otherwise({
         redirectTo: '/'

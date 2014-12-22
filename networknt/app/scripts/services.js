@@ -52,6 +52,7 @@ angular.module('lightApp')
             if (rejection.status === 401) {
                 var authService = $injector.get('authService');
                 if(rejection.data === 'token_expired') {
+                    console.log("token expired, renewing...")
                     authService.refreshToken().then(function (response) {
                         _retryHttpRequest(rejection.config, deferred);
                     }, function () {
