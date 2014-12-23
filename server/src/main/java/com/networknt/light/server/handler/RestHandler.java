@@ -99,7 +99,6 @@ public class RestHandler implements HttpHandler {
         // and table(s) to be accessed should be host specific as well.
         if(jsonMap.get("host") == null) {
             String host = headerMap.getFirst("host");
-            logger.debug("host = {}", host);
             if(host.indexOf(':') != -1) {
                 host = host.substring(0, host.indexOf(":"));
             }

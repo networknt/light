@@ -1,74 +1,30 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('blogHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
-        $scope.getBlog = {
+    angular.module('lightApp').controller('blogPostCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
+        $scope.getBlogPost = {
             category : 'blog',
-            name : 'getBlog',
+            name: 'getBlogPost',
             readOnly: true,
-            data : {
+            data: {
                 pageSize : 10,
                 pageNo : 1,
                 sortDir : 'desc',
                 sortedBy : 'createDate'
             }
-        };
+        }
 
-        $scope.delBlog = {
-            category : 'blog',
-            name : 'delBlog',
-            readOnly: false
-        };
+        $scope.page = { maxSize: 10, totalItems: 0, numPages: 0 };
 
-        $scope.page = { maxSize: 5, totalItems: 0, numPages: 0 };
+        $scope.posts = [];
 
-        $scope.blogs = [];
-        $scope.hosts = [];
-
-        $scope.headers = [
-            {
-                title: 'Delete',
-                value: 'delete'
-            },
-            {
-                title: 'Host',
-                value: 'host'
-            },
-            {
-                title: 'Title',
-                value: 'title'
-            },
-            {
-                title: 'Rank',
-                value: 'rank'
-            },
-            {
-                title: 'Up Users',
-                value: 'upUsers'
-            },
-            {
-                title: 'Down Users',
-                value: 'downUsers'
-            },
-            {
-                title: 'Create User Id',
-                value: 'createUserId'
-            },
-            {
-                title: 'Create Date',
-                value: 'createDate'
-            },
-            {
-                title: 'Update Date',
-                value: 'updateDate'
-            }
-        ];
-
-
-        $scope.delete = function(blog) {
-            $scope.delBlog.data = blog;
-            $http.post('api/rs', $scope.delBlog)
-                    .success(function (data, status, headers, config) {
-                        $scope.blogs.splice($scope.blogs.indexOf(blog), 1);
-                        toaster.pop('success', status, data, 3000);
+        $scope.fetchResult = function () {
+            $http.post('api/rs', $scope.getBlogPost)
+                    .success(function (result, status, headers, config) {
+                        $scope.posts = result.posts;
+                        console.log($scope.posts);
+                        $scope.page.totalItems = result.total;
+                        console.log($scope.page.totalItems);
+                        $scope.page.numPages = Math.ceil($scope.page.totalItems / $scope.getBlogPost.data.pageSize);
+                        console.log($scope.page.numPages);
                     })
         };
 
@@ -76,37 +32,14 @@
             $location.path("/form/com.networknt.light.blog.post");
         };
 
-        $scope.update = function(blog) {
-            modelDataService.setModelData(blog);
+        $scope.update = function(post) {
+            modelDataService.setModelData(post);
             $location.path("/form/com.networknt.light.blog.update");
         };
 
-        //The function that is responsible of fetching the result from the server
-        $scope.fetchResult = function () {
-            $http.post('api/rs', $scope.getBlog)
-                    .success(function (result, status, headers, config) {
-                        $scope.blogs = result.blogs;
-                        $scope.hosts = result.hosts;
-                        $scope.page.totalItems = result.total;
-                        //console.log($scope.blogs);
-                        //console.log($scope.page.totalItems);
-                        $scope.page.numPages = Math.ceil($scope.page.totalItems / $scope.getBlog.data.pageSize);
-                        //console.log($scope.page.numPages);
-                    })
-        };
-
-        //call back function that we passed to our custom directive sortBy, will be called when clicking on any field to sort
-        $scope.onSort = function (sortedBy, sortDir) {
-            $scope.getBlog.data.sortDir = sortDir;
-            $scope.getBlog.data.sortedBy = sortedBy;
-            $scope.getBlog.data.pageNo = 1;
-            $scope.fetchResult();
-        };
-
-        //Will be called when filtering the grid, will reset the page number to one
-        $scope.filterResult = function () {
-            $scope.getBlog.data.pageNo = 1;
-            $scope.fetchResult();
+        $scope.view = function(post) {
+            modelDataService.setModelData(post);
+            $location.path("/page/com.networknt.light.blog.post.view");
         };
 
         $scope.pageChanged = function() {
@@ -118,7 +51,7 @@
     }]);
 </script>
 
-<div class="container" ng-controller="blogHomeCtrl">
+<div class="container" ng-controller="blogPostCtrl">
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right" ng-if="global.isLogin">
@@ -137,6 +70,8 @@
                         </li>
                     </ul>
                     -->
+                    <pagination total-items="page.totalItems" items-per-page="getBlogPost.data.pageSize" ng-model="getBlogPost.data.pageNo" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
+
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -177,10 +112,10 @@
                     <pagination total-items="page.totalItems" items-per-page="getBlog.data.pageSize" ng-model="getBlog.data.pageNo" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
                     <table>
                         <tr>
-                            <td>Page: {{getBlog.data.pageNo}} / {{page.numPages}}</td>
+                            <td>Page: {{getBlogPost.data.pageNo}} / {{page.numPages}}</td>
                             <td>&nbsp;</td>
                             <td>Page Size:</td>
-                            <td><input type="number" min="1" max="100" ng-change="filterResult()" ng-model="getBlog.data.pageSize"></td>
+                            <td><input type="number" min="1" max="100" ng-change="filterResult()" ng-model="getBlogPost.data.pageSize"></td>
                         </tr>
                     </table>
 
@@ -188,7 +123,7 @@
                 <tab heading="Hot">
                     <div>This is tab hot</div>
                 </tab>
-                <tab heading="Updated">
+                <tab heading="Tag">
                     <div>This is tab updated</div>
                 </tab>
                 <tab heading="My posts" ng-if="global.isLogin">
@@ -197,6 +132,8 @@
             </tabset>
         </div>
     </div>
+    <!--
+    This will be done in a web component later.
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="panel panel-default">
@@ -215,4 +152,5 @@
             </div>
         </div>
     </div>
+    -->
 </div> <!-- /container -->
