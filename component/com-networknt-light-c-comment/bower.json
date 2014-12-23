@@ -1,0 +1,36 @@
+{
+  "name": "com-networknt-light-comment",
+  "main": [
+    "com-networknt-light-comment.min.js"
+  ],
+  "version": "0.1.0",
+  "authors": [
+    "Steve Hu",
+    "stevehu@gmail.com"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "json",
+    "comment",
+    "forum",
+    "blog",
+    "news",
+    "light framework",
+    "OCA"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "coverage"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "angular-mocks": ">= 1.2"
+  }
+}

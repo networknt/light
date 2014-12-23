@@ -1,0 +1,32 @@
+{
+  "name": "com-networknt-light-c-example",
+  "main": [
+    "com-networknt-light-c-example.min.js"
+  ],
+  "version": "0.1.0",
+  "authors": [
+    "Steve Hu",
+    "stevehu@gmail.com"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "json",
+    "light framework",
+    "OCA"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "coverage"
+  ],
+  "dependencies": {
+  },
+  "devDependencies": {
+    "angular-mocks": ">= 1.2"
+  }
+}
