@@ -89,7 +89,7 @@ var lightApp = angular.module('lightApp', [
     uiTreeFilterSettingsProvider.descendantCollection = "children";
 })
 */
-.run(['authService', function (authService) {
+.run(['$rootScope', 'authService', function ($rootScope, authService) {
         authService.fillAuthData();
         //authService.logOut();
     }

@@ -13,6 +13,13 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/angular-sanitize/angular-sanitize.min.js',
+      'bower_components/angular-translate/angular-translate.min.js',
+      'bower_components/angular-strap/dist/angular-strap.min.js',
+      'bower_components/angular-strap/dist/angular-strap.tpl.min.js',
+      'bower_components/tv4/tv4.js',
+      'bower_components/objectpath/lib/ObjectPath.js',
+      'bower_components/angular-schema-form/dist/schema-form.js',
+      'bower_components/angular-schema-form/dist/bootstrap-decorator.min.js',
       'src/*.js',
       'src/**/*.html',
       'test/tests.js'
@@ -40,7 +47,7 @@ module.exports = function(config) {
 
     ngHtml2JsPreprocessor: {
       cacheIdFromPath: function(filepath) {
-        return 'tpl/' + filepath.substr(4);
+        return 'directives/decorators/bootstrap/file-reader/' + filepath.substr(4);
       },
       moduleName: 'templates'
     },
