@@ -4,6 +4,7 @@ import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,14 +44,27 @@ public class UpdMenuRule extends AbstractMenuRule implements Rule {
                             inputMap.put("responseCode", 400);
                             error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
                         } else {
+                            // need to make sure that all the menuItems exist and convert to id for event replay.
+                            List menuItemIds = new ArrayList<String>();
+                            List<String> menuItems = (List<String>)data.get("menuItems");
+                            for(String menuItemRid: menuItems) {
+                                ODocument menuItem = DbService.getODocumentByRid(menuItemRid);
+                                if(menuItem == null) {
+                                    error = "MenuItem with @rid " + menuItemRid + " cannot be found";
+                                    inputMap.put("responseCode", 404);
+                                    break;
+                                } else {
+                                    menuItemIds.add(menuItem.field("id"));
+                                }
+                            }
                             Map eventMap = getEventMap(inputMap);
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                             inputMap.put("eventMap", eventMap);
-                            eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                            eventData.put("host", data.get("host"));
+                            eventData.put("menuItemIds", menuItemIds);
                             eventData.put("updateDate", new java.util.Date());
                             eventData.put("updateUserId", user.get("userId"));
                         }
-
                     }
                 }
             }

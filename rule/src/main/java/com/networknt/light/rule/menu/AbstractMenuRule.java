@@ -289,11 +289,11 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
             if (oidMenu != null) {
                 ODocument menu = (ODocument) oidMenu.getRecord();
                 // update menuItems.
-                List inputItems = (List)data.get("menuItems");
-                if(inputItems != null && inputItems.size() > 0) {
+                List inputItemIds = (List)data.get("menuItemIds");
+                if(inputItemIds != null && inputItemIds.size() > 0) {
                     OIndex<?> menuItemIdIdx = db.getMetadata().getIndexManager().getIndex("MenuItem.id");
                     List menuItems = new ArrayList();
-                    for(Object obj : inputItems) {
+                    for(Object obj : inputItemIds) {
                         if(obj != null) {
                             String id = (String)obj;
                             OIdentifiable oidMenuItem = (OIdentifiable) menuItemIdIdx.get(id);
@@ -365,11 +365,10 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
             OIdentifiable oidMenuItem = (OIdentifiable) menuItemIdIdx.get(id);
             if(oidMenuItem != null) {
                 ODocument menuItem = oidMenuItem.getRecord();
-                List inputItems = (List)data.get("menuItems");
-                if(inputItems != null && inputItems.size() > 0) {
-                    List list = new ArrayList();
+                List inputItemIds = (List)data.get("menuItemIds");
+                if(inputItemIds != null && inputItemIds.size() > 0) {
                     List menuItems = new ArrayList();
-                    for(Object obj : inputItems) {
+                    for(Object obj : inputItemIds) {
                         if(obj != null) {
                             String menuItemId = (String)obj;
                             OIdentifiable oid = (OIdentifiable) menuItemIdIdx.get(menuItemId);

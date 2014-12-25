@@ -33,7 +33,7 @@ angular.module('lightApp')
             }
         };
     })
-    .factory('authInterceptorService', ['$q', '$injector','$location','localStorageService','toaster', function ($q, $injector, $location, localStorageService, toaster) {
+    .factory('authInterceptorService', ['$q', '$injector','$location', 'httpBuffer', 'localStorageService','toaster', function ($q, $injector, $location, httpBuffer, localStorageService, toaster) {
 
         var authInterceptorServiceFactory = {};
         var $http;
@@ -48,40 +48,55 @@ angular.module('lightApp')
         }
 
         var _responseError = function (rejection) {
+            console.log("responseError: rejection", rejection);
             var deferred = $q.defer();
             if (rejection.status === 401) {
                 var authService = $injector.get('authService');
                 if(rejection.data === 'token_expired') {
                     console.log("token expired, renewing...")
+                    httpBuffer.append(rejection.config, deferred);
+                    console.log("rejection and deferred are added to httpBuffer", rejection, deferred);
                     authService.refreshToken().then(function (response) {
-                        _retryHttpRequest(rejection.config, deferred);
+                        console.log("_responseError: successfully called refreshToken");
+                        // the updater function will put the renewed token into header of saved requests.
+                        httpBuffer.retryAll(function(config) {
+                            config.headers = config.headers || {};
+                            var authorizationData = localStorageService.get('authorizationData');
+                            if (authorizationData) {
+                                config.headers.Authorization = 'Bearer ' + authorizationData.token;
+                            }
+                            return config;
+                        });
                     }, function () {
+                        // failed to get refresh token somehow. go to login page.
                         toaster.pop('error', rejection.status, rejection.data, 5000);
+                        // abandon all the saved requests
+                        httpBuffer.rejectAll();
                         authService.logOut();
                         $location.path('/signin');
                         deferred.reject(rejection);
                     });
                 } else {
-                    // 401 but not token expired. might need proper role to perform the action.
+                    // 401 but not token expired the user is not logged in yet.
                     toaster.pop('error', rejection.status, rejection.data, 5000);
-                    authService.logOut();
+                    httpBuffer.rejectAll();
                     $location.path('/signin');
                     deferred.reject(rejection);
                 }
+            } else if (rejection.status === 403) {
+                // 403 forbidden. The user is logged in but doesn't have permission for the request.
+                // logout and redirect to login page.
+                toaster.pop('error', rejection.status, rejection.data, 5000);
+                httpBuffer.rejectAll();
+                authService.logOut();
+                $location.path('/signin');
+                deferred.reject(rejection);
             } else {
+                // some other errors, reject immediately.
                 toaster.pop('error', rejection.status, rejection.data, 5000);
                 deferred.reject(rejection);
             }
             return deferred.promise;
-        }
-
-        var _retryHttpRequest = function (config, deferred) {
-            $http = $http || $injector.get('$http');
-            $http(config).then(function (response) {
-                deferred.resolve(response);
-            }, function (response) {
-                deferred.reject(response);
-            });
         }
 
         authInterceptorServiceFactory.request = _request;
@@ -109,14 +124,11 @@ angular.module('lightApp')
 
         var _fillAuthData = function () {
             var authorizationData = localStorageService.get('authorizationData');
-            console.log('authorizationData', authorizationData);
+            console.log('_fillAuthData:authorizationData', authorizationData);
             if (authorizationData) {
                 _authentication.isAuth = true;
                 _authentication.useRefreshTokens = authorizationData.useRefreshTokens;
                 _authentication.currentUser = authorizationData.currentUser;
-                console.log('isAuth', _authentication.isAuth);
-                console.log('useRefreshTokens', _authentication.useRefreshTokens);
-                console.log('currentUser', _authentication.currentUser);
             }
         };
 
@@ -131,16 +143,20 @@ angular.module('lightApp')
             };
 
             var authorizationData = localStorageService.get('authorizationData');
-
+            console.log("authService:_refreshToken:authorizationData before refresh", authorizationData);
             if (authorizationData && authorizationData.useRefreshTokens) {
                 refreshTokenPost.data = {refreshToken : authorizationData.refreshToken, userId: authorizationData.currentUser.userId};
+                // The authorizationData must be removed before calling refreshToken api as the old expired token will be sent again
+                // and cause infinite loop. Once it is removed, not access token will be sent to the server along with the request.
                 localStorageService.remove('authorizationData');
                 $http = $http || $injector.get('$http');
                 $http.post('/api/rs', refreshTokenPost).success(function (response) {
                     _authentication.isAuth = true;
                     _authentication.currentUser = JSON.parse(base64.base64Decode(response.accessToken.split('.')[1])).user;
                     _authentication.useRefreuseshTokens = true;
-                    localStorageService.set('authorizationData', { token: response.accessToken, currentUser: _authentication.currentUser, refreshToken: response.refreshToken || '', useRefreshTokens: true });
+                    authorizationData.token = response.accessToken; // only access token is replaced.
+                    localStorageService.set('authorizationData', authorizationData);
+                    console.log("authService:_refreshToken:authrizationData after refresh", authorizationData);
                     deferred.resolve(response);
                 }).error(function (err, status) {
                     _logOut();
@@ -159,6 +175,63 @@ angular.module('lightApp')
 
         return authServiceFactory;
     }])
+    .factory('httpBuffer', ['$injector', function($injector) {
+        /** Holds all the requests, so they can be re-requested in future. */
+        var buffer = [];
+
+        /** Service initialized later because of circular dependency problem. */
+        var $http;
+
+        function retryHttpRequest(config, deferred) {
+            console.log("httpBuffer:retryHttpRequest config", config);
+            function successCallback(response) {
+                deferred.resolve(response);
+            }
+            function errorCallback(response) {
+                deferred.reject(response);
+            }
+            $http = $http || $injector.get('$http');
+            $http(config).then(successCallback, errorCallback);
+        }
+
+        return {
+            /**
+             * Appends HTTP request configuration object with deferred response attached to buffer.
+             */
+            append: function(config, deferred) {
+                console.log("httpBuffer.append is called", config, deferred);
+                buffer.push({
+                    config: config,
+                    deferred: deferred
+                });
+            },
+
+            /**
+             * Abandon or reject (if reason provided) all the buffered requests.
+             */
+            rejectAll: function(reason) {
+                console.log("httpBuffer.rejectAll is called", reason);
+                if (reason) {
+                    for (var i = 0; i < buffer.length; ++i) {
+                        buffer[i].deferred.reject(reason);
+                    }
+                }
+                buffer = [];
+            },
+
+            /**
+             * Retries all the buffered requests clears the buffer.
+             */
+            retryAll: function(updater) {
+                for (var i = 0; i < buffer.length; ++i) {
+                    console.log("httpBuffer.retryAll is called");
+                    retryHttpRequest(updater(buffer[i].config), buffer[i].deferred);
+                }
+                buffer = [];
+            }
+        };
+    }])
+
 /*
 .factory('restAPI', ['$resource',
     function ($resource) {

@@ -9,7 +9,7 @@
  */
 angular.module('lightApp')
     .controller('mainCtrl', ['$scope', '$http', function ($scope, $http) {
-
+        console.log("Now we are in mainCtrl");
         var getRecentPosts = {
             category : 'post',
             name : 'getRecentPosts',
@@ -20,7 +20,7 @@ angular.module('lightApp')
         $scope.forumPosts = [];
         $scope.newsPosts = [];
         $scope.blogPosts = [];
-
+        /*
         $http.post('api/rs', getRecentPosts)
             .success(function(result, status, headers, config) {
                 console.log(result);
@@ -28,5 +28,5 @@ angular.module('lightApp')
                 $scope.newsPosts = result.newsPosts;
                 $scope.blogPosts = result.blogPosts;
             });
-
+        */
     }]);

@@ -4,6 +4,7 @@ import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,12 +38,32 @@ public class UpdMenuItemRule extends AbstractMenuRule implements Rule {
                         error = "MenuItem with @rid " + rid + " cannot be found";
                         inputMap.put("responseCode", 404);
                     } else {
+                        // need to make sure that all the menuItems exist and convert to id for event replay.
+                        List menuItemIds = new ArrayList<String>();
+                        List<String> menuItems = (List<String>)data.get("menuItems");
+                        for(String menuItemRid: menuItems) {
+                            ODocument childItem = DbService.getODocumentByRid(menuItemRid);
+                            if(childItem == null) {
+                                error = "MenuItem with @rid " + menuItemRid + " cannot be found";
+                                inputMap.put("responseCode", 404);
+                                break;
+                            } else {
+                                menuItemIds.add(childItem.field("id"));
+                            }
+                        }
+
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
-                        eventData.putAll((Map<String, Object>)inputMap.get("data"));
                         eventData.put("id", menuItem.field("id"));
-                        // TODO remove host?
+                        eventData.put("path", data.get("path"));
+                        eventData.put("click", data.get("click"));
+                        eventData.put("tpl", data.get("tpl"));
+                        eventData.put("ctrl", data.get("ctrl"));
+                        eventData.put("left", data.get("left"));
+                        eventData.put("roles", data.get("roles"));
+                        eventData.put("menuItemIds", menuItemIds);
+                        // TODO remove host for owner?
                         eventData.put("updateDate", new java.util.Date());
                         eventData.put("updateUserId", user.get("userId"));
                     }

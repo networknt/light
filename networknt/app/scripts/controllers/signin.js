@@ -47,7 +47,7 @@ angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$h
                     if(angular.isDefined($scope.action[0].success)) {
                         $location.path($scope.action[0].success);
                     }
-                    console.log('authorizationData', localStorageService.get('authorizationData'));
+                    console.log('signinCtrl: authorizationData', localStorageService.get('authorizationData'));
                     //console.log(data);
                     //console.log(status);
                     //console.log(headers);
