@@ -1,13 +1,4 @@
 'use strict';
-
-/**
- * @ngdoc overview
- * @name lightApp
- * @description
- * # lightApp
- *
- * Main module of the application.
- */
 var lightApp = angular.module('lightApp', [
     'ngAnimate',
     'ngCookies',
@@ -24,15 +15,13 @@ var lightApp = angular.module('lightApp', [
     'hc.marked',
     'toaster',
     'schemaForm-marked',
-    'mgcrea.ngStrap.helpers.dimensions',
-    'mgcrea.ngStrap.helpers.parseOptions',
-    'mgcrea.ngStrap.tooltip',
-    'mgcrea.ngStrap.select',
-    'angular-loading-bar',
-    'LocalStorageModule',
+    'pascalprecht.translate',
+    'mgcrea.ngStrap',
     'schemaForm-datepicker',
     'schemaForm-datetimepicker',
-    'schemaForm-timepicker'
+    'schemaForm-timepicker',
+    'angular-loading-bar',
+    'LocalStorageModule'
 ])
 .config(['$httpProvider',
     function ($httpProvider) {
@@ -95,26 +84,5 @@ var lightApp = angular.module('lightApp', [
 */
 .run(['authService', function (authService) {
         authService.fillAuthData();
-        //authService.logOut();
     }
 ]);
-
-lightApp.service('signinService', function() {
-    //this is used to parse the profile
-    this.base64Decode = function(str) {
-        var output = str.replace('-', '+').replace('_', '/');
-        switch (output.length % 4) {
-            case 0:
-                break;
-            case 2:
-                output += '==';
-                break;
-            case 3:
-                output += '=';
-                break;
-            default:
-                throw 'Illegal base64url string!';
-        }
-        return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
-    };
-});

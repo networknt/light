@@ -17,7 +17,9 @@ var lightApp = angular.module('lightApp', [
     'schemaForm-marked',
     'pascalprecht.translate',
     'mgcrea.ngStrap',
+    'schemaForm-datepicker',
     'schemaForm-datetimepicker',
+    'schemaForm-timepicker',
     'angular-loading-bar',
     'LocalStorageModule'
 ])
