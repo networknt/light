@@ -9,7 +9,7 @@ angular.module('lightApp').controller('menuCtrl', ['$scope', '$http', 'authServi
         name : 'getMenu',
         readOnly: true,
         data : {
-            host : 'www.example.com'
+            host : 'injector'
         }
     };
 

@@ -199,7 +199,7 @@ angular.module('lightApp')
                     toggle: false
                 });
                 // Stupid hack to wait for DOM insertion prior to setting up plugin
-            }, 100);
+            }, 1);
         });
         $scope.$on('$emptiedNestedComments', function(nodes) {
             console.log("received $emptiedNestedComments");
