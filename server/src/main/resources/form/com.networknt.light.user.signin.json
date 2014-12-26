@@ -9,9 +9,7 @@
             "category" : "user",
             "name" : "signInUser",
             "readOnly": false,
-            "title" : "Sign In",
-            "success" : "/page/com.networknt.light.user.home",
-            "error" : "/"
+            "title" : "Sign In"
         }],
         "schema": {
             "type": "object",

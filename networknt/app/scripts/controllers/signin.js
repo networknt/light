@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$http', '$location', 'localStorageService', 'base64', 'authService', 'toaster', function($rootScope, $scope, $http, $location, localStorageService, base64, authService, toaster) {
+angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$http', '$location', 'localStorageService', 'base64', 'authService', 'httpBuffer', 'toaster', function($rootScope, $scope, $http, $location, localStorageService, base64, authService, httpBuffer, toaster) {
     $scope.message = '';
     $scope.error = false;
 
@@ -44,9 +44,7 @@ angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$h
                     authService.authentication.currentUser = JSON.parse(base64.base64Decode(data.accessToken.split('.')[1])).user;
                     authService.authentication.useRefreshTokens = $scope.modelData.rememberMe;
                     localStorageService.set('authorizationData', { token: data.accessToken, currentUser: authService.authentication.currentUser, refreshToken: data.refreshToken || '', useRefreshTokens: authService.authentication.useRefreshTokens  });
-                    if(angular.isDefined($scope.action[0].success)) {
-                        $location.path($scope.action[0].success);
-                    }
+                    httpBuffer.redirectToAttemptedUrl();
                     console.log('signinCtrl: authorizationData', localStorageService.get('authorizationData'));
                     //console.log(data);
                     //console.log(status);
@@ -55,6 +53,7 @@ angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$h
                 })
                 .error(function (data, status, headers, config) {
                     authService.logOut();
+                    httpBuffer.rejectAll();
                     if(angular.isDefined($scope.action[0].error)) {
                         $location.path($scope.action[0].error);
                     }

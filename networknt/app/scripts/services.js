@@ -68,10 +68,12 @@ angular.module('lightApp')
                             return config;
                         });
                     }, function () {
-                        // failed to get refresh token somehow. go to login page.
+                        // failed to get refresh token somehow. Maybe didn't check remember me. go to login page.
                         toaster.pop('error', rejection.status, rejection.data, 5000);
+                        console.log("_responseError failed to get refresh token. Maybe didn't check remember me");
                         // abandon all the saved requests
                         httpBuffer.rejectAll();
+                        httpBuffer.saveAttemptUrl();
                         authService.logOut();
                         $location.path('/signin');
                         deferred.reject(rejection);
@@ -80,6 +82,7 @@ angular.module('lightApp')
                     // 401 but not token expired the user is not logged in yet.
                     toaster.pop('error', rejection.status, rejection.data, 5000);
                     httpBuffer.rejectAll();
+                    httpBuffer.saveAttemptUrl();
                     $location.path('/signin');
                     deferred.reject(rejection);
                 }
@@ -88,6 +91,7 @@ angular.module('lightApp')
                 // logout and redirect to login page.
                 toaster.pop('error', rejection.status, rejection.data, 5000);
                 httpBuffer.rejectAll();
+                httpBuffer.saveAttemptUrl();
                 authService.logOut();
                 $location.path('/signin');
                 deferred.reject(rejection);
@@ -163,6 +167,7 @@ angular.module('lightApp')
                     deferred.reject(err);
                 });
             } else {
+                console.log("not use refresh token.");
                 deferred.reject();
             }
             return deferred.promise;
@@ -178,9 +183,11 @@ angular.module('lightApp')
     .factory('httpBuffer', ['$injector', function($injector) {
         /** Holds all the requests, so they can be re-requested in future. */
         var buffer = [];
+        var attemptUrl = '';
 
         /** Service initialized later because of circular dependency problem. */
         var $http;
+        var $location;
 
         function retryHttpRequest(config, deferred) {
             console.log("httpBuffer:retryHttpRequest config", config);
@@ -228,6 +235,20 @@ angular.module('lightApp')
                     retryHttpRequest(updater(buffer[i].config), buffer[i].deferred);
                 }
                 buffer = [];
+            },
+
+            saveAttemptUrl: function() {
+                $location = $location || $injector.get('$location');
+                if($location.path().toLowerCase() != '/signin') {
+                    attemptUrl = $location.path();
+                } else {
+                    attemptUrl = '/page/com.networknt.light.user.home';
+                }
+            },
+
+            redirectToAttemptedUrl: function() {
+                $location = $location || $injector.get('$location');
+                $location.path(attemptUrl);
             }
         };
     }])
