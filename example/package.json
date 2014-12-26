@@ -1,45 +1,35 @@
 {
-  "name": "web",
-  "version": "0.0.0",
-  "dependencies": {},
-  "devDependencies": {
-    "connect-modrewrite": "^0.7.7",
-    "grunt": "^0.4.1",
-    "grunt-autoprefixer": "^0.7.3",
-    "grunt-concurrent": "^0.5.0",
-    "grunt-contrib-clean": "^0.5.0",
-    "grunt-contrib-concat": "^0.4.0",
-    "grunt-contrib-connect": "^0.7.1",
-    "grunt-contrib-copy": "^0.5.0",
-    "grunt-contrib-cssmin": "^0.9.0",
-    "grunt-contrib-htmlmin": "^0.3.0",
-    "grunt-contrib-imagemin": "^0.7.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-uglify": "^0.4.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-filerev": "^0.2.1",
-    "grunt-google-cdn": "^0.4.0",
-    "grunt-karma": "^0.8.3",
-    "grunt-newer": "^0.7.0",
-    "grunt-ngmin": "^0.0.3",
-    "grunt-svgmin": "^0.4.0",
-    "grunt-usemin": "^2.1.1",
-    "grunt-wiredep": "^1.7.0",
-    "imagemin-gifsicle": "^4.0.0",
-    "imagemin-jpegtran": "^4.0.0",
-    "imagemin-optipng": "^4.0.0",
-    "imagemin-pngquant": "^4.0.0",
-    "jshint-stylish": "^0.2.0",
-    "karma": "^0.12.19",
-    "karma-jasmine": "^0.1.5",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "load-grunt-tasks": "^0.4.0",
-    "time-grunt": "^0.3.1"
-  },
-  "engines": {
-    "node": ">=0.10.0"
-  },
-  "scripts": {
-    "test": "grunt test"
-  }
+    "name": "example",
+    "version": "0.1.0",
+    "description": "example web site",
+    "scripts": {
+        "test": "rm -fr coverage && ./node_modules/karma/bin/karma start --single-run --browsers PhantomJS karma.conf.js"
+    },
+    "author": "Steve Hu",
+    "license": "MIT",
+    "devDependencies": {
+        "chai": "^1.9.0",
+        "coveralls": "^2.11.0",
+        "gulp": "^3.5.6",
+        "gulp-angular-templatecache": "^1.2.1",
+        "gulp-concat": "^2.2.0",
+        "gulp-jscs": "^1.1.0",
+        "gulp-minify-html": "^0.1.1",
+        "gulp-uglify": "^0.2.1",
+        "gulp-webserver": "^0.9.0",
+        "karma": "^0.12.23",
+        "karma-chai-sinon": "^0.1.3",
+        "karma-chrome-launcher": "^0.1.4",
+        "karma-coverage": "^0.2.1",
+        "karma-growler-reporter": "0.0.1",
+        "karma-jasmine": "^0.1.5",
+        "karma-mocha": "^0.1.3",
+        "karma-ng-html2js-preprocessor": "^0.1.0",
+        "karma-phantomjs-launcher": "^0.1.4",
+        "mocha": "^1.18.0",
+        "mocha-lcov-reporter": "0.0.1",
+        "sinon": "^1.9.0",
+        "sinon-chai": "^2.5.0",
+        "streamqueue": "0.0.5"
+    }
 }
