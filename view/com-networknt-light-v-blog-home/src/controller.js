@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
     angular.module('lightApp')
-        .controller('BlogCtrl', function ($scope, $http, $location, toaster, modelDataService) {
+        .controller('BlogCtrl', ['$scope', '$http', '$location', 'authService', 'toaster', 'modelDataService', function ($scope, $http, $location, authService, toaster, modelDataService) {
 
             $scope.getBlog = {
                 category : 'blog',
@@ -17,10 +17,8 @@
             };
             $scope.page = { maxSize: 10, totalItems: 0, numPages: 0 };
             $scope.blogs = [];
+            $scope.allowPost = false;
 
-            $scope.allowPost = function () {
-                return true;
-            }
             $scope.post = function(index) {
                 console.log(index);
                 if(angular.isDefined(index)) {
@@ -36,14 +34,12 @@
                     .success(function (result, status, headers, config) {
                         $scope.blogs = result.blogs;
                         $scope.page.totalItems = result.total;
+                        $scope.allowPost = result.allowPost;
                         console.log($scope.blogs);
                         console.log($scope.page.totalItems);
+                        console.log($scope.allowPost);
                         $scope.page.numPages = Math.ceil($scope.page.totalItems / $scope.getBlog.data.pageSize);
-                        //console.log($scope.page.numPages);
-                    }).error(function (data, status, headers, config) {
-                        console.log("enter error!!!");
-                    }
-                );
+                    })
             };
 
             //call back function that we passed to our custom directive sortBy, will be called when clicking on any field to sort
@@ -67,5 +63,5 @@
             //manually select a page to trigger an ajax request to populate the grid on page load
             $scope.pageChanged();
 
-        });
+        }]);
 })(window.angular);

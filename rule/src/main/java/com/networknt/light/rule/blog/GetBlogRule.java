@@ -17,7 +17,22 @@ public class GetBlogRule extends AbstractBlogRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         Map<String, Object> blogMap = ServiceLocator.getInstance().getMemoryImage("blogMap");
+        // determine if the current user can post.
+        boolean allowPost = false;
         String host = (String)data.get("host");
+        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        if(payload != null) {
+            Map<String,Object> user = (Map<String, Object>)payload.get("user");
+            List roles = (List)user.get("roles");
+            if(roles.contains("owner")) {
+                allowPost = true;
+            } else if(roles.contains("admin") || roles.contains("blowAdmin") || roles.contains("blogUser")){
+                if(host.equals(user.get("host"))) {
+                    allowPost = true;
+                }
+            }
+        }
+
         List<String> newList = (List<String>)blogMap.get(host + "newList");
         if(newList == null) {
             refreshCache(host);
@@ -56,6 +71,7 @@ public class GetBlogRule extends AbstractBlogRule implements Rule {
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", total);
             result.put("blogs", blogs);
+            result.put("allowPost", allowPost);
             Set hosts = ServiceLocator.getInstance().getHostMap().keySet();
             result.put("hosts", hosts);
             inputMap.put("result", mapper.writeValueAsString(result));

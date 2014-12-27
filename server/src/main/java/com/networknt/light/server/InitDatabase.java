@@ -1012,6 +1012,11 @@ public class InitDatabase {
             blogAdmin.field("desc", "admin user that can do anything with blog");
             blogAdmin.save();
 
+            ODocument blogUser = new ODocument(schema.getClass("Role"));
+            blogUser.field("id", "blogUser");
+            blogUser.field("desc", "user that can post blog and update his own blog");
+            blogUser.save();
+
             ODocument categoryAdmin = new ODocument(schema.getClass("Role"));
             categoryAdmin.field("id", "categoryAdmin");
             categoryAdmin.field("desc", "admin category for the host");
