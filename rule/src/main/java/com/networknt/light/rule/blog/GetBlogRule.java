@@ -77,9 +77,14 @@ public class GetBlogRule extends AbstractBlogRule implements Rule {
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         } else {
-            inputMap.put("result", "No blog can be found.");
-            inputMap.put("responseCode", 404);
-            return false;
+            // there is no blog available. but still need to return allowPost and hosts
+            Map<String, Object> result = new HashMap<String, Object>();
+            result.put("total", 0);
+            result.put("allowPost", allowPost);
+            Set hosts = ServiceLocator.getInstance().getHostMap().keySet();
+            result.put("hosts", hosts);
+            inputMap.put("result", mapper.writeValueAsString(result));
+            return true;
         }
     }
 }

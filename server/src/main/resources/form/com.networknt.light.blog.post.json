@@ -64,6 +64,10 @@
                                         "key": "summary",
                                         "type": "ace",
                                         "style": {"height" : "300px"},
+                                        "aceOptions": {
+                                            "theme": "eclipse",
+                                            "mode" : "markdown"
+                                        },
                                         "onChange": "updSummaryLength(modelValue)",
                                         "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
                                     },

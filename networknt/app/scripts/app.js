@@ -1,13 +1,4 @@
 'use strict';
-
-/**
- * @ngdoc overview
- * @name lightApp
- * @description
- * # lightApp
- *
- * Main module of the application.
- */
 var lightApp = angular.module('lightApp', [
     'ngAnimate',
     'ngCookies',
@@ -26,7 +17,9 @@ var lightApp = angular.module('lightApp', [
     'schemaForm-marked',
     'pascalprecht.translate',
     'mgcrea.ngStrap',
+    'schemaForm-datepicker',
     'schemaForm-datetimepicker',
+    'schemaForm-timepicker',
     'angular-loading-bar',
     'LocalStorageModule'
 ])
@@ -87,12 +80,6 @@ var lightApp = angular.module('lightApp', [
       });
     $locationProvider.html5Mode(true);
 }])
-/*
-.config(function (uiTreeFilterSettingsProvider) {
-    uiTreeFilterSettingsProvider.addresses = ['id', 'desc'];
-    uiTreeFilterSettingsProvider.descendantCollection = "children";
-})
-*/
 .run(['$rootScope', 'authService', function ($rootScope, authService) {
         console.log("Angular is running...");
         authService.fillAuthData();
