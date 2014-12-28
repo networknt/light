@@ -446,6 +446,9 @@ public class InitDatabase {
             blog.createProperty("parent", OType.LINK);
             blog.createProperty("children", OType.LINKSET);
             blog.createProperty("attributes", OType.EMBEDDEDMAP);
+            blog.createProperty("upUsers", OType.LINKSET);
+            blog.createProperty("downUsers", OType.LINKSET);
+            blog.createProperty("rank", OType.INTEGER);
             blog.createProperty("posts", OType.LINKLIST);
             blog.createProperty("createDate", OType.DATETIME);
             blog.createProperty("createUserId", OType.STRING);
@@ -478,6 +481,9 @@ public class InitDatabase {
             forum.createProperty("parent", OType.LINK);
             forum.createProperty("children", OType.LINKSET);
             forum.createProperty("attributes", OType.EMBEDDEDMAP);
+            forum.createProperty("upUsers", OType.LINKSET);
+            forum.createProperty("downUsers", OType.LINKSET);
+            forum.createProperty("rank", OType.INTEGER);
             forum.createProperty("posts", OType.LINKLIST);
             forum.createProperty("createDate", OType.DATETIME);
             forum.createProperty("createUserId", OType.STRING);
@@ -510,6 +516,9 @@ public class InitDatabase {
             news.createProperty("parent", OType.STRING);
             news.createProperty("children", OType.LINKSET);
             news.createProperty("attributes", OType.EMBEDDEDMAP);
+            news.createProperty("upUsers", OType.LINKSET);
+            news.createProperty("downUsers", OType.LINKSET);
+            news.createProperty("rank", OType.INTEGER);
             news.createProperty("posts", OType.STRING);
             news.createProperty("createDate", OType.DATETIME);
             news.createProperty("createUserRid", OType.STRING);

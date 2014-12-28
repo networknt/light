@@ -109,7 +109,7 @@ public class BlogRuleTest extends TestCase {
             // del post if it exists in case previous test failed and the post is not removed.
             {
                 DelBlogEvRule rule = new DelBlogEvRule();
-                rule.delBlogByHost("www.example.com");
+                //rule.delBlogByHost("www.example.com");
             }
 
             // add post

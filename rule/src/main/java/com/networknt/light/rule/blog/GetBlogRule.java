@@ -1,6 +1,7 @@
 package com.networknt.light.rule.blog;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.networknt.light.rule.AbstractBfnRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.injector.main.feed.FeedRule;
 import com.networknt.light.util.ServiceLocator;
@@ -12,7 +13,12 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by husteve on 10/8/2014.
  */
-public class GetBlogRule extends AbstractBlogRule implements Rule {
+public class GetBlogRule extends AbstractBfnRule implements Rule {
+    public boolean execute (Object ...objects) throws Exception {
+        return getBfn("blog", objects);
+    }
+
+    /*
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
@@ -87,4 +93,6 @@ public class GetBlogRule extends AbstractBlogRule implements Rule {
             return true;
         }
     }
+    */
+
 }

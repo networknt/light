@@ -19,6 +19,19 @@
             $scope.blogs = [];
             $scope.allowPost = false;
 
+
+            $scope.publicProfile = function(userId) {
+                console.log("publicProfile is called");
+                modelDataService.setModelData(userId);
+                $location.path("/page/com.networknt.light.user.public.profile");
+            };
+
+            $scope.view = function(post) {
+                console.log("view is called");
+                modelDataService.setModelData(post);
+                $location.path("/page/com.networknt.light.blog.post.view");
+            };
+
             $scope.post = function(index) {
                 console.log(index);
                 if(angular.isDefined(index)) {

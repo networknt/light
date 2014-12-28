@@ -45,7 +45,7 @@ public class BlogCacheSizeTest extends TestCase {
 
         System.gc();
         long before = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
-        rule.refreshCache("www.example.com");
+        //rule.refreshCache("www.example.com");
         System.gc();
         long after = Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory();
         System.out.println(after - before);

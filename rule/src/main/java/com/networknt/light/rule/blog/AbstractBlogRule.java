@@ -77,6 +77,68 @@ public abstract class AbstractBlogRule extends AbstractRule implements Rule {
         return map;
     }
 
+    protected ODocument addBlog(Map<String, Object> data) throws Exception {
+        ODocument blog = null;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OSchema schema = db.getMetadata().getSchema();
+        try {
+            db.begin();
+            OIndex<?> blogHostIdIdx = db.getMetadata().getIndexManager().getIndex("blogHostIdIdx");
+            blog = new ODocument(schema.getClass("Blog"));
+            blog.field("host", data.get("host"));
+            blog.field("id", data.get("id"));
+            if(data.get("desc") != null) blog.field("desc", data.get("desc"));
+            if(data.get("attributes") != null) blog.field("attributes", data.get("attributes"));
+            blog.field("createDate", data.get("createDate"));
+            blog.field("createUserId", data.get("createUserId"));
+            // parent
+            if(data.get("parent") != null) {
+                OCompositeKey parentKey = new OCompositeKey(data.get("host"), data.get("parent"));
+                OIdentifiable parentOid = (OIdentifiable) blogHostIdIdx.get(parentKey);
+                if(parentOid != null) {
+                    ODocument parent = (ODocument)parentOid.getRecord();
+                    blog.field("parent", parent);
+                    // update parent with the children
+                    Set children = parent.field("children");
+                    if(children != null) {
+                        children.add(blog);
+                    } else {
+                        children = new HashSet<ODocument>();
+                        children.add(blog);
+                        parent.field("children", children);
+                    }
+                    parent.save();
+                }
+            }
+            // children
+            List<String> childrenIds = (List<String>)data.get("children");
+            if(childrenIds != null) {
+                Set children = new HashSet<ODocument>();
+                for(String childId: childrenIds) {
+                    OCompositeKey childKey = new OCompositeKey(data.get("host"), childId);
+                    OIdentifiable childOid = (OIdentifiable) blogHostIdIdx.get(childKey);
+                    if(childOid != null) {
+                        ODocument child = (ODocument)childOid.getRecord();
+                        children.add(child);
+                        child.field("parent", blog);
+                        child.save();
+                    }
+                }
+                blog.field("children", children);
+            }
+            blog.save();
+            db.commit();
+        } catch (Exception e) {
+            db.rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            db.close();
+        }
+        return blog;
+    }
+
+    /*
     protected void addBlog(Map<String, Object> data) throws Exception {
         ODocument blog = addBlogDb(data);
         // rebuild cache in memory.
@@ -103,8 +165,8 @@ public abstract class AbstractBlogRule extends AbstractRule implements Rule {
         // TODO build hot list
 
     }
-
-
+    */
+    /*
     protected ODocument addBlogDb(Map<String, Object> data) throws Exception {
         ODocument blog = null;
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
@@ -171,7 +233,51 @@ public abstract class AbstractBlogRule extends AbstractRule implements Rule {
         }
         return blog;
     }
+    */
 
+    protected boolean delBlog(Map<String, Object> data) throws Exception {
+        boolean result = false;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            db.begin();
+            OIndex<?> blogHostIdIdx = db.getMetadata().getIndexManager().getIndex("blogHostIdIdx");
+            OCompositeKey key = new OCompositeKey(data.get("host"), data.get("id"));
+            OIdentifiable oid = (OIdentifiable) blogHostIdIdx.get(key);
+            if (oid != null) {
+                ODocument blog = (ODocument) oid.getRecord();
+                // update references from parent and children
+                ODocument parent = blog.field("parent");
+                if(parent != null) {
+                    Set children = parent.field("children");
+                    if(children != null && children.size() > 0) {
+                        children.remove(blog);
+                    }
+                    parent.save();
+                }
+                Set<ODocument> children = blog.field("children");
+                if(children != null && children.size() > 0) {
+                    for(ODocument child: children) {
+                        if(child != null) {
+                            child.removeField("parent");
+                            child.save();
+                        }
+
+                    }
+                }
+                blog.delete();
+                db.commit();
+                result = true;
+            }
+        } catch (Exception e) {
+            db.rollback();
+            e.printStackTrace();
+            throw e;
+        } finally {
+            db.close();
+        }
+        return result;
+    }
+    /*
     protected void delBlogUpdCache(String blogRid, String host) throws Exception {
         delBlogDb(blogRid);
         // rebuild cache in memory.
@@ -190,7 +296,8 @@ public abstract class AbstractBlogRule extends AbstractRule implements Rule {
         // TODO build hot list
 
     }
-
+    */
+    /*
     protected boolean delBlogDb(String blogRid) throws Exception {
         boolean result = false;
         ODocument blog = null;
@@ -223,8 +330,8 @@ public abstract class AbstractBlogRule extends AbstractRule implements Rule {
         }
         return result;
     }
-
-
+    */
+    /*
     protected int delBlogByHost(String host) throws Exception {
         int recordsUpdated = 0;
         String sql = "DELETE FROM Blog WHERE host = '" + host + "'";
@@ -249,7 +356,7 @@ public abstract class AbstractBlogRule extends AbstractRule implements Rule {
         }
         return recordsUpdated;
     }
-
+    */
     protected void updBlog(Map<String, Object> data, String userRid, String userId) throws Exception {
         ODocument blog = updBlogDb(data, userRid, userId);
         String blogRid = blog.field("@rid").toString();

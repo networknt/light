@@ -1,6 +1,11 @@
 'use strict';
 
 angular.module('lightApp')
+    .filter('timeago', function() {
+        return function(date) {
+            return moment(date).fromNow();
+        };
+    })
     .filter('formatDate', ['$filter', '$locale',
         function ($filter, $locale) {
             return function (date, full) {

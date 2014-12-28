@@ -183,7 +183,7 @@ public class ForumRuleTest extends TestCase {
             AddForumRule rule = new AddForumRule();
             ruleResult = rule.execute(jsonMap);
             assertFalse(ruleResult);
-            assertEquals(401, jsonMap.get("responseCode"));
+            assertEquals(403, jsonMap.get("responseCode"));
         }
 
         // add forum6 by forumAdmin
