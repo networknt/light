@@ -1,8 +1,12 @@
 package com.networknt.light.rule.db;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
+import com.networknt.light.util.Util;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,24 +27,17 @@ public class ReplayEventRule extends AbstractDbRule implements Rule {
             Map<String, Object> user = (Map<String, Object>)payload.get("user");
             List roles = (List)user.get("roles");
             if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("dbAdmin")) {
-                error = "Role owner or admin or dbAdmin is required to add schema";
-                inputMap.put("responseCode", 401);
+                error = "Role owner or admin or dbAdmin is required to replay events";
+                inputMap.put("responseCode", 403);
             } else {
+                String content = (String)data.get("content");
+                // content may contains several events, parse it.
+                List<Map<String, Object>> events = mapper.readValue(content,
+                    new TypeReference<List<HashMap<String, Object>>>() {});
 
-                String path = (String)data.get("path");
-                if(path != null) {
-                    // make sure that the Path exists.
-                    File file = new File(path);
-                    if (file.exists() && file.isDirectory()) {
-                        String result = exportEvent(path);
-                        inputMap.put("result", result);
-                    } else {
-                        error = "Path must exist and is a folder";
-                        inputMap.put("responseCode", 400);
-                    }
-                } else {
-                    error = "Path is required";
-                    inputMap.put("responseCode", 400);
+                // replay event one by one.
+                for(Map<String, Object> event: events) {
+                    RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);
                 }
             }
         }

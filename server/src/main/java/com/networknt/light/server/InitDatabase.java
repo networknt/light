@@ -1372,6 +1372,20 @@ public class InitDatabase {
             m_edibleforestgarden.field("menuItems", menuItems);
             m_edibleforestgarden.save();
 
+            ODocument m_networknt = new ODocument(schema.getClass("Menu"));
+            m_networknt.field("host", "www.networknt.com");
+            m_networknt.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            m_networknt.field("createDate", new java.util.Date());
+            m_networknt.field("menuItems", menuItems);
+            m_networknt.save();
+
+            ODocument m_example = new ODocument(schema.getClass("Menu"));
+            m_example.field("host", "example");
+            m_example.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            m_example.field("createDate", new java.util.Date());
+            m_example.field("menuItems", menuItems);
+            m_example.save();
+
             // create a counter for feed injector requestId
             ODocument requestId = new ODocument(schema.getClass("Counter"));
             requestId.field("name", "injector.requestId");
