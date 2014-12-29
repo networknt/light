@@ -9,18 +9,14 @@ angular.module('lightApp').controller('menuCtrl', ['$scope', '$http', 'authServi
         name : 'getMenu',
         readOnly: true,
         data : {
-            host : 'injector'
+            host : 'example'
         }
     };
 
     $http.post('api/rs', getMenuPost)
         .success(function(result, status, headers, config) {
             $scope.tree = result.menuItems;
-            //console.log($scope.tree);
-        })
-        .error(function(data, status, headers, config) {
-        }
-    );
+        });
 
     $scope.toggleCollapsed = function () {
         $scope.menuSettings.isCollapsed =  !$scope.menuSettings.isCollapsed;

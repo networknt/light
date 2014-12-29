@@ -23,20 +23,20 @@ var lightApp = angular.module('lightApp', [
     'angular-loading-bar',
     'LocalStorageModule'
 ])
-    .config(['$httpProvider',
-        function ($httpProvider) {
-            $httpProvider.interceptors.push('authInterceptorService');
-        }
-    ])
-    .config(['$routeProvider', '$locationProvider', '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', function ($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
+.config(['$httpProvider',
+    function ($httpProvider) {
+        $httpProvider.interceptors.push('authInterceptorService');
+    }
+])
+.config(['$routeProvider', '$locationProvider', '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', function ($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
 
-        // Notice that the registration methods on the
-        // module are now being overridden by their provider equivalents
-        lightApp.controller = $controllerProvider.register;
-        lightApp.directive  = $compileProvider.directive;
-        lightApp.filter     = $filterProvider.register;
-        lightApp.factory    = $provide.factory;
-        lightApp.service    = $provide.service;
+    // Notice that the registration methods on the
+    // module are now being overridden by their provider equivalents
+    lightApp.controller = $controllerProvider.register;
+    lightApp.directive  = $compileProvider.directive;
+    lightApp.filter     = $filterProvider.register;
+    lightApp.factory    = $provide.factory;
+    lightApp.service    = $provide.service;
 
         $routeProvider
             .when('/', {

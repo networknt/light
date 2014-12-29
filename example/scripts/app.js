@@ -76,13 +76,8 @@ var lightApp = angular.module('lightApp', [
       });
     $locationProvider.html5Mode(true);
 }])
-/*
-.config(function (uiTreeFilterSettingsProvider) {
-    uiTreeFilterSettingsProvider.addresses = ['id', 'desc'];
-    uiTreeFilterSettingsProvider.descendantCollection = "children";
-})
-*/
-.run(['authService', function (authService) {
+.run(['$rootScope', 'authService', function ($rootScope, authService) {
+        console.log("Angular is running...");
         authService.fillAuthData();
     }
 ]);

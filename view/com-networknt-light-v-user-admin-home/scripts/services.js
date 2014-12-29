@@ -41,7 +41,7 @@ angular.module('lightApp')
         var _request = function (config) {
             config.headers = config.headers || {};
             var authorizationData = localStorageService.get('authorizationData');
-            console.log('config', config);
+            //console.log('config', config);
             // TODO Do not put access token into header of refresh token post. In this case,
             // we don't need to remove the authorizationData before sending refresh token post.
             // chances are some other requests might be sent during the time slot and got login

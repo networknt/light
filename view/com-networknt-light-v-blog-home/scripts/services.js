@@ -41,7 +41,16 @@ angular.module('lightApp')
         var _request = function (config) {
             config.headers = config.headers || {};
             var authorizationData = localStorageService.get('authorizationData');
+            //console.log('config', config);
+            // TODO Do not put access token into header of refresh token post. In this case,
+            // we don't need to remove the authorizationData before sending refresh token post.
+            // chances are some other requests might be sent during the time slot and got login
+            // is required error and forced to login page.
+            // TODO I really don't like this checking. need to find another way? backend?
             if (authorizationData) {
+                if(angular.isDefined(config.data) && angular.isDefined(config.data.name) && config.data.name === 'refreshToken') {
+                    return config;
+                }
                 config.headers.Authorization = 'Bearer ' + authorizationData.token;
             }
             return config;
@@ -152,7 +161,9 @@ angular.module('lightApp')
                 refreshTokenPost.data = {refreshToken : authorizationData.refreshToken, userId: authorizationData.currentUser.userId};
                 // The authorizationData must be removed before calling refreshToken api as the old expired token will be sent again
                 // and cause infinite loop. Once it is removed, not access token will be sent to the server along with the request.
-                localStorageService.remove('authorizationData');
+                // TODO but we have another issue that some other requests might be sent during this time slot. It is better to check
+                // refresh token command in the request intercpetor.
+                //localStorageService.remove('authorizationData');
                 $http = $http || $injector.get('$http');
                 $http.post('/api/rs', refreshTokenPost).success(function (response) {
                     _authentication.isAuth = true;

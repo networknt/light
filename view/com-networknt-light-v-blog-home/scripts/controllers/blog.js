@@ -1,12 +1,5 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name lightApp.controller:BlogCtrl
- * @description
- * # BlogCtrl
- * Controller of the lightApp
- */
 angular.module('lightApp')
     .controller('BlogCtrl', function ($scope, $http, $location, toaster, modelDataService) {
 
