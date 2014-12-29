@@ -41,17 +41,18 @@ public class UpdMenuItemRule extends AbstractMenuRule implements Rule {
                         // need to make sure that all the menuItems exist and convert to id for event replay.
                         List menuItemIds = new ArrayList<String>();
                         List<String> menuItems = (List<String>)data.get("menuItems");
-                        for(String menuItemRid: menuItems) {
-                            ODocument childItem = DbService.getODocumentByRid(menuItemRid);
-                            if(childItem == null) {
-                                error = "MenuItem with @rid " + menuItemRid + " cannot be found";
-                                inputMap.put("responseCode", 404);
-                                break;
-                            } else {
-                                menuItemIds.add(childItem.field("id"));
+                        if(menuItems != null && menuItems.size() > 0) {
+                            for(String menuItemRid: menuItems) {
+                                ODocument childItem = DbService.getODocumentByRid(menuItemRid);
+                                if(childItem == null) {
+                                    error = "MenuItem with @rid " + menuItemRid + " cannot be found";
+                                    inputMap.put("responseCode", 404);
+                                    break;
+                                } else {
+                                    menuItemIds.add(childItem.field("id"));
+                                }
                             }
                         }
-
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
