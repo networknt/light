@@ -87,9 +87,13 @@ public class InitDatabase {
             }
             OClass config = schema.createClass("Config");
             config.createProperty("host", OType.STRING);
+            config.createProperty("app", OType.STRING);
             config.createProperty("category", OType.STRING);
-            config.createProperty("key", OType.STRING);
-            config.createProperty("value", OType.STRING);
+            config.createProperty("name", OType.STRING);
+            config.createProperty("version", OType.STRING);
+
+            config.createProperty("id", OType.STRING);
+            config.createProperty("properties", OType.EMBEDDEDMAP);
             config.createProperty("createUserId", OType.STRING);
             config.createProperty("createDate", OType.DATETIME);
             config.createProperty("updateUserId", OType.STRING);

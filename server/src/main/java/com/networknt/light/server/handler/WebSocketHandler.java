@@ -1,26 +1,19 @@
 package com.networknt.light.server.handler;
 
 import com.networknt.light.server.LightServer;
-import com.networknt.light.server.ServerConstants;
-import com.networknt.light.util.ServiceLocator;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
 import io.undertow.websockets.WebSocketConnectionCallback;
 import io.undertow.websockets.core.*;
 import io.undertow.websockets.spi.WebSocketHttpExchange;
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * Created by husteve on 8/7/14.
  */
 public class WebSocketHandler implements WebSocketConnectionCallback {
-    private static final Logger logger = Logger.getLogger(WebSocketHandler.class);
+    static final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
 
     public WebSocketHandler() {
     }
@@ -28,7 +21,10 @@ public class WebSocketHandler implements WebSocketConnectionCallback {
     @Override
     public void onConnect(WebSocketHttpExchange exchange, WebSocketChannel channel) {
         logger.info("Connecting to websocket server.");
-        // Validate origin header (security!)
+        // Validate if access token is available. Do I need to validate if the request comes from
+        // one of configured hosts?
+
+
         String originHeader = exchange.getRequestHeader("Origin");
         boolean allowedOriginHeader = (originHeader == null ||
                 LightServer.WEBSOCKET_ALLOWED_ORIGIN_HEADER.matcher(originHeader).matches());
@@ -51,7 +47,7 @@ public class WebSocketHandler implements WebSocketConnectionCallback {
 
                 @Override
                 protected void onError(WebSocketChannel webSocketChannel, Throwable error) {
-                    logger.info("Server error : " + error.toString());
+                    logger.error("Server error:", error);
                 }
 
                 @Override
