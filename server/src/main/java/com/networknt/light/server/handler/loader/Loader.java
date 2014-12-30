@@ -50,7 +50,7 @@ public class Loader {
         data.put("rememberMe", true);
         inputMap.put("data", data);
 
-        HttpPost httpPost = new HttpPost("http://" + host + ":8080/api/rs");
+        HttpPost httpPost = new HttpPost(host + "/api/rs");
         StringEntity input = new StringEntity(ServiceLocator.getInstance().getMapper().writeValueAsString(inputMap));
         input.setContentType("application/json");
         httpPost.setEntity(input);

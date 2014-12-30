@@ -35,7 +35,6 @@ public class PageLoader extends Loader {
             }
             File folder = getFileFromResourceFolder(pageFolder);
             if(folder != null) {
-                LightServer.start();
                 httpclient = HttpClients.createDefault();
                 // login as owner here
                 login(host, userId, password);
@@ -48,7 +47,6 @@ public class PageLoader extends Loader {
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-            LightServer.stop();
         }
     }
 
@@ -68,7 +66,7 @@ public class PageLoader extends Loader {
             data.put("id", id);
             data.put("content", content);
             inputMap.put("data", data);
-            HttpPost httpPost = new HttpPost("http://" + host + ":8080/api/rs");
+            HttpPost httpPost = new HttpPost(host + "/api/rs");
             httpPost.addHeader("Authorization", "Bearer " + jwt);
             StringEntity input = new StringEntity(ServiceLocator.getInstance().getMapper().writeValueAsString(inputMap));
             input.setContentType("application/json");

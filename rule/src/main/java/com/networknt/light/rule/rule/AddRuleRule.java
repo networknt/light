@@ -8,6 +8,10 @@ import java.util.Map;
 
 /**
  * Created by steve on 08/10/14.
+ *
+ * This is the rule that allow user to add brand new rule from rule admin interface. It will fail
+ * if the rule exist in database. And normally, you construct simple rules on the fly.
+ *
  */
 public class AddRuleRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

@@ -1,13 +1,10 @@
 package com.networknt.light.server.handler.loader;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.server.LightServer;
-import com.networknt.light.util.ServiceLocator;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
@@ -44,7 +41,6 @@ public class FormLoader extends Loader {
             }
             File folder = getFileFromResourceFolder(formFolder);
             if(folder != null) {
-                LightServer.start();
                 httpclient = HttpClients.createDefault();
                 // login as owner here
                 login(host, userId, password);
@@ -57,7 +53,6 @@ public class FormLoader extends Loader {
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-            LightServer.stop();
         }
     }
 
@@ -67,7 +62,7 @@ public class FormLoader extends Loader {
             scan = new Scanner(file, Loader.encoding);
             // the content is only the data portion. convert to map
             String content = scan.useDelimiter("\\Z").next();
-            HttpPost httpPost = new HttpPost("http://" + host + ":8080/api/rs");
+            HttpPost httpPost = new HttpPost(host + "/api/rs");
             httpPost.addHeader("Authorization", "Bearer " + jwt);
             StringEntity input = new StringEntity(content);
             input.setContentType("application/json");

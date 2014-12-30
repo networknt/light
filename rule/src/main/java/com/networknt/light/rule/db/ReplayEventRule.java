@@ -1,11 +1,13 @@
 package com.networknt.light.rule.db;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.RuleEngine;
+import com.networknt.light.util.ServiceLocator;
 import com.networknt.light.util.Util;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +15,9 @@ import java.util.Map;
 /**
  * Created by steve on 14/12/14.
  */
-public class ReplayEventRule extends AbstractDbRule implements Rule {
+public class ReplayEventRule implements Rule {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(ReplayEventRule.class);
+    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
@@ -37,7 +41,7 @@ public class ReplayEventRule extends AbstractDbRule implements Rule {
 
                 // replay event one by one.
                 for(Map<String, Object> event: events) {
-                    RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);
+                    RuleEngine.getInstance().executeRuleAsync(Util.getEventRuleId(event), event);
                 }
             }
         }
