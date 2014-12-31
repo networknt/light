@@ -1,0 +1,107 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Development Environment</h1>
+            <p>
+                I personally use Linux as my dev environment and I would recommend you do so; however, Mac and Windows are perfectly OK.
+                The following steps are for Ubuntu Linux and some of the commands might be different on Other Linux distributions, Mac and Windows. My production is CentOS 6.5 32bit and the installation guide is <a href="/page/production_single">here</a>
+
+                I also recommend Google Chrome as your browser for Front End AngularJS testing and debugging.
+            </p>
+            <p>
+                On Linux, the dev environment will mimic production environment so it is easier to deploy your site to Linux based production. Also, you can learn a lot about security once your site is public.
+            </p>
+            <p>
+                1. Create a user for development: (If you have a user already on the Linux box other than root, please use it) The following assumes that you logged in as root.
+                <pre>
+            #adduser steve
+            #passwd steve
+
+            #visudo
+            This is to edit /etc/sudoers to add steve to the last line so that he can use sudo command
+            Never use vi to edit the above file!
+
+            Add steve right after
+            root ALL=(ALL)   ALL
+            with
+            steve ALL=(ALL)   ALL
+
+            vi /etc/ssh/sshd_config
+
+            change the following line
+            #PermitRootLogin  yes
+            to
+            PermitRootLogin no
+
+            change the following line
+            #UserDNS yes
+            to
+            UserDNS  no
+
+            Log out from root and log in with steve. From this moment on, please use sudo command instead of logging in as root.
+                </pre>
+            </p>
+            <p>
+                2. Install JDK8, maven, node.js and npm with sudo and then using npm to install Grunt, Gulp, Bower and other modules.
+
+                
+
+            </p>
+            <p>
+                3. Create dev folder and check out the source code.
+                <pre>
+            log in to the user you just created.
+            $mkdir networknt
+            $cd networknt
+
+            Check out Json Token which is forked from Google and fixed some of the issues.
+            $git clone https://github.com/networknt/jsontoken.git
+            Check out light rule engine which is a Java based rule engine used in the back end
+            $git clone https://github.com/networknt/rule-engine.git
+            Check out the light framework and other projects
+            $git clone https://github.com/networknt/light.git
+
+            $cd jsontoken
+            $mvn clean install
+            $cd ..
+            $cd rule-engine
+            $mvn clean install
+            $cd rule-loader
+            $mvn clean install
+            $cd ~
+            $cd light
+            $mvn clean install -DskipTests
+
+            Now you have all the Java code built already.
+
+                </pre>
+            </p>
+            <p>
+                4. Open the source code with your IDE. I am using JetBrains Idea but other IDE like Eclipse will work. From Idea, you can just select File/Open... and then choose ~/networknt/light folder to open. It will import the pom.xml file under the light folder.
+            </p>
+            <p>
+                5. Set up other users and virtual host. Light Framework supports multiple web sites hosted on the same IP address. In the ~/networknt/light folder there are three sites included.
+                <ul>networknt folder contains source code for www.networknt.com which is the main site for Light Framework</ul>
+                <ul>edibleforestgarden folder contains source code for www.edibleforestgarden.ca which is a socail commerce site to demo the features of the framework</ul>
+                <ul>example folder is a template site that can be copied to start your own web site.</ul>
+                OK. Let's create three users for each site and if you are building a new site, create one extra user for it.
+
+            </p>
+            <p>
+                If you’re thinking that matching the colors and content across devices is omnichannel, we would encourage you to reconsider. If you are ready to lead in the next phase of social business and get the most out of the promise that our new identity as customers is truly omniscient, then let’s connect. This way of thinking is the future promise on which we started Omnichannel Application Framework.
+            </p>
+            <p>
+                There are a few key features in the framework that allowed this idea to be made reality:
+            <ul>
+                In exploring and discovering products in your brand domain that data should be transferable for me to collect and use universally.
+            </ul>
+            <ul>
+                In exchange for this data, the customer will give you access to other data they have collected that will far outweigh the value of the limited data in your brand universe.
+            </ul>
+            <ul>
+                All experiences offline and online should allow an individual to identify themselves and present a brand with the opportunity to access my preferences.
+            </ul>
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,126 @@
+<div class="container" ng-controller="UserAdminHomeCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <tabset>
+                <tab heading="Users">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="header in userHeaders">
+                                <sort-by onsort="onUserSort" sortdir="getAllUser.data.sortDir" sortedby="getAllUser.data.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.locked" type="checkbox" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.userId" type="text" /></td>
+                            <td>
+                                <select ng-change="filterResult()" ng-model="getAllUser.data.host" ng-options="host for host in hosts" >
+                                    <option value=""> </option>
+                                </select>
+                            </td>
+                            <td>
+                                <select ng-change="filterResult()" ng-model="getAllUser.data.roles" ng-options="role for role in roles" >
+                                    <option value=""> </option>
+                                </select>
+                            </td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.email" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.firstName" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.lastName" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.upUsers" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.downUsers" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.karma" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.createDate" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.updateDate" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.logInDate" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.logOutDate" type="text" /></td>
+                        </tr>
+                        <tr ng-repeat="user in users">
+                            <td><a href ng-click="deleteUser(user)">Delete</a></td>
+                            <td><a href ng-click="lock(user)">{{user.locked}}</a></td>
+                            <td><a href ng-click="updateUser(user)">{{user.userId}}</a></td>
+                            <td>{{user.host}}</td>
+                            <td>{{user.roles}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.firstName}}</td>
+                            <td>{{user.lastName}}</td>
+                            <td>{{user.upUsers}}</td>
+                            <td>{{user.downUsers}}</td>
+                            <td>{{user.karma}}</td>
+                            <td>{{user.createDate}}</td>
+                            <td>{{user.updateDate}}</td>
+                            <td>{{user.logInDate}}</td>
+                            <td>{{page.logOutDate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <pagination total-items="page.totalItems" items-per-page="getAllUser.data.pageSize" ng-model="getAllUser.data.pageNo" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
+                    <table>
+                        <tr>
+                            <td>Page: {{getAllUser.data.pageNo}} / {{page.numPages}}</td>
+                            <td>&nbsp;</td>
+                            <td>Page Size:</td>
+                            <td><input type="number" min="1" max="200" ng-change="filterResult()" ng-model="getAllUser.data.pageSize"></td>
+                        </tr>
+                    </table>
+                </tab>
+                <tab heading="Hosts">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="header in hostHeaders">
+                                <sort-by onsort="onHostSort" sortdir="hostSort.sortDir" sortedby="hostSort.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.userId" type="text" /></td>
+                            <td>
+                                <select ng-change="filterResult()" ng-model="getAllUser.data.host" ng-options="host for host in hosts" >
+                                    <option value=""> </option>
+                                </select>
+                            </td>
+                            <td>
+                                <select ng-change="filterResult()" ng-model="getAllUser.data.roles" ng-options="role for role in roles" >
+                                    <option value=""> </option>
+                                </select>
+                            </td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.email" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.firstName" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.lastName" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.upUsers" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.downUsers" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.karma" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.createDate" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.updateDate" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.logInDate" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.logOutDate" type="text" /></td>
+                        </tr>
+                        <tr ng-repeat="user in users">
+                            <td><a href ng-click="delete(user)">Delete</a></td>
+                            <td><a href ng-click="lock(user)">{{user.locked}}</a></td>
+                            <td><a href ng-click="update(user)">{{user.userId}}</a></td>
+                            <td>{{user.host}}</td>
+                            <td>{{user.roles}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.firstName}}</td>
+                            <td>{{user.lastName}}</td>
+                            <td>{{user.upUsers}}</td>
+                            <td>{{user.downUsers}}</td>
+                            <td>{{user.karma}}</td>
+                            <td>{{user.createDate}}</td>
+                            <td>{{user.updateDate}}</td>
+                            <td>{{user.logInDate}}</td>
+                            <td>{{page.logOutDate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div> <!-- /container -->
