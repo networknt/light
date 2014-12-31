@@ -23,10 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TimeZone;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static io.undertow.Handlers.resource;
@@ -61,11 +60,11 @@ public class LightServer {
             db.getStorage().getConfiguration().update();
             db.close();
             InitDatabase.initDb();
+            // replay all the event to create database image.
+            // TODO need to rethink replay as orientdb is used instead of Memory Image.
+            // TODO load menu and form other common things from db to cache. or just by replay.
+            replayEvent();
         }
-        // replay all the event to create memory image.
-        // TODO need to rethink replay as orientdb is used instead of Memory Image.
-        // replayEvent();
-        // TODO load menu and form other common things from db to cache. or just by replay.
 
         NameVirtualHostHandler virtualHostHandler = new NameVirtualHostHandler();
         Iterator<String> it = hostMap.keySet().iterator();
@@ -118,26 +117,40 @@ public class LightServer {
         Runtime.getRuntime().addShutdownHook( new Thread() { public void run() { LightServer.shutdown(); }});
     }
 
+    /**
+     * This replay is to initialize database when the db is newly created. It load rules, forms and pages
+     * and certain setup that need to make the applications working. To replay the entire event schema,
+     * you have to call it from the Db Admin interface.
+     *
+     */
     static private void replayEvent() {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
-        for (OClass oClass : schema.getClasses()) {
-            System.out.println(oClass.getName());
-        }
 
-        ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
-        try {
-            for(ODocument event : db.browseClass("Event")) {
-                System.out.println(event.toJSON());
-                Map<String, Object> jsonMap = mapper.readValue(event.toJSON(),
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                RuleEngine.getInstance().executeRule(Util.getEventRuleId(jsonMap), jsonMap);
+        // need to replay from a file instead if the file exist. Otherwise, load from db and replay.
+        // in this case, we need to recreate db.
+
+        StringBuilder sb = new StringBuilder("");
+
+        //Get file from resources folder
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        File file = new File(classloader.getResource("initdb.json").getFile());
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                sb.append(line).append("\n");
             }
+            scanner.close();
+
+            ObjectMapper mapper = new ObjectMapper();
+            List<Map<String, Object>> events = mapper.readValue(sb.toString(),
+                    new TypeReference<List<HashMap<String, Object>>>() {});
+
+            // replay event one by one.
+            for(Map<String, Object> event: events) {
+                RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);
+            }
+
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
+            logger.error("Exception:", e);
         }
     }
 }
