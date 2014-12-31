@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -132,8 +133,8 @@ public class LightServer {
 
         //Get file from resources folder
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        File file = new File(classloader.getResource("initdb.json").getFile());
-        try (Scanner scanner = new Scanner(file)) {
+        InputStream is = classloader.getResourceAsStream("initdb.json");
+        try (Scanner scanner = new Scanner(is)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 sb.append(line).append("\n");
