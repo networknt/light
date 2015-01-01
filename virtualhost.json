@@ -1,0 +1,18 @@
+{
+    "www.networknt.com": {
+        "base" : "/home/networknt/web",
+	"transferMinSize" : "100"
+    },
+    "www.edibleforestgarden.ca" : {
+        "base" : "/home/edibleforestgarden/web",
+	"transferMinSize" : "100"
+    },
+    "example" : {
+        "base" : "/home/example/web",
+	"transferMinSize" : "100"
+    },
+    "injector" : {
+        "base" : "/home/injector/web",
+        "transferMinSize" : "100"
+    }
+}

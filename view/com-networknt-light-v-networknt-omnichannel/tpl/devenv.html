@@ -15,7 +15,6 @@
                 1. Create a user for development: (If you have a user already on the Linux box other than root, please use it) The following assumes that you logged in as root.
                 <pre>
             #adduser steve
-            #passwd steve
 
             #visudo
             This is to edit /etc/sudoers to add steve to the last line so that he can use sudo command
@@ -77,30 +76,49 @@
                 </pre>
             </p>
             <p>
-                4. Open the source code with your IDE. I am using JetBrains Idea but other IDE like Eclipse will work. From Idea, you can just select File/Open... and then choose ~/networknt/light folder to open. It will import the pom.xml file under the light folder.
+                4. Open the source code with your IDE. I am using JetBrains Idea but other IDE like Eclipse will work. From Idea, you can just select File/Open... and then choose ~/networknt/light folder to open. It will import the pom.xml file under the light folder. You might need to select JDK for java projects if Idea couldn't find the JDK.
             </p>
             <p>
                 5. Set up other users and virtual host. Light Framework supports multiple web sites hosted on the same IP address. In the ~/networknt/light folder there are three sites included.
                 <ul>networknt folder contains source code for www.networknt.com which is the main site for Light Framework</ul>
                 <ul>edibleforestgarden folder contains source code for www.edibleforestgarden.ca which is a socail commerce site to demo the features of the framework</ul>
                 <ul>example folder is a template site that can be copied to start your own web site.</ul>
-                OK. Let's create three users for each site and if you are building a new site, create one extra user for it.
+                Let's create three users for each site and if you are building a new site, create one extra user for it.
+                <pre>
+            sudo adduser networknt
+            sudo adduser edibleforestgarden
+            sudo adduser example
+                </pre>
+
+                Copy and update server.json and virtualhost.json to /home directory and update them if necessary.
+                <pre>
+            sudo cp ~/networknt/light/server.json /home
+            sudo cp ~/networknt/light/virtualhost.json /home
+                </pre>
+
+            </p>
+
+            <p>
+                6. Start server from IDE in debug mode. From your IDE, right click server/src/main/java/com/networknt/light/server/LightServer and select Debug. The first time the server is started it will create the database and replay the event in resources/initdb.json. It will take several minutes until the debug info is stopped. At this time, you can start Grunt webserver to monitor all your changes in the local directory.
+                <pre>
+        cd ~/networknt/light/networknt
+        npm install
+        bower install
+        grunt serve
+                </pre>
+                assuming that Chrome is your default browser, it will be started now and point to localhost:9000 with www.networknt.com site content. I am in a process to move everything from Grunt to Gulp but it is not been done yet.
 
             </p>
             <p>
-                If you’re thinking that matching the colors and content across devices is omnichannel, we would encourage you to reconsider. If you are ready to lead in the next phase of social business and get the most out of the promise that our new identity as customers is truly omniscient, then let’s connect. This way of thinking is the future promise on which we started Omnichannel Application Framework.
-            </p>
-            <p>
-                There are a few key features in the framework that allowed this idea to be made reality:
-            <ul>
-                In exploring and discovering products in your brand domain that data should be transferable for me to collect and use universally.
-            </ul>
-            <ul>
-                In exchange for this data, the customer will give you access to other data they have collected that will far outweigh the value of the limited data in your brand universe.
-            </ul>
-            <ul>
-                All experiences offline and online should allow an individual to identify themselves and present a brand with the opportunity to access my preferences.
-            </ul>
+                For individual component/view/application development, you can go the the folder and run the following commands to start another webserver using gulp
+        <pre>
+        cd ~/networknt/light/view/com-networknt-light-v-example
+        npm install
+        bower install
+        gulp webserver
+        </pre>
+               Now another server is up listening localhost:8001 using gulp webserver. You can switch to other folders to do the same.
+
             </p>
         </div>
     </div>

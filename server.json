@@ -1,0 +1,14 @@
+{
+  "port": "8080",
+  "init": "true",
+  "ip": "127.0.0.1",
+  "dburl": "plocal:/home/steve/lightdb",
+  "dbpass": "admin",
+  "dbuser": "admin",
+  "ownerId": "stevehu",
+  "ownerEmail": "stevehu@gmail.com",
+  "ownerPass": "123456",
+  "testId": "test",
+  "testEmail": "test@example.com",
+  "testPass": "123456"
+}
