@@ -16,6 +16,7 @@ import com.orientechnologies.orient.core.record.ORecord;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -24,6 +25,8 @@ import java.util.concurrent.ConcurrentMap;
  * Created by steve on 23/09/14.
  */
 public abstract class AbstractFormRule extends AbstractRule implements Rule {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractFormRule.class);
+
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
     public abstract boolean execute (Object ...objects) throws Exception;
@@ -51,7 +54,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                     cache.put(id, json);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Exception:", e);
                 throw e;
             } finally {
                 db.close();
@@ -80,7 +83,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             json = form.toJSON();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();
@@ -110,7 +113,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
         } finally {
             db.close();
         }
@@ -143,7 +146,51 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             }
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+        } finally {
+            db.close();
+        }
+        Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
+        if(cache == null) {
+            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(100)
+                    .build();
+            formMap.put("cache", cache);
+        }
+        cache.put(data.get("id"), json);
+        return json;
+    }
+
+    protected String impForm(Map<String, Object> data) throws Exception {
+        String json = null;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OSchema schema = db.getMetadata().getSchema();
+        try {
+            db.begin();
+            OIndex<?> formIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
+            // this is a unique index, so it retrieves a OIdentifiable
+            OIdentifiable oid = (OIdentifiable) formIdIdx.get(data.get("id"));
+            if (oid != null && oid.getRecord() != null) {
+                oid.getRecord().delete();
+            }
+
+            ODocument form = new ODocument(schema.getClass("Form"));
+            if(data.get("host") != null) form.field("host", data.get("host"));
+            form.field("id", data.get("id"));
+            form.field("action", data.get("action"));
+            form.field("schema", data.get("schema"));
+            form.field("form", data.get("form"));
+            if(data.get("modelData") != null) form.field("modelData", data.get("modelData"));
+            form.field("createDate", data.get("createDate"));
+            form.field("createUserId", data.get("createUserId"));
+            form.save();
+            db.commit();
+            json = form.toJSON();
+        } catch (Exception e) {
+            db.rollback();
+            logger.error("Exception:", e);
+            throw e;
         } finally {
             db.close();
         }
@@ -173,7 +220,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                 json = OJSONWriter.listToJSON(forms, null);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();

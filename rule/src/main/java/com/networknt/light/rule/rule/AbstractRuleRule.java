@@ -13,6 +13,7 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Map;
  * Created by husteve on 10/8/2014.
  */
 public abstract class AbstractRuleRule implements Rule {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractRuleRule.class);
 
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
@@ -64,7 +66,7 @@ public abstract class AbstractRuleRule implements Rule {
             json  = rule.toJSON();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();
@@ -94,7 +96,7 @@ public abstract class AbstractRuleRule implements Rule {
             }
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();
@@ -109,7 +111,7 @@ public abstract class AbstractRuleRule implements Rule {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();
@@ -128,7 +130,7 @@ public abstract class AbstractRuleRule implements Rule {
             List<ODocument> roles = db.command(query).execute();
             json = OJSONWriter.listToJSON(roles, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();

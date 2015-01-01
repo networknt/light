@@ -34,29 +34,31 @@ public class ImpRuleRule extends AbstractRule implements Rule {
             List roles = (List)user.get("roles");
             if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("ruleAdmin")) {
                 error = "Role owner or admin or ruleAdmin is required to add rule";
-                inputMap.put("responseCode", 401);
+                inputMap.put("responseCode", 403);
             } else {
                 String host = (String)user.get("host");
                 if(host != null) {
                     if(!host.equals(data.get("host"))) {
                         error = "User can only add rule from host: " + host;
-                        inputMap.put("responseCode", 401);
+                        inputMap.put("responseCode", 403);
                     } else {
                         // Won't check if rule exists or not here.
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
-                        eventData.put("ruleClass", data.get("ruleClass"));
                         eventData.put("host", host);
+
+                        eventData.put("ruleClass", data.get("ruleClass"));
                         eventData.put("sourceCode", data.get("sourceCode"));
                         eventData.put("createDate", new java.util.Date());
                         eventData.put("createUserId", user.get("userId"));
                     }
                 } else {
-                    // This is owner to import rule
+                    // This is owner to import rule, notice that no host is passed in.
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
+
                     eventData.put("ruleClass", data.get("ruleClass"));
                     eventData.put("sourceCode", data.get("sourceCode"));
                     eventData.put("createDate", new java.util.Date());

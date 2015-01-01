@@ -13,6 +13,7 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,8 @@ import java.util.concurrent.ConcurrentMap;
  * Created by husteve on 10/24/2014.
  */
 public abstract class AbstractPageRule extends AbstractRule implements Rule {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractPageRule.class);
+
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
     public abstract boolean execute (Object ...objects) throws Exception;
@@ -49,7 +52,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
                     cache.put(id, json);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Exception:", e);
             } finally {
                 db.close();
             }
@@ -74,7 +77,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
             json = page.toJSON();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
             db.close();
@@ -104,7 +107,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
         } finally {
             db.close();
         }
@@ -134,7 +137,47 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
             db.commit();
         } catch (Exception e) {
             db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+        } finally {
+            db.close();
+        }
+        Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
+        if(cache == null) {
+            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(100)
+                    .build();
+            pageMap.put("cache", cache);
+        }
+        cache.put(data.get("id"), json);
+        return json;
+    }
+
+    protected String impPage(Map<String, Object> data) throws Exception {
+        String json = null;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OSchema schema = db.getMetadata().getSchema();
+        try {
+            db.begin();
+            OIndex<?> pageIdIdx = db.getMetadata().getIndexManager().getIndex("Page.id");
+            // this is a unique index, so it retrieves a OIdentifiable
+            OIdentifiable oid = (OIdentifiable) pageIdIdx.get(data.get("id"));
+            if (oid != null && oid.getRecord() != null) {
+                oid.getRecord().delete();
+            }
+            ODocument page = new ODocument(schema.getClass("Page"));
+            if(data.get("host") != null) page.field("host", data.get("host"));
+            page.field("id", data.get("id"));
+            page.field("content", data.get("content"));
+            page.field("createDate", data.get("updateDate"));
+            page.field("createUserId", data.get("updateUserId"));
+            page.save();
+            db.commit();
+            json = page.toJSON();
+        } catch (Exception e) {
+            db.rollback();
+            logger.error("Exception:", e);
+            throw e;
         } finally {
             db.close();
         }
@@ -161,7 +204,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
             pages = db.command(query).execute();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
         } finally {
             db.close();
         }
