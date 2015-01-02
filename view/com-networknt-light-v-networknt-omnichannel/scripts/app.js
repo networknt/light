@@ -40,7 +40,7 @@ var lightApp = angular.module('lightApp', [
 
     $routeProvider
       .when('/', {
-        templateUrl: 'tpl/getstarted.html'
+        templateUrl: 'tpl/com-networknt-light-v-get-started.html'
       })
       .when('/signin', {
         templateUrl: 'views/form.html',
@@ -71,7 +71,7 @@ var lightApp = angular.module('lightApp', [
         controller: 'BlogCtrl'
       })
       .when('omnichannel', {
-        templateUrl: 'views/omnichannel.html',
+        templateUrl: 'views/com-networknt-light-v-omnichannel.html',
         controller: 'omnichannelCtrl'
       })
       .otherwise({

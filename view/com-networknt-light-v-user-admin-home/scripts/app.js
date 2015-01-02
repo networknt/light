@@ -72,7 +72,7 @@ var lightApp = angular.module('lightApp', [
         controller: 'BlogCtrl'
       })
       .when('omnichannel', {
-        templateUrl: 'views/omnichannel.html',
+        templateUrl: 'views/com-networknt-light-v-omnichannel.html',
         controller: 'omnichannelCtrl'
       })
       .otherwise({

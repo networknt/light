@@ -1,27 +1,31 @@
 {
-  "id": "com.networknt.light.db.replayEvent",
+  "id": "com.networknt.light.rule.import",
   "version": 1,
   "action" : [{
-    "category" : "db",
-    "name" : "replayEvent",
-    "readOnly": true,
-    "title": "Replay Event",
-    "success" : "/page/com.networknt.light.db.admin.home"
+    "category" : "rule",
+    "name" : "impRule",
+    "readOnly": false,
+    "title": "Import Rule",
+    "success" : "/page/com.networknt.light.rule.admin.home"
   }],
   "schema": {
     "type": "object",
-    "title": "Upload Event File",
-    "required": ["content"],
+    "title": "Import Rule File",
+    "required": ["ruleClass", "sourceCode"],
     "properties": {
-      "content": {
-        "title": "Event Content",
+      "ruleClass": {
+        "title": "Rule Class",
+        "type": "string"
+      },
+      "sourceCode": {
+        "title": "Rule Source Code",
         "type": "string",
         "format": "file-reader"
       }
     }
   },
   "form": [
-    "content"
+    "ruleClass",
+    "sourceCode"
   ]
 }
-

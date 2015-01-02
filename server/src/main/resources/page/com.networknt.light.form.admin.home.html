@@ -72,6 +72,10 @@
             $location.path("/page/com.networknt.light.form.admin.add");
         };
 
+        $scope.import = function() {
+            $location.path("/form/com.networknt.light.form.import");
+        };
+
         $scope.fetchResult = function () {
             $http.post('api/rs', $scope.getAllForm)
                     .success(function (result, status, headers, config) {
@@ -87,6 +91,9 @@
         <div class="col-md-12">
             <div class="pull-right">
                 <button class="btn btn-info" ng-click="add()"><i class="glyphicon glyphicon-edit"></i>Add</button>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="import()"><i class="glyphicon glyphicon-edit"></i>Import</button>
             </div>
             <tabset>
                 <tab heading="Forms">

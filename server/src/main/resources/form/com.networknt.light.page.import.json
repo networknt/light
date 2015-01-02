@@ -1,27 +1,32 @@
 {
-  "id": "com.networknt.light.db.replayEvent",
-  "version": 1,
-  "action" : [{
-    "category" : "db",
-    "name" : "replayEvent",
-    "readOnly": true,
-    "title": "Replay Event",
-    "success" : "/page/com.networknt.light.db.admin.home"
-  }],
-  "schema": {
-    "type": "object",
-    "title": "Upload Event File",
-    "required": ["content"],
-    "properties": {
-      "content": {
-        "title": "Event Content",
-        "type": "string",
-        "format": "file-reader"
-      }
-    }
-  },
-  "form": [
-    "content"
-  ]
+    "id": "com.networknt.light.page.import",
+    "version": 1,
+    "action" : [{
+        "category" : "page",
+        "name" : "impPage",
+        "readOnly": false,
+        "title": "Import Page",
+        "success" : "/page/com.networknt.light.page.admin.home"
+    }],
+    "schema": {
+        "type": "object",
+        "title": "Import Page File",
+        "required": ["id", "content"],
+        "properties": {
+            "id": {
+                "title": "Id",
+                "type": "string"
+            },
+            "content": {
+                "title": "Page Content",
+                "type": "string",
+                "format": "file-reader"
+            }
+        }
+    },
+    "form": [
+        "id",
+        "content"
+    ]
 }
 

@@ -26,13 +26,22 @@ public class PageLoader extends Loader {
 
     public static void main(String[] args) {
         try {
-            String host = args[0];
-            String userId = args[1];
-            String password = args[2];
-            if(host == null || userId == null || password == null) {
-                System.out.println("host, userId and password are required");
+            String host = null;
+            String userId = null;
+            String password = null;
+            if(args != null && args.length == 3) {
+                host = args[0];
+                userId = args[1];
+                password = args[2];
+                if(host.length() == 0 || userId.length() == 0 || password.length() == 0) {
+                    System.out.println("host, userId and password are required");
+                    System.exit(1);
+                }
+            } else {
+                System.out.println("Usage: FormLoader host userId password");
                 System.exit(1);
             }
+
             File folder = getFileFromResourceFolder(pageFolder);
             if(folder != null) {
                 httpclient = HttpClients.createDefault();

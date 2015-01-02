@@ -73,6 +73,10 @@
             $location.path("/form/com.networknt.light.page.add");
         };
 
+        $scope.import = function() {
+            $location.path("/form/com.networknt.light.page.import");
+        };
+
         //The function that is responsible of fetching the result from the server and setting the grid to the new result
         $scope.fetchResult = function () {
             $http.post('api/rs', $scope.getAllPage)
@@ -89,6 +93,9 @@
         <div class="col-md-12">
             <div class="pull-right">
                 <button class="btn btn-info" ng-click="add()"><i class="glyphicon glyphicon-edit"></i>Add</button>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="import()"><i class="glyphicon glyphicon-edit"></i>Import</button>
             </div>
             <tabset>
                 <tab heading="Recent">

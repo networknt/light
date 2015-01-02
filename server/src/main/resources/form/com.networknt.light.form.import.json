@@ -1,20 +1,20 @@
 {
-  "id": "com.networknt.light.db.replayEvent",
+  "id": "com.networknt.light.form.import",
   "version": 1,
   "action" : [{
-    "category" : "db",
-    "name" : "replayEvent",
-    "readOnly": true,
-    "title": "Replay Event",
-    "success" : "/page/com.networknt.light.db.admin.home"
+    "category" : "form",
+    "name" : "impForm",
+    "readOnly": false,
+    "title": "Import Form",
+    "success" : "/page/com.networknt.light.form.admin.home"
   }],
   "schema": {
     "type": "object",
-    "title": "Upload Event File",
+    "title": "Import Form File",
     "required": ["content"],
     "properties": {
       "content": {
-        "title": "Event Content",
+        "title": "Form Content",
         "type": "string",
         "format": "file-reader"
       }
