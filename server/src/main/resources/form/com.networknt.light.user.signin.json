@@ -1,43 +1,38 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.user.signin",
-        "version": 1,
-        "action" : [{
-            "category" : "user",
-            "name" : "signInUser",
-            "readOnly": false,
-            "title" : "Sign In"
-        }],
-        "schema": {
-            "type": "object",
-            "title": "Sign In",
-            "required": ["userIdEmail", "password"],
-            "properties": {
-                "userIdEmail": {
-                    "title": "UserId or Email",
-                    "type": "string"
-                },
-                "password": {
-                    "title": "Password",
-                    "type": "string"
-                },
-                "rememberMe": {
-                    "title": "Remember me",
-                    "type": "boolean",
-                    "default": false
-                }
-            }
-        },
-        "form": [
-            "userIdEmail",
-            {
-                "key": "password",
-                "type": "password"
+    "id": "com.networknt.light.user.signin",
+    "version": 1,
+    "action" : [{
+        "category" : "user",
+        "name" : "signInUser",
+        "readOnly": false,
+        "title" : "Sign In"
+    }],
+    "schema": {
+        "type": "object",
+        "title": "Sign In",
+        "required": ["userIdEmail", "password"],
+        "properties": {
+            "userIdEmail": {
+                "title": "UserId or Email",
+                "type": "string"
             },
-            "rememberMe"
-        ]
-    }
+            "password": {
+                "title": "Password",
+                "type": "string"
+            },
+            "rememberMe": {
+                "title": "Remember me",
+                "type": "boolean",
+                "default": false
+            }
+        }
+    },
+    "form": [
+        "userIdEmail",
+        {
+            "key": "password",
+            "type": "password"
+        },
+        "rememberMe"
+    ]
 }

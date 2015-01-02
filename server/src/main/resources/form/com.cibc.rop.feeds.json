@@ -1,55 +1,51 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.cibc.rop.feeds",
-        "version": 1,
-        "action" : [{
-            "host" : "injector",
-            "app" : "main",
-            "category" : "feed",
-            "name" : "injAllFeed",
-            "readOnly": false,
-            "title": "Inject"
-        }],
-        "schema": {
-            "type": "object",
-            "required": [
-                "environment",
-                "feeds"
-            ],
-            "title": "Feeds",
-            "properties": {
-                "environment": {
-                    "type": "string",
-                    "title": "Environment",
-                    "enum": [
-                        "LOCAL",
-                        "IDT5N",
-                        "SIT1N",
-                        "SIT2N",
-                        "SIT3N",
-                        "UAT1N",
-                        "UAT2N"
-                    ]
-                },
-                "feeds": {
-                    "type": "string",
-                    "title": "Feeds"
-                }
-            }
-        },
-        "form": [
+    "id": "com.cibc.rop.feeds",
+    "version": 1,
+    "action" : [{
+        "host" : "injector",
+        "app" : "main",
+        "category" : "feed",
+        "name" : "injAllFeed",
+        "readOnly": false,
+        "title": "Inject"
+    }],
+    "schema": {
+        "type": "object",
+        "required": [
             "environment",
-            {
-                "key": "feeds",
-                "type": "ace",
-                "aceOptions": {
-                    "theme": "eclipse",
-                    "mode" : "json"
-                }
+            "feeds"
+        ],
+        "title": "Feeds",
+        "properties": {
+            "environment": {
+                "type": "string",
+                "title": "Environment",
+                "enum": [
+                    "LOCAL",
+                    "IDT5N",
+                    "SIT1N",
+                    "SIT2N",
+                    "SIT3N",
+                    "UAT1N",
+                    "UAT2N"
+                ]
+            },
+            "feeds": {
+                "type": "string",
+                "title": "Feeds"
             }
-        ]
-    }
+        }
+    },
+    "form": [
+        "environment",
+        {
+            "key": "feeds",
+            "type": "ace",
+            "aceOptions": {
+                "theme": "eclipse",
+                "mode" : "json"
+            }
+        }
+    ]
 }
+

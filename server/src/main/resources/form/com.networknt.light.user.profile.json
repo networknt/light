@@ -1,103 +1,99 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.user.profile",
-        "version": 1,
-        "action" : [
-            {
-                "category" : "user",
-                "name" : "updProfile",
-                "readOnly": false,
-                "title" : "Update Profile"
-            },
-            {
-                "category" : "user",
-                "name" : "updPassword",
-                "readOnly": false,
-                "title" : "Change Password"
-            },
-            {
-                "category" : "user",
-                "name" : "lockUser",
-                "readOnly": false,
-                "title" : "Lock User"
-            },
-            {
-                "category" : "user",
-                "name" : "unlockUser",
-                "readOnly": false,
-                "title" : "Unlock User"
-            },
-            {
-                "category" : "user",
-                "name" : "delUser",
-                "readOnly": false,
-                "title" : "Delete User"
-            },
-            {
-                "category" : "user",
-                "name" : "upUser",
-                "readOnly": false,
-                "title" : "Up Vote User"
-            },
-            {
-                "category" : "user",
-                "name" : "downUser",
-                "readOnly": false,
-                "title" : "Down Vote User"
-            }
-        ],
-        "schema": {
-            "type": "object",
-            "required": ["email", "password", "password_confirm"],
-            "title": "Sign Up",
-            "properties": {
-                "userId": {
-                    "title": "User Id",
-                    "type": "string",
-                    "description": "User Id can be used to log in."
-                },
-                "email": {
-                    "title": "Email",
-                    "type": "string",
-                    "description": "Email can be used to log in."
-                },
-                "password": {
-                    "title": "Password",
-                    "type": "string"
-                },
-                "passwordConfirm": {
-                    "title": "Password Confirmation",
-                    "type": "string"
-                },
-                "firstName": {
-                    "title": "First Name",
-                    "type": "string"
-                },
-                "lastName": {
-                    "title": "Last Name",
-                    "type": "string"
-                }
-            }
+    "id": "com.networknt.light.user.profile",
+    "version": 1,
+    "action" : [
+        {
+            "category" : "user",
+            "name" : "updProfile",
+            "readOnly": false,
+            "title" : "Update Profile"
         },
-        "form": [
-            "userId",
-            {
-                "key": "email",
-                "type": "email"
+        {
+            "category" : "user",
+            "name" : "updPassword",
+            "readOnly": false,
+            "title" : "Change Password"
+        },
+        {
+            "category" : "user",
+            "name" : "lockUser",
+            "readOnly": false,
+            "title" : "Lock User"
+        },
+        {
+            "category" : "user",
+            "name" : "unlockUser",
+            "readOnly": false,
+            "title" : "Unlock User"
+        },
+        {
+            "category" : "user",
+            "name" : "delUser",
+            "readOnly": false,
+            "title" : "Delete User"
+        },
+        {
+            "category" : "user",
+            "name" : "upUser",
+            "readOnly": false,
+            "title" : "Up Vote User"
+        },
+        {
+            "category" : "user",
+            "name" : "downUser",
+            "readOnly": false,
+            "title" : "Down Vote User"
+        }
+    ],
+    "schema": {
+        "type": "object",
+        "required": ["email", "password", "password_confirm"],
+        "title": "Sign Up",
+        "properties": {
+            "userId": {
+                "title": "User Id",
+                "type": "string",
+                "description": "User Id can be used to log in."
             },
-            {
-                "key": "password",
-                "type": "password"
+            "email": {
+                "title": "Email",
+                "type": "string",
+                "description": "Email can be used to log in."
             },
-            {
-                "key": "passwordConfirm",
-                "type": "password"
+            "password": {
+                "title": "Password",
+                "type": "string"
             },
-            "firstName",
-            "lastName"
-        ]
-    }
+            "passwordConfirm": {
+                "title": "Password Confirmation",
+                "type": "string"
+            },
+            "firstName": {
+                "title": "First Name",
+                "type": "string"
+            },
+            "lastName": {
+                "title": "Last Name",
+                "type": "string"
+            }
+        }
+    },
+    "form": [
+        "userId",
+        {
+            "key": "email",
+            "type": "email"
+        },
+        {
+            "key": "password",
+            "type": "password"
+        },
+        {
+            "key": "passwordConfirm",
+            "type": "password"
+        },
+        "firstName",
+        "lastName"
+    ]
 }
+

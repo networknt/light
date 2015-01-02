@@ -1,35 +1,31 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.user.update.profile",
-        "version": 1,
-        "action" : [
-            {
-                "category" : "user",
-                "name" : "updProfile",
-                "readOnly": false,
-                "title" : "Update"
+    "id": "com.networknt.light.user.update.profile",
+    "version": 1,
+    "action" : [
+        {
+            "category" : "user",
+            "name" : "updProfile",
+            "readOnly": false,
+            "title" : "Update"
+        }
+    ],
+    "schema": {
+        "type": "object",
+        "title": "Update Profile",
+        "properties": {
+            "firstName": {
+                "title": "First Name",
+                "type": "string"
+            },
+            "lastName": {
+                "title": "Last Name",
+                "type": "string"
             }
-        ],
-        "schema": {
-            "type": "object",
-            "title": "Update Profile",
-            "properties": {
-                "firstName": {
-                    "title": "First Name",
-                    "type": "string"
-                },
-                "lastName": {
-                    "title": "Last Name",
-                    "type": "string"
-                }
-            }
-        },
-        "form": [
-            "firstName",
-            "lastName"
-        ]
-    }
+        }
+    },
+    "form": [
+        "firstName",
+        "lastName"
+    ]
 }
+

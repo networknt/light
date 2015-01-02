@@ -1,59 +1,55 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.forum.add",
-        "version": 1,
-        "action" : [{
-            "category" : "forum",
-            "name" : "addForum",
-            "readOnly": false,
-            "title": "Submit",
-            "success" : "/page/com.networknt.light.forum.admin.home"
-        }],
-        "schema": {
-            "type": "object",
-            "title": "Forum",
-            "required": ["id", "desc"],
-            "properties": {
-                "id": {
-                    "title": "Id",
-                    "type": "string"
-                },
-                "desc": {
-                    "title": "Description",
-                    "type": "string"
-                },
-                "parent": {
-                    "title" : "Parent",
-                    "type": "string",
-                    "format": "strapselect"
-                },
-                "children": {
-                    "title" : "Children",
-                    "type": "array",
-                    "format": "strapselect"
-                }
+    "id": "com.networknt.light.forum.add",
+    "version": 1,
+    "action" : [{
+        "category" : "forum",
+        "name" : "addForum",
+        "readOnly": false,
+        "title": "Submit",
+        "success" : "/page/com.networknt.light.forum.admin.home"
+    }],
+    "schema": {
+        "type": "object",
+        "title": "Forum",
+        "required": ["id", "desc"],
+        "properties": {
+            "id": {
+                "title": "Id",
+                "type": "string"
+            },
+            "desc": {
+                "title": "Description",
+                "type": "string"
+            },
+            "parent": {
+                "title" : "Parent",
+                "type": "string",
+                "format": "strapselect"
+            },
+            "children": {
+                "title" : "Children",
+                "type": "array",
+                "format": "strapselect"
+            }
+        }
+    },
+    "form": [
+        "id",
+        "desc",
+        {
+            "key": "parent",
+            "options": {
+                "category": "forum",
+                "name": "getForumDropdown"
             }
         },
-        "form": [
-            "id",
-            "desc",
-            {
-                "key": "parent",
-                "options": {
-                    "category": "forum",
-                    "name": "getForumDropdown"
-                }
-            },
-            {
-                "key": "children",
-                "options": {
-                    "category": "forum",
-                    "name": "getForumDropdown"
-                }
+        {
+            "key": "children",
+            "options": {
+                "category": "forum",
+                "name": "getForumDropdown"
             }
-        ]
-    }
+        }
+    ]
 }
+

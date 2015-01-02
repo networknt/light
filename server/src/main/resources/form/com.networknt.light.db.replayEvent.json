@@ -1,31 +1,27 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.db.replayEvent",
-        "version": 1,
-        "action" : [{
-            "category" : "db",
-            "name" : "replayEvent",
-            "readOnly": true,
-            "title": "Replay Event",
-            "success" : "/page/com.networknt.light.db.admin.home"
-        }],
-        "schema": {
-            "type": "object",
-            "title": "Upload Event File",
-            "required": ["content"],
-            "properties": {
-                "content": {
-                    "title": "Event Content",
-                    "type": "string",
-                    "format": "file-reader"
-                }
+    "id": "com.networknt.light.db.replayEvent",
+    "version": 1,
+    "action" : [{
+        "category" : "db",
+        "name" : "replayEvent",
+        "readOnly": true,
+        "title": "Replay Event",
+        "success" : "/page/com.networknt.light.db.admin.home"
+    }],
+    "schema": {
+        "type": "object",
+        "title": "Upload Event File",
+        "required": ["content"],
+        "properties": {
+            "content": {
+                "title": "Event Content",
+                "type": "string",
+                "format": "file-reader"
             }
-        },
-        "form": [
-            "content"
-        ]
-    }
+        }
+    },
+    "form": [
+        "content"
+    ]
 }
+

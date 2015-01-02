@@ -1,35 +1,31 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.role.add",
-        "version": 1,
-        "action" : [{
-            "category" : "role",
-            "name" : "addRole",
-            "readOnly": false,
-            "title": "Submit",
-            "success" : "/page/com.networknt.light.role.admin.home"
-        }],
-        "schema": {
-            "type": "object",
-            "title": "Role",
-            "required": ["id", "desc"],
-            "properties": {
-                "id": {
-                    "title": "Id",
-                    "type": "string"
-                },
-                "desc": {
-                    "title": "Description",
-                    "type": "string"
-                }
+    "id": "com.networknt.light.role.add",
+    "version": 1,
+    "action" : [{
+        "category" : "role",
+        "name" : "addRole",
+        "readOnly": false,
+        "title": "Submit",
+        "success" : "/page/com.networknt.light.role.admin.home"
+    }],
+    "schema": {
+        "type": "object",
+        "title": "Role",
+        "required": ["id", "desc"],
+        "properties": {
+            "id": {
+                "title": "Id",
+                "type": "string"
+            },
+            "desc": {
+                "title": "Description",
+                "type": "string"
             }
-        },
-        "form": [
-            "id",
-            "desc"
-        ]
-    }
+        }
+    },
+    "form": [
+        "id",
+        "desc"
+    ]
 }
+

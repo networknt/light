@@ -1,52 +1,48 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.config.update",
-        "version": 1,
-        "action" : [{
-            "category" : "config",
-            "name" : "updConfig",
-            "readOnly": false,
-            "title": "Update"
-        }],
-        "schema": {
-            "type": "object",
-            "required": [
-                "host",
-                "app"
-            ],
-            "title": "Configuration",
-            "properties": {
-                "host": {
-                    "type": "string",
-                    "title": "Host",
-                    "enum": [
-                        "injector",
-                        "www.networknt.com",
-                        "www.edibleforestgarden.ca"
-                    ]
-                },
-                "app": {
-                    "type": "string",
-                    "title": "Application",
-                    "enum": [
-                        "main",
-                        "blog"
-                    ]
-                },
-                "blogCacheSize": {
-                    "type": "number",
-                    "title" : "Blog Cache Size (number of blogs cached for the entire server. max 9999)",
-                    "maxLength": 4
-                }
-            }
-        },
-        "form": [
+    "id": "com.networknt.light.config.update",
+    "version": 1,
+    "action" : [{
+        "category" : "config",
+        "name" : "updConfig",
+        "readOnly": false,
+        "title": "Update"
+    }],
+    "schema": {
+        "type": "object",
+        "required": [
             "host",
-            "app",
-            "blogCacheSize"
-        ]
-    }
+            "app"
+        ],
+        "title": "Configuration",
+        "properties": {
+            "host": {
+                "type": "string",
+                "title": "Host",
+                "enum": [
+                    "injector",
+                    "www.networknt.com",
+                    "www.edibleforestgarden.ca"
+                ]
+            },
+            "app": {
+                "type": "string",
+                "title": "Application",
+                "enum": [
+                    "main",
+                    "blog"
+                ]
+            },
+            "blogCacheSize": {
+                "type": "number",
+                "title" : "Blog Cache Size (number of blogs cached for the entire server. max 9999)",
+                "maxLength": 4
+            }
+        }
+    },
+    "form": [
+        "host",
+        "app",
+        "blogCacheSize"
+    ]
 }
+

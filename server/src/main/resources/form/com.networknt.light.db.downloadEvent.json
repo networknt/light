@@ -1,46 +1,42 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.db.downloadEvent",
-        "version": 1,
-        "action" : [{
-            "category" : "db",
-            "name" : "downloadEvent",
-            "readOnly": true,
-            "title": "Download Events"
-        }],
-        "schema": {
-            "type": "object",
-            "title": "Download Events",
-            "required": ["createDateFrom"],
-            "properties": {
-                "createDateFrom": {
-                    "title": "Event From Date",
-                    "type": "object",
-                    "format": "datetimepicker"
-                },
-                "createDateTo": {
-                    "title": "Event To Date",
-                    "type": "object",
-                    "format": "datetimepicker"
-                }
+    "id": "com.networknt.light.db.downloadEvent",
+    "version": 1,
+    "action" : [{
+        "category" : "db",
+        "name" : "downloadEvent",
+        "readOnly": true,
+        "title": "Download Events"
+    }],
+    "schema": {
+        "type": "object",
+        "title": "Download Events",
+        "required": ["createDateFrom"],
+        "properties": {
+            "createDateFrom": {
+                "title": "Event From Date",
+                "type": "object",
+                "format": "datetimepicker"
+            },
+            "createDateTo": {
+                "title": "Event To Date",
+                "type": "object",
+                "format": "datetimepicker"
+            }
+        }
+    },
+    "form": [
+        {
+            "key": "createDateFrom",
+            "options": {
+                "autoclose": 1
             }
         },
-        "form": [
-            {
-                "key": "createDateFrom",
-                "options": {
-                    "autoclose": 1
-                }
-            },
-            {
-                "key": "createDateTo",
-                "options": {
-                    "autoclose": 1
-                }
+        {
+            "key": "createDateTo",
+            "options": {
+                "autoclose": 1
             }
-        ]
-    }
+        }
+    ]
 }
+

@@ -1,6 +1,8 @@
 package com.networknt.light.server.handler.loader;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.server.LightServer;
+import com.networknt.light.util.ServiceLocator;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -12,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -62,9 +66,19 @@ public class FormLoader extends Loader {
             scan = new Scanner(file, Loader.encoding);
             // the content is only the data portion. convert to map
             String content = scan.useDelimiter("\\Z").next();
+
+
+            Map<String, Object> inputMap = new HashMap<String, Object>();
+            inputMap.put("category", "form");
+            inputMap.put("name", "impForm");
+            inputMap.put("readOnly", false);
+
+            Map<String, Object> data = ServiceLocator.getInstance().getMapper().readValue(content,
+                    new TypeReference<HashMap<String, Object>>() {});
+            inputMap.put("data", data);
             HttpPost httpPost = new HttpPost(host + "/api/rs");
             httpPost.addHeader("Authorization", "Bearer " + jwt);
-            StringEntity input = new StringEntity(content);
+            StringEntity input = new StringEntity(ServiceLocator.getInstance().getMapper().writeValueAsString(inputMap));
             input.setContentType("application/json");
             httpPost.setEntity(input);
             CloseableHttpResponse response = httpclient.execute(httpPost);

@@ -1,42 +1,38 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.rule.add",
-        "version": 1,
-        "action" : [{
-            "category" : "rule",
-            "name" : "addRule",
-            "readOnly": false,
-            "title": "Submit",
-            "success" : "/page/com.networknt.light.rule.admin.home"
-        }],
-        "schema": {
-            "type": "object",
-            "title": "Rule",
-            "required": ["ruleClass", "sourceCode"],
-            "properties": {
-                "ruleClass": {
-                    "title": "Rule Class",
-                    "type": "string"
-                },
-                "sourceCode": {
-                    "title": "Source Code",
-                    "type": "string"
-                }
+    "id": "com.networknt.light.rule.add",
+    "version": 1,
+    "action" : [{
+        "category" : "rule",
+        "name" : "addRule",
+        "readOnly": false,
+        "title": "Submit",
+        "success" : "/page/com.networknt.light.rule.admin.home"
+    }],
+    "schema": {
+        "type": "object",
+        "title": "Rule",
+        "required": ["ruleClass", "sourceCode"],
+        "properties": {
+            "ruleClass": {
+                "title": "Rule Class",
+                "type": "string"
+            },
+            "sourceCode": {
+                "title": "Source Code",
+                "type": "string"
             }
-        },
-        "form": [
-            "ruleClass",
-            {
-                "key": "sourceCode",
-                "type": "ace",
-                "aceOptions": {
-                    "theme": "eclipse",
-                    "mode" : "java"
-                }
+        }
+    },
+    "form": [
+        "ruleClass",
+        {
+            "key": "sourceCode",
+            "type": "ace",
+            "aceOptions": {
+                "theme": "eclipse",
+                "mode" : "java"
             }
-        ]
-    }
+        }
+    ]
 }
+

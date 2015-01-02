@@ -1,41 +1,37 @@
 {
-    "category": "form",
-    "name": "impForm",
-    "readOnly": false,
-    "data": {
-        "id": "com.networknt.light.page.update",
-        "version": 1,
-        "action" : [{
-            "category" : "page",
-            "name" : "updPage",
-            "readOnly": false,
-            "title": "Submit"
-        }],
-        "schema": {
-            "type": "object",
-            "title": "Page",
-            "required": ["id", "content"],
-            "properties": {
-                "id": {
-                    "title": "Id",
-                    "type": "string"
-                },
-                "content": {
-                    "title": "Content",
-                    "type": "string"
-                }
+    "id": "com.networknt.light.page.update",
+    "version": 1,
+    "action" : [{
+        "category" : "page",
+        "name" : "updPage",
+        "readOnly": false,
+        "title": "Submit"
+    }],
+    "schema": {
+        "type": "object",
+        "title": "Page",
+        "required": ["id", "content"],
+        "properties": {
+            "id": {
+                "title": "Id",
+                "type": "string"
+            },
+            "content": {
+                "title": "Content",
+                "type": "string"
             }
-        },
-        "form": [
-            "id",
-            {
-                "key": "content",
-                "type": "ace",
-                "aceOptions": {
-                    "theme": "eclipse",
-                    "mode" : "html"
-                }
+        }
+    },
+    "form": [
+        "id",
+        {
+            "key": "content",
+            "type": "ace",
+            "aceOptions": {
+                "theme": "eclipse",
+                "mode" : "html"
             }
-        ]
-    }
+        }
+    ]
 }
+
