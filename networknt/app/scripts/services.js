@@ -145,6 +145,11 @@ angular.module('lightApp')
             }
         };
 
+        var _getRefreshToken = function () {
+            var authorizationData = localStorageService.get('authorizationData');
+            return authorizationData.refreshToken;
+        }
+
         var _refreshToken = function ()
         {
             var deferred = $q.defer();
@@ -188,6 +193,7 @@ angular.module('lightApp')
         authServiceFactory.fillAuthData = _fillAuthData;
         authServiceFactory.authentication = _authentication;
         authServiceFactory.refreshToken = _refreshToken;
+        authServiceFactory.getRefreshToken = _getRefreshToken;
 
         return authServiceFactory;
     }])

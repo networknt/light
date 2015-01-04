@@ -12,7 +12,7 @@ public class LogOutUserEvRule extends AbstractUserRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        updUser(data);
+        logOut(data);
         // TODO update global online user count
         return true;
     }

@@ -1,0 +1,70 @@
+{
+  "id": "com.networknt.light.demo.select",
+  "version": 1,
+  "action" : [{
+    "category" : "demo",
+    "name" : "selectDemo",
+    "readOnly": false,
+    "title" : "Submit"
+  }],
+  "schema": {
+    "type": "object",
+    "title": "Demo Select",
+    "required": ["strapSingleSelectStatic", "strapMultipleSelectStatic", "strapSingleSelectDynamic", "strapMultipleSelectDynamic"],
+    "properties": {
+      "strapSingleSelectStatic": {
+        "title": "Strap Single Select Static",
+        "type": "string",
+        "format": "strapselect",
+        "items": [
+          {"value": "value1", "label": "label1"},
+          {"value": "value2", "label": "label2"},
+          {"value": "value3", "label": "label3"}
+        ]
+      },
+      "strapMultipleSelectStatic": {
+        "title": "Strap Multiple Select Static",
+        "type": "array",
+        "format": "strapselect",
+        "items": [
+          {"value": "value1", "label": "label1"},
+          {"value": "value2", "label": "label2"},
+          {"value": "value3", "label": "long very very long label3"}
+        ]
+      },
+      "strapSingleSelectDynamic": {
+        "title": "Strap Single Select Dynamic",
+        "type": "string",
+        "format": "strapselectdynamic"
+      },
+      "strapMultipleSelectDynamic": {
+        "title": "Strap Multiple Select Dynamic",
+        "type": "array",
+        "format": "strapselectdynamic"
+      }
+    }
+  },
+  "form": [
+    {
+      "key": "strapSingleSelectStatic"
+    },
+    {
+      "key": "strapMultipleSelectStatic"
+    },
+    {
+      "key": "strapSingleSelectDynamic",
+      "options": {
+        "category": "forum",
+        "name": "getForumDropdown"
+      }
+    },
+    {
+      "key": "strapMultipleSelectDynamic",
+      "options": {
+        "category": "forum",
+        "name": "getForumDropdown"
+      }
+    }
+
+  ]
+}

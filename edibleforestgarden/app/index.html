@@ -10,6 +10,7 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.css" />
     <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.css" />
     <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
     <!-- endbower -->
@@ -46,15 +47,15 @@
                     <ul class="nav navbar-nav">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: {left: true}"  dropdown>
                             <a ng-if="node.hasOwnProperty('menuItems')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
-                            <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed(); {{node.click}}">{{node.label}}</a>
+                            <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="item in node.menuItems"><a href="{{item.path}}" ng-click="toggleCollapsed(); {{node.click}}">{{item.label}}</a></li>
+                                <li ng-repeat="item in node.menuItems"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
                             </ul>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: { left: false}">
-                            <a href="{{node.path}}" ng-click="toggleCollapsed(); {{node.click}}">{{node.label}}</a>
+                            <a href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
                         </li>
                     </ul>
                 </nav>
@@ -63,15 +64,15 @@
                     <ul class="nav navbar-nav">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: { left: true}"  dropdown>
                             <a ng-if="node.hasOwnProperty('menuItems')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
-                            <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed(); {{node.click}}">{{node.label}}</a>
+                            <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="item in node.menuItems"><a href="{{item.path}}" ng-click="toggleCollapsed(); {{node.click}}">{{item.label}}</a></li>
+                                <li ng-repeat="item in node.menuItems"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
                             </ul>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: { left: false}">
-                        	<a href="{{node.path}}" ng-click="toggleCollapsed(); {{node.click}}">{{node.label}}</a>
+                        	<a href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
                     	</li>
                     </ul>
                 </nav>
@@ -116,7 +117,8 @@
     <script src="bower_components/tv4/tv4.js"></script>
     <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
     <script src="bower_components/pickadate/lib/picker.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/pickadate/lib/picker.date.js"></script>
+    <script src="bower_components/pickadate/lib/picker.time.js"></script>
     <script src="bower_components/angular-schema-form/dist/schema-form.min.js"></script>
     <script src="bower_components/flow.js/dist/flow.js"></script>
     <script src="bower_components/ng-flow/dist/ng-flow.js"></script>

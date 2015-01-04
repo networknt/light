@@ -40,8 +40,7 @@ var lightApp = angular.module('lightApp', [
 
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'mainCtrl'
+        templateUrl: 'views/demo.html'
       })
       .when('/signin', {
         templateUrl: 'views/form.html',
@@ -62,10 +61,6 @@ var lightApp = angular.module('lightApp', [
       .when('/menuAdmin', {
         templateUrl: 'views/menuAdmin.html',
         controller: 'MenuAdminCtrl'
-      })
-      .when('/forum', {
-        templateUrl: 'views/forum.html',
-        controller: 'forumCtrl'
       })
       .when('/blog', {
         templateUrl: 'views/blog.html',

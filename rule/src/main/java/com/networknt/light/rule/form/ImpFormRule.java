@@ -1,5 +1,6 @@
 package com.networknt.light.rule.form;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.metadata.schema.OType;
@@ -7,6 +8,7 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
 import javax.xml.ws.Service;
 import java.rmi.server.ServerCloneException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +32,7 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
                 inputMap.put("responseCode", 403);
             } else {
                 String host = (String)user.get("host");
+                Map<String, Object> dataMap = mapper.readValue((String)data.get("content"), new TypeReference<HashMap<String, Object>>() {});
                 if(host != null) {
                     if(!host.equals(data.get("host"))) {
                         error = "User can only import form from host: " + host;
@@ -41,11 +44,11 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
                         inputMap.put("eventMap", eventMap);
                         eventData.put("host", host);
 
-                        eventData.put("id", data.get("id"));
-                        eventData.put("action", data.get("action"));
-                        eventData.put("schema", data.get("schema"));
-                        eventData.put("form", data.get("form"));
-                        eventData.put("modelData", data.get("modelData"));
+                        eventData.put("id", dataMap.get("id"));
+                        eventData.put("action", dataMap.get("action"));
+                        eventData.put("schema", dataMap.get("schema"));
+                        eventData.put("form", dataMap.get("form"));
+                        eventData.put("modelData", dataMap.get("modelData"));
 
                         eventData.put("createDate", new java.util.Date());
                         eventData.put("createUserId", user.get("userId"));
@@ -56,11 +59,11 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
 
-                    eventData.put("id", data.get("id"));
-                    eventData.put("action", data.get("action"));
-                    eventData.put("schema", data.get("schema"));
-                    eventData.put("form", data.get("form"));
-                    eventData.put("modelData", data.get("modelData"));
+                    eventData.put("id", dataMap.get("id"));
+                    eventData.put("action", dataMap.get("action"));
+                    eventData.put("schema", dataMap.get("schema"));
+                    eventData.put("form", dataMap.get("form"));
+                    eventData.put("modelData", dataMap.get("modelData"));
 
                     eventData.put("createDate", new java.util.Date());
                     eventData.put("createUserId", user.get("userId"));
@@ -74,4 +77,5 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
             return true;
         }
     }
+
 }

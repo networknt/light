@@ -70,7 +70,7 @@ gulp.task('webserver', function() {
       proxies: [
         {
           source: '/api',
-          target: 'http://www.networknt.com:8080/api'
+          target: 'http://example:8080/api'
         }
       ],
       port: 8001,

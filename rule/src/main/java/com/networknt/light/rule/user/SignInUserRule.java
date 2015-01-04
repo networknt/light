@@ -48,6 +48,7 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
                     }
                     inputMap.put("result", mapper.writeValueAsString(tokens));
                     eventData.put("userId", user.field("userId"));
+                    eventData.put("host", data.get("host"));  // add host as refreshToken will be associate with host.
                     eventData.put("logInDate", new java.util.Date());
                 }
             } else {

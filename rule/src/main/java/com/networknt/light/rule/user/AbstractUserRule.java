@@ -18,6 +18,7 @@ import com.orientechnologies.orient.core.record.ORecord;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -31,6 +32,8 @@ import java.util.regex.Pattern;
  * Created by steve on 9/23/2014.
  */
 public abstract class AbstractUserRule extends AbstractRule implements Rule {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractUserRule.class);
+
     public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     Pattern pattern = Pattern.compile(EMAIL_PATTERN);
@@ -300,42 +303,121 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
     }
 
     protected void signIn(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            if (oid != null) {
-                ODocument user = (ODocument) oid.getRecord();
-                ODocument credential = (ODocument)user.field("credential");
-                if(credential != null) {
-                    credential.field("loginDate", data.get("loginDate"));
-                    String hashedRefreshToken = (String)data.get("hashedRefreshToken");
-                    if(hashedRefreshToken != null) {
-                        List refreshTokens = credential.field("refreshTokens");
-                        if(refreshTokens != null) {
-                            // max refresh tokens for user is 10. max 10 devices.
-                            if(refreshTokens.size() >= 10) {
-                                refreshTokens.remove(0);
+        String hashedRefreshToken = (String)data.get("hashedRefreshToken");
+        if(hashedRefreshToken != null) {
+            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            try {
+                db.begin();
+                OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
+                OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
+                if (oid != null) {
+                    ODocument user = (ODocument) oid.getRecord();
+                    ODocument credential = (ODocument)user.field("credential");
+                    if(credential != null) {
+                        String host = (String)data.get("host");
+                        // get hostRefreshTokens map here.
+                        Map hostRefreshTokens = credential.field("hostRefreshTokens");
+                        if(hostRefreshTokens != null) {
+                            // logged in before, check if logged in from the host.
+                            List<String> refreshTokens = (List)hostRefreshTokens.get(host);
+                            if(refreshTokens != null) {
+                                // max refresh tokens for user is 10. max 10 devices.
+                                if(refreshTokens.size() >= 10) {
+                                    refreshTokens.remove(0);
+                                }
+                                refreshTokens.add(hashedRefreshToken);
+                            } else {
+                                refreshTokens = new ArrayList<String>();
+                                refreshTokens.add(hashedRefreshToken);
+                                hostRefreshTokens.put(host, refreshTokens);
                             }
-                            refreshTokens.add(hashedRefreshToken);
+
                         } else {
-                            refreshTokens = new ArrayList<String>();
+                            // never logged in, create the map.
+                            hostRefreshTokens = new HashMap<String, List<String>>();
+                            List<String> refreshTokens = new ArrayList<String>();
                             refreshTokens.add(hashedRefreshToken);
+                            hostRefreshTokens.put(host, refreshTokens);
+                            credential.field("hostRefreshTokens", hostRefreshTokens);
                         }
-                        credential.field("refreshTokens", refreshTokens);
+                        credential.save();
+                        db.commit();
                     }
-                    credential.save();
-                    db.commit();
                 }
+            } catch (Exception e) {
+                db.rollback();
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                db.close();
             }
-        } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
+        } else {
+            logger.debug("There is no hashedRefreshToken as user didn't select remember me. Do nothing");
         }
+    }
+
+    protected void logOut(Map<String, Object> data) throws Exception {
+        String refreshToken = (String)data.get("refreshToken");
+        if(refreshToken != null) {
+            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            try {
+                db.begin();
+                OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
+                OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
+                if (oid != null) {
+                    ODocument user = (ODocument) oid.getRecord();
+                    ODocument credential = (ODocument)user.field("credential");
+                    if(credential != null) {
+                        // now remove the refresh token
+                        String host = (String)data.get("host");
+                        logger.debug("logOut to remove refreshToken {} from host {}" , refreshToken, host);
+                        Map hostRefreshTokens = credential.field("hostRefreshTokens");
+                        if(hostRefreshTokens != null) {
+                            // logged in before, check if logged in from the host.
+                            List<String> refreshTokens = (List)hostRefreshTokens.get(host);
+                            if(refreshTokens != null) {
+                                String hashedRefreshToken = HashUtil.md5(refreshToken);
+                                refreshTokens.remove(hashedRefreshToken);
+                            }
+                        } else {
+                            logger.error("There is no refresh tokens");
+                        }
+                        credential.save();
+                        db.commit();
+                    }
+                }
+            } catch (Exception e) {
+                db.rollback();
+                e.printStackTrace();
+                throw e;
+            } finally {
+                db.close();
+            }
+        } else {
+            logger.debug("There is no hashedRefreshToken as user didn't pass in refresh token when logging out. Do nothing");
+        }
+    }
+
+    boolean checkRefreshToken(ODocument credential, String host, String refreshToken) throws Exception {
+        boolean result = false;
+        if(credential != null && refreshToken != null) {
+            Map hostRefreshTokens = credential.field("hostRefreshTokens");
+            if(hostRefreshTokens != null) {
+                List<String> refreshTokens = (List)hostRefreshTokens.get(host);
+                if(refreshTokens != null) {
+                    String hashedRefreshToken = HashUtil.md5(refreshToken);
+                    for(String token: refreshTokens) {
+                        if(hashedRefreshToken.equals(token)) {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                logger.error("There is no refresh tokens");
+            }
+        }
+        return result;
     }
 
     protected void upVoteUser(Map<String, Object> data) {
@@ -515,20 +597,4 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return HashUtil.validatePassword(inputPassword, storedPassword);
     }
 
-    boolean checkRefreshToken(ODocument credential, String refreshToken) throws Exception {
-        boolean result = false;
-        if(credential != null && refreshToken != null) {
-            List<String> refreshTokens = credential.field("refreshTokens");
-            if(refreshTokens != null && refreshTokens.size() > 0) {
-                String hashedRefreshToken = HashUtil.md5(refreshToken);
-                for(String token: refreshTokens) {
-                    if(hashedRefreshToken.equals(token)) {
-                        result = true;
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
-    }
 }

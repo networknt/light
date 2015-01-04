@@ -73,8 +73,8 @@ public class FormLoader extends Loader {
             inputMap.put("name", "impForm");
             inputMap.put("readOnly", false);
 
-            Map<String, Object> data = ServiceLocator.getInstance().getMapper().readValue(content,
-                    new TypeReference<HashMap<String, Object>>() {});
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("content", content);
             inputMap.put("data", data);
             HttpPost httpPost = new HttpPost(host + "/api/rs");
             httpPost.addHeader("Authorization", "Bearer " + jwt);

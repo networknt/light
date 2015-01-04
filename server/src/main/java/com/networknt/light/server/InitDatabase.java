@@ -182,11 +182,10 @@ public class InitDatabase {
             }
             OClass credential = schema.createClass("Credential");
             credential.createProperty("password", OType.STRING);
-            // can have up to 10 refresh tokens for 10 devices. when 11 refresh token is created, the first one is removed.
-            // there is no expire date for refresh token unless it is removed from user browser local storage.
-            credential.createProperty("refreshTokens", OType.EMBEDDEDLIST);
-            credential.createProperty("logInDate", OType.DATETIME);
-            credential.createProperty("logOutDate", OType.DATETIME);
+            // each host has an entry with a list of refresh tokens up to 10 devices.
+            // when 11 refresh token is created, the first one is removed for the host.
+            // there is no expire date for refresh token unless it is removed by log out action from user.
+            credential.createProperty("hostRefreshTokens", OType.EMBEDDEDMAP);
             schema.save();
         } catch (Exception e) {
             e.printStackTrace();

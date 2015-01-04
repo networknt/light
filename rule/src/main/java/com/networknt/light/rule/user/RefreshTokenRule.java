@@ -23,6 +23,7 @@ public class RefreshTokenRule extends AbstractUserRule implements Rule {
 
         String refreshToken = (String)data.get("refreshToken");
         String userId = (String)data.get("userId");
+        String host = (String)data.get("host");
         if(refreshToken == null || userId == null) {
             inputMap.put("responseCode", 401);
             error = "Refresh token or userId is missing";
@@ -30,7 +31,7 @@ public class RefreshTokenRule extends AbstractUserRule implements Rule {
             ODocument user = getUserByUserId(userId);
             if(user != null) {
                 ODocument credential = (ODocument) user.field("credential");
-                if (checkRefreshToken(credential, refreshToken)) {
+                if (checkRefreshToken(credential, host, refreshToken)) {
                     String jwt = generateToken(user);
                     if (jwt != null) {
                         Map<String, String> tokens = new HashMap<String, String>();

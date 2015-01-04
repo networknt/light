@@ -24,12 +24,12 @@
             "parent": {
                 "title" : "Parent",
                 "type": "string",
-                "format": "strapselect"
+                "format": "strapselectdynamic"
             },
             "children": {
                 "title" : "Children",
                 "type": "array",
-                "format": "strapselect"
+                "format": "strapselectdynamic"
             }
         }
     },
