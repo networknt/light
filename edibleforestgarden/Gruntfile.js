@@ -70,10 +70,10 @@ module.exports = function (grunt) {
     // The actual grunt server settings
     connect: {
       options: {
-        port: 9000,
+        port: 9002,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
-        livereload: 35729
+        livereload: 35740
       },
       livereload: {
         options: {
@@ -93,7 +93,7 @@ module.exports = function (grunt) {
       },
       test: {
         options: {
-          port: 9001,
+          port: 9003,
           middleware: function (connect) {
             return [
               require('connect-modrewrite')(['^/api http://www.edibleforestgarden.ca:8080/api [P L]']),

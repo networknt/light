@@ -10,7 +10,6 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.css" />
     <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.css" />
     <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
     <!-- endbower -->
@@ -83,7 +82,9 @@
     <div class="header-placeholder"></div>
     <div role="main" ng-view></div><!-- /.main -->
     <footer class="footer">
-        <div class="container"></div>
+        <div class="container">
+            <a class="btn btn-primary" onclick="window.open('/chat.html', '_blank', 'location=no,menubar=no,toolbar=no,height=570,width=520,scrollbars=yes,status=yes');">Chat With Me</a>
+        </div>
     </footer>
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <!--
@@ -106,8 +107,8 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -116,16 +117,17 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/tv4/tv4.js"></script>
     <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
-    <script src="bower_components/pickadate/lib/picker.js"></script>
-    <script src="bower_components/pickadate/lib/picker.date.js"></script>
-    <script src="bower_components/pickadate/lib/picker.time.js"></script>
-    <script src="bower_components/angular-schema-form/dist/schema-form.min.js"></script>
-    <script src="bower_components/flow.js/dist/flow.js"></script>
-    <script src="bower_components/ng-flow/dist/ng-flow.js"></script>
-    <script src="bower_components/angular-translate/angular-translate.js"></script>
-    <script src="bower_components/schema-form-ngflow/schema-form-ngflow.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+    <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="bower_components/angular-ui-utils/highlight.js"></script>
+    <script src="bower_components/angular-schema-form/dist/schema-form.min.js"></script>
+    <script src="bower_components/angular-schema-form-marked/bootstrap-marked.min.js"></script>
+    <script src="bower_components/angular-schema-form-ui-ace/bootstrap-ui-ace.min.js"></script>
+    <script src="bower_components/angular-schema-form-strapselect/bootstrap-strapselect.min.js"></script>
     <script src="bower_components/schema-form-datetimepicker/schema-form-datetimepicker.min.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/momentjs/moment.js"></script>
     <!-- endbower -->
     <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
     <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
@@ -134,9 +136,7 @@
     <script src="bower_components/angular-ui-utils/highlight.min.js"></script>
     <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
     <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
-    <script src="bower_components/underscore/underscore-min.js"></script>
     <script src="bower_components/angular-translate/angular-translate.min.js"></script>
-    <script src='bower_components/angular-ui-select/dist/select.js'></script>
     <script src="bower_components/angular-schema-form/dist/schema-form.js"></script>
     <script src="bower_components/angular-schema-form/dist/bootstrap-decorator.min.js"></script>
     <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
@@ -169,7 +169,6 @@
     <script src="scripts/controllers/blog.js"></script>
     <script src="scripts/controllers/page.js"></script>
     <script src="scripts/controllers/forum.js"></script>
-
     <!-- endbuild -->
 </body>
 </html>
