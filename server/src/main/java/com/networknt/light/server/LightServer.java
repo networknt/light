@@ -142,14 +142,17 @@ public class LightServer {
             scanner.close();
 
             ObjectMapper mapper = new ObjectMapper();
-            List<Map<String, Object>> events = mapper.readValue(sb.toString(),
-                    new TypeReference<List<HashMap<String, Object>>>() {});
+            if(sb.length() > 0) {
+                // if you want to generate the initdb.json from your dev env, then you should make this
+                // file as empty in server resources folder and load all objects again.
+                List<Map<String, Object>> events = mapper.readValue(sb.toString(),
+                        new TypeReference<List<HashMap<String, Object>>>() {});
 
-            // replay event one by one.
-            for(Map<String, Object> event: events) {
-                RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);
+                // replay event one by one.
+                for(Map<String, Object> event: events) {
+                    RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);
+                }
             }
-
         } catch (Exception e) {
             logger.error("Exception:", e);
         }
