@@ -15,7 +15,7 @@ public class Util {
                 (jsonMap.get("host") == null? "" : jsonMap.get("host") + ".") +
                 (jsonMap.get("app") == null? "" : jsonMap.get("app") + ".") +
                 (jsonMap.get("category") == null? "" : jsonMap.get("category") + ".") +
-                (jsonMap.get("version")) == null? "" : jsonMap.get("version") + "." +
+                (jsonMap.get("version") == null? "" : jsonMap.get("version") + ".") +
                 ruleId;
         System.out.println("ruleId = " + ruleId);
         return ruleId;
@@ -29,7 +29,7 @@ public class Util {
                 (jsonMap.get("host") == null? "" : jsonMap.get("host") + ".") +
                 (jsonMap.get("app") == null? "" : jsonMap.get("app") + ".") +
                 (jsonMap.get("category") == null? "" : jsonMap.get("category") + ".") +
-                (jsonMap.get("version")) == null? "" : jsonMap.get("version") + "." +
+                (jsonMap.get("version") == null? "" : jsonMap.get("version") + ".") +
                 ruleId;
         System.out.println("ruleId = " + ruleId);
         return ruleId;
