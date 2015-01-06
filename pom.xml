@@ -158,9 +158,12 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <dbType>orientdb</dbType>
-                    <dbUrl>plocal:/home/steve/lightdb</dbUrl>
+                    <dbName>lightdb</dbName>
                     <dbUser>admin</dbUser>
                     <dbPass>admin</dbPass>
+                    <serverUrl>http://example:8080</serverUrl>
+                    <serverUser>stevehu</serverUser>
+                    <serverPass>123456</serverPass>
                 </configuration>
             </plugin>
         </plugins>

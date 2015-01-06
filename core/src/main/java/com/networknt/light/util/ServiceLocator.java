@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +23,6 @@ public class ServiceLocator {
     ObjectMapper mapper = new ObjectMapper();
     Map<String, String> serverMap = null;
     Map<String, Object> hostMap = null;
-    Map<String, Object> injectorEnvMap = null;
 
     Map<String, Map<String, Object>> memoryImage = new ConcurrentHashMap<String,Map<String, Object>>(10, 0.9f, 1);
 
@@ -81,25 +81,22 @@ public class ServiceLocator {
 
     public String getDbUrl() {
         loadServerConfig();
-        return serverMap.get("dburl");
+        String dbName = serverMap.get("dbName");
+        return "plocal:"+ System.getProperty("user.home") + "/" + dbName;
     }
 
     public ODatabaseDocumentTx getDb() {
         loadServerConfig();
-        String dburl = serverMap.get("dburl");
-        String dbuser = serverMap.get("dbuser");
-        String dbpass = serverMap.get("dbpass");
-        return ODatabaseDocumentPool.global().acquire(dburl, dbuser, dbpass);
+        String dbName = serverMap.get("dbName");
+        String dbUser = serverMap.get("dbUser");
+        String dbPass = serverMap.get("dbPass");
+        String dbUrl = "plocal:"+ System.getProperty("user.home") + "/" + dbName;
+        return ODatabaseDocumentPool.global().acquire(dbUrl, dbUser, dbPass);
     }
 
     public Map<String, Object> getHostMap() {
         loadHostConfig();
         return hostMap;
-    }
-
-    public Map<String, Object> getInjectorEnvMap() {
-        loadInjectorEnvConfig();
-        return injectorEnvMap;
     }
 
     public Map<String, Object> getMemoryImage(String key) {
@@ -116,7 +113,8 @@ public class ServiceLocator {
             synchronized (ServiceLocator.class) {
                 if(serverMap == null) {
                     try {
-                        serverMap = mapper.readValue(new File("/home/server.json"),
+                        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+                        serverMap = mapper.readValue(classloader.getResourceAsStream("server.json"),
                                 new TypeReference<HashMap<String, String>>() {
                                 });
                     } catch (IOException ioe) {
@@ -132,7 +130,8 @@ public class ServiceLocator {
             synchronized (ServiceLocator.class) {
                 if(hostMap == null) {
                     try {
-                        hostMap = mapper.readValue(new File("/home/virtualhost.json"),
+                        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+                        hostMap = mapper.readValue(classloader.getResourceAsStream("virtualhost.json"),
                                 new TypeReference<HashMap<String, Object>>() {
                                 });
                     } catch (IOException ioe) {
@@ -142,21 +141,4 @@ public class ServiceLocator {
             }
         }
     }
-
-    private void loadInjectorEnvConfig() {
-        if(injectorEnvMap == null) {
-            synchronized (ServiceLocator.class) {
-                if(injectorEnvMap == null) {
-                    try {
-                        injectorEnvMap = mapper.readValue(new File("/home/injectorenv.json"),
-                                new TypeReference<HashMap<String, Object>>() {
-                                });
-                    } catch (IOException ioe) {
-                        logger.error("Exception:", ioe);
-                    }
-                }
-            }
-        }
-    }
-
 }
