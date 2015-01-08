@@ -200,17 +200,20 @@
             <h2>OCA Server</h2>
             <p>
 
-            The most important role of the OCA sever is to add another layer of security before our legacy system API. Otherwise, our legacy systems will be exposed to outside world and subject to attacks. The OCA Server will validate all the request from browser and make sure only valid request goes to resource server and it is designed to identify attacks or misuse
+            The most important role of the OCA sever is to add another layer of security before our legacy system API. Otherwise, our legacy systems will be exposed to outside world and subject to attacks. The OCA Server will validate all the requests from browser and make sure only valid request goes to resource server and it is designed to identify attacks or misuse.
             <p>
 
-            The OCA server supports integration with legacy system. Instead changing the legacy systems to provide REST API, we leave legacy system along and our OCA server will be acted as a proxy to the existing legacy API. Two benefits: avoid updating legacy system that is costly and shield our OCA application and experience to have a relatively stable API if legacy API changed.
+            The OCA server supports integration with legacy system. Instead changing the legacy systems to provide REST API, we leave legacy system along and our OCA server will be acted as a proxy to the existing legacy API. There are two benefits:
+            <ul>Avoid updating legacy system that is costly or adding another layer just for REST API purpose. Our OCA server will call the existing API directly regardless the service types, Remote Session Bean, EMB, Web Services, .Net etc.</ul>
+            <ul>When OCA apps and experiences communicate with their own API, the interface will be relatively stable and any legacy API change will be done on the rules running on the server.</ul>
             <p>
-
-            The OCA server provides references, configurations for our OCA apps and experiences. This allows us to develop data driven components with customization in mind. For example, we can have a form component that renders different form given different form schema and form configuration. Another example would be account summary, number of columns and column headers can all be customized.
+            The OCA server provides references, configurations for our OCA apps and experiences. This allows us to develop data driven components with customization in mind. For example, we can have a form component that renders different forms given different form schemas and form configurations. Another example would be account summary, number of columns and column headers can all be customized.
             <p>
-
-            The OCA server also serves as a distributed cache layer for legacy system and data is cached in the final consumption json format.
+            The OCA server also serves as a distributed cache layer for legacy system and data is cached in the final consumption json format. It is Domain Driven Design with command/event sourcing along with CQRS and can be clustered with Distributed cache like coherence or Hazelcast. Possible to have all the cached data in memory to serve query part of the app and support decision making for UI commands depending on the nature of the application and infrastructure.
             <p>
+            The server is responsible for logging, monitoring, auditing and user behaviour analysis. As apps and experiences are running on browser, you don’t know if end users get exceptions or not. Given we are using event sourcing, all the user actions on the browser will be in our event store. Uncaught Exceptions on UI will be logged as an event, Error response on the server will be logged as an event, service side exception will be logged as an event and all the events are associated with the user as JWT token is passing alone. From the event store, it is very easy to reproduce front end exception and back end exception as all the sequence and data are available and simply replay will reproduce. Monitoring meaning we will have a filter rule for events so that certain events will trigger notifications to administrators such as UI exception and server exception. For enterprise system, auditing is very important so that all the updates to the system are traceable. Our event store will serve the audit well and beyond. The information in event store are valuable for understanding customer behaviours, detect attacks etc.
+            <p>
+            The OCA server stack would be Undertow, OrientDB, Hazelcast and Light Rule Engine.
 
             <h2>Future proof</h2>
             <p>
