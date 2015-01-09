@@ -10,10 +10,9 @@ import java.util.Map;
  */
 public class DelRuleEvRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
-        Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        String rid = (String) data.get("@rid");
-        delRule(rid);
+        Map<String, Object> eventMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
+        delRule(data);
         return true;
     }
 }

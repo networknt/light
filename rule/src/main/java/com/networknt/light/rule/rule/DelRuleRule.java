@@ -3,6 +3,7 @@ package com.networknt.light.rule.rule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.role.AbstractRoleRule;
 import com.networknt.light.server.DbService;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class DelRuleRule extends AbstractRuleRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         String rid = (String)data.get("@rid");
+        int inputVersion = (int)data.get("@version");
         String error = null;
         if(payload == null) {
             error = "Login is required";
@@ -25,20 +27,30 @@ public class DelRuleRule extends AbstractRuleRule implements Rule {
             List roles = (List)user.get("roles");
             if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("ruleAdmin")) {
                 error = "Role owner or admin or ruleAdmin is required to delete rule";
-                inputMap.put("responseCode", 401);
+                inputMap.put("responseCode", 403);
             } else {
                 String host = (String)user.get("host");
                 if(host != null && !host.equals(data.get("host"))) {
                     error = "User can only delete rule for host: " + host;
-                    inputMap.put("responseCode", 401);
+                    inputMap.put("responseCode", 403);
                 } else {
-                    String json = DbService.getJsonByRid(rid);
-                    if(json == null) {
+                    ODocument rule = DbService.getODocumentByRid(rid);
+                    if(rule == null) {
                         error = "Rule with @rid " + rid + " cannot be found";
                         inputMap.put("responseCode", 404);
                     } else {
-                        // TODO check if rule is disabled and version is matched.
-
+                        int storedVersion = rule.field("@version");
+                        if(inputVersion != storedVersion) {
+                            error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
+                            inputMap.put("responseCode", 400);
+                        } else {
+                            Map eventMap = getEventMap(inputMap);
+                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                            inputMap.put("eventMap", eventMap);
+                            eventData.put("ruleClass", data.get("ruleClass"));
+                            eventData.put("updateDate", new java.util.Date());
+                            eventData.put("updateUserId", user.get("userId"));
+                        }
                     }
                 }
             }

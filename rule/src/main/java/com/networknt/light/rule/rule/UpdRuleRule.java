@@ -3,6 +3,7 @@ package com.networknt.light.rule.rule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,39 +35,46 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
                 if(host != null) {
                     if(!host.equals(data.get("host"))) {
                         error = "User can only update rule for host: " + host;
-                        inputMap.put("responseCode", 401);
+                        inputMap.put("responseCode", 403);
                     } else {
-                        String json = DbService.getJsonByRid(rid);
-                        if(json == null) {
+                        ODocument rule = DbService.getODocumentByRid(rid);
+                        if(rule == null) {
                             error = "Rule with @rid " + rid + " cannot be found";
                             inputMap.put("responseCode", 404);
                         } else {
-                            Map<String, Object> rule = mapper.readValue(json,
-                                    new TypeReference<HashMap<String, Object>>() {
-                                    });
-                            int storedVersion = (int)rule.get("@version");
+                            int storedVersion = rule.field("@version");
                             if(inputVersion != storedVersion) {
                                 error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
                                 inputMap.put("responseCode", 400);
+                            } else {
+                                Map eventMap = getEventMap(inputMap);
+                                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                                inputMap.put("eventMap", eventMap);
+                                eventData.put("ruleClass", data.get("ruleClass"));
+                                eventData.put("sourceCode", data.get("sourceCode"));
+                                eventData.put("updateDate", new java.util.Date());
+                                eventData.put("updateUserId", user.get("userId"));
                             }
                         }
                     }
                 } else {
-                    String json = DbService.getJsonByRid(rid);
-                    if(json == null) {
+                    ODocument rule = DbService.getODocumentByRid(rid);
+                    if(rule == null) {
                         error = "Rule with @rid " + rid + " cannot be found";
                         inputMap.put("responseCode", 404);
                     } else {
-                        Map<String, Object> rule = mapper.readValue(json,
-                                new TypeReference<HashMap<String, Object>>() {
-                                });
-                        int storedVersion = (int)rule.get("@version");
+                        int storedVersion = rule.field("@version");
                         if(inputVersion != storedVersion) {
                             error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
                             inputMap.put("responseCode", 400);
                         } else {
-                            // this is the owner update the role. remove host.
-                            data.remove("host");
+                            Map eventMap = getEventMap(inputMap);
+                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                            inputMap.put("eventMap", eventMap);
+                            eventData.put("ruleClass", data.get("ruleClass"));
+                            eventData.put("sourceCode", data.get("sourceCode"));
+                            eventData.put("updateDate", new java.util.Date());
+                            eventData.put("updateUserId", user.get("userId"));
                         }
                     }
                 }

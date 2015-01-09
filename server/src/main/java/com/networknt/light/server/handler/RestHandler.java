@@ -15,10 +15,12 @@ import io.undertow.server.handlers.form.FormEncodedDataDefinition;
 import io.undertow.server.handlers.form.FormParserFactory;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
+import io.undertow.util.Methods;
 import net.oauth.jsontoken.JsonToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -40,7 +42,21 @@ public class RestHandler implements HttpHandler {
         }
 
         exchange.startBlocking();
-        String json = new Scanner(exchange.getInputStream(),"UTF-8").useDelimiter("\\A").next();
+        // check if it is get or post
+        String json = null;
+        if(Methods.GET.equals(exchange.getRequestMethod())) {
+            Map params = exchange.getQueryParameters();
+            String cmd = ((Deque<String>)params.get("cmd")).getFirst();
+            json = URLDecoder.decode(cmd, "UTF8");
+        } else if (Methods.POST.equals(exchange.getRequestMethod())) {
+            json = new Scanner(exchange.getInputStream(),"UTF-8").useDelimiter("\\A").next();
+        } else {
+            logger.error("Invalid Request Method");
+            exchange.setResponseCode(400);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+            exchange.getResponseSender().send((ByteBuffer.wrap("Invalid Request Method".getBytes("utf-8"))));
+            return;
+        }
         logger.debug("request json = {}", json);
         // TODO validate with json schema to make sure the input json is valid. return an error message otherwise.
         // you need to get the schema from db again for the one sent from browser might be modified.

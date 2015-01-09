@@ -10,7 +10,9 @@ import java.util.Map;
  * Created by steve on 08/10/14.
  *
  * This is the rule that allow user to add brand new rule from rule admin interface. It will fail
- * if the rule exist in database. And normally, you construct simple rules on the fly.
+ * if the rule exist in database. And normally, you only construct simple rules on the fly. Most of
+ * the time, you should use impRuleRule instead.
+ *
  *
  */
 public class AddRuleRule extends AbstractRuleRule implements Rule {
@@ -27,28 +29,47 @@ public class AddRuleRule extends AbstractRuleRule implements Rule {
             List roles = (List)user.get("roles");
             if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("ruleAdmin")) {
                 error = "Role owner or admin or ruleAdmin is required to add rule";
-                inputMap.put("responseCode", 401);
+                inputMap.put("responseCode", 403);
             } else {
                 String host = (String)user.get("host");
                 if(host != null) {
                     if(!host.equals(data.get("host"))) {
                         error = "User can only add rule from host: " + host;
-                        inputMap.put("responseCode", 401);
+                        inputMap.put("responseCode", 403);
                     } else {
+                        // check if the rule exists or not
                         String json = getRuleByRuleClass((String)data.get("ruleClass"));
                         if(json != null) {
                             error = "ruleClass for the rule exists";
                             inputMap.put("responseCode", 400);
+                        } else {
+                            Map eventMap = getEventMap(inputMap);
+                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                            inputMap.put("eventMap", eventMap);
+                            eventData.put("host", host);
+
+                            eventData.put("ruleClass", data.get("ruleClass"));
+                            eventData.put("sourceCode", data.get("sourceCode"));
+                            eventData.put("createDate", new java.util.Date());
+                            eventData.put("createUserId", user.get("userId"));
                         }
                     }
                 } else {
+                    // check if the rule exists or not.
                     String json = getRuleByRuleClass((String)data.get("ruleClass"));
                     if(json != null) {
                         error = "ruleClass for the rule exists";
                         inputMap.put("responseCode", 400);
                     } else {
-                        // remove host from data as this is owner adding role
-                        data.remove("host");
+                        // This is owner to import rule, notice that no host is passed in.
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
+
+                        eventData.put("ruleClass", data.get("ruleClass"));
+                        eventData.put("sourceCode", data.get("sourceCode"));
+                        eventData.put("createDate", new java.util.Date());
+                        eventData.put("createUserId", user.get("userId"));
                     }
                 }
             }
@@ -60,4 +81,5 @@ public class AddRuleRule extends AbstractRuleRule implements Rule {
             return true;
         }
     }
+
 }

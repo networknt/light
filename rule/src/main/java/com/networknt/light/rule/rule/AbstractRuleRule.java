@@ -2,6 +2,7 @@ package com.networknt.light.rule.rule;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -22,7 +23,7 @@ import java.util.Map;
 /**
  * Created by husteve on 10/8/2014.
  */
-public abstract class AbstractRuleRule implements Rule {
+public abstract class AbstractRuleRule extends AbstractRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractRuleRule.class);
 
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
@@ -48,7 +49,7 @@ public abstract class AbstractRuleRule implements Rule {
         return json;
     }
 
-    protected String addRule(Map<String, Object> data, String userRid, String userId) throws Exception {
+    protected String addRule(Map<String, Object> data) throws Exception {
         String json = null;
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         OSchema schema = db.getMetadata().getSchema();
@@ -56,11 +57,10 @@ public abstract class AbstractRuleRule implements Rule {
             db.begin();
             ODocument rule = new ODocument(schema.getClass("Rule"));
             rule.field("ruleClass", data.get("ruleClass"));
-            rule.field("host", data.get("host"));
+            if(data.get("host") != null) rule.field("host", data.get("host"));
             rule.field("sourceCode", data.get("sourceCode"));
-            rule.field("createDate", new java.util.Date());
-            rule.field("createUserId", userId);
-            rule.field("createUserRid", userRid);
+            rule.field("createDate", data.get("createDate"));
+            rule.field("createUserId", data.get("createUserId"));
             rule.save();
             db.commit();
             json  = rule.toJSON();
@@ -74,26 +74,24 @@ public abstract class AbstractRuleRule implements Rule {
         return json;
     }
 
-    protected void updRule(Map<String, Object> data, String userRid, String userId) throws Exception {
+    protected void updRule(Map<String, Object> data) throws Exception {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             db.begin();
-            ODocument rule = db.load(new ORecordId((String)data.get("@rid")));
-            if (rule != null) {
-                String host = (String)data.get("host");
-                if(host != null && !host.equals(rule.field("host"))) {
-                    rule.field("host", host);
-                }
+            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Rule.ruleClass");
+            // this is a unique index, so it retrieves a OIdentifiable
+            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
+            if (oid != null && oid.getRecord() != null) {
+                ODocument rule = (ODocument) oid.getRecord();
                 String sourceCode = (String)data.get("sourceCode");
                 if(sourceCode != null && !sourceCode.equals(rule.field("sourceCode"))) {
                     rule.field("sourceCode", sourceCode);
                 }
-                rule.field("updateDate", new java.util.Date());
-                rule.field("updateUserRid", userRid);
-                rule.field("updateUserId", userId);
+                rule.field("updateDate", data.get("updateDate"));
+                rule.field("updateUserId", data.get("updateUserId"));
                 rule.save();
-                db.commit();
             }
+            db.commit();
         } catch (Exception e) {
             db.rollback();
             logger.error("Exception:", e);
@@ -103,11 +101,18 @@ public abstract class AbstractRuleRule implements Rule {
         }
     }
 
-    protected void delRule(String rid) throws Exception {
+    protected void delRule(Map<String, Object> data) throws Exception {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             db.begin();
-            db.delete(new ORecordId(rid));
+
+            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Rule.ruleClass");
+            // this is a unique index, so it retrieves a OIdentifiable
+            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
+            if (oid != null && oid.getRecord() != null) {
+                ODocument rule = (ODocument) oid.getRecord();
+                rule.delete();
+            }
             db.commit();
         } catch (Exception e) {
             db.rollback();
