@@ -1,0 +1,127 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('com.networknt.light.ForumAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+        $scope.getForum = {
+            category : 'forum',
+            name : 'getForum',
+            readOnly: true
+        };
+        $scope.delForum = {
+            category : 'forum',
+            name : 'delForum',
+            readOnly: false
+        };
+
+        $scope.forums = [];
+        $scope.headers = [
+            {
+                title: 'Delete',
+                value: 'delete'
+            },
+            {
+                title: 'Id',
+                value: 'id'
+            },
+            {
+                title: 'Desc',
+                value: 'desc'
+            },
+            {
+                title: 'Create User Id',
+                value: 'createUserId'
+            },
+            {
+                title: 'Create Date',
+                value: 'createDate'
+            },
+            {
+                title: 'Update User Id',
+                value: 'updateUserId'
+            },
+            {
+                title: 'Update Date',
+                value: 'updateDate'
+            }
+        ];
+        $scope.sort = {
+            sortDir : 'desc',
+            sortedBy : 'updateDate'
+        };
+        $scope.filter = {};
+
+        $scope.onSort = function (sortedBy, sortDir) {
+            $scope.sort.sortDir = sortDir;
+            $scope.sort.sortedBy = sortedBy;
+        };
+
+        $scope.delete = function(forum) {
+            $scope.delForum.data = forum;
+            $http.post('api/rs', $scope.delForum)
+                    .success(function (data, status, headers, config) {
+                        $scope.forums.splice($scope.forums.indexOf(forum), 1);
+                        toaster.pop('success', status, data, 3000);
+                    })
+        };
+
+        $scope.update = function(forum) {
+            modelDataService.setModelData(forum);
+            $location.path("/form/com.networknt.light.forum.update");
+        };
+
+        $scope.add = function() {
+            $location.path("/form/com.networknt.light.forum.add");
+        };
+
+        $scope.fetchResult = function () {
+            $http.post('api/rs', $scope.getForum)
+                    .success(function (result, status, headers, config) {
+                        $scope.forums = result;
+                        console.log($scope.forums);
+                    })
+        };
+        $scope.fetchResult();
+    }]);
+</script>
+<div class="container" ng-controller="com.networknt.light.ForumAdminHomeCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="add()"><i class="glyphicon glyphicon-edit"></i>Add</button>
+            </div>
+            <tabset>
+                <tab heading="Recent">
+                    <h4>Forums</h4>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="header in headers">
+                                <sort-by onsort="onSort" sortdir="sort.sortDir" sortedby="sort.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td><input ng-model="filter.id" type="text" /></td>
+                            <td><input ng-model="filter.desc" type="text" /></td>
+                            <td><input ng-model="filter.createUserId" type="text" /></td>
+                            <td><input ng-model="filter.createDate" type="text" /></td>
+                            <td><input ng-model="filter.updateUserId" type="text" /></td>
+                            <td><input ng-model="filter.updateDate" type="text" /></td>
+                        </tr>
+                        <tr ng-repeat="forum in forums | filter: filter | orderBy: sort.sortedBy">
+                            <td><a href ng-click="delete(forum)">Delete</a></td>
+                            <td><a href ng-click="update(forum)">{{forum.id}}</a></td>
+                            <td>{{forum.desc}}</td>
+                            <td>{{forum.createUserId}}</td>
+                            <td>{{forum.createDate}}</td>
+                            <td>{{forum.updateUserId}}</td>
+                            <td>{{forum.updateDate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <pagination total-items="page.totalItems" items-per-page="getForum.data.pageSize" ng-model="getForum.data.pageNo" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div> <!-- /container -->

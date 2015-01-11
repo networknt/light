@@ -20,7 +20,7 @@
             "menuItems": {
                 "type": "array",
                 "title": "Menu Items",
-                "format": "strapselect"
+                "format": "strapselectdynamic"
             }
         }
     },

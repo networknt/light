@@ -165,7 +165,6 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
             menuItem.field("label", data.get("label"));
             menuItem.field("host", data.get("host"));
             menuItem.field("path", data.get("path"));
-            menuItem.field("click", data.get("click"));
             menuItem.field("tpl", data.get("tpl"));
             menuItem.field("ctrl", data.get("ctrl"));
             menuItem.field("left", data.get("left"));
@@ -386,10 +385,6 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
                 String path = (String)data.get("path");
                 if(path != null && !path.equals(menuItem.field("path"))) {
                     menuItem.field("path", path);
-                }
-                String click = (String)data.get("click");
-                if(click != null && !click.equals(menuItem.field("click"))) {
-                    menuItem.field("click", click);
                 }
                 String tpl = (String)data.get("tpl");
                 if(tpl != null && !tpl.equals(menuItem.field("tpl"))) {

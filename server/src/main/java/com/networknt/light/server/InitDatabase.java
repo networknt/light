@@ -302,7 +302,6 @@ public class InitDatabase {
             menuItem.createProperty("label", OType.STRING);   // label
             menuItem.createProperty("host", OType.STRING);    // host  some common menuItems have no host.
             menuItem.createProperty("path", OType.STRING);    // path url
-            menuItem.createProperty("click", OType.STRING);   // java script function to call when clicked. you either have click or tpl.
             menuItem.createProperty("tpl", OType.STRING);     // template that angular use
             menuItem.createProperty("ctrl", OType.STRING);    // controller of angular
             menuItem.createProperty("left", OType.BOOLEAN);   // on the left side of nav bar if true
@@ -1292,7 +1291,7 @@ public class InitDatabase {
             m_blog.field("tpl", "views/page.html");
             m_blog.field("ctrl", "pageCtrl");
             m_blog.field("left", true);
-            m_blog.field("roles", "user,blogAdmin,admin,owner");
+            m_blog.field("roles", "anonymous,user,blogAdmin,admin,owner");
             m_blog.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_blog.field("createDate", new java.util.Date());
             m_blog.save();
@@ -1304,7 +1303,7 @@ public class InitDatabase {
             m_news.field("tpl", "views/news.html");
             m_news.field("ctrl", "NewsCtrl");
             m_news.field("left", true);
-            m_news.field("roles", "user,newsAdmin,admin,owner");
+            m_news.field("roles", "anonymous,user,newsAdmin,admin,owner");
             m_news.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_news.field("createDate", new java.util.Date());
             m_news.save();
@@ -1316,7 +1315,7 @@ public class InitDatabase {
             m_forum.field("tpl", "views/forum.html");
             m_forum.field("ctrl", "forumCtrl");
             m_forum.field("left", true);
-            m_forum.field("roles", "user,forumAdmin,admin,owner");
+            m_forum.field("roles", "anonymous,user,forumAdmin,admin,owner");
             m_forum.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_forum.field("createDate", new java.util.Date());
             m_forum.save();
@@ -1328,7 +1327,7 @@ public class InitDatabase {
             m_product.field("tpl", "views/product.html");
             m_product.field("ctrl", "ProductCtrl");
             m_product.field("left", true);
-            m_product.field("roles", "user,prodAdmin,admin,owner");
+            m_product.field("roles", "anonymous,user,prodAdmin,admin,owner");
             m_product.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_product.field("createDate", new java.util.Date());
             m_product.save();

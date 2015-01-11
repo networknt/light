@@ -6,7 +6,7 @@
         "name" : "addForum",
         "readOnly": false,
         "title": "Submit",
-        "success" : "/page/com.networknt.light.forum.admin.home"
+        "success" : "/page/com-networknt-light-v-forum-admin-home"
     }],
     "schema": {
         "type": "object",

@@ -1,0 +1,54 @@
+{
+  "id": "com.networknt.light.blog.add",
+  "version": 1,
+  "action" : [{
+    "category" : "blog",
+    "name" : "addBlog",
+    "readOnly": false,
+    "title": "Submit",
+    "success" : "/page/com-networknt-light-v-blog-admin-home"
+  }],
+  "schema": {
+    "type": "object",
+    "title": "Blog",
+    "required": ["id", "desc"],
+    "properties": {
+      "id": {
+        "title": "Id",
+        "type": "string"
+      },
+      "desc": {
+        "title": "Description",
+        "type": "string"
+      },
+      "parent": {
+        "title" : "Parent",
+        "type": "string",
+        "format": "strapselectdynamic"
+      },
+      "children": {
+        "title" : "Children",
+        "type": "array",
+        "format": "strapselectdynamic"
+      }
+    }
+  },
+  "form": [
+    "id",
+    "desc",
+    {
+      "key": "parent",
+      "options": {
+        "category": "blog",
+        "name": "getBlogDropdown"
+      }
+    },
+    {
+      "key": "children",
+      "options": {
+        "category": "blog",
+        "name": "getBlogDropdown"
+      }
+    }
+  ]
+}

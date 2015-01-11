@@ -58,7 +58,6 @@ public class UpdMenuItemRule extends AbstractMenuRule implements Rule {
                         inputMap.put("eventMap", eventMap);
                         eventData.put("id", menuItem.field("id"));
                         eventData.put("path", data.get("path"));
-                        eventData.put("click", data.get("click"));
                         eventData.put("tpl", data.get("tpl"));
                         eventData.put("ctrl", data.get("ctrl"));
                         eventData.put("left", data.get("left"));

@@ -25,10 +25,6 @@
                 "title": "Path",
                 "type": "string"
             },
-            "click": {
-                "title": "Click",
-                "type": "string"
-            },
             "tpl": {
                 "title": "Template",
                 "type": "string"
@@ -44,12 +40,12 @@
             "roles": {
                 "title": "Roles",
                 "type": "array",
-                "format": "strapselect"
+                "format": "strapselectdynamic"
             },
             "menuItems": {
                 "type": "array",
                 "title": "Menu Items",
-                "format": "strapselect"
+                "format": "strapselectdynamic"
             }
         }
     },
@@ -57,7 +53,6 @@
         "label",
         "host",
         "path",
-        "click",
         "tpl",
         "ctrl",
         "left",
