@@ -1,7 +1,7 @@
 <script type='text/javascript'>
     (function(angular) {
         'use strict';
-        angular.module('lightApp').controller('UserAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+        angular.module('lightApp').controller('com.networknt.light.UserAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
             $scope.getAllUser = {
                 category : 'user',
                 name : 'getAllUser',
@@ -254,7 +254,7 @@
         }]);
     })(window.angular);
 </script>
-<div class="container" ng-controller="UserAdminHomeCtrl">
+<div class="container" ng-controller="com.networknt.light.UserAdminHomeCtrl">
     <div class="row">
         <div class="col-md-12">
             <tabset>

@@ -1,0 +1,109 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('com.networknt.light.DbEventDownloadCtrl', ['$scope', '$routeParams', '$http', '$location', 'toaster', 'modelDataService', function($scope, $routeParams, $http, $location, toaster, modelDataService) {
+        var getForm = {
+            category : 'form',
+            name : 'getForm',
+            readOnly: true,
+            data : {
+                id : 'com.networknt.light.db.downloadEvent'
+            }
+        };
+
+        $scope.content = '';
+
+        $scope.saveTextAsFile = function ()
+        {
+            var textToWrite = document.getElementById("inputTextToSave").value;
+            var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+            var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
+
+            var downloadLink = document.createElement("a");
+            downloadLink.download = fileNameToSaveAs;
+            downloadLink.innerHTML = "Download File";
+            if (window.webkitURL != null)
+            {
+                // Chrome allows the link to be clicked
+                // without actually adding it to the DOM.
+                downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+            }
+            else
+            {
+                // Firefox requires the link to be added to the DOM
+                // before it can be clicked.
+                downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+                downloadLink.onclick = destroyClickedElement;
+                downloadLink.style.display = "none";
+                document.body.appendChild(downloadLink);
+            }
+
+            downloadLink.click();
+        }
+
+        function destroyClickedElement(event)
+        {
+            document.body.removeChild(event.target);
+        }
+
+
+        $http.post('api/rs', getForm)
+                .success(function(result, status, headers, config) {
+                    $scope.schema = result.schema;
+                    console.log('schema = ', $scope.schema);
+                    $scope.form = result.form;
+                    console.log('form = ', $scope.form);
+                    $scope.action = result.action;
+                    console.log('action = ', $scope.action);
+                    $scope.schemaJson = JSON.stringify($scope.schema, undefined, 2);
+                    $scope.formJson = JSON.stringify($scope.form, undefined, 2);
+                    $scope.modelData = result.model || modelDataService.getModelData() || {};
+                    modelDataService.setModelData(null); // reset the modelDataService variable.
+                    $scope.decorator = 'bootstrap-decorator';
+                })
+
+        $scope.setButtonIndex = function(index) {
+            $scope.buttonIndex = index;
+        };
+
+        $scope.submitForm = function(form, model) {
+            // First we broadcast an event so all fields validate themselves
+            $scope.$broadcast('schemaFormValidate');
+            // Then we check if the form is valid
+            if (form.$valid) {
+                $scope.action[$scope.buttonIndex].data = $scope.modelData;
+                $scope.action[$scope.buttonIndex].data.parentId = $routeParams.parentId;
+                $http.post('/api/rs', $scope.action[$scope.buttonIndex])
+                        .success(function (data, status, headers, config) {
+                            $scope.content = JSON.stringify(data, undefined, 2);
+                        })
+            }
+        };
+
+    }]);
+</script>
+<div class="container" ng-controller="com.networknt.light.DbEventDownloadCtrl">
+    <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+        <form name="ngform" ng-submit="submitForm(ngform, modelData)">
+            <div sf-model="modelData" sf-form="form" sf-schema="schema">
+            </div>
+
+            <div ng-repeat="act in action">
+                <input type="submit" ng-click="setButtonIndex($index)" class="btn btn-primary pull-right" value="{{act.title}}">
+            </div>
+        </form>
+    </div>
+    <div class="col-md-12">
+        <table>
+            <tr><td>Events to Save:</td></tr>
+            <tr>
+                <td colspan="3">
+                    <textarea id="inputTextToSave" ng-model="content" style="height:256px"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>Filename to Save As:</td>
+                <td><input id="inputFileNameToSaveAs"/></td>
+                <td><button ng-click="saveTextAsFile()">Save Text to File</button></td>
+            </tr>
+        </table>
+    </div>
+</div> <!-- /container -->

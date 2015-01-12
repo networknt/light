@@ -1,0 +1,122 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('com.networknt.light.ForumPostViewCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
+        $scope.getComment = {
+            category : 'comment',
+            name: 'getCommentTree',
+            readOnly: true
+        }
+
+        $scope.addComment = {
+            category : 'comment',
+            name: 'addComment',
+            readOnly: false
+        }
+
+        $scope.getComment.data = modelDataService.getModelData();
+        $scope.addComment.data = modelDataService.getModelData();
+
+        $scope.comments = [];
+
+        $scope.fetchResult = function () {
+            $http.post('api/rs', $scope.getComment)
+                    .success(function (result, status, headers, config) {
+                        $scope.comments = result;
+                        console.log($scope.comments);
+                    })
+        };
+        $scope.fetchResult();
+
+        $scope.aceOption = {
+            useWrapMode : true,
+            showGutter: false,
+            theme:'eclipse',
+            mode: 'markdown'
+        };
+
+        $scope.submit = function () {
+            $http.post('api/rs', $scope.addComment)
+                    .success(function (data, status, headers, config) {
+                        toaster.pop('success', status, data);
+                        $scope.fetchResult();
+                    })
+        }
+
+        $scope.toggle = function(scope) {
+            scope.toggle();
+        };
+
+        var getRootNodesScope = function() {
+            return angular.element(document.getElementById("tree-root")).scope();
+        };
+
+        $scope.collapseAll = function() {
+            var scope = getRootNodesScope();
+            scope.collapseAll();
+        };
+
+        $scope.expandAll = function() {
+            var scope = getRootNodesScope();
+            scope.expandAll();
+        };
+
+        $scope.treeFilter = $filter('uiTreeFilter');
+
+        $scope.supportedFields = ['content'];
+
+        $scope.toggledForm = false;
+        $scope.btnText = 'add comment';
+
+        $scope.toggleForm = function() {
+            $scope.toggledForm = !$scope.toggledForm;
+            $scope.btnText = ($scope.toggledForm) ? 'add comment' : 'close';
+        };
+
+    }]);
+</script>
+<div class="container" ng-controller="com.networknt.light.ForumPostViewCtrl">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div>
+                <div>{{getComment.data.title}}</div>
+                <div>{{getComment.data.createUserId}} {{getComment.data.createDate}}</div>
+                <div marked="getComment.data.content"></div>
+            </div>
+            <div ui-ace="aceOption" ng-model="addComment.data.comment"></div>
+            <button class="pure-button pure-button-small success-bg" ng-click="submit()">Submit</button>
+
+            <div>
+                <a href="" class="btn btn-default pull-right" ng-click="collapseAll()">Collapse all</a>
+                <a href="" class="btn btn-default pull-right" ng-click="expandAll()">Expand all</a>
+                <input ng-model="pattern" placeholder="Type a part of any comment"/>
+            </div>
+            <!-- Nested node template -->
+            <script type="text/ng-template" id="nodes_renderer.html">
+                <div ui-tree-handle class="tree-node tree-node-content">
+                    <a class="btn btn-success btn-xs" ng-if="node.children && node.children.length > 0" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon glyphicon-plus': collapsed, 'glyphicon glyphicon-minus': !collapsed}"></span></a>
+                    <a href="http://www.reddit.com/user/JhnnyTsunami" class="author may-blank id-t2_95r8a"><span ng-bind-html="node.createUserId | highlight:pattern | trust"></span></a>&#32;<span>{{node.createDate}}</span>
+                    <div ng-bind-html="node.content | highlight:pattern | trust"></div>
+                    <!--
+                    <div class="panel-body">
+                        <form name="form" ng-submit="action(node)" class="form-inline" ng-hide="toggledForm">
+                            <div class="form-group">
+                                <textarea ng-model="child.text" value="your comment.." class="form-control" rows="1" ng-minlength="5" required></textarea>
+                            </div>
+                            <button ng-disabled="form.$invalid" type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                        <span class="label pull-right pointer" ng-click="toggleForm()"
+                        ng-class="{'label-success': toggledForm, 'label-warning': !toggledForm}">{{ btnText }}</span>
+                    </div>
+                    -->
+                </div>
+                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                    <li ng-repeat="node in node.children" ui-tree-node ng-include="'nodes_renderer.html'" ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
+                </ol>
+            </script>
+            <div ui-tree id="tree-root">
+                <ol ui-tree-nodes ng-model="comments">
+                    <li ng-repeat="node in comments" ui-tree-node ng-include="'nodes_renderer.html'" ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div> <!-- /container -->

@@ -1,0 +1,21 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('com.networknt.light.UserLogoutCtrl', ['$scope', '$http', '$location', 'toaster', 'authService', function ($scope, $http, $location, toaster, authService) {
+        var logOutUser = {
+            category : 'user',
+            name : 'logOutUser',
+            readOnly: false,
+            data: {
+                refreshToken : authService.getRefreshToken()
+            }
+        };
+        console.log("logOutUser", logOutUser);
+        $http.post('api/rs', logOutUser)
+                .success(function (result, status, headers, config) {
+                    // call logOut function
+                    authService.logOut();
+                    // move to main location
+                    $location.path("/");
+                })
+    }]);
+</script>
+<div ng-controller="com.networknt.light.UserLogoutCtrl"></div>

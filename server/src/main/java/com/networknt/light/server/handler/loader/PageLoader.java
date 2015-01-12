@@ -38,7 +38,7 @@ public class PageLoader extends Loader {
                     System.exit(1);
                 }
             } else {
-                System.out.println("Usage: FormLoader host userId password");
+                System.out.println("Usage: PageLoader host userId password");
                 System.exit(1);
             }
 

@@ -1094,9 +1094,7 @@ public class InitDatabase {
             ODocument m_pageAdmin = new ODocument(schema.getClass("MenuItem"));
             m_pageAdmin.field("id", "pageAdmin");
             m_pageAdmin.field("label", "Page Admin");
-            m_pageAdmin.field("path", "/page/com.networknt.light.page.admin.home");
-            m_pageAdmin.field("tpl", "views/page.html");
-            m_pageAdmin.field("ctrl", "pageCtrl");
+            m_pageAdmin.field("path", "/page/com-networknt-light-v-page-admin-home");
             m_pageAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_pageAdmin.field("createDate", new java.util.Date());
             m_pageAdmin.save();
@@ -1104,9 +1102,7 @@ public class InitDatabase {
             ODocument m_formAdmin = new ODocument(schema.getClass("MenuItem"));
             m_formAdmin.field("id", "formAdmin");
             m_formAdmin.field("label", "Form Admin");
-            m_formAdmin.field("path", "/page/com.networknt.light.form.admin.home");
-            m_formAdmin.field("tpl", "views/page.html");
-            m_formAdmin.field("ctrl", "pageCtrl");
+            m_formAdmin.field("path", "/page/com-networknt-light-v-form-admin-home");
             m_formAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_formAdmin.field("createDate", new java.util.Date());
             m_formAdmin.save();
@@ -1114,9 +1110,7 @@ public class InitDatabase {
             ODocument m_ruleAdmin = new ODocument(schema.getClass("MenuItem"));
             m_ruleAdmin.field("id", "ruleAdmin");
             m_ruleAdmin.field("label", "Rule Admin");
-            m_ruleAdmin.field("path", "/page/com.networknt.light.rule.admin.home");
-            m_ruleAdmin.field("tpl", "views/page.html");
-            m_ruleAdmin.field("ctrl", "pageCtrl");
+            m_ruleAdmin.field("path", "/page/com-networknt-light-v-rule-admin-home");
             m_ruleAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_ruleAdmin.field("createDate", new java.util.Date());
             m_ruleAdmin.save();
@@ -1124,9 +1118,7 @@ public class InitDatabase {
             ODocument m_menuAdmin = new ODocument(schema.getClass("MenuItem"));
             m_menuAdmin.field("id", "menuAdmin");
             m_menuAdmin.field("label", "Menu Admin");
-            m_menuAdmin.field("path", "/page/com.networknt.light.menu.admin.home");
-            m_menuAdmin.field("tpl", "views/page.html");
-            m_menuAdmin.field("ctrl", "pageCtrl");
+            m_menuAdmin.field("path", "/page/com-networknt-light-v-menu-admin-home");
             m_menuAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_menuAdmin.field("createDate", new java.util.Date());
             m_menuAdmin.save();
@@ -1134,9 +1126,7 @@ public class InitDatabase {
             ODocument m_dbAdmin = new ODocument(schema.getClass("MenuItem"));
             m_dbAdmin.field("id", "dbAdmin");
             m_dbAdmin.field("label", "DB Admin");
-            m_dbAdmin.field("path", "/page/com.networknt.light.db.admin.home");
-            m_dbAdmin.field("tpl", "views/page.html");
-            m_dbAdmin.field("ctrl", "pageCtrl");
+            m_dbAdmin.field("path", "/page/com-networknt-light-v-db-admin-home");
             m_dbAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_dbAdmin.field("createDate", new java.util.Date());
             m_dbAdmin.save();
@@ -1144,8 +1134,7 @@ public class InitDatabase {
             ODocument m_productAdmin = new ODocument(schema.getClass("MenuItem"));
             m_productAdmin.field("id", "productAdmin");
             m_productAdmin.field("label", "Product Admin");
-            m_productAdmin.field("path", "/productAdmin");
-            m_productAdmin.field("ctrl", "ProductCtrl");
+            m_productAdmin.field("path", "/page/com-networknt-light-v-product-admin-home");
             m_productAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_productAdmin.field("createDate", new java.util.Date());
             m_productAdmin.save();
@@ -1153,9 +1142,7 @@ public class InitDatabase {
             ODocument m_forumAdmin = new ODocument(schema.getClass("MenuItem"));
             m_forumAdmin.field("id", "forumAdmin");
             m_forumAdmin.field("label", "Forum Admin");
-            m_forumAdmin.field("path", "/page/com.networknt.light.forum.admin.home");
-            m_forumAdmin.field("tpl", "views/page.html");
-            m_forumAdmin.field("ctrl", "pageCtrl");
+            m_forumAdmin.field("path", "/page/com-networknt-light-v-forum-admin-home");
             m_forumAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_forumAdmin.field("createDate", new java.util.Date());
             m_forumAdmin.save();
@@ -1163,9 +1150,7 @@ public class InitDatabase {
             ODocument m_blogAdmin = new ODocument(schema.getClass("MenuItem"));
             m_blogAdmin.field("id", "blogAdmin");
             m_blogAdmin.field("label", "Blog Admin");
-            m_blogAdmin.field("path", "/page/com.networknt.light.blog.admin.home");
-            m_blogAdmin.field("tpl", "views/page.html");
-            m_blogAdmin.field("ctrl", "pageCtrl");
+            m_blogAdmin.field("path", "/page/com-networknt-light-v-blog-admin-home");
             m_blogAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_blogAdmin.field("createDate", new java.util.Date());
             m_blogAdmin.save();
@@ -1173,9 +1158,7 @@ public class InitDatabase {
             ODocument m_newsAdmin = new ODocument(schema.getClass("MenuItem"));
             m_newsAdmin.field("id", "newsAdmin");
             m_newsAdmin.field("label", "News Admin");
-            m_newsAdmin.field("path", "/page/com.networknt.light.news.admin.home");
-            m_newsAdmin.field("tpl", "views/page.html");
-            m_newsAdmin.field("ctrl", "pageCtrl");
+            m_newsAdmin.field("path", "/page/com-networknt-light-v-news-admin-home");
             m_newsAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_newsAdmin.field("createDate", new java.util.Date());
             m_newsAdmin.save();
@@ -1183,9 +1166,7 @@ public class InitDatabase {
             ODocument m_userAdmin = new ODocument(schema.getClass("MenuItem"));
             m_userAdmin.field("id", "userAdmin");
             m_userAdmin.field("label", "User Admin");
-            m_userAdmin.field("path", "/page/com.networknt.light.user.admin.home");
-            m_userAdmin.field("tpl", "views/page.html");
-            m_userAdmin.field("ctrl", "pageCtrl");
+            m_userAdmin.field("path", "/page/com-networknt-light-v-user-admin-home");
             m_userAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_userAdmin.field("createDate", new java.util.Date());
             m_userAdmin.save();
@@ -1193,9 +1174,7 @@ public class InitDatabase {
             ODocument m_roleAdmin = new ODocument(schema.getClass("MenuItem"));
             m_roleAdmin.field("id", "roleAdmin");
             m_roleAdmin.field("label", "Role Admin");
-            m_roleAdmin.field("path", "/page/com.networknt.light.role.admin.home");
-            m_roleAdmin.field("tpl", "views/page.html");
-            m_roleAdmin.field("ctrl", "pageCtrl");
+            m_roleAdmin.field("path", "/page/com-networknt-light-v-role-admin-home");
             m_roleAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_roleAdmin.field("createDate", new java.util.Date());
             m_roleAdmin.save();
@@ -1219,53 +1198,16 @@ public class InitDatabase {
             m_admin.field("path", "/admin");
             m_admin.field("ctrl", "AdminCtrl");
             m_admin.field("left", true);
-            m_admin.field("roles", "admin,owner");  // make sure there is no space between ,
+            m_admin.field("roles", "owner,admin,pageAdmin,formAdmin,ruleAdmin,menuAdmin,dbAdmin,productAdmin,forumAdmin,blogAdmin,newsAdmin,userAdmin,roleAdmin");  // make sure there is no space between ,
             m_admin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_admin.field("createDate", new java.util.Date());
             m_admin.field("menuItems", menuItems);
             m_admin.save();
 
-            ODocument m_feedClass = new ODocument(schema.getClass("MenuItem"));
-            m_feedClass.field("id", "classFeed");
-            m_feedClass.field("label", "CLASS Feed");
-            m_feedClass.field("path", "/form/com.cibc.rop.class.feed");
-            m_feedClass.field("tpl", "views/form.html");
-            m_feedClass.field("ctrl", "FormCtrl");
-            m_feedClass.field("createUserId", ServiceLocator.getInstance().getOwnerId());
-            m_feedClass.field("createDate", new java.util.Date());
-            m_feedClass.save();
-
-            ODocument m_feedCops = new ODocument(schema.getClass("MenuItem"));
-            m_feedCops.field("id", "copsFeed");
-            m_feedCops.field("label", "COPS Feed");
-            m_feedCops.field("path", "/form/com.cibc.rop.cops.feed");
-            m_feedCops.field("tpl", "views/form.html");
-            m_feedCops.field("ctrl", "FormCtrl");
-            m_feedCops.field("createUserId", ServiceLocator.getInstance().getOwnerId());
-            m_feedCops.field("createDate", new java.util.Date());
-            m_feedCops.save();
-
-            menuItems = new ArrayList<ODocument>();
-            menuItems.add(m_feedClass);
-            menuItems.add(m_feedCops);
-            ODocument m_feed = new ODocument(schema.getClass("MenuItem"));
-            m_feed.field("id", "feed");
-            m_feed.field("label", "Feed");
-            m_feed.field("path", "/feed");
-            m_feed.field("ctrl", "FeedCtrl");
-            m_feed.field("left", true);
-            m_feed.field("roles", "user,admin,owner");
-            m_feed.field("createUserId", ServiceLocator.getInstance().getOwnerId());
-            m_feed.field("createDate", new java.util.Date());
-            m_feed.field("menuItems", menuItems);
-            m_feed.save();
-
             ODocument m_logOut = new ODocument(schema.getClass("MenuItem"));
             m_logOut.field("id", "logOut");
             m_logOut.field("label", "Log Out");
-            m_logOut.field("path", "/page/com.networknt.light.user.logout");
-            m_logOut.field("tpl", "views/page.html");
-            m_logOut.field("ctrl", "pageCtrl");
+            m_logOut.field("path", "/page/com-networknt-light-v-user-logout");
             m_logOut.field("left", false);
             m_logOut.field("roles", "user,admin,owner");
             m_logOut.field("createUserId", ServiceLocator.getInstance().getOwnerId());
@@ -1287,9 +1229,7 @@ public class InitDatabase {
             ODocument m_blog = new ODocument(schema.getClass("MenuItem"));
             m_blog.field("id", "blog");
             m_blog.field("label", "Blog");
-            m_blog.field("path", "/page/com.networknt.light.blog.home");
-            m_blog.field("tpl", "views/page.html");
-            m_blog.field("ctrl", "pageCtrl");
+            m_blog.field("path", "/page/com-networknt-light-v-blog-home");
             m_blog.field("left", true);
             m_blog.field("roles", "anonymous,user,blogAdmin,admin,owner");
             m_blog.field("createUserId", ServiceLocator.getInstance().getOwnerId());
@@ -1299,9 +1239,7 @@ public class InitDatabase {
             ODocument m_news = new ODocument(schema.getClass("MenuItem"));
             m_news.field("id", "news");
             m_news.field("label", "News");
-            m_news.field("path", "/news");
-            m_news.field("tpl", "views/news.html");
-            m_news.field("ctrl", "NewsCtrl");
+            m_news.field("path", "/page/com-networknt-light-v-news-home");
             m_news.field("left", true);
             m_news.field("roles", "anonymous,user,newsAdmin,admin,owner");
             m_news.field("createUserId", ServiceLocator.getInstance().getOwnerId());
@@ -1311,9 +1249,7 @@ public class InitDatabase {
             ODocument m_forum = new ODocument(schema.getClass("MenuItem"));
             m_forum.field("id", "forum");
             m_forum.field("label", "Forum");
-            m_forum.field("path", "/forum");
-            m_forum.field("tpl", "views/forum.html");
-            m_forum.field("ctrl", "forumCtrl");
+            m_forum.field("path", "/page/com-networknt-light-v-forum-home");
             m_forum.field("left", true);
             m_forum.field("roles", "anonymous,user,forumAdmin,admin,owner");
             m_forum.field("createUserId", ServiceLocator.getInstance().getOwnerId());
@@ -1323,9 +1259,7 @@ public class InitDatabase {
             ODocument m_product = new ODocument(schema.getClass("MenuItem"));
             m_product.field("id", "product");
             m_product.field("label", "Product");
-            m_product.field("path", "/product");
-            m_product.field("tpl", "views/product.html");
-            m_product.field("ctrl", "ProductCtrl");
+            m_product.field("path", "/page/com-networknt-light-v-product-home");
             m_product.field("left", true);
             m_product.field("roles", "anonymous,user,prodAdmin,admin,owner");
             m_product.field("createUserId", ServiceLocator.getInstance().getOwnerId());
@@ -1346,7 +1280,6 @@ public class InitDatabase {
 
             menuItems = new ArrayList<ODocument>();
             menuItems.add(m_admin);
-            menuItems.add(m_feed);
             menuItems.add(m_logOut);
             menuItems.add(m_logIn);
             menuItems.add(m_signUp);
