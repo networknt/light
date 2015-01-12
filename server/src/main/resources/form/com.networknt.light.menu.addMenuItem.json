@@ -6,7 +6,7 @@
         "name" : "addMenuItem",
         "readOnly": false,
         "title": "Submit",
-        "success" : "/page/com.networknt.light.menu.admin.home"
+        "success" : "/page/com-networknt-light-v-menu-admin-home"
     }],
     "schema": {
         "type": "object",

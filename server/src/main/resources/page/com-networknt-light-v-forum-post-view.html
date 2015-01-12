@@ -1,5 +1,5 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('forumPostViewCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
+    angular.module('lightApp').controller('com.networknt.light.ForumPostViewCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
         $scope.getComment = {
             category : 'comment',
             name: 'getCommentTree',
@@ -73,7 +73,7 @@
 
     }]);
 </script>
-<div class="container" ng-controller="forumPostViewCtrl">
+<div class="container" ng-controller="com.networknt.light.ForumPostViewCtrl">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div>

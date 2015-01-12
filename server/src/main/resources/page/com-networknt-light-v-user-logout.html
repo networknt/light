@@ -1,5 +1,5 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('UserLogoutCtrl', ['$scope', '$http', '$location', 'toaster', 'authService', function ($scope, $http, $location, toaster, authService) {
+    angular.module('lightApp').controller('com.networknt.light.UserLogoutCtrl', ['$scope', '$http', '$location', 'toaster', 'authService', function ($scope, $http, $location, toaster, authService) {
         var logOutUser = {
             category : 'user',
             name : 'logOutUser',
@@ -18,4 +18,4 @@
                 })
     }]);
 </script>
-<div ng-controller="UserLogoutCtrl"></div>
+<div ng-controller="com.networknt.light.UserLogoutCtrl"></div>

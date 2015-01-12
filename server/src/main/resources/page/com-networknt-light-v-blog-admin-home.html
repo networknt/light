@@ -1,16 +1,18 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('ruleAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
-        $scope.getRule = {
-            category : 'rule',
-            name : 'getRule',
+    angular.module('lightApp').controller('com.networknt.light.BlogAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+        $scope.getBlog = {
+            category : 'blog',
+            name : 'getBlog',
             readOnly: true
         };
-        $scope.delRule = {
-            category : 'rule',
-            name : 'delRule',
+
+        $scope.delBlog = {
+            category : 'blog',
+            name : 'delBlog',
             readOnly: false
         };
-        $scope.rules = [];
+
+        $scope.blogs = [];
 
         $scope.headers = [
             {
@@ -18,12 +20,12 @@
                 value: 'delete'
             },
             {
-                title: 'Rule Class',
-                value: 'ruleClass'
+                title: 'Id',
+                value: 'id'
             },
             {
-                title: 'Host',
-                value: 'host'
+                title: 'Desc',
+                value: 'desc'
             },
             {
                 title: 'Create User Id',
@@ -42,10 +44,12 @@
                 value: 'updateDate'
             }
         ];
+
         $scope.sort = {
             sortDir : 'desc',
-            sortedBy : 'createDate'
+            sortedBy : 'updateDate'
         };
+
         $scope.filter = {};
 
         $scope.onSort = function (sortedBy, sortDir) {
@@ -53,50 +57,48 @@
             $scope.sort.sortedBy = sortedBy;
         };
 
-        $scope.delete = function(rule) {
-            $scope.delRule.data = rule;
-            $http.post('api/rs', $scope.delRule)
+
+        $scope.delete = function(blog) {
+            $scope.delBlog.data = blog;
+            $http.post('api/rs', $scope.delBlog)
                     .success(function (data, status, headers, config) {
-                        $scope.rules.splice($scope.rules.indexOf(rule), 1);
+                        $scope.blogs.splice($scope.blogs.indexOf(blog), 1);
                         toaster.pop('success', status, data, 3000);
                     })
         };
 
-
-        $scope.update = function(rule) {
-            modelDataService.setModelData(rule);
-            $location.path("/form/com.networknt.light.rule.update");
-        };
-
         $scope.add = function() {
-            $location.path("/form/com.networknt.light.rule.add");
+            $location.path("/form/com.networknt.light.blog.add");
         };
 
-        $scope.import = function() {
-            $location.path("/form/com.networknt.light.rule.import");
+        $scope.update = function(blog) {
+            modelDataService.setModelData(blog);
+            $location.path("/form/com.networknt.light.blog.update");
         };
 
+        //The function that is responsible of fetching the result from the server
         $scope.fetchResult = function () {
-            $http.post('api/rs', $scope.getRule)
-                    .success(function (data, status, headers, config) {
-                        $scope.rules = data;
-                        //console.log($scope.rules);
+            $http.post('api/rs', $scope.getBlog)
+                    .success(function (result, status, headers, config) {
+                        $scope.blogs = result;
+                        //console.log($scope.blogs);
                     })
         };
+
         $scope.fetchResult();
+
     }]);
 </script>
-<div class="container" ng-controller="ruleAdminHomeCtrl">
+
+<div class="container" ng-controller="com.networknt.light.BlogAdminHomeCtrl">
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
                 <button class="btn btn-info" ng-click="add()"><i class="glyphicon glyphicon-edit"></i>Add</button>
             </div>
-            <div class="pull-right">
-                <button class="btn btn-info" ng-click="import()"><i class="glyphicon glyphicon-edit"></i>Import</button>
-            </div>
             <tabset>
-                <tab heading="Rules">
+                <tab heading="Recent">
+                    <h4>Blog</h4>
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -108,21 +110,21 @@
                         <tbody>
                         <tr>
                             <td></td>
-                            <td><input ng-model="filter.ruleClass" type="text" /></td>
-                            <td><input ng-model="filter.host" type="text" /></td>
+                            <td><input ng-model="filter.id" type="text" /></td>
+                            <td><input ng-model="filter.desc" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
                             <td><input ng-model="filter.createDate" type="text" /></td>
                             <td><input ng-model="filter.updateUserId" type="text" /></td>
                             <td><input ng-model="filter.updateDate" type="text" /></td>
                         </tr>
-                        <tr ng-repeat="rule in rules | filter: filter | orderBy: sort.sortedBy">
-                            <td><a href ng-click="delete(rule)">Delete</a></td>
-                            <td><a href ng-click="update(rule)">{{rule.ruleClass}}</a></td>
-                            <td>{{rule.host}}</td>
-                            <td>{{rule.createUserId}}</td>
-                            <td>{{rule.createDate}}</td>
-                            <td>{{rule.updateUserId}}</td>
-                            <td>{{rule.updateDate}}</td>
+                        <tr ng-repeat="blog in blogs | filter: filter | orderBy: sort.sortedBy">
+                            <td><a href ng-click="delete(blog)">Delete</a></td>
+                            <td><a href ng-click="update(blog)">{{blog.id}}</a></td>
+                            <td>{{blog.desc}}</td>
+                            <td>{{blog.createUserId}}</td>
+                            <td>{{blog.createDate}}</td>
+                            <td>{{blog.updateUserId}}</td>
+                            <td>{{blog.updateDate}}</td>
                         </tr>
                         </tbody>
                     </table>

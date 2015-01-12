@@ -1,0 +1,92 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Development Environment Mac OS X</h1>
+            <p>
+                I have set up my development environment on a Mac Book Pro and here is the steps. I am using Google Chrome as my default browser for testing and debugging.
+            </p>
+            <p>
+                The set up is very similar with Linux and Windows 7
+            </p>
+            <p>
+                1. Create a user for development: (If you have a user already please use it. this user needs to have sudo access though. )
+            </p>
+            <p>
+                2. Install JDK8, maven, node.js and npm with sudo and then using npm to install Grunt, Gulp, Bower and other modules.
+            </p>
+            <p>
+                3. Create dev folder and check out the source code.
+                <pre>
+            log in to the user you just created. Open a terminal and you should be in your home directory c:\Users\steve
+            $mkdir networknt
+            $cd networknt
+
+            Check out Json Token which is forked from Google and fixed some of the issues.
+            $git clone https://github.com/networknt/jsontoken.git
+            Check out light rule engine which is a Java based rule engine used in the back end
+            $git clone https://github.com/networknt/rule-engine.git
+            Check out the light framework and other projects
+            $git clone https://github.com/networknt/light.git
+
+            $cd jsontoken
+            $mvn clean install
+            $cd ..
+            $cd rule-engine
+            $mvn clean install
+            $cd rule-loader
+            $mvn clean install
+            $cd ~
+            $cd light
+            $mvn clean install -DskipTests
+
+            Now you have all the Java code built already.
+
+                </pre>
+            </p>
+            <p>
+                4. Open the source code with your IDE. I am using JetBrains Idea but other IDE like Eclipse will work. From Idea, you can just select File/Open... and then choose ~/networknt/light folder to open. It will import the pom.xml file under the light folder. You might need to select JDK for java projects if Idea couldn't find the JDK.
+            </p>
+            <p>
+                5. Set up other users and virtual host. Light Framework supports multiple web sites hosted on the same IP address. In the ~/networknt/light folder there are three sites included.
+            <ul>networknt folder contains source code for www.networknt.com which is the main site for Light Framework</ul>
+            <ul>edibleforestgarden folder contains source code for www.edibleforestgarden.ca which is a socail commerce site to demo the features of the framework</ul>
+            <ul>example folder is a template site that can be copied to start your own web site.</ul>
+            Let's create three users for each site and if you are building a new site, create one extra user for it.
+                <pre>
+            create user networknt and home directory c:\Users\networknt
+            create user edibleforestgarden and home directory c:\Users\edibleforestgarden
+            create user example and home directory c:\Users\example
+                </pre>
+            Within each user's home directory, create web subdirectory and grant access to the development user. steve in my case. If you run grunt build from these projects in light folder, you website will be compiled and copied to these web folders and the server will serve the content from these folders for each site. This is like running in production mode.
+            Update virtualhost.json under server resource folder to specify host location. Change from /home/xxx to /Users/xxx and update them if necessary.
+            Add the following line into /etc/hosts in order to test locally using domain names.
+                <pre>
+            127.0.0.1	www.edibleforestgarden.ca www.networknt.com example
+                </pre>
+            </p>
+
+            <p>
+                6. Start server from IDE in debug mode. From your IDE, right click server/src/main/java/com/networknt/light/server/LightServer and select Debug. The first time the server is started it will create the database and replay the event in resources/initdb.json. It will take several minutes until the debug info is stopped. At this time, you can start Grunt webserver to monitor all your changes in the local directory.
+                <pre>
+        cd ~/networknt/light/networknt
+        npm install
+        bower install
+        grunt serve
+                </pre>
+            assuming that Chrome is your default browser, it will be started now and point to localhost:9000 with www.networknt.com site content. You can login with stevehu/123456 to check the admin features. I am in a process to move everything from Grunt to Gulp but it is not been done yet.
+
+            </p>
+            <p>
+                For individual component/view/application development, you can go the the folder and run the following commands to start another webserver using gulp
+        <pre>
+        cd ~/networknt/light/view/com-networknt-light-v-example
+        npm install
+        bower install
+        gulp webserver
+        </pre>
+            Now another server is up listening localhost:8001 using gulp webserver. You can switch to other folders to do the same.
+
+            </p>
+        </div>
+    </div>
+</div>

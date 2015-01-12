@@ -1,5 +1,5 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('forumPostCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
+    angular.module('lightApp').controller('com.networknt.light.ForumPostCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
         $scope.getForumPost = {
             category : 'forum',
             name: 'getForumPost',
@@ -32,7 +32,7 @@
 
     }]);
 </script>
-<div class="container" ng-controller="forumPostCtrl">
+<div class="container" ng-controller="com.networknt.light.ForumPostCtrl">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="pull-right">

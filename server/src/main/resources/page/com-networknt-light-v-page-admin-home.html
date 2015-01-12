@@ -1,16 +1,17 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('forumAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
-        $scope.getForum = {
-            category : 'forum',
-            name : 'getForum',
+    angular.module('lightApp').controller('com.networknt.light.PageAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+        $scope.getAllPage = {
+            category : 'page',
+            name : 'getAllPage',
             readOnly: true
         };
-        $scope.delForum = {
-            category : 'forum',
-            name : 'delForum',
-            readOnly: false
+        $scope.delPage = {
+            category : 'page',
+            name : 'delPage',
+            readOnly: false,
+            data: {}
         };
-        $scope.forums = [];
+        $scope.pages = [];
         $scope.headers = [
             {
                 title: 'Delete',
@@ -21,8 +22,8 @@
                 value: 'id'
             },
             {
-                title: 'Desc',
-                value: 'desc'
+                title: 'Host',
+                value: 'host'
             },
             {
                 title: 'Create User Id',
@@ -47,48 +48,58 @@
         };
         $scope.filter = {};
 
+        //call back function that we passed to our custom directive sortBy, will be called when clicking on any field to sort
         $scope.onSort = function (sortedBy, sortDir) {
             $scope.sort.sortDir = sortDir;
             $scope.sort.sortedBy = sortedBy;
         };
 
-        $scope.delete = function(forum) {
-            $scope.delForum.data = forum;
-            $http.post('api/rs', $scope.delForum)
+        $scope.delete = function(page) {
+            $scope.delPage.data = page;
+            $http.post('api/rs', $scope.delPage)
                     .success(function (data, status, headers, config) {
-                        $scope.forums.splice($scope.forums.indexOf(forum), 1);
+                        $scope.pages.splice($scope.pages.indexOf(page), 1);
                         toaster.pop('success', status, data, 3000);
                     })
         };
 
-        $scope.update = function(forum) {
-            modelDataService.setModelData(forum);
-            $location.path("/form/com.networknt.light.forum.update");
+
+        $scope.update = function(page) {
+            modelDataService.setModelData(page);
+            $location.path("/form/com.networknt.light.page.update");
         };
 
         $scope.add = function() {
-            $location.path("/form/com.networknt.light.forum.add");
+            $location.path("/form/com.networknt.light.page.add");
         };
 
+        $scope.import = function() {
+            $location.path("/form/com.networknt.light.page.import");
+        };
+
+        //The function that is responsible of fetching the result from the server and setting the grid to the new result
         $scope.fetchResult = function () {
-            $http.post('api/rs', $scope.getForum)
+            $http.post('api/rs', $scope.getAllPage)
                     .success(function (result, status, headers, config) {
-                        $scope.forums = result;
-                        console.log($scope.forums);
+                        $scope.pages = result;
+                        //console.log($scope.pages);
                     })
         };
         $scope.fetchResult();
     }]);
 </script>
-<div class="container" ng-controller="forumAdminHomeCtrl">
+<div class="container" ng-controller="com.networknt.light.PageAdminHomeCtrl">
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
                 <button class="btn btn-info" ng-click="add()"><i class="glyphicon glyphicon-edit"></i>Add</button>
             </div>
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="import()"><i class="glyphicon glyphicon-edit"></i>Import</button>
+            </div>
             <tabset>
                 <tab heading="Recent">
-                    <h4>Forums</h4>
+                    <h1>Pages</h1>
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -101,20 +112,20 @@
                         <tr>
                             <td></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.id" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.desc" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.host" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.createUserId" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.createDate" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.updateUserId" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.updateDate" type="text" /></td>
                         </tr>
-                        <tr ng-repeat="forum in forums | filter: filter | orderBy: sort.sortedBy">
-                            <td><a href ng-click="delete(forum)">Delete</a></td>
-                            <td><a href ng-click="update(forum)">{{forum.id}}</a></td>
-                            <td>{{forum.desc}}</td>
-                            <td>{{forum.createUserId}}</td>
-                            <td>{{forum.createDate}}</td>
-                            <td>{{forum.updateUserId}}</td>
-                            <td>{{forum.updateDate}}</td>
+                        <tr ng-repeat="page in pages | filter: filter | orderBy: sort.sortedBy">
+                            <td><a href ng-click="delete(page)">Delete</a></td>
+                            <td><a href ng-click="update(page)">{{page.id}}</a></td>
+                            <td>{{page.host}}</td>
+                            <td>{{page.createUserId}}</td>
+                            <td>{{page.createDate}}</td>
+                            <td>{{page.updateUserId}}</td>
+                            <td>{{page.updateDate}}</td>
                         </tr>
                         </tbody>
                     </table>

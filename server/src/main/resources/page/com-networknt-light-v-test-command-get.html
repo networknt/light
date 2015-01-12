@@ -1,5 +1,5 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('TestCommandCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
+    angular.module('lightApp').controller('com.networknt.light.TestCommandCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
         var getTest = {
             category : 'test',
             name : 'getTest',
@@ -25,7 +25,7 @@
 
     }]);
 </script>
-<div class="container" ng-controller="TestCommandCtrl">
+<div class="container" ng-controller="com.networknt.light.TestCommandCtrl">
     <div class="row">
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
             <button class="btn btn-info" ng-click="fetchResult()"><i class="glyphicon glyphicon-edit"></i>Fetch</button>

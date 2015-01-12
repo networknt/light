@@ -6,7 +6,7 @@
         "name" : "addRole",
         "readOnly": false,
         "title": "Submit",
-        "success" : "/page/com.networknt.light.role.admin.home"
+        "success" : "/page/com-networknt-light-v-role-admin-home"
     }],
     "schema": {
         "type": "object",

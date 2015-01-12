@@ -1,19 +1,26 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('formAdminAddCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
-        $scope.addFormPost = {
+    angular.module('lightApp').controller('com.networknt.light.FormAdminUpdateCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+        $scope.updFormPost = {
             category : 'form',
-            name : 'addForm',
-            readOnly: false,
-            data: {}
+            name : 'updForm',
+            readOnly: false
         };
 
-        $scope.schema = {};
-        $scope.form = [];
-        $scope.action = [];
-        $scope.modelData = {};
+        $scope.data = modelDataService.getModelData() || {};
+        modelDataService.setModelData(null); // reset the modelDataService variable.
+        //console.log($scope.data);
+        //console.log($scope.data.id);
+        $scope.updFormPost.data = $scope.data;
+        $scope.schema = $scope.data.schema;
+        //console.log($scope.schema);
+        $scope.form = $scope.data.form;
+        //console.log($scope.form);
+        $scope.action = $scope.data.action;
+        //console.log($scope.action);
         $scope.schemaJson = JSON.stringify($scope.schema, undefined, 2);
         $scope.formJson = JSON.stringify($scope.form, undefined, 2);
         $scope.actionJson = JSON.stringify($scope.action, undefined, 2);
+        $scope.modelData = $scope.data.modelData || {};
         $scope.decorator = 'bootstrap-decorator';
 
         $scope.itParsesSchema = true;
@@ -71,14 +78,16 @@
 
         $scope.submitSchema = function() {
             console.log('submitSchema is called');
-            $scope.addFormPost.data.id = $scope.id;
-            $scope.addFormPost.data.schema = $scope.schema;
-            $scope.addFormPost.data.form = $scope.form;
-            $scope.addFormPost.data.action = $scope.action;
-            $http.post('api/rs', $scope.addFormPost)
+            $scope.updFormPost.data.schema = $scope.schema;
+            console.log($scope.schema);
+            $scope.updFormPost.data.form = $scope.form;
+            console.log($scope.form);
+            $scope.updFormPost.data.action = $scope.action;
+            console.log($scope.action);
+            $http.post('api/rs', $scope.updFormPost)
                     .success(function(data, status, headers, config) {
                         toaster.pop('success', status, data, 3000);
-                        $location.path("/page/com.networknt.light.form.admin.home");
+                        $location.path("/page/com-networknt-light-v-form-admin-home");
                     })
 
         };
@@ -86,11 +95,11 @@
         $scope.saveModel = function() {
             console.log('saveModel is called');
             console.log($scope.modelData);
-            $scope.addFormPost.data.modelData = $scope.modelData;
-            $http.post('api/rs', $scope.addFormPost)
+            $scope.updFormPost.data.modelData = $scope.modelData;
+            $http.post('api/rs', $scope.updFormPost)
                     .success(function(data, status, headers, config) {
                         toaster.pop('success', status, data, 3000);
-                        $location.path("/page/com.networknt.light.form.admin.home");
+                        $location.path("/page/com-networknt-light-v-form-admin-home");
                     })
         };
 
@@ -116,7 +125,7 @@
     .action { height: 200px; }
     .schema {  height: 800px;  }
 </style>
-<div class="col-md-12" ng-app="lightApp" ng-controller="formAdminAddCtrl">
+<div class="col-md-12" ng-app="lightApp" ng-controller="com.networknt.light.FormAdminUpdateCtrl">
     <h1>Schema Form Admin</h1>
     <div class="row">
         <div class="col-sm-4">
@@ -133,8 +142,7 @@
             <div class="col-xs-3 col-md-3"><input type="submit" value="Save Model" ng-click="saveModel()" class="btn btn-primary btn-block"></div>
         </div>
         <div class="col-sm-8">
-            <h3>Form Id</h3>
-            <div><input type="text" ng-model="id"></div>
+            <h3>Selected Form: {{data.id}}</h3>
             <h3>Form</h3>
             <div ui-ace="{ theme: 'eclipse',mode:'json'}" ng-class="{red: !itParsesForm}" ng-model="formJson" class="form-control form"></div>
             <h3>Action</h3>

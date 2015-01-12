@@ -6,7 +6,7 @@
         "name" : "impPage",
         "readOnly": false,
         "title": "Import Page",
-        "success" : "/page/com.networknt.light.page.admin.home"
+        "success" : "/page/com-networknt-light-v-page-admin-home"
     }],
     "schema": {
         "type": "object",

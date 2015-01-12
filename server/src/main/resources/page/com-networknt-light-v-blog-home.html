@@ -1,0 +1,79 @@
+<script type='text/javascript'>
+    (function(angular) {
+        'use strict';
+        angular.module('lightApp').controller('com.networknt.light.BlogHomeCtrl', ['$scope', '$http', '$location', '$filter', 'authService', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, authService, toaster, modelDataService) {
+
+            $scope.getBlog = {
+                category : 'blog',
+                name : 'getBlogTree',
+                readOnly: true
+            };
+
+            //The function that is responsible of fetching the result from the server
+            $scope.fetchResult = function () {
+                $http.post('api/rs', $scope.getBlog)
+                    .success(function (result, status, headers, config) {
+                        $scope.blogs = result;
+                    })
+            };
+
+            $scope.fetchResult();
+
+            $scope.toggle = function(scope) {
+                scope.toggle();
+            };
+
+            var getRootNodesScope = function() {
+                return angular.element(document.getElementById("tree-root")).scope();
+            };
+
+            $scope.collapseAll = function() {
+                var scope = getRootNodesScope();
+                scope.collapseAll();
+            };
+
+            $scope.expandAll = function() {
+                var scope = getRootNodesScope();
+                scope.expandAll();
+            };
+
+            $scope.treeFilter = $filter('uiTreeFilter');
+
+            $scope.supportedFields = ['id', 'desc'];
+
+            $scope.gotoBlog = function(id) {
+                modelDataService.setModelData(id);
+                $location.path("/page/com-networknt-light-v-blog-post");
+            }
+        }]);
+    })(window.angular);
+</script>
+<div class="container" data-ng-controller="com.networknt.light.BlogHomeCtrl">
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <h4 class="page-header">Blog</h4>
+            <div>
+                <a href="" class="btn btn-default pull-right" ng-click="collapseAll()">Collapse all</a>
+                <a href="" class="btn btn-default pull-right" ng-click="expandAll()">Expand all</a>
+                <input ng-model="pattern" placeholder="Type a part of any blog"/>
+            </div>
+            <!-- Nested node template -->
+            <script type="text/ng-template" id="nodes_renderer.html">
+                <div ui-tree-handle class="tree-node tree-node-content">
+                    <a class="btn btn-success btn-xs" ng-if="node.children && node.children.length > 0" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon glyphicon-plus': collapsed, 'glyphicon glyphicon-minus': !collapsed}"></span></a>
+                    <!--{{node.id | highlight:pattern | trust}}-->
+                    <a href ng-click="gotoBlog(node.id)" ng-bind-html="node.id | highlight:pattern | trust"></a>
+                    <small ng-bind-html="node.desc | highlight:pattern | trust"></small>
+                </div>
+                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                    <li ng-repeat="node in node.children" ui-tree-node ng-include="'nodes_renderer.html'" ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
+                </ol>
+            </script>
+            <div ui-tree data-drag-enabled=false id="tree-root">
+                <ol ui-tree-nodes ng-model="blogs">
+                    <li ng-repeat="node in blogs" ui-tree-node ng-include="'nodes_renderer.html'" ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div> <!-- /container -->

@@ -6,7 +6,7 @@
     "name" : "impForm",
     "readOnly": false,
     "title": "Import Form",
-    "success" : "/page/com.networknt.light.form.admin.home"
+    "success" : "/page/com-networknt-light-v-form-admin-home"
   }],
   "schema": {
     "type": "object",

@@ -1,5 +1,5 @@
 <script type='text/javascript'>
-    angular.module('lightApp').controller('dbEventDownloadCtrl', ['$scope', '$routeParams', '$http', '$location', 'toaster', 'modelDataService', function($scope, $routeParams, $http, $location, toaster, modelDataService) {
+    angular.module('lightApp').controller('com.networknt.light.DbEventDownloadCtrl', ['$scope', '$routeParams', '$http', '$location', 'toaster', 'modelDataService', function($scope, $routeParams, $http, $location, toaster, modelDataService) {
         var getForm = {
             category : 'form',
             name : 'getForm',
@@ -80,7 +80,7 @@
 
     }]);
 </script>
-<div class="container" ng-controller="dbEventDownloadCtrl">
+<div class="container" ng-controller="com.networknt.light.DbEventDownloadCtrl">
     <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
         <form name="ngform" ng-submit="submitForm(ngform, modelData)">
             <div sf-model="modelData" sf-form="form" sf-schema="schema">

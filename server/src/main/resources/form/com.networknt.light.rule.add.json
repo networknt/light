@@ -6,7 +6,7 @@
         "name" : "addRule",
         "readOnly": false,
         "title": "Submit",
-        "success" : "/page/com.networknt.light.rule.admin.home"
+        "success" : "/page/com-networknt-light-v-rule-admin-home"
     }],
     "schema": {
         "type": "object",

@@ -6,7 +6,7 @@
         "name" : "exportDb",
         "readOnly": true,
         "title": "Export",
-        "success" : "/page/com.networknt.light.db.admin.home"
+        "success" : "/page/com-networknt-light-v-db-admin-home"
     }],
     "schema": {
         "type": "object",
