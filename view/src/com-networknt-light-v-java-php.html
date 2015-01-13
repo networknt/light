@@ -28,19 +28,16 @@
             It is domain driven design with command/event sourcing and CQRS. When Angularjs app talks to resource server, it always send a command with either GET or POST and the server will translate it into an event to saved into event store for tracing, logging, auditing and user behaviour analysis. From the command, the REST handler of Undertow will translate it into a package and Java class just by concatenation of the common fields in the command json object. Then the Light Rule Engine looks up the rule class instance in a hash map to handle the command. All rules are POJO and implement a common interface. They can be unit tested and hot deployed to production server on a class basis.
             <p>
             For more detail, take a look at
-            www.github.com/networknt or www.networknt.com
+            <a href="http://www.github.com/networknt" target="_blank">www.github.com/networknt</a>  or <a href="http://www.networknt.com" target="_blank">www.networknt.com</a>
             <p>
 
             References:
             <p>
-            Server-side programming language statistics
-            http://blog.websitesframeworks.com/2013/03/programming-language-statistics-in-server-side-161/
+            <a href="http://blog.websitesframeworks.com/2013/03/programming-language-statistics-in-server-side-161/" target="_blank">Server-side programming language statistics</a>
             <p>
-            Usage statistics and market share of PHP for websites
-            http://w3techs.com/technologies/details/pl-php/all/all
+            <a href="http://w3techs.com/technologies/details/pl-php/all/all" target="_blank">Usage statistics and market share of PHP for websites</a>
             <p>
-            One million HTTP RPS without load balancing is easy
-            https://www.techempower.com/blog/2014/03/04/one-million-http-rps-without-load-balancing-is-easy/
+            <a href="https://www.techempower.com/blog/2014/03/04/one-million-http-rps-without-load-balancing-is-easy/" target="_blank">One million HTTP RPS without load balancing is easy</a>
         </div>
     </div>
 </div>
