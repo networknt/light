@@ -15,6 +15,7 @@ import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
 import io.undertow.server.handlers.NameVirtualHostHandler;
 import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.handlers.builder.PredicatedHandlersParser;
 import io.undertow.server.handlers.form.EagerFormParsingHandler;
 import io.undertow.server.handlers.resource.FileResourceManager;
 import io.undertow.util.Headers;
@@ -77,15 +78,18 @@ public class LightServer {
             virtualHostHandler
                     .addHost(
                             host,
-                            new PathHandler(resource(new FileResourceManager(
-                                    new File(base), Integer
-                                    .valueOf(transferMinSize))))
-                                    .addPrefixPath("/api/rs",
-                                            new EagerFormParsingHandler().setNext(
-                                                    new RestHandler()))
-                                    .addPrefixPath("/api/ws",
-                                            websocket(new WebSocketHandler()))
-                    );
+                            Handlers.predicates(
+                                PredicatedHandlersParser.parse("not path-suffix['.js', '.html', '.css'] -> rewrite['/index.html']"
+                                , LightServer.class.getClassLoader()),
+                                    new PathHandler(resource(new FileResourceManager(
+                                            new File(base), Integer
+                                            .valueOf(transferMinSize))))
+                                            .addPrefixPath("/api/rs",
+                                                    new EagerFormParsingHandler().setNext(
+                                                            new RestHandler()))
+                                            .addPrefixPath("/api/ws",
+                                                    websocket(new WebSocketHandler()))
+                            ));
         }
         String ip = ServiceLocator.getInstance().getIp();
         String port = ServiceLocator.getInstance().getPort();

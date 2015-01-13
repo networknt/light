@@ -5,16 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.server.LightServer;
 import com.networknt.light.util.ServiceLocator;
+import io.undertow.util.StatusCodes;
 import javafx.scene.effect.Light;
+import org.junit.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -76,19 +81,29 @@ public class RestHandlerTest extends TestCase {
         super.setUp();
     }
 
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception {   
         LightServer.stop();
         httpclient.close();
         super.tearDown();
     }
 
+    public void testRewrite() throws Exception {
+        System.out.println("testRewrite starts");
+
+        HttpGet get = new HttpGet("http://example:8080/page/a");
+        HttpResponse response = httpclient.execute(get);
+        Assert.assertEquals(StatusCodes.OK, response.getStatusLine().getStatusCode());
+        System.out.println("testRewrite ends");
+    }
+
     public void testUser() throws Exception {
+
+        /*
         postCleanUpUser();
         postSignUpUser();
         postSignInUser();
         postGetUserByUserId();
         postGetUserByEmail();
-        /*
         postAddForm();
         postGetForm();
         getForm();
@@ -123,7 +138,7 @@ public class RestHandlerTest extends TestCase {
         System.out.println("postCleanUpUser starts");
         StatusLine statusLine = null;
         // getUser and check status
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getUserByUserId);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -154,7 +169,7 @@ public class RestHandlerTest extends TestCase {
     private void postDelUser() throws Exception {
         System.out.println("postDelUser starts");
         // getUser and check status
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(delUser);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -181,7 +196,7 @@ public class RestHandlerTest extends TestCase {
     private void postSignUpUser() throws Exception {
         System.out.println("postSignUpUser starts");
         // getUser and check status
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(signUpJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -208,7 +223,7 @@ public class RestHandlerTest extends TestCase {
     private void postSignInUser() throws Exception {
         System.out.println("postSignInUser starts");
         // getUser and check status
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(signInByUserId);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -235,7 +250,7 @@ public class RestHandlerTest extends TestCase {
 
     private void postGetUserByUserId() throws Exception {
         System.out.println("postGetUserByUserId starts");
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getUserByUserId);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -259,7 +274,7 @@ public class RestHandlerTest extends TestCase {
 
     private void postGetUserByEmail() throws Exception {
         System.out.println("postGetUserByEmail starts");
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getUserByEmail);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -282,7 +297,7 @@ public class RestHandlerTest extends TestCase {
     }
 
     private void postGetMenu() throws Exception {
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getMenuJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -340,7 +355,7 @@ public class RestHandlerTest extends TestCase {
 
     private void postAddForm() throws Exception {
 
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(addJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -367,7 +382,7 @@ public class RestHandlerTest extends TestCase {
     }
 
     private void postGetForm() throws Exception {
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -397,7 +412,7 @@ public class RestHandlerTest extends TestCase {
     }
 
     private void postUpdForm() throws Exception {
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(updJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -424,7 +439,7 @@ public class RestHandlerTest extends TestCase {
     }
 
     private void postGetFormVerifyUpdate() throws Exception {
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -458,7 +473,7 @@ public class RestHandlerTest extends TestCase {
     }
 
     private void postGetAllForm() throws Exception {
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getAllJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -485,7 +500,7 @@ public class RestHandlerTest extends TestCase {
 
     private void postDelForm() throws Exception {
         System.out.println("postDelForm starts");
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(delJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
@@ -514,7 +529,7 @@ public class RestHandlerTest extends TestCase {
     private void postGetFormVerifyDelete() throws Exception {
         System.out.println("postGetFormVerifyDelete starts");
 
-        HttpPost httpPost = new HttpPost("http://injector:8080/api/rs");
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getJson);
         input.setContentType("application/json");
         httpPost.setEntity(input);
