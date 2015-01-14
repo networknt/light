@@ -1,0 +1,85 @@
+{
+  "id": "com.networknt.light.demo.uiselect_d",
+  "version": 1,
+  "action" : [{
+    "category" : "demo",
+    "name" : "uiSelectDemo",
+    "readOnly": false,
+    "title" : "Submit"
+  }],
+  "schema": {
+    "type": "object",
+    "title": "Demo UiSelect",
+    "required": ["uiSingleSelectStatic", "uiMultipleSelectStatic", "uiSingleSelectDynamic", "uiMultipleSelectDynamic"],
+    "properties": {
+      "uiSingleSelectStatic": {
+        "title": "Ui Single Select Static",
+        "type": "string",
+        "format": "uiselect",
+        "description": "Only single item is allowd",
+        "items": [
+          {"value": "value1", "label": "label1"},
+          {"value": "value2", "label": "label2"},
+          {"value": "value3", "label": "label3"}
+        ]
+      },
+      "uiMultipleSelectStatic": {
+        "title": "Ui Multiple Select Static",
+        "type": "array",
+        "format": "uiselect",
+        "items": [
+          {"value": "value1", "label": "label1"},
+          {"value": "value2", "label": "label2"},
+          {"value": "value3", "label": "long very very long label3"}
+        ]
+      },
+      "uiSingleSelectDynamic": {
+        "title": "Ui Single Select Populated",
+        "type": "string",
+        "format": "uiselect",
+        "items": [
+          {
+            "category": "forum",
+            "name": "getForumDropdown"
+          }
+        ]
+      },
+      "uiMultipleSelectDynamic": {
+        "title": "Ui Multiple Select Populated",
+        "type": "array",
+        "format": "uiselect",
+        "items": [
+          {
+            "category": "role",
+            "name": "getRoleDropdown"
+          }
+        ]
+      }
+    }
+  },
+  "form": [
+    {
+      "key": "uiSingleSelectStatic",
+      "options": {
+        "uiClass": "short"
+      }
+    },
+    {
+      "key": "uiMultipleSelectStatic"
+    },
+    {
+      "key": "uiSingleSelectDynamic",
+      "options": {
+        "category": "forum",
+        "name": "getForumDropdown"
+      }
+    },
+    {
+      "key": "uiMultipleSelectDynamic",
+      "options": {
+        "category": "forum",
+        "name": "getForumDropdown"
+      }
+    }
+  ]
+}

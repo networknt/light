@@ -10,7 +10,7 @@
   "schema": {
     "type": "object",
     "title": "Demo Select",
-    "required": ["strapSingleSelectStatic", "strapMultipleSelectStatic", "strapSingleSelectDynamic", "strapMultipleSelectDynamic"],
+    "required": ["strapSingleSelectStatic", "strapMultipleSelectStatic", "strapSingleSelectDynamic", "strapMultipleSelectDynamic", "strapSingleSelectPopulated", "strapMultipleSelectPopulated"],
     "properties": {
       "strapSingleSelectStatic": {
         "title": "Strap Single Select Static",
@@ -41,6 +41,28 @@
         "title": "Strap Multiple Select Dynamic",
         "type": "array",
         "format": "strapselectdynamic"
+      },
+      "strapSingleSelectPopulated": {
+        "title": "Strap Single Select Populated",
+        "type": "string",
+        "format": "strapselect",
+        "items": [
+          {
+            "category": "forum",
+            "name": "getForumDropdown"
+          }
+        ]
+      },
+      "strapMultipleSelectPopulated": {
+        "title": "Strap Multiple Select Populated",
+        "type": "array",
+        "format": "strapselect",
+        "items": [
+          {
+            "category": "role",
+            "name": "getRoleDropdown"
+          }
+        ]
       }
     }
   },
