@@ -24,6 +24,7 @@ public class GetFormRule extends AbstractFormRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        String host = (String)data.get("host");
         String id = (String)data.get("id");
         String json = getFormById(id);
         if(json != null) {
@@ -38,9 +39,17 @@ public class GetFormRule extends AbstractFormRule implements Rule {
                     logger.debug("text = {}", text);
                     Map<String, Object> jsonMap = mapper.readValue(text,
                             new TypeReference<HashMap<String, Object>>() {});
+                    // inject host into data here.
+                    Map<String, Object> dataMap = new HashMap<String, Object>();
+                    dataMap.put("host", host);
+                    jsonMap.put("data", dataMap);
                     RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
                     String result = (String)jsonMap.get("result");
-                    m.appendReplacement(sb, Matcher.quoteReplacement(result));
+                    if(result != null && result.length() > 0) {
+                        m.appendReplacement(sb, Matcher.quoteReplacement(result));
+                    } else {
+                        m.appendReplacement(sb, Matcher.quoteReplacement("[]"));
+                    }
                 }
                 m.appendTail(sb);
                 logger.debug("form = {}", sb.toString());
