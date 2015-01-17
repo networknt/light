@@ -181,7 +181,7 @@ public abstract class AbstractRoleRule extends AbstractRule implements Rule {
                 for(ODocument doc: roles) {
                     Map<String, String> map = new HashMap<String, String>();
                     String id = doc.field("id");
-                    map.put("id", id);
+                    map.put("label", id);
                     map.put("value", id);
                     list.add(map);
                 }
