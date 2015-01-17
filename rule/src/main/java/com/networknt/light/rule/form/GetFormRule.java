@@ -45,10 +45,11 @@ public class GetFormRule extends AbstractFormRule implements Rule {
                     jsonMap.put("data", dataMap);
                     RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
                     String result = (String)jsonMap.get("result");
+                    logger.debug("result = {}", result);
                     if(result != null && result.length() > 0) {
                         m.appendReplacement(sb, Matcher.quoteReplacement(result));
                     } else {
-                        m.appendReplacement(sb, Matcher.quoteReplacement("[]"));
+                        m.appendReplacement(sb, Matcher.quoteReplacement("[ ]"));
                     }
                 }
                 m.appendTail(sb);

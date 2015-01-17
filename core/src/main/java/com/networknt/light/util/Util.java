@@ -1,6 +1,7 @@
 package com.networknt.light.util;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Map;
 
 /**

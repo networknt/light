@@ -8,8 +8,6 @@ import junit.framework.TestSuite;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by steve on 21/12/14.

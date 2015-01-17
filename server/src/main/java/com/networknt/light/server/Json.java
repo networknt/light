@@ -11,9 +11,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Json {
 	public static void main(String[] args) { 
-		String injected = "{\"value\": \"value1\", \"label\": \"label1\"},\n" +
+		String injected = "[{\"value\": \"value1\", \"label\": \"label1\"},\n" +
 				"          {\"value\": \"value2\", \"label\": \"label2\"},\n" +
-				"          {\"value\": \"value3\", \"label\": \"label3\"}\n";
+				"          {\"value\": \"value3\", \"label\": \"label3\"}]\n";
+		String injectedEmpty = "[]";
 		try {
             InputStream is = Json.class.getResourceAsStream("/form/com.networknt.light.demo.uiselect_d.json");
             String formStr = convertStreamToString(is);

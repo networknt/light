@@ -28,6 +28,8 @@ public class FormRuleTest extends TestCase {
     String getAllForm = "{\"readOnly\": true, \"category\": \"form\", \"name\": \"getAllForm\"}";
     String delForm = "{\"readOnly\":false,\"category\":\"form\",\"name\":\"delForm\",\"data\":{\"id\":\"com.networknt.light.common.test.json\"}}";
 
+    String getDynaForm = "{\"readOnly\":true,\"category\":\"form\",\"name\":\"getForm\",\"data\":{\"id\":\"com.networknt.light.demo.uiselect_d\"}}";
+
     public FormRuleTest(String name) {
         super(name);
     }
@@ -44,7 +46,51 @@ public class FormRuleTest extends TestCase {
         super.tearDown();
     }
 
+    public void testDynamicForm() throws Exception {
+        Map<String, Object> jsonMap = new HashMap<String, Object>();
+        boolean ruleResult = false;
 
+        JsonToken ownerToken = null;
+        // signIn owner by userId
+        {
+            jsonMap = mapper.readValue(signInOwner,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+            SignInUserRule valRule = new SignInUserRule();
+            ruleResult = valRule.execute(jsonMap);
+            assertTrue(ruleResult);
+            Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+            String result = (String)jsonMap.get("result");
+            jsonMap = mapper.readValue(result,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+            String jwt = (String)jsonMap.get("accessToken");
+            ownerToken = JwtUtil.Deserialize(jwt);
+            SignInUserEvRule rule = new SignInUserEvRule();
+            ruleResult = rule.execute(eventMap);
+            assertTrue(ruleResult);
+        }
+
+        {
+            jsonMap = mapper.readValue(getDynaForm,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+            jsonMap.put("payload", ownerToken.getPayload());
+            GetFormRule rule = new GetFormRule();
+            ruleResult = rule.execute(jsonMap);
+            assertTrue(ruleResult);
+            String result = (String) jsonMap.get("result");
+            // make sure we have schema, form and id
+            jsonMap = mapper.readValue(result,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+
+            assertTrue(jsonMap.containsKey("schema"));
+            assertTrue(jsonMap.containsKey("form"));
+            assertTrue(jsonMap.containsKey("id"));
+        }
+    }
+    /*
     public void testExecute() throws Exception {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         boolean ruleResult = false;
@@ -282,5 +328,5 @@ public class FormRuleTest extends TestCase {
             e.printStackTrace();
         }
     }
-
+    */
 }
