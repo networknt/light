@@ -32,8 +32,8 @@ import java.util.*;
  */
 public class MenuRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInTest = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
 
     String getMenuInjector = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenu\", \"data\": {\"host\":\"injector\"}}";
     String getMenuEdibleForestGarden = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenu\", \"data\": {\"host\":\"www.edibleforestgarden.ca\"}}";
@@ -95,7 +95,7 @@ public class MenuRuleTest extends TestCase {
 
             // signIn test by userId
             {
-                jsonMap = mapper.readValue(signInTest,
+                jsonMap = mapper.readValue(signInUser,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 

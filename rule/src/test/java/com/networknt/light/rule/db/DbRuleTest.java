@@ -35,8 +35,8 @@ import java.util.Map;
 public class DbRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
 
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInTest = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
 
     String addSchema = "{\"readOnly\":false,\"category\":\"db\",\"name\":\"cmdDb\",\"data\":{\"script\":\"DROP CLASS Test;\\\\nCREATE CLASS Test;\\\\nCREATE PROPERTY Test.id STRING;\\\\nCREATE PROPERTY Test.name STRING;\\\\nCREATE INDEX Test.id UNIQUE;\"}}";
 
@@ -84,9 +84,9 @@ public class DbRuleTest extends TestCase {
                 ruleResult = rule.execute(eventMap);
                 assertTrue(ruleResult);
             }
-            // signIn test by userId
+            // signIn user by userId
             {
-                jsonMap = mapper.readValue(signInTest,
+                jsonMap = mapper.readValue(signInUser,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 

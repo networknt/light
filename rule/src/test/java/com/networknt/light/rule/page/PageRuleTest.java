@@ -35,8 +35,8 @@ import java.util.Map;
 public class PageRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
 
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInTest = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
 
     String addPage = "{\"readOnly\":false,\"category\":\"page\",\"name\":\"addPage\",\"data\":{\"id\":\"com.networknt.light.common.test.html\",\"content\":\"<div>This is just a test html</div>\"}}";
     String getPage = "{\"readOnly\":true,\"category\":\"page\",\"name\":\"getPage\",\"data\":{\"id\":\"com.networknt.light.common.test.html\"}}";
@@ -88,7 +88,7 @@ public class PageRuleTest extends TestCase {
             }
             // signIn test by userId
             {
-                jsonMap = mapper.readValue(signInTest,
+                jsonMap = mapper.readValue(signInUser,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 

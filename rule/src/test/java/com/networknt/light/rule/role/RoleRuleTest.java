@@ -32,8 +32,8 @@ import java.util.*;
  */
 public class RoleRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInTest = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
 
     String getRole = "{\"readOnly\":true,\"category\":\"role\",\"name\":\"getRole\"}";
 
@@ -87,9 +87,9 @@ public class RoleRuleTest extends TestCase {
                 assertTrue(ruleResult);
             }
 
-            // signIn test by userId
+            // signIn user by userId
             {
-                jsonMap = mapper.readValue(signInTest,
+                jsonMap = mapper.readValue(signInUser,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 

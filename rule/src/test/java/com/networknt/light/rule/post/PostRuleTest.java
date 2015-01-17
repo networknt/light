@@ -34,8 +34,8 @@ import java.util.*;
  */
 public class PostRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInTest = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
 
     String addPost1 = "{\"readOnly\":false,\"category\":\"post\",\"name\":\"addPost\",\"data\":{\"host\":\"www.example.com\",\"title\":\"Test blog1\",\"source\":\"http://www.networknt.com/blog/1\",\"content\":\"This is just a test1\"}}";
     String addPost2 = "{\"readOnly\":false,\"category\":\"post\",\"name\":\"addPost\",\"data\":{\"host\":\"www.example.com\",\"title\":\"Test blog2\",\"source\":\"http://www.networknt.com/blog/1\",\"content\":\"This is just a test2\",\"tags\":\"test, blog, java\"}}";
@@ -103,9 +103,9 @@ public class PostRuleTest extends TestCase {
                 assertTrue(ruleResult);
             }
 
-            // signIn test by userId
+            // signIn user by userId
             {
-                jsonMap = mapper.readValue(signInTest,
+                jsonMap = mapper.readValue(signInUser,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 

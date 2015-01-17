@@ -37,8 +37,8 @@ import java.util.*;
 public class ForumRuleTest extends TestCase {
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
 
     String getForum = "{\"readOnly\":true,\"category\":\"forum\",\"name\":\"getForum\",\"data\":{\"host\":\"www.example.com\"}}";
     String getForumTree = "{\"readOnly\":true,\"category\":\"forum\",\"name\":\"getForum\",\"data\":{\"host\":\"www.example.com\"}}";

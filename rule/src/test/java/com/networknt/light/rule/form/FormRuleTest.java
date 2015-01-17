@@ -35,8 +35,8 @@ import java.util.Map;
 public class FormRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
 
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInTest = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
 
     String addForm = "{\"readOnly\":false,\"category\":\"form\",\"name\":\"addForm\",\"data\":{\"id\":\"com.networknt.light.common.test.json\",\"schema\":{\"type\":\"object\",\"title\":\"Comment\",\"properties\":{\"name\":{\"title\":\"Name\",\"type\":\"string\"},\"email\":{\"title\":\"Email\",\"type\":\"string\",\"pattern\":\"^\\\\S+@\\\\S+$\",\"description\":\"Email will be used for evil.\"},\"comment\":{\"title\":\"Comment\",\"type\":\"string\",\"maxLength\":20,\"validationMessage\":\"Don't be greedy!\"}},\"required\":[\"name\",\"email\",\"comment\"]},\"form\":[\"name\",\"email\",{\"key\":\"comment\",\"type\":\"textarea\"},{\"type\":\"submit\",\"style\":\"btn-info\",\"title\":\"OK\"}]}}";
     String getForm = "{\"readOnly\":true,\"category\":\"form\",\"name\":\"getForm\",\"data\":{\"id\":\"com.networknt.light.common.test.json\"}}";
@@ -44,7 +44,7 @@ public class FormRuleTest extends TestCase {
     String getAllForm = "{\"readOnly\": true, \"category\": \"form\", \"name\": \"getAllForm\"}";
     String delForm = "{\"readOnly\":false,\"category\":\"form\",\"name\":\"delForm\",\"data\":{\"id\":\"com.networknt.light.common.test.json\"}}";
 
-    String getDynaForm = "{\"readOnly\":true,\"category\":\"form\",\"name\":\"getForm\",\"data\":{\"id\":\"com.networknt.light.demo.uiselect_d\"}}";
+    String getDynaForm = "{\"readOnly\":true,\"category\":\"form\",\"name\":\"getForm\",\"data\":{\"host\":\"example\",\"id\":\"com.networknt.light.demo.uiselect_d\"}}";
 
     public FormRuleTest(String name) {
         super(name);
@@ -61,6 +61,7 @@ public class FormRuleTest extends TestCase {
     public void tearDown() throws Exception {
         super.tearDown();
     }
+
 
     public void testDynamicForm() throws Exception {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -132,9 +133,9 @@ public class FormRuleTest extends TestCase {
                 ruleResult = rule.execute(eventMap);
                 assertTrue(ruleResult);
             }
-            // signIn test by userId
+            // signIn user by userId
             {
-                jsonMap = mapper.readValue(signInTest,
+                jsonMap = mapper.readValue(signInUser,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 
