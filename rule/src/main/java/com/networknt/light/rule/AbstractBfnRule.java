@@ -805,7 +805,7 @@ public abstract class AbstractBfnRule  extends AbstractRule implements Rule {
                 List<Map<String, String>> list = new ArrayList<Map<String, String>>();
                 for(ODocument doc: docs) {
                     Map<String, String> map = new HashMap<String, String>();
-                    map.put("id", doc.field("id"));
+                    map.put("label", doc.field("id"));
                     map.put("value", doc.field("@rid").toString());
                     list.add(map);
                 }
