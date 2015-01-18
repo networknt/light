@@ -18,6 +18,7 @@ package com.networknt.light.rule.rule;
 
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
@@ -58,24 +59,32 @@ public class ImpRuleRule extends AbstractRule implements Rule {
                         error = "User can only add rule from host: " + host;
                         inputMap.put("responseCode", 403);
                     } else {
+                        // remove the rule instance from Rule Engine Cache
+                        String ruleClass = (String)data.get("ruleClass");
+                        RuleEngine.getInstance().removeRule(ruleClass);
+
                         // Won't check if rule exists or not here.
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
                         eventData.put("host", host);
 
-                        eventData.put("ruleClass", data.get("ruleClass"));
+                        eventData.put("ruleClass", ruleClass);
                         eventData.put("sourceCode", data.get("sourceCode"));
                         eventData.put("createDate", new java.util.Date());
                         eventData.put("createUserId", user.get("userId"));
                     }
                 } else {
+                    // remove the rule instance from Rule Engine Cache
+                    String ruleClass = (String)data.get("ruleClass");
+                    RuleEngine.getInstance().removeRule(ruleClass);
+
                     // This is owner to import rule, notice that no host is passed in.
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
 
-                    eventData.put("ruleClass", data.get("ruleClass"));
+                    eventData.put("ruleClass", ruleClass);
                     eventData.put("sourceCode", data.get("sourceCode"));
                     eventData.put("createDate", new java.util.Date());
                     eventData.put("createUserId", user.get("userId"));

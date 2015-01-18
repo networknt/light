@@ -18,6 +18,7 @@ package com.networknt.light.rule.rule;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.server.DbService;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
@@ -63,10 +64,14 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
                                 error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
                                 inputMap.put("responseCode", 400);
                             } else {
+                                // remove the rule instance from Rule Engine Cache
+                                String ruleClass = (String)data.get("ruleClass");
+                                RuleEngine.getInstance().removeRule(ruleClass);
+
                                 Map eventMap = getEventMap(inputMap);
                                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                                 inputMap.put("eventMap", eventMap);
-                                eventData.put("ruleClass", data.get("ruleClass"));
+                                eventData.put("ruleClass", ruleClass);
                                 eventData.put("sourceCode", data.get("sourceCode"));
                                 eventData.put("updateDate", new java.util.Date());
                                 eventData.put("updateUserId", user.get("userId"));
@@ -84,10 +89,14 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
                             error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
                             inputMap.put("responseCode", 400);
                         } else {
+                            // remove the rule instance from Rule Engine Cache
+                            String ruleClass = (String)data.get("ruleClass");
+                            RuleEngine.getInstance().removeRule(ruleClass);
+
                             Map eventMap = getEventMap(inputMap);
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                             inputMap.put("eventMap", eventMap);
-                            eventData.put("ruleClass", data.get("ruleClass"));
+                            eventData.put("ruleClass", ruleClass);
                             eventData.put("sourceCode", data.get("sourceCode"));
                             eventData.put("updateDate", new java.util.Date());
                             eventData.put("updateUserId", user.get("userId"));

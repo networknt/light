@@ -17,6 +17,7 @@
 package com.networknt.light.rule.rule;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.rule.role.AbstractRoleRule;
 import com.networknt.light.server.DbService;
 import com.orientechnologies.orient.core.record.impl.ODocument;
@@ -60,10 +61,14 @@ public class DelRuleRule extends AbstractRuleRule implements Rule {
                             error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
                             inputMap.put("responseCode", 400);
                         } else {
+                            // remove the rule instance from Rule Engine Cache
+                            String ruleClass = (String)data.get("ruleClass");
+                            RuleEngine.getInstance().removeRule(ruleClass);
+
                             Map eventMap = getEventMap(inputMap);
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                             inputMap.put("eventMap", eventMap);
-                            eventData.put("ruleClass", data.get("ruleClass"));
+                            eventData.put("ruleClass", ruleClass);
                             eventData.put("updateDate", new java.util.Date());
                             eventData.put("updateUserId", user.get("userId"));
                         }
