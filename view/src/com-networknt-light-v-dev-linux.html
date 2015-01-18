@@ -4,7 +4,7 @@
             <h1>Development Environment Linux</h1>
             <p>
                 I personally use Linux as my dev environment and I would recommend you do so; however, Mac and Windows are perfectly OK.
-                The following steps are for Ubuntu Linux and some of the commands might be different on Other Linux distributions, Mac and Windows. My production is CentOS 6.5 32bit and the installation guide is <a href="/page/production_single">here</a>
+                The following steps are for Ubuntu Linux and some of the commands might be different on other Linux distributions, Mac and Windows. My production is CentOS 6.5 32bit and the installation guide for single node is <a href="/page/com-networknt-light-v-production-single">here</a>. For cluster with load balancer, the installation guide is <a href="/page/com-networknt-light-v-production-cluster">here</a>.
 
                 I also recommend Google Chrome as your browser for Front End AngularJS testing and debugging.
             </p>
@@ -90,7 +90,7 @@
             sudo adduser example
                 </pre>
             Within each user's home directory, create web subdirectory and grant access to the development user. steve in my case. If you run grunt build from these projects in light folder, you website will be compiled and copied to these web folders and the server will serve the content from these folders for each site. This is like running in production mode.
-            update virtualhost.json under networknt/light/server/src/main/resources folder to specify site location.
+            copy server.json and virtualhost.json under networknt/light/server/src/main/resources folder to your home directory and update them accordingly.
             Add the following line into /etc/hosts in order to test locally using domain names.
                 <pre>
             127.0.0.1	www.edibleforestgarden.ca www.networknt.com example
