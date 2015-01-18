@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="styles/toaster.css">
     <link rel="stylesheet" href="styles/select.css">
     <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css" />
+    <link href="bower_components/angular-ui-select/dist/select.css" rel="stylesheet" />
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- endbuild -->
   </head>
@@ -108,6 +109,7 @@
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/underscore/underscore-min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -115,6 +117,16 @@
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src='bower_components/angular-ui-select/dist/select.js'></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
+    <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
+    <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+    <script src="bower_components/angular-ui-tree-filter/dist/angular-ui-tree-filter.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
+    <script src="bower_components/marked/lib/marked.js"></script>
+    <script src="bower_components/angular-marked/angular-marked.js"></script>
     <script src="bower_components/tv4/tv4.js"></script>
     <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
@@ -122,35 +134,21 @@
     <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
     <script src="bower_components/angular-ui-utils/highlight.js"></script>
     <script src="bower_components/angular-schema-form/dist/schema-form.min.js"></script>
+    <script src="bower_components/angular-schema-form/dist/bootstrap-decorator.min.js"></script>
     <script src="bower_components/angular-schema-form-marked/bootstrap-marked.min.js"></script>
     <script src="bower_components/angular-schema-form-ui-ace/bootstrap-ui-ace.min.js"></script>
     <script src="bower_components/angular-schema-form-strapselect/bootstrap-strapselect.min.js"></script>
-    <script src="bower_components/schema-form-datetimepicker/schema-form-datetimepicker.min.js"></script>
-    <script src="bower_components/angular-translate/angular-translate.js"></script>
-    <script src="bower_components/momentjs/moment.js"></script>
-    <!-- endbower -->
-    <script src="bower_components/angular-strap/dist/angular-strap.js"></script>
-    <script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
-    <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
-    <script src="bower_components/angular-ui-tree-filter/dist/angular-ui-tree-filter.js"></script>
-    <script src="bower_components/angular-ui-utils/highlight.min.js"></script>
-    <script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
-    <script src="bower_components/angular-translate/angular-translate.min.js"></script>
-    <script src="bower_components/angular-schema-form/dist/schema-form.js"></script>
-    <script src="bower_components/angular-schema-form/dist/bootstrap-decorator.min.js"></script>
-    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
-    <script src="bower_components/marked/lib/marked.js"></script>
-    <script src="bower_components/angular-marked/angular-marked.js"></script>
+    <script src="bower_components/angular-schema-form-ui-select/angular-underscore.js"></script>
+    <script src="bower_components/angular-schema-form-ui-select/ui-sortable.js"></script>
+    <script src="bower_components/angular-schema-form-ui-select/bootstrap-ui-select.js"></script>
     <script src="bower_components/angular-schema-form-marked/bootstrap-marked.js"></script>
     <script src="bower_components/angular-schema-form-ui-ace/bootstrap-ui-ace.js"></script>
-    <script src="bower_components/angular-schema-form-strapselect/bootstrap-strapselect.js"></script>
     <script src="bower_components/schema-form-datetimepicker/date.js"></script>
     <script src="bower_components/schema-form-datetimepicker/schema-form-date-time-picker.min.js"></script>
     <script src="bower_components/angular-schema-form-file-reader/bootstrap-file-reader.min.js"></script>
-
+    <script src="bower_components/momentjs/moment.js"></script>
+    <!-- endbower -->
     <!-- endbuild -->
-
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/ui-bootstrap-custom-tpls-0.12.0.js"></script>
