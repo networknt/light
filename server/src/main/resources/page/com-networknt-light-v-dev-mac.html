@@ -58,7 +58,7 @@
             create user example and home directory c:\Users\example
                 </pre>
             Within each user's home directory, create web subdirectory and grant access to the development user. steve in my case. If you run grunt build from these projects in light folder, you website will be compiled and copied to these web folders and the server will serve the content from these folders for each site. This is like running in production mode.
-            Update virtualhost.json under server resource folder to specify host location. Change from /home/xxx to /Users/xxx and update them if necessary.
+            Copy server.json and virtualhost.json under server resource folder to user home directory and update them accordingly.
             Add the following line into /etc/hosts in order to test locally using domain names.
                 <pre>
             127.0.0.1	www.edibleforestgarden.ca www.networknt.com example
