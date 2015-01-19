@@ -1004,6 +1004,11 @@ public class InitDatabase {
             dbAdmin.field("desc", "admin database objects for the host");
             dbAdmin.save();
 
+            ODocument hostAdmin = new ODocument(schema.getClass("Role"));
+            hostAdmin.field("id", "hostAdmin");
+            hostAdmin.field("desc", "admin hosts for the platform");
+            hostAdmin.save();
+
             ODocument userAdmin = new ODocument(schema.getClass("Role"));
             userAdmin.field("id", "userAdmin");
             userAdmin.field("desc", "admin users for the host");
@@ -1106,6 +1111,14 @@ public class InitDatabase {
             user2.field("createDate", new java.util.Date());
             user2.save();
 
+            ODocument m_hostAdmin = new ODocument(schema.getClass("MenuItem"));
+            m_hostAdmin.field("id", "hostAdmin");
+            m_hostAdmin.field("label", "Host Admin");
+            m_hostAdmin.field("path", "/page/com-networknt-light-v-host-admin-home");
+            m_hostAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            m_hostAdmin.field("createDate", new java.util.Date());
+            m_hostAdmin.save();
+
 
             ODocument m_pageAdmin = new ODocument(schema.getClass("MenuItem"));
             m_pageAdmin.field("id", "pageAdmin");
@@ -1197,6 +1210,7 @@ public class InitDatabase {
 
             List<ODocument> menuItems = new ArrayList<ODocument>();
             menuItems.add(m_ruleAdmin);
+            menuItems.add(m_hostAdmin);
             menuItems.add(m_roleAdmin);
             menuItems.add(m_userAdmin);
             menuItems.add(m_dbAdmin);

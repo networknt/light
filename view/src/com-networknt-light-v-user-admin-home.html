@@ -29,11 +29,12 @@
                 readOnly: false
             };
 
-            $scope.page = { maxSize: 5, totalItems: 0, numPages: 0 };
+            $scope.page = { maxSize: 10, totalItems: 0, numPages: 0 };
             $scope.users = [];
             $scope.roles = [];
             $scope.hosts = [];
-            $scope.userHeaders = [
+
+            $scope.headers = [
                 {
                     title: 'Delete',
                     value: 'delete'
@@ -96,67 +97,6 @@
                 }
             ];
 
-            $scope.roleHeaders = [
-                {
-                    title: 'Delete',
-                    value: 'delete'
-                },
-                {
-                    title: 'Role Id',
-                    value: 'id'
-                },
-                {
-                    title: 'Host',
-                    value: 'host'
-                },
-                {
-                    title: 'Description',
-                    value: 'desc'
-                },
-                {
-                    title: 'Create User Id',
-                    value: 'createUserId'
-                },
-                {
-                    title: 'Create Date',
-                    value: 'createDate'
-                }
-            ];
-
-            $scope.hostHeaders = [
-                {
-                    title: 'Delete',
-                    value: 'delete'
-                },
-                {
-                    title: 'Host',
-                    value: 'host'
-                },
-                {
-                    title: 'Base',
-                    value: 'base'
-                },
-                {
-                    title: 'TransferMinSize',
-                    value: 'transferMinSize'
-                },
-                {
-                    title: 'DirectoryListingEnabled',
-                    value: 'directoryListingEnabled'
-                }
-            ];
-
-            $scope.roleSort = {
-                sortDir : 'asc',
-                sortedBy : 'id'
-            };
-            $scope.hostSort = {
-                sortDir : 'asc',
-                sortedBy : 'host'
-            };
-            $scope.roleFilter = {};
-            $scope.hostFilter = {};
-
             $scope.fetchResult = function () {
                 $http.post('api/rs', $scope.getAllUser)
                         .success(function (result, status, headers, config) {
@@ -178,16 +118,6 @@
                 $scope.getAllUser.data.sortedBy = sortedBy;
                 $scope.getAllUser.data.pageNo = 1;
                 $scope.fetchResult();
-            };
-
-            $scope.onRoleSort = function (sortedBy, sortDir) {
-                $scope.roleSort.sortDir = sortDir;
-                $scope.roleSort.sortedBy = sortedBy;
-            };
-
-            $scope.onHostSort = function (sortedBy, sortDir) {
-                $scope.hostSort.sortDir = sortDir;
-                $scope.hostSort.sortedBy = sortedBy;
             };
 
             //Will be called when filtering the grid, will reset the page number to one
@@ -218,7 +148,7 @@
                         })
             };
 
-            $scope.deleteUser = function(user) {
+            $scope.delete = function(user) {
                 $scope.delUser.data = user;
                 $http.post('api/rs', $scope.delUser)
                         .success(function (data, status, headers, config) {
@@ -227,27 +157,9 @@
                         })
             };
 
-            $scope.updateUser = function(user) {
+            $scope.update = function(user) {
                 modelDataService.setModelData(user);
-                $location.path("/form/com.networknt.light.user.update.permission");
-            };
-
-            $scope.deleteRole = function(role) {
-                $scope.delRole.data = role;
-                $http.post('api/rs', $scope.delRole)
-                        .success(function (data, status, headers, config) {
-                            $scope.roles.splice($scope.roles.indexOf(role), 1);
-                            toaster.pop('success', status, data, 3000);
-                        })
-            };
-
-            $scope.updateRole = function(role) {
-                modelDataService.setModelData(role);
-                $location.path("/form/com.networknt.light.user.update.role");
-            };
-
-            $scope.addRole = function() {
-                $location.path("/form/com.networknt.light.user.add.role");
+                $location.path("/page/com-networknt-light-v-user-admin-update");
             };
 
             $scope.pageChanged();
@@ -262,7 +174,7 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th ng-repeat="header in userHeaders">
+                            <th ng-repeat="header in headers">
                                 <sort-by onsort="onUserSort" sortdir="getAllUser.data.sortDir" sortedby="getAllUser.data.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
                             </th>
                         </tr>
@@ -274,75 +186,12 @@
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.userId" type="text" /></td>
                             <td>
                                 <select ng-change="filterResult()" ng-model="getAllUser.data.host" ng-options="host for host in hosts" >
-                                    <option value=""> </option>
+                                    <option value=""></option>
                                 </select>
                             </td>
                             <td>
                                 <select ng-change="filterResult()" ng-model="getAllUser.data.roles" ng-options="role for role in roles" >
-                                    <option value=""> </option>
-                                </select>
-                            </td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.email" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.firstName" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.lastName" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.upUsers" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.downUsers" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.karma" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.createDate" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.updateDate" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.logInDate" type="text" /></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.logOutDate" type="text" /></td>
-                        </tr>
-                        <tr ng-repeat="user in users">
-                            <td><a href ng-click="deleteUser(user)">Delete</a></td>
-                            <td><a href ng-click="lock(user)">{{user.locked}}</a></td>
-                            <td><a href ng-click="updateUser(user)">{{user.userId}}</a></td>
-                            <td>{{user.host}}</td>
-                            <td>{{user.roles}}</td>
-                            <td>{{user.email}}</td>
-                            <td>{{user.firstName}}</td>
-                            <td>{{user.lastName}}</td>
-                            <td>{{user.upUsers}}</td>
-                            <td>{{user.downUsers}}</td>
-                            <td>{{user.karma}}</td>
-                            <td>{{user.createDate}}</td>
-                            <td>{{user.updateDate}}</td>
-                            <td>{{user.logInDate}}</td>
-                            <td>{{page.logOutDate}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <pagination total-items="page.totalItems" items-per-page="getAllUser.data.pageSize" ng-model="getAllUser.data.pageNo" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
-                    <table>
-                        <tr>
-                            <td>Page: {{getAllUser.data.pageNo}} / {{page.numPages}}</td>
-                            <td>&nbsp;</td>
-                            <td>Page Size:</td>
-                            <td><input type="number" min="1" max="200" ng-change="filterResult()" ng-model="getAllUser.data.pageSize"></td>
-                        </tr>
-                    </table>
-                </tab>
-                <tab heading="Hosts">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th ng-repeat="header in hostHeaders">
-                                <sort-by onsort="onHostSort" sortdir="hostSort.sortDir" sortedby="hostSort.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.userId" type="text" /></td>
-                            <td>
-                                <select ng-change="filterResult()" ng-model="getAllUser.data.host" ng-options="host for host in hosts" >
-                                    <option value=""> </option>
-                                </select>
-                            </td>
-                            <td>
-                                <select ng-change="filterResult()" ng-model="getAllUser.data.roles" ng-options="role for role in roles" >
-                                    <option value=""> </option>
+                                    <option value=""></option>
                                 </select>
                             </td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="getAllUser.data.email" type="text" /></td>
@@ -374,6 +223,15 @@
                             <td>{{page.logOutDate}}</td>
                         </tr>
                         </tbody>
+                    </table>
+                    <pagination total-items="page.totalItems" items-per-page="getAllUser.data.pageSize" ng-model="getAllUser.data.pageNo" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
+                    <table>
+                        <tr>
+                            <td>Page: {{getAllUser.data.pageNo}} / {{page.numPages}}</td>
+                            <td>&nbsp;</td>
+                            <td>Page Size:</td>
+                            <td><input type="number" min="1" max="200" ng-change="filterResult()" ng-model="getAllUser.data.pageSize"></td>
+                        </tr>
                     </table>
                 </tab>
             </tabset>

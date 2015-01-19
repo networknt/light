@@ -67,10 +67,11 @@ gulp.task('webserver', function() {
   gulp.src('.')
     .pipe(webserver({
       livereload: true,
+      fallback: 'index.html',
       proxies: [
         {
           source: '/api',
-          target: 'http://www.networknt.com:8080/api'
+          target: 'http://example:8080/api'
         }
       ],
       port: 8001,

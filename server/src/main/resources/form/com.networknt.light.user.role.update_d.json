@@ -1,0 +1,34 @@
+{
+  "id": "com.networknt.light.user.role.update_d",
+  "version": 1,
+  "action" : [
+    {
+      "category" : "user",
+      "name" : "updRole",
+      "readOnly": false,
+      "title" : "Submit",
+      "success" : "/page/com-networknt-light-v-user-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Update Role",
+    "properties": {
+      "roles": {
+        "title": "Roles",
+        "type": "array",
+        "format": "uiselect",
+        "items": ["@",
+          {
+            "category": "role",
+            "name": "getRoleDropdown"
+          }
+        ]
+      }
+    }
+  },
+  "form": [
+    "roles"
+  ]
+}
+

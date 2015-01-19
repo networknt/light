@@ -210,6 +210,31 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return credential;
     }
 
+    protected ODocument updRole(Map<String, Object> data) throws Exception {
+        ODocument user = null;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            db.begin();
+            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
+            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
+            if (oid != null) {
+                user = (ODocument) oid.getRecord();
+                user.field("roles", data.get("roles"));
+                user.field("updateDate", data.get("updateDate"));
+                user.field("updateUserId", data.get("updateUserId"));
+                user.save();
+                db.commit();
+            }
+        } catch (Exception e) {
+            db.rollback();
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            db.close();
+        }
+        return user;
+    }
+
     protected ODocument addRole(Map<String, Object> data) throws Exception {
         ODocument user = null;
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();

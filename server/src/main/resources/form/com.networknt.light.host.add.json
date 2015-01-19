@@ -1,0 +1,36 @@
+{
+  "id": "com.networknt.light.host.add",
+  "version": 1,
+  "action" : [{
+    "category" : "host",
+    "name" : "addHost",
+    "readOnly": false,
+    "title": "Submit",
+    "success" : "/page/com-networknt-light-v-host-admin-home"
+  }],
+  "schema": {
+    "type": "object",
+    "title": "Host",
+    "required": ["id", "base", "transferMinSize"],
+    "properties": {
+      "id": {
+        "title": "Id",
+        "type": "string"
+      },
+      "base": {
+        "title": "Base",
+        "type": "string"
+      },
+      "transferMinSize": {
+        "title": "Transfer Min Size",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    "id",
+    "base",
+    "transferMinSize"
+  ]
+}
+
