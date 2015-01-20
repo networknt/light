@@ -24,9 +24,9 @@ public class HostRuleTest extends TestCase {
     String getAllHost = "{\"readOnly\":true,\"category\":\"host\",\"name\":\"getAllHost\"}";
     String getHostDropdown = "{\"readOnly\":true,\"category\":\"host\",\"name\":\"getHostDropdown\"}";
 
-    String addHost = "{\"readOnly\":false,\"category\":\"host\",\"name\":\"addHost\",\"data\":{\"id\":\"www.test.com\",\"host\":\"example\",\"base\":\"/home/test/web\"}}";
-    String updHost = "{\"readOnly\": false, \"category\": \"host\", \"name\": \"updHost\"}";
-    String delHost = "{\"readOnly\": false, \"category\": \"host\", \"name\": \"delHost\"}";
+    String addHost = "{\"readOnly\":false,\"category\":\"host\",\"name\":\"addHost\",\"data\":{\"id\":\"www.test.com\",\"host\":\"example\",\"base\":\"/home/test/web\",\"transferMinSize\":\"100\"}}";
+    String updHost = "{\"readOnly\":false,\"category\":\"host\",\"name\":\"updHost\",\"data\":{\"id\":\"www.test.com\",\"base\":\"/home/test1/web\",\"transferMinSize\":\"50\",\"host\":\"example\"}}";
+    String delHost = "{\"readOnly\":false,\"category\":\"host\",\"name\":\"delHost\",\"data\":{\"id\":\"www.test.com\",\"host\":\"example\"}}";
 
     public HostRuleTest(String name) {
         super(name);
@@ -106,154 +106,83 @@ public class HostRuleTest extends TestCase {
                 System.out.println("result = " + result);
             }
 
-            // del the new host added in the test case in case test case failed.
-            /*
+            // get all host drop down by user
             {
-                DelHostRule delHostRule = new DelHostRule();
-
-                DelRoleEvRule delRoleEvRule = new DelRoleEvRule();
-                String commonRole = delRoleRule.getRoleById("commonRole");
-                if(commonRole != null) {
-                    jsonMap = mapper.readValue(delRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            });
-                    jsonMap.put("payload", ownerToken.getPayload());
-                    jsonMap.put("data", mapper.readValue(commonRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            }));
-                    ruleResult = delRoleRule.execute(jsonMap);
-                    assertTrue(ruleResult);
-                    Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                    ruleResult = delRoleEvRule.execute(eventMap);
-                    assertTrue(ruleResult);
-                }
-
-                String injectorRole = delRoleRule.getRoleById("injectorRole");
-                if(injectorRole != null) {
-                    jsonMap = mapper.readValue(delRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            });
-                    jsonMap.put("payload", ownerToken.getPayload());
-                    jsonMap.put("data", mapper.readValue(injectorRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            }));
-                    ruleResult = delRoleRule.execute(jsonMap);
-                    assertTrue(ruleResult);
-                    Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                    ruleResult = delRoleEvRule.execute(eventMap);
-                    assertTrue(ruleResult);
-                }
-
-                String exampleRole = delRoleRule.getRoleById("exampleRole");
-                if(exampleRole != null) {
-                    jsonMap = mapper.readValue(delRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            });
-                    jsonMap.put("payload", ownerToken.getPayload());
-                    jsonMap.put("data", mapper.readValue(exampleRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            }));
-                    ruleResult = delRoleRule.execute(jsonMap);
-                    assertTrue(ruleResult);
-                    Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                    ruleResult = delRoleEvRule.execute(eventMap);
-                    assertTrue(ruleResult);
-                }
-            }
-
-            // add commonRole by owner
-            {
-                jsonMap = mapper.readValue(addRoleCommon,
+                jsonMap = mapper.readValue(getHostDropdown,
                         new TypeReference<HashMap<String, Object>>() {
                         });
                 jsonMap.put("payload", ownerToken.getPayload());
-                AddRoleRule addRoleRule = new AddRoleRule();
-                ruleResult = addRoleRule.execute(jsonMap);
+
+                GetHostDropdownRule rule = new GetHostDropdownRule();
+                ruleResult = rule.execute(jsonMap);
                 assertTrue(ruleResult);
-                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                AddRoleEvRule addRoleEvRule = new AddRoleEvRule();
-                ruleResult = addRoleEvRule.execute(eventMap);
-                assertTrue(ruleResult);
+                String result = (String) jsonMap.get("result");
+                System.out.println("result = " + result);
             }
 
-            // add injectorRole by adminExample and it failed
-            // add injectorRole by adminInjector
+            // del the new host added in the test case in case test case failed.
             {
-                jsonMap = mapper.readValue(addRoleInjector,
+                jsonMap = mapper.readValue(delHost,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", adminExamplePayload);
-                AddRoleRule addRoleRule = new AddRoleRule();
-                ruleResult = addRoleRule.execute(jsonMap);
-                assertFalse(ruleResult);
-                jsonMap = mapper.readValue(addRoleInjector,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                jsonMap.put("payload", adminInjectorPayload);
-                addRoleRule = new AddRoleRule();
-                ruleResult = addRoleRule.execute(jsonMap);
-                assertTrue(ruleResult);
-                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                AddRoleEvRule addRoleEvRule = new AddRoleEvRule();
-                ruleResult = addRoleEvRule.execute(eventMap);
-                assertTrue(ruleResult);
-            }
+                jsonMap.put("payload", ownerToken.getPayload());
 
-            // add exampleRole by adminExample
-            {
-                jsonMap = mapper.readValue(addRoleExample,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                jsonMap.put("payload", adminExamplePayload);
-                AddRoleRule addRoleRule = new AddRoleRule();
-                ruleResult = addRoleRule.execute(jsonMap);
-                assertTrue(ruleResult);
-                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                AddRoleEvRule addRoleEvRule = new AddRoleEvRule();
-                ruleResult = addRoleEvRule.execute(eventMap);
-                assertTrue(ruleResult);
-
-            }
-
-            // update commonRole by adminExample and it failed
-            {
-                UpdRoleRule updRoleRule = new UpdRoleRule();
-                UpdRoleEvRule updRoleEvRule = new UpdRoleEvRule();
-                String commonRole = updRoleRule.getRoleById("commonRole");
-                if(commonRole != null) {
-                    jsonMap = mapper.readValue(updRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            });
-                    jsonMap.put("payload", adminExamplePayload);
-                    jsonMap.put("data", mapper.readValue(commonRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            }));
-                    ruleResult = updRoleRule.execute(jsonMap);
-                    assertFalse(ruleResult);
-                }
-            }
-
-            // update exampleRole by adminExample
-            {
-                UpdRoleRule updRoleRule = new UpdRoleRule();
-                UpdRoleEvRule updRoleEvRule = new UpdRoleEvRule();
-                String exampleRole = updRoleRule.getRoleById("exampleRole");
-                if(exampleRole != null) {
-                    jsonMap = mapper.readValue(updRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            });
-                    jsonMap.put("payload", adminExamplePayload);
-                    jsonMap.put("data", mapper.readValue(exampleRole,
-                            new TypeReference<HashMap<String, Object>>() {
-                            }));
-                    ruleResult = updRoleRule.execute(jsonMap);
-                    assertTrue(ruleResult);
+                DelHostRule delHostRule = new DelHostRule();
+                ruleResult = delHostRule.execute(jsonMap);
+                if(ruleResult) {
                     Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                    ruleResult = updRoleEvRule.execute(eventMap);
+                    DelHostEvRule delHostEvRule = new DelHostEvRule();
+                    ruleResult = delHostEvRule.execute(eventMap);
                     assertTrue(ruleResult);
                 }
             }
-            */
+
+            // add host by owner
+            {
+                jsonMap = mapper.readValue(addHost,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+
+                AddHostRule addHostRule = new AddHostRule();
+                ruleResult = addHostRule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                AddHostEvRule addHostEvRule = new AddHostEvRule();
+                ruleResult = addHostEvRule.execute(eventMap);
+                assertTrue(ruleResult);
+            }
+
+            // update host by owner
+            {
+                jsonMap = mapper.readValue(updHost,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+
+                UpdHostRule updHostRule = new UpdHostRule();
+                ruleResult = updHostRule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                UpdHostEvRule updHostEvRule = new UpdHostEvRule();
+                ruleResult = updHostEvRule.execute(eventMap);
+                assertTrue(ruleResult);
+            }
+
+            // delete host by owner
+            {
+                jsonMap = mapper.readValue(delHost,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+                DelHostRule delHostRule = new DelHostRule();
+                ruleResult = delHostRule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                DelHostEvRule delHostEvRule = new DelHostEvRule();
+                ruleResult = delHostEvRule.execute(eventMap);
+                assertTrue(ruleResult);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

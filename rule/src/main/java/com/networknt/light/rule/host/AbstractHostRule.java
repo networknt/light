@@ -2,6 +2,7 @@ package com.networknt.light.rule.host;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
@@ -51,6 +52,7 @@ public abstract class AbstractHostRule extends AbstractRule implements Rule {
 
     private void writeHostMap(Map<String, Object> hostMap) {
         try {
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             mapper.writeValue((new File(System.getProperty("user.home") + "/virtualhost.json")), hostMap);
         } catch (IOException ioe) {
             logger.error("Exception:", ioe);
