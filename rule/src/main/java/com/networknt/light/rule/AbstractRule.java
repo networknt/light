@@ -85,7 +85,10 @@ public abstract class AbstractRule implements Rule {
             Map<String, Object> user = (Map<String, Object>)payload.get("user");
             if(user != null)  eventMap.put("createUserId", user.get("userId"));
         }
-
+        // IP address is used to identify event owner if user is not logged in.
+        if(inputMap.get("ipAddress") != null) {
+            eventMap.put("ipAddress", inputMap.get("ipAddress"));
+        }
         if(inputMap.get("host") != null) {
             eventMap.put("host", inputMap.get("host"));
         }

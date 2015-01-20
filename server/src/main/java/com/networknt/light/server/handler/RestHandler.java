@@ -147,6 +147,10 @@ public class RestHandler implements HttpHandler {
             }
         }
 
+        // inject ip address into the command here and saved as part of event in order to  identify
+        // users that are not logged in.
+        jsonMap.put("ipAddress", getIpAddress(exchange));
+
         boolean readOnly = (boolean)jsonMap.get("readOnly");
         // two types of rules (Command Rule and Event Rule)
         // Command Rule is responsible for validation and return result to client and enrich the command to event that
@@ -233,4 +237,15 @@ public class RestHandler implements HttpHandler {
         return payload;
     }
 
+    private String getIpAddress(HttpServerExchange exchange) {
+        String ipAddress = null;
+        HeaderMap headerMap = exchange.getRequestHeaders();
+        ipAddress = headerMap.getFirst(Headers.X_FORWARDED_FOR_STRING);
+        if(ipAddress == null) {
+            logger.debug("could not get ip address from x forward for, try sourceAddress in exchange");
+            ipAddress = exchange.getSourceAddress().getAddress().getHostAddress();
+        }
+        logger.debug("ip = {}", ipAddress);
+        return ipAddress;
+    }
 }
