@@ -48,6 +48,7 @@ public class DbService {
             ODocument event = new ODocument(schema.getClass("Event"));
             if(eventMap.get("host") != null) event.field("host", eventMap.get("host"));
             if(eventMap.get("app") != null) event.field("app", eventMap.get("app"));
+            if(eventMap.get("ipAddress") != null) event.field("ipAddress", eventMap.get("ipAddress"));
             event.field("category", eventMap.get("category"));
             event.field("name", eventMap.get("name"));
             event.field("data", eventMap.get("data"));
