@@ -343,6 +343,33 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return user;
     }
 
+    protected void revokeRefreshToken(Map<String, Object> data) throws Exception {
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            db.begin();
+            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
+            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
+            if (oid != null) {
+                ODocument user = (ODocument) oid.getRecord();
+                ODocument credential = (ODocument)user.field("credential");
+                if(credential != null) {
+                    // remove hostRefreshTokens map here. That means all the refresh token will be
+                    // removed for the user even the token is for other hosts.
+                    credential.removeField("hostRefreshTokens");
+                    credential.save();
+                    db.commit();
+                }
+            }
+        } catch (Exception e) {
+            db.rollback();
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            db.close();
+        }
+    }
+
+
     protected void signIn(Map<String, Object> data) throws Exception {
         String hashedRefreshToken = (String)data.get("hashedRefreshToken");
         if(hashedRefreshToken != null) {

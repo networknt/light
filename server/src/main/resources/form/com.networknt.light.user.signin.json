@@ -5,7 +5,8 @@
         "category" : "user",
         "name" : "signInUser",
         "readOnly": false,
-        "title" : "Sign In"
+        "title" : "Sign In",
+        "success" : "/page/com-networknt-light-v-user-home"
     }],
     "schema": {
         "type": "object",

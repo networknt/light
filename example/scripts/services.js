@@ -259,7 +259,7 @@ angular.module('lightApp')
                 if($location.path().toLowerCase() != '/signin') {
                     attemptUrl = $location.path();
                 } else {
-                    attemptUrl = '/page/com.networknt.light.user.home';
+                    attemptUrl = '/page/com-networknt-light-v-user-home';
                 }
             },
 
