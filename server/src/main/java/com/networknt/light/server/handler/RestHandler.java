@@ -187,6 +187,9 @@ public class RestHandler implements HttpHandler {
             exchange.setResponseCode(responseCode);
             result = (String)jsonMap.get("error");
             logger.debug("response error: {}", result);
+            // TODO should I log the response error here or in the response interceptor?
+            // do I have all the info here?
+
         } else {
             //  no error
             result = (String)jsonMap.get("result");
