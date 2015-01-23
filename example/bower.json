@@ -33,7 +33,8 @@
     "angular-schema-form-file-reader": "~0.1.0",
     "angular-schema-form-ui-select": "~0.1.0",
     "schema-form-datetimepicker": "chengz/schema-form-datetimepicker",
-    "momentjs": "~2.8.4"
+    "momentjs": "~2.8.4",
+    "stacktrace-js": "~0.6.4"
   },
   "devDependencies": {
     "angular-mocks": "1.3.8",
