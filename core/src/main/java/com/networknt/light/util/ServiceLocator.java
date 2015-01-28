@@ -100,6 +100,31 @@ public class ServiceLocator {
         return "plocal:"+ System.getProperty("user.home") + "/" + dbName;
     }
 
+    public String getJwtIssuer() {
+        loadServerConfig();
+        return serverMap.get("jwtIssuer");
+    }
+
+    public String getJwtSigningKey() {
+        loadServerConfig();
+        return serverMap.get("jwtSigningKey");
+    }
+
+    public String getJwtAudience() {
+        loadServerConfig();
+        return serverMap.get("jwtAudience");
+    }
+
+    public String getJwtTyp() {
+        loadServerConfig();
+        return serverMap.get("jwtTyp");
+    }
+
+    public String getJwtExpireInSecond() {
+        loadServerConfig();
+        return serverMap.get("jwtExpireInSecond");
+    }
+
     public ODatabaseDocumentTx getDb() {
         loadServerConfig();
         String dbName = serverMap.get("dbName");

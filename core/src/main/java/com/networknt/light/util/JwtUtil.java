@@ -38,14 +38,12 @@ import java.util.Map;
  * Created by steve on 14/09/14.
  */
 public class JwtUtil {
-    final static String ISSUER = "networknt.com";
-    final static String SIGNING_KEY = "1293089278894893893";
     public static String TOKEN_EXPIRED_MESSAGE = "Invalid iat and/or exp.";
 
     static VerifierProviders verifierProviders = null;
     static{
         try {
-            final Verifier hmacVerifier = new HmacSHA256Verifier(SIGNING_KEY.getBytes());
+            final Verifier hmacVerifier = new HmacSHA256Verifier(ServiceLocator.getInstance().getJwtSigningKey().getBytes());
             VerifierProvider hmacLocator = new VerifierProvider() {
                 @Override
                 public List<Verifier> findVerifier(String signerId, String keyId) {
@@ -81,28 +79,26 @@ public class JwtUtil {
 
     public static JsonToken createToken(Map<String, Object> userMap) throws InvalidKeyException {
         // Current time and signing algorithm
-        HmacSHA256Signer signer = new HmacSHA256Signer(ISSUER, null, SIGNING_KEY.getBytes());
+        HmacSHA256Signer signer = new HmacSHA256Signer(ServiceLocator.getInstance().getJwtIssuer(),
+            null, ServiceLocator.getInstance().getJwtSigningKey().getBytes());
 
         // Configure JSON token with signer and SystemClock
         JsonToken token = new JsonToken(signer);
-        token.setAudience("networknt.com");
-        token.setParam("typ", "networknt.com/auth/v1");
+        token.setAudience(ServiceLocator.getInstance().getJwtAudience());
+        token.setParam("typ", ServiceLocator.getInstance().getJwtTyp());
         token.setIssuedAt(Instant.now());
-        //token.setExpiration(Instant.now().plusSeconds(3600));  // 1 hour
-        // TODO test only
-        token.setExpiration(Instant.now().plusSeconds(1));  // 1 second + 2 minutes
-
+        token.setExpiration(Instant.now().plusSeconds(new Integer(ServiceLocator.getInstance().getJwtExpireInSecond())));
         Map<String, Object> payload = token.getPayload();
         payload.put("user", userMap);
         return token;
     }
 
     public static JsonToken Deserialize(String jwt) throws Exception {
-        JsonTokenParser parser = new JsonTokenParser(verifierProviders, new SignedTokenAudienceChecker("networknt.com"));
+        JsonTokenParser parser = new JsonTokenParser(verifierProviders, new SignedTokenAudienceChecker(ServiceLocator.getInstance().getJwtAudience()));
         return parser.deserialize(jwt);
     }
     public static JsonToken VerifyAndDeserialize(String jwt) throws Exception {
-        JsonTokenParser parser = new JsonTokenParser(verifierProviders, new SignedTokenAudienceChecker("networknt.com"));
+        JsonTokenParser parser = new JsonTokenParser(verifierProviders, new SignedTokenAudienceChecker(ServiceLocator.getInstance().getJwtAudience()));
         return parser.verifyAndDeserialize(jwt);
     }
 }

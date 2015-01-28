@@ -10,5 +10,10 @@
   "ownerPass": "123456",
   "testId": "test",
   "testEmail": "test@example.com",
-  "testPass": "123456"
+  "testPass": "123456",
+  "jwtIssuer" : "networknt.com",
+  "jwtSigningKey" : "1293089278894893893",
+  "jwtAudience" : "networknt.com",
+  "jwtTyp": "networknt.com/auth/v1",
+  "jwtExpireInSecond": "60"
 }
