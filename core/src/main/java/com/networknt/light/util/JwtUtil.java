@@ -61,14 +61,26 @@ public class JwtUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        Map<String, Object> userMap = new LinkedHashMap<String, Object>();
-        userMap.put("email", "stevehu@gmail.com");
-        String jwt = getJwt(userMap);
-        System.out.println("jwt = " + jwt);
-        JsonToken token = Deserialize(jwt);
-        System.out.println("token = " + token);
-        token = VerifyAndDeserialize(jwt);
-        System.out.println("token = " + token);
+        String jwt = null;
+        if(args != null && args.length == 1) {
+            // there is a token passed in, deserializer it.
+            jwt = args[0];
+            JsonToken token = VerifyAndDeserialize(jwt);
+            System.out.println("token=" + token);
+        } else {
+            // there is no parameter then generate a new token.
+            Map<String, Object> userMap = new LinkedHashMap<String, Object>();
+            userMap.put("userId", "stevehu");
+            userMap.put("host", "www.networknt.com");
+            userMap.put("client", "browser");
+            // roles array
+            ArrayList roles = new ArrayList();
+            roles.add("user");
+            roles.add("admin");
+            userMap.put("roles", roles);
+            jwt = getJwt(userMap);
+            System.out.println("jwt = " + jwt);
+        }
     }
 
 
