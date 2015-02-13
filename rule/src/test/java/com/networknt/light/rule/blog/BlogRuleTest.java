@@ -18,7 +18,8 @@ package com.networknt.light.rule.blog;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.light.rule.user.*;
+import com.networknt.light.rule.user.SignInUserEvRule;
+import com.networknt.light.rule.user.SignInUserRule;
 import com.networknt.light.util.JwtUtil;
 import com.networknt.light.util.ServiceLocator;
 import junit.framework.Test;
@@ -26,7 +27,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.oauth.jsontoken.JsonToken;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by husteve on 10/8/2014.

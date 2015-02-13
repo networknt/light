@@ -16,14 +16,10 @@
 
 package com.networknt.light.rule.page;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.form.AbstractFormRule;
 import com.networknt.light.server.DbService;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

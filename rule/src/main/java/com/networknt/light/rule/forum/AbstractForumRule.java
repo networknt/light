@@ -19,11 +19,9 @@ package com.networknt.light.rule.forum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
-import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.index.OCompositeKey;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
@@ -200,7 +198,7 @@ public abstract class AbstractForumRule extends AbstractRule implements Rule {
                         for(String id: list) {
                             OCompositeKey childKey = new OCompositeKey(data.get("host"), id);
                             OIdentifiable childOid = (OIdentifiable) forumHostIdIdx.get(childKey);
-                            if(childOid != null) inputChildren.add(childOid.getRecord());
+                            if(childOid != null) inputChildren.add((ODocument)childOid.getRecord());
                         }
 
                         Set<ODocument> addSet = new HashSet<ODocument>(inputChildren);
@@ -233,7 +231,7 @@ public abstract class AbstractForumRule extends AbstractRule implements Rule {
                             if(childOid != null) {
                                 ODocument child = childOid.getRecord();
                                 if(child != null) {
-                                    storedChildren.add(childOid.getRecord());
+                                    storedChildren.add((ODocument)childOid.getRecord());
                                     child.field("parent", forum);
                                     child.save();
                                 }
@@ -331,7 +329,7 @@ public abstract class AbstractForumRule extends AbstractRule implements Rule {
                 List<Map<String, String>> list = new ArrayList<Map<String, String>>();
                 for(ODocument doc: forums) {
                     Map<String, String> map = new HashMap<String, String>();
-                    map.put("id", doc.field("id"));
+                    map.put("id", (String)doc.field("id"));
                     map.put("value", doc.field("@rid").toString());
                     list.add(map);
                 }

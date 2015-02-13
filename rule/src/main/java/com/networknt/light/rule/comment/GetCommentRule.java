@@ -18,10 +18,10 @@ package com.networknt.light.rule.comment;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.blog.AbstractBlogRule;
-import com.networknt.light.util.ServiceLocator;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by steve on 03/12/14.

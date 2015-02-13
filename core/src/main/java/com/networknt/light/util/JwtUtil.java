@@ -28,7 +28,7 @@ import net.oauth.signatures.SignedTokenAudienceChecker;
 
 import java.security.InvalidKeyException;
 import java.security.SignatureException;
-import java.time.Instant;
+import org.joda.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -99,7 +99,8 @@ public class JwtUtil {
         token.setAudience(ServiceLocator.getInstance().getJwtAudience());
         token.setParam("typ", ServiceLocator.getInstance().getJwtTyp());
         token.setIssuedAt(Instant.now());
-        token.setExpiration(Instant.now().plusSeconds(new Integer(ServiceLocator.getInstance().getJwtExpireInSecond())));
+        int expireInMilli = new Integer(ServiceLocator.getInstance().getJwtExpireInSecond()) * 1000;
+        token.setExpiration(Instant.now().plus(expireInMilli));
         Map<String, Object> payload = token.getPayload();
         payload.put("user", userMap);
         return token;

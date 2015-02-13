@@ -17,10 +17,6 @@
 package com.networknt.light.rule.db;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.form.AbstractFormRule;
-import com.networknt.light.util.ServiceLocator;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.metadata.schema.OSchema;
 
 import java.util.List;
 import java.util.Map;

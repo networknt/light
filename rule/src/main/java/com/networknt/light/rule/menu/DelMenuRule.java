@@ -17,7 +17,6 @@
 package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.blog.AbstractBlogRule;
 import com.networknt.light.server.DbService;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 

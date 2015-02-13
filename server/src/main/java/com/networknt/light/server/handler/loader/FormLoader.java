@@ -16,8 +16,6 @@
 
 package com.networknt.light.server.handler.loader;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.networknt.light.server.LightServer;
 import com.networknt.light.util.ServiceLocator;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;

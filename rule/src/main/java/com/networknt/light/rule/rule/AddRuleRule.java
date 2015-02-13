@@ -18,7 +18,6 @@ package com.networknt.light.rule.rule;
 
 import com.networknt.light.rule.Rule;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

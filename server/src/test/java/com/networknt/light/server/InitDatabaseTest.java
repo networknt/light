@@ -16,7 +16,6 @@
 
 package com.networknt.light.server;
 
-import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;

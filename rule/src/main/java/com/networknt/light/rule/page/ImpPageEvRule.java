@@ -17,7 +17,6 @@
 package com.networknt.light.rule.page;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.form.AbstractFormRule;
 
 import java.util.Map;
 

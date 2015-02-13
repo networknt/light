@@ -17,7 +17,6 @@
 package com.networknt.light.rule.post;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.forum.AbstractForumRule;
 import com.networknt.light.server.DbService;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 

@@ -16,13 +16,9 @@
 
 package com.networknt.light.rule.page;
 
-import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.form.AbstractFormRule;
-import com.networknt.light.util.ServiceLocator;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by husteve on 10/24/2014.

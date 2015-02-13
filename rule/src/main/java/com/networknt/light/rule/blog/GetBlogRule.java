@@ -16,15 +16,8 @@
 
 package com.networknt.light.rule.blog;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.AbstractBfnRule;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.injector.main.feed.FeedRule;
-import com.networknt.light.util.ServiceLocator;
-import com.orientechnologies.orient.core.record.impl.ODocument;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by husteve on 10/8/2014.

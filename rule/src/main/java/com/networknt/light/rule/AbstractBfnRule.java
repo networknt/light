@@ -100,7 +100,7 @@ public abstract class AbstractBfnRule  extends AbstractRule implements Rule {
                                         inputMap.put("responseCode", 404);
                                         break;
                                     } else {
-                                        childrenIds.add(child.field("id"));
+                                        childrenIds.add((String)child.field("id"));
                                     }
                                 }
                             }
@@ -361,7 +361,7 @@ public abstract class AbstractBfnRule  extends AbstractRule implements Rule {
                                             inputMap.put("responseCode", 404);
                                             return false;
                                         } else {
-                                            childrenIds.add(child.field("id"));
+                                            childrenIds.add((String)child.field("id"));
                                         }
                                     }
                                 }
@@ -446,7 +446,7 @@ public abstract class AbstractBfnRule  extends AbstractRule implements Rule {
                         for(String id: list) {
                             OCompositeKey childKey = new OCompositeKey(data.get("host"), id);
                             OIdentifiable childOid = (OIdentifiable) docHostIdIdx.get(childKey);
-                            if(childOid != null) inputChildren.add(childOid.getRecord());
+                            if(childOid != null) inputChildren.add((ODocument)childOid.getRecord());
                         }
 
                         Set<ODocument> addSet = new HashSet<ODocument>(inputChildren);
@@ -479,7 +479,7 @@ public abstract class AbstractBfnRule  extends AbstractRule implements Rule {
                             if(childOid != null) {
                                 ODocument child = childOid.getRecord();
                                 if(child != null) {
-                                    storedChildren.add(childOid.getRecord());
+                                    storedChildren.add((ODocument)childOid.getRecord());
                                     child.field("parent", doc);
                                     child.save();
                                 }
@@ -805,7 +805,7 @@ public abstract class AbstractBfnRule  extends AbstractRule implements Rule {
                 List<Map<String, String>> list = new ArrayList<Map<String, String>>();
                 for(ODocument doc: docs) {
                     Map<String, String> map = new HashMap<String, String>();
-                    map.put("label", doc.field("id"));
+                    map.put("label", (String)doc.field("id"));
                     map.put("value", doc.field("@rid").toString());
                     list.add(map);
                 }

@@ -17,18 +17,14 @@
 package com.networknt.light.server.handler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.server.DbService;
 import com.networknt.light.server.ServerConstants;
-import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.util.JwtUtil;
 import com.networknt.light.util.ServiceLocator;
 import com.networknt.light.util.Util;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.server.handlers.form.FormData;
-import io.undertow.server.handlers.form.FormDataParser;
-import io.undertow.server.handlers.form.FormEncodedDataDefinition;
-import io.undertow.server.handlers.form.FormParserFactory;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
 import io.undertow.util.Methods;
@@ -38,7 +34,10 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**

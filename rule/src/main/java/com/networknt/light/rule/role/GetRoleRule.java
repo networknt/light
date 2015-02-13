@@ -18,7 +18,6 @@ package com.networknt.light.rule.role;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.menu.AbstractMenuRule;
 import com.networknt.light.util.ServiceLocator;
 
 import java.util.HashMap;

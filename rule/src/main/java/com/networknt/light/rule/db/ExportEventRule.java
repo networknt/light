@@ -17,14 +17,8 @@
 package com.networknt.light.rule.db;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.util.ServiceLocator;
-import com.orientechnologies.orient.core.command.OCommandOutputListener;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.db.tool.ODatabaseExport;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

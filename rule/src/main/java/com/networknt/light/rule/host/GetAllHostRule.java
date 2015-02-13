@@ -1,11 +1,12 @@
 package com.networknt.light.rule.host;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.role.AbstractRoleRule;
 import com.networknt.light.util.ServiceLocator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Steve Hu on 2015-01-19.

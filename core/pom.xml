@@ -47,6 +47,10 @@
             <groupId>com.orientechnologies</groupId>
             <artifactId>orientdb-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>

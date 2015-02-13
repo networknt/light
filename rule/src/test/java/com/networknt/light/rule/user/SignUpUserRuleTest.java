@@ -23,7 +23,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
