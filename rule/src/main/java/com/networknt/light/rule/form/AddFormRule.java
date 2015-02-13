@@ -45,7 +45,7 @@ public class AddFormRule extends AbstractFormRule implements Rule {
                         error = "User can only add form from host: " + host;
                         inputMap.put("responseCode", 401);
                     } else {
-                        String json = getFormById((String)data.get("id"));
+                        String json = getFormById(inputMap);
                         if(json != null) {
                             error = "Form with the same id exists";
                             inputMap.put("responseCode", 400);
@@ -59,7 +59,7 @@ public class AddFormRule extends AbstractFormRule implements Rule {
                         }
                     }
                 } else {
-                    String json = getFormById((String)data.get("id"));
+                    String json = getFormById(inputMap);
                     if(json != null) {
                         error = "Form with the same id exists";
                         inputMap.put("responseCode", 400);

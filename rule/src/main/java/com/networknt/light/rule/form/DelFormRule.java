@@ -50,7 +50,7 @@ public class DelFormRule extends AbstractFormRule implements Rule {
                 } else {
                     int inputVersion = (int)data.get("@version");
                     String id = (String)data.get("id");
-                    String json = getFormById(id);
+                    String json = getFormById(inputMap);
                     if(json == null) {
                         error = "Form with id " + id + " cannot be found";
                         inputMap.put("responseCode", 404);

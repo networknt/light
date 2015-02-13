@@ -34,6 +34,7 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         int inputVersion = (int)data.get("@version");
         String rid = (String)data.get("@rid");
+        String ruleClass = (String)data.get("ruleClass");
         String error = null;
         if(payload == null) {
             error = "Login is required";
@@ -43,7 +44,7 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
             List roles = (List)user.get("roles");
             if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("ruleAdmin")) {
                 error = "Role owner or admin or ruleAdmin is required to update rule";
-                inputMap.put("responseCode", 401);
+                inputMap.put("responseCode", 403);
             } else {
                 String host = (String)user.get("host");
                 if(host != null) {
@@ -51,27 +52,32 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
                         error = "User can only update rule for host: " + host;
                         inputMap.put("responseCode", 403);
                     } else {
-                        ODocument rule = DbService.getODocumentByRid(rid);
-                        if(rule == null) {
-                            error = "Rule with @rid " + rid + " cannot be found";
-                            inputMap.put("responseCode", 404);
+                        // make sure the ruleClass contains the host.
+                        if(host != null && !ruleClass.contains(host)) {
+                            // you are not allowed to update rule as it is not owned by the host.
+                            error = "ruleClass is not owned by the host: " + host;
+                            inputMap.put("responseCode", 403);
                         } else {
-                            int storedVersion = rule.field("@version");
-                            if(inputVersion != storedVersion) {
-                                error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
-                                inputMap.put("responseCode", 400);
+                            ODocument rule = DbService.getODocumentByRid(rid);
+                            if(rule == null) {
+                                error = "Rule with @rid " + rid + " cannot be found";
+                                inputMap.put("responseCode", 404);
                             } else {
-                                // remove the rule instance from Rule Engine Cache
-                                String ruleClass = (String)data.get("ruleClass");
-                                RuleEngine.getInstance().removeRule(ruleClass);
-
-                                Map eventMap = getEventMap(inputMap);
-                                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                                inputMap.put("eventMap", eventMap);
-                                eventData.put("ruleClass", ruleClass);
-                                eventData.put("sourceCode", data.get("sourceCode"));
-                                eventData.put("updateDate", new java.util.Date());
-                                eventData.put("updateUserId", user.get("userId"));
+                                int storedVersion = rule.field("@version");
+                                if(inputVersion != storedVersion) {
+                                    error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
+                                    inputMap.put("responseCode", 400);
+                                } else {
+                                    // remove the rule instance from Rule Engine Cache
+                                    RuleEngine.getInstance().removeRule(ruleClass);
+                                    Map eventMap = getEventMap(inputMap);
+                                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                                    inputMap.put("eventMap", eventMap);
+                                    eventData.put("ruleClass", ruleClass);
+                                    eventData.put("sourceCode", data.get("sourceCode"));
+                                    eventData.put("updateDate", new java.util.Date());
+                                    eventData.put("updateUserId", user.get("userId"));
+                                }
                             }
                         }
                     }
@@ -87,7 +93,6 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
                             inputMap.put("responseCode", 400);
                         } else {
                             // remove the rule instance from Rule Engine Cache
-                            String ruleClass = (String)data.get("ruleClass");
                             RuleEngine.getInstance().removeRule(ruleClass);
 
                             Map eventMap = getEventMap(inputMap);

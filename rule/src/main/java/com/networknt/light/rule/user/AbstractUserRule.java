@@ -640,13 +640,10 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return matcher.matches();
     }
 
-    String generateToken(ODocument user) throws Exception {
+    String generateToken(ODocument user, String clientId) throws Exception {
         Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();
-        jwtMap.put("@rid", user.field("@rid").toString());
         jwtMap.put("userId", user.field("userId"));
-        if(user.field("host") != null) {
-            jwtMap.put("host", user.field("host"));
-        }
+        jwtMap.put("clientId", clientId);
         jwtMap.put("roles", user.field("roles"));
         return JwtUtil.getJwt(jwtMap);
     }

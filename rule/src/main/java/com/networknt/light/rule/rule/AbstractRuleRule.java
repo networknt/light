@@ -16,7 +16,9 @@
 
 package com.networknt.light.rule.rule;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
@@ -29,8 +31,8 @@ import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by husteve on 10/8/2014.
@@ -63,17 +65,40 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
 
     protected String addRule(Map<String, Object> data) throws Exception {
         String json = null;
+        ODocument access = null;
+        String ruleClass = (String)data.get("ruleClass");
+        String createUserId = (String)data.get("createUserId");
+        Date createDate = (Date)data.get("createDate");
+        String host = (String)data.get("host");
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         OSchema schema = db.getMetadata().getSchema();
         try {
             db.begin();
             ODocument rule = new ODocument(schema.getClass("Rule"));
-            rule.field("ruleClass", data.get("ruleClass"));
-            if(data.get("host") != null) rule.field("host", data.get("host"));
+            rule.field("ruleClass", ruleClass);
+            if(host != null) rule.field("host", host);
             rule.field("sourceCode", data.get("sourceCode"));
-            rule.field("createDate", data.get("createDate"));
-            rule.field("createUserId", data.get("createUserId"));
+            rule.field("createDate", createDate);
+            rule.field("createUserId", createUserId);
             rule.save();
+
+            // For all the newly added rules, the default security access is role based and only
+            // owner can access. For some of the rules, like getForm, getMenu, they are granted
+            // to anyone in the db script. Don't overwrite if access exists for these rules.
+
+            // check if access exists for the ruleClass and add access if not.
+            Map<String, Object> accessMap = getAccessByRuleClass(ruleClass);
+            if(accessMap == null) {
+                access = new ODocument(schema.getClass("Access"));
+                access.field("ruleClass", ruleClass);
+                access.field("accessLevel", "R"); // role level access
+                List roles = new ArrayList();
+                roles.add("owner");  // give owner access for all the rules by default.
+                access.field("roles", roles);
+                access.field("createDate", createDate);
+                access.field("createUserId", createUserId);
+                access.save();
+            }
             db.commit();
             json  = rule.toJSON();
         } catch (Exception e) {
@@ -83,8 +108,89 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
         } finally {
             db.close();
         }
+        if(access != null) {
+            Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
+            if(cache == null) {
+                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                        .maximumWeightedCapacity(1000)
+                        .build();
+                accessMap.put("cache", cache);
+            }
+            cache.put(ruleClass, mapper.readValue(access.toJSON(),
+                    new TypeReference<HashMap<String, Object>>() {
+                    }));
+        }
         return json;
     }
+
+    protected String impRule(Map<String, Object> data) throws Exception {
+        String json = null;
+        ODocument access = null;
+        String ruleClass = (String)data.get("ruleClass");
+        String createUserId = (String)data.get("createUserId");
+        Date createDate = (Date)data.get("createDate");
+        String host = (String)data.get("host");
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OSchema schema = db.getMetadata().getSchema();
+        try {
+            db.begin();
+            // remove the existing rule if there is.
+            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Rule.ruleClass");
+            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
+            if (oid != null) {
+                ((ODocument) oid.getRecord()).delete();
+            }
+            // create a new rule
+            ODocument rule = new ODocument(schema.getClass("Rule"));
+            rule.field("ruleClass", ruleClass);
+            if(host != null) rule.field("host", host);
+            rule.field("sourceCode", data.get("sourceCode"));
+            rule.field("createDate", createDate);
+            rule.field("createUserId", createUserId);
+            rule.save();
+            // For all the newly added rules, the default security access is role based and only
+            // owner can access. For some of the rules, like getForm, getMenu, they are granted
+            // to anyone in the db script. Don't overwrite if access exists for these rules.
+
+            // check if access exists for the ruleClass and add access if not.
+            Map<String, Object> accessMap = getAccessByRuleClass(ruleClass);
+            if(accessMap == null) {
+                access = new ODocument(schema.getClass("Access"));
+                access.field("ruleClass", ruleClass);
+                access.field("accessLevel", "R"); // role level access
+                List roles = new ArrayList();
+                roles.add("owner");  // give owner access for all the rules by default.
+                access.field("roles", roles);
+                access.field("createDate", createDate);
+                access.field("createUserId", createUserId);
+                access.save();
+            }
+            db.commit();
+            json  = rule.toJSON();
+        } catch (Exception e) {
+            db.rollback();
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            db.close();
+        }
+        if(access != null) {
+            Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
+            if(cache == null) {
+                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                        .maximumWeightedCapacity(1000)
+                        .build();
+                accessMap.put("cache", cache);
+            }
+            cache.put(ruleClass, mapper.readValue(access.toJSON(),
+                    new TypeReference<HashMap<String, Object>>() {
+                    }));
+        }
+        return json;
+    }
+
 
     protected void updRule(Map<String, Object> data) throws Exception {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
@@ -144,11 +250,42 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> roles = db.command(query).execute();
-            json = OJSONWriter.listToJSON(roles, null);
+            List<ODocument> rules = db.command(query).execute();
+            json = OJSONWriter.listToJSON(rules, null);
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
+        } finally {
+            db.close();
+        }
+        return json;
+    }
+
+    protected String getRuleDropdown(String host) {
+        String sql = "SELECT FROM Rule";
+        if(host != null) {
+            sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
+        }
+        String json = null;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
+            List<ODocument> rules = db.command(query).execute();
+            if(rules.size() > 0) {
+                List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+                for(ODocument doc: rules) {
+                    Map<String, String> map = new HashMap<String, String>();
+                    String ruleClass = doc.field("ruleClass");
+                    map.put("label", ruleClass);
+                    map.put("value", ruleClass);
+                    list.add(map);
+                }
+                json = mapper.writeValueAsString(list);
+            }
+
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            //throw e;
         } finally {
             db.close();
         }

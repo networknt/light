@@ -1,6 +1,9 @@
 'use strict';
 
 angular.module('lightApp')
+    .constant('CLIENT', {
+        'clientId': 'example@Browser'
+    })
     .factory('base64', function() {
         return {
             // This is used to parse the profile.
@@ -104,6 +107,11 @@ angular.module('lightApp')
                 authService.logOut();
                 $location.path('/signin');
                 deferred.reject(rejection);
+            } else if (rejection.status === 404) {
+                // 404 not found. don't do anything here just let it go. as the controller might try
+                // some other ways to get the resource. eg. PageCtrl load from file system first and
+                // then try REST API second for development.
+                deferred.reject(rejection);
             } else {
                 // some other errors, reject immediately.
                 toaster.pop('error', rejection.status, rejection.data, 5000);
@@ -117,7 +125,7 @@ angular.module('lightApp')
 
         return authInterceptorServiceFactory;
     }])
-    .factory('authService', ['$q', '$injector', 'localStorageService', 'base64', function ($q, $injector, localStorageService, base64) {
+    .factory('authService', ['$q', '$injector', 'localStorageService', 'base64', 'CLIENT', function ($q, $injector, localStorageService, base64, CLIENT) {
 
         var $http;
         var authServiceFactory = {};
@@ -163,7 +171,7 @@ angular.module('lightApp')
             var authorizationData = localStorageService.get('authorizationData');
             console.log("authService:_refreshToken:authorizationData before refresh", authorizationData);
             if (authorizationData && authorizationData.useRefreshTokens) {
-                refreshTokenPost.data = {refreshToken : authorizationData.refreshToken, userId: authorizationData.currentUser.userId};
+                refreshTokenPost.data = {refreshToken : authorizationData.refreshToken, userId: authorizationData.currentUser.userId, clientId: CLIENT.clientId};
                 // The authorizationData must be removed before calling refreshToken api as the old expired token will be sent again
                 // and cause infinite loop. Once it is removed, not access token will be sent to the server along with the request.
                 // TODO but we have another issue that some other requests might be sent during this time slot. It is better to check
@@ -258,8 +266,10 @@ angular.module('lightApp')
                 $location = $location || $injector.get('$location');
                 if($location.path().toLowerCase() != '/signin') {
                     attemptUrl = $location.path();
+                    console.log("attemptUrl = {}", attemptUrl);
                 } else {
                     attemptUrl = '/page/com-networknt-light-v-user-home';
+                    console.log("attemptUrl = {}", attemptUrl);
                 }
             },
 
@@ -311,7 +321,7 @@ angular.module('lightApp')
                 // use our traceService to generate a stack trace
                 var stackTrace = traceService.print({e: exception});
 
-                var escape = function(x) { return x.replace('\\', '\\\\').replace('\"', '\\"'); };
+                var escape = function(x) { return x.replace(/"/g, '\\"'); };
                 var XHR = window.XMLHttpRequest || function() {
                         try { return new ActiveXObject("Msxml3.XMLHTTP"); } catch (e0) {}
                         try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
@@ -328,7 +338,7 @@ angular.module('lightApp')
                     '"type": "exception", ' +
                     '"url": "' + escape(window.location.href) + '",' +
                     '"stackTrace": "' + (stackTrace) + '",' +
-                    '"cause": "' + (cause || "") + '"' +
+                    '"cause": "' + escape(cause || '') + '"' +
                     '}}';
                 console.log("error", error);
                 xhr.send(error);
@@ -349,7 +359,8 @@ angular.module('lightApp')
                 // preserve default behaviour
                 $log.error.apply($log, arguments);
                 // send server side
-                var escape = function(x) { return x.replace('\\', '\\\\').replace('\"', '\\"'); };
+                //var escape = function(x) { return x.replace('\\', '\\\\').replace('\"', '\\"'); };
+                var escape = function(x) { return x.replace(/"/g, '\\"'); };
                 var XHR = window.XMLHttpRequest || function() {
                         try { return new ActiveXObject("Msxml3.XMLHTTP"); } catch (e0) {}
                         try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}

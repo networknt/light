@@ -75,8 +75,8 @@ var lightApp = angular.module('lightApp', [
       });
     $locationProvider.html5Mode(true);
 }])
-.run(['$rootScope', 'authService', function ($rootScope, authService) {
-        console.log("Angular is running...");
+.run(['$rootScope', 'authService', 'lightLoggingService', function ($rootScope, authService, lightLoggingService) {
+        lightLoggingService.debug('debug information from lightLoggingService: Angular is running...');
         authService.fillAuthData();
     }
 ]);

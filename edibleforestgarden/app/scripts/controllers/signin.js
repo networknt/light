@@ -37,6 +37,7 @@ angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$h
         $scope.$broadcast('schemaFormValidate');
         // Then we check if the form is valid
         if (form.$valid) {
+            $scope.modelData.clientId = 'www.edibleforestgarden.ca@Browser';
             $scope.action[0].data = $scope.modelData;
             $http.post('/api/rs', $scope.action[0])
                 .success(function (data, status, headers, config) {

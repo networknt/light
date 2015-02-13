@@ -46,6 +46,8 @@ public class FormRuleTest extends TestCase {
 
     String getDynaForm = "{\"readOnly\":true,\"category\":\"form\",\"name\":\"getForm\",\"data\":{\"host\":\"example\",\"id\":\"com.networknt.light.demo.uiselect_d\"}}";
 
+    String enrichDynamicForm = "{\"id\":\"com.networknt.light.access.add_d\",\"version\":1,\"action\":[{\"category\":\"access\",\"name\":\"addAccess\",\"readOnly\":false,\"title\":\"Submit\",\"success\":\"/page/com-networknt-light-v-access-admin-home\"}],\"schema\":{\"type\":\"object\",\"title\":\"Add Access Control\",\"required\":[\"ruleClass\",\"accessLevel\"],\"properties\":{\"ruleClass\":{\"title\":\"Rule Class\",\"type\":\"string\",\"format\":\"uiselect\",\"items\":[{\"label\":\"dynamic\",\"value\":{\"category\":\"rule\",\"name\":\"getRuleDropdown\"}}]},\"accessLevel\":{\"title\":\"Access Level\",\"type\":\"string\",\"format\":\"uiselect\",\"items\":[{\"value\":\"C\",\"label\":\"Client Based\"},{\"value\":\"R\",\"label\":\"Role Based\"},{\"value\":\"U\",\"label\":\"User Based\"},{\"value\":\"CR\",\"label\":\"Client and Role Based\"},{\"value\":\"CU\",\"label\":\"Client and User Based\"},{\"value\":\"RU\",\"label\":\"Role and User Based\"},{\"value\":\"CRU\",\"label\":\"Client, Role and User Based\"}]},\"clients\":{\"title\":\"Clients\",\"type\":\"array\",\"format\":\"uiselect\",\"items\":[{\"label\":\"dynamic\",\"value\":{\"category\":\"client\",\"name\":\"getClientDropdown\"}}]},\"roles\":{\"title\":\"Roles\",\"type\":\"array\",\"format\":\"uiselect\",\"items\":[{\"value\":{\"category\":\"role\",\"name\":\"getRoleDropdown\"},\"label\":\"dynamic\"}]},\"users\":{\"title\":\"Users [Separate by comma if multiple]\",\"type\":\"string\"}}},\"form\":[\"ruleClass\",\"accessLevel\",\"clients\",\"roles\",{\"key\":\"users\",\"type\":\"textarea\"}]}";
+
     public FormRuleTest(String name) {
         super(name);
     }
@@ -62,7 +64,53 @@ public class FormRuleTest extends TestCase {
         super.tearDown();
     }
 
+    public void testEnrichForm() throws Exception {
+        Map<String, Object> jsonMap = new HashMap<String, Object>();
+        boolean ruleResult = false;
 
+        JsonToken ownerToken = null;
+        // signIn owner by userId
+        {
+            jsonMap = mapper.readValue(signInOwner,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+            SignInUserRule valRule = new SignInUserRule();
+            ruleResult = valRule.execute(jsonMap);
+            assertTrue(ruleResult);
+            Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+            String result = (String)jsonMap.get("result");
+            jsonMap = mapper.readValue(result,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+            String jwt = (String)jsonMap.get("accessToken");
+            ownerToken = JwtUtil.Deserialize(jwt);
+            SignInUserEvRule rule = new SignInUserEvRule();
+            ruleResult = rule.execute(eventMap);
+            assertTrue(ruleResult);
+        }
+
+        {
+            // construct a fake inputMap.
+            jsonMap = mapper.readValue(getDynaForm,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+            jsonMap.put("payload", ownerToken.getPayload());
+
+            GetFormRule rule = new GetFormRule();
+            String json = rule.enrichForm(enrichDynamicForm, jsonMap);
+            System.out.println("json = " + json);
+            /*
+            jsonMap = mapper.readValue(json,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+            */
+            // check schema dropdown values here.
+
+        }
+
+    }
+
+    /*
     public void testDynamicForm() throws Exception {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         boolean ruleResult = false;
@@ -107,6 +155,8 @@ public class FormRuleTest extends TestCase {
             assertTrue(jsonMap.containsKey("id"));
         }
     }
+    */
+
     /*
     public void testExecute() throws Exception {
         Map<String, Object> jsonMap = new HashMap<String, Object>();

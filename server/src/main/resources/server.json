@@ -15,5 +15,5 @@
   "jwtSigningKey" : "1293089278894893893",
   "jwtAudience" : "networknt.com",
   "jwtTyp": "networknt.com/auth/v1",
-  "jwtExpireInSecond": "60"
+  "jwtExpireInSecond": "600"
 }

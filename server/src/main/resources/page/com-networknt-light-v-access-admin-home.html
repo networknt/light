@@ -1,0 +1,139 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('com.networknt.light.AccessAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+
+        $scope.getAccess = {
+            category : 'access',
+            name : 'getAllAccess',
+            readOnly: true
+        };
+
+        $scope.delAccess = {
+            category : 'access',
+            name : 'delAccess',
+            readOnly: false
+        };
+
+        $scope.accesses = [];
+
+        $scope.headers = [
+            {
+                title: 'Delete',
+                value: 'delete'
+            },
+            {
+                title: 'Rule Class',
+                value: 'ruleClass'
+            },
+            {
+                title: 'Access Level',
+                value: 'accessLevel'
+            },
+            {
+                title: 'Clients',
+                value: 'clients'
+            },
+            {
+                title: 'Roles',
+                value: 'roles'
+            },
+            {
+                title: 'Users',
+                value: 'users'
+            },
+            {
+                title: 'Create User Id',
+                value: 'createUserId'
+            },
+            {
+                title: 'Create Date',
+                value: 'createDate'
+            },
+            {
+                title: 'Update User Id',
+                value: 'updateUserId'
+            },
+            {
+                title: 'Update Date',
+                value: 'updateDate'
+            }
+        ];
+        $scope.sort = {
+            sortDir : 'desc',
+            sortedBy : 'createDate'
+        };
+        $scope.filter = {};
+
+        $scope.onSort = function (sortedBy, sortDir) {
+            $scope.sort.sortDir = sortDir;
+            $scope.sort.sortedBy = sortedBy;
+        };
+
+        $scope.delete = function(access) {
+            $scope.delAccess.data = access;
+            $http.post('api/rs', $scope.delAccess)
+                    .success(function (data, status, headers, config) {
+                        $scope.accesses.splice($scope.accesses.indexOf(access), 1);
+                        toaster.pop('success', status, data, 3000);
+                    })
+        };
+
+
+        $scope.update = function(access) {
+            modelDataService.setModelData(access);
+            $location.path("/form/com.networknt.light.access.upd_d");
+        };
+
+        $scope.fetchResult = function () {
+            $http.post('api/rs', $scope.getAccess)
+                    .success(function (data, status, headers, config) {
+                        $scope.accesses = data;
+                    })
+        };
+        $scope.fetchResult();
+    }]);
+</script>
+<div class="container" ng-controller="com.networknt.light.AccessAdminHomeCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <tabset>
+                <tab heading="Access">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="header in headers">
+                                <sort-by onsort="onSort" sortdir="sort.sortDir" sortedby="sort.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td><input ng-model="filter.ruleClass" type="text" /></td>
+                            <td><input ng-model="filter.accessLevel" type="text" /></td>
+                            <td><input ng-model="filter.clients" type="text" /></td>
+                            <td><input ng-model="filter.roles" type="text" /></td>
+                            <td><input ng-model="filter.users" type="text" /></td>
+                            <td><input ng-model="filter.createUserId" type="text" /></td>
+                            <td><input ng-model="filter.createDate" type="text" /></td>
+                            <td><input ng-model="filter.updateUserId" type="text" /></td>
+                            <td><input ng-model="filter.updateDate" type="text" /></td>
+                        </tr>
+                        <tr ng-repeat="access in accesses | filter: filter | orderBy: sort.sortedBy">
+                            <td><a href ng-click="delete(access)">Delete</a></td>
+                            <td><a href ng-click="update(access)">{{access.ruleClass}}</a></td>
+                            <td>{{access.accessLevel}}</td>
+                            <td>{{access.clients}}</td>
+                            <td>{{access.roles}}</td>
+                            <td>{{access.users}}</td>
+                            <td>{{access.createUserId}}</td>
+                            <td>{{access.createDate}}</td>
+                            <td>{{access.updateUserId}}</td>
+                            <td>{{access.updateDate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div> <!-- /container -->

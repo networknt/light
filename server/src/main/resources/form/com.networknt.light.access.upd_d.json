@@ -1,0 +1,87 @@
+{
+  "id": "com.networknt.light.access.upd_d",
+  "version": 1,
+  "action": [
+    {
+      "category": "access",
+      "name": "updAccess",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-access-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Update Access Control",
+    "required": [
+      "accessLevel"
+    ],
+    "properties": {
+      "ruleClass": {
+        "title": "Rule Class",
+        "type": "string",
+        "readonly": true
+      },
+      "accessLevel": {
+        "title": "Access Level",
+        "type": "string",
+        "format": "uiselect",
+        "items": [
+          {"value": "A", "label": "Authorized to anyone"},
+          {"value": "N", "label": "Not Accessible"},
+          {"value": "C", "label": "Client Based"},
+          {"value": "R", "label": "Role Based"},
+          {"value": "U", "label": "User Based"},
+          {"value": "CR", "label": "Client and Role Based"},
+          {"value": "CU", "label": "Client and User Based"},
+          {"value": "RU", "label": "Role and User Based"},
+          {"value": "CRU", "label": "Client, Role and User Based"}
+        ]
+      },
+      "clients": {
+        "title": "Clients",
+        "type": "array",
+        "format": "strapselect",
+        "items": [
+          {
+            "label": "dynamic",
+            "value": {
+              "category": "client",
+              "name": "getClientDropdown"
+            }
+          }
+        ]
+      },
+      "roles": {
+        "title": "Roles",
+        "type": "array",
+        "format": "strapselect",
+        "items": [
+          {
+            "label": "dynamic",
+            "value": {
+              "category": "role",
+              "name": "getRoleDropdown"
+            }
+          }
+        ]
+      },
+      "users": {
+        "title": "Users [Separate by comma if multiple]",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    "ruleClass",
+    "accessLevel",
+    "clients",
+    "roles",
+    {
+      "key": "users",
+      "type": "textarea"
+    }
+  ]
+}
+
+

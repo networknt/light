@@ -82,11 +82,11 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
                 if(menuItems != null) {
                     for(ODocument menuItem: menuItems) {
                         if(menuItem != null && menuItem.field("host") != null) {
-                            db.delete(menuItem);
+                            menuItem.delete();
                         }
                     }
                 }
-                db.delete(menu);
+                menu.delete();
                 db.commit();
             }
         } catch (Exception e) {
@@ -111,7 +111,7 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
             if (oidMenuItem != null) {
                 db.begin();
                 ODocument menuItem = (ODocument)oidMenuItem.getRecord();
-                db.delete(menuItem);
+                menuItem.delete();
                 db.commit();
             }
         } catch (Exception e) {

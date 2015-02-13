@@ -27,11 +27,11 @@ public class Json {
 				"          {\"value\": \"value3\", \"label\": \"label3\"}]\n";
 		String injectedEmpty = "[]";
 		try {
-            InputStream is = Json.class.getResourceAsStream("/form/com.networknt.light.demo.uiselect_d.json");
+            InputStream is = Json.class.getResourceAsStream("/form/com.networknt.light.access.add_d.json");
             String formStr = convertStreamToString(is);
 			//System.out.println("is = " + formStr);
 
-			Pattern pattern = Pattern.compile("\\[\"@\",([^]]+)\\]");
+			Pattern pattern = Pattern.compile("\\[\\{\"label\":\"dynamic\",([^]]+)\\}\\]");
 
 			Matcher m = pattern.matcher(formStr);
 			StringBuffer sb = new StringBuffer(formStr.length());

@@ -61,6 +61,7 @@ public class Loader {
         data.put("userIdEmail", userId);
         data.put("password", password);
         data.put("rememberMe", true);
+        data.put("clientId", "example@Browser");
         inputMap.put("data", data);
 
         HttpPost httpPost = new HttpPost(host + "/api/rs");
