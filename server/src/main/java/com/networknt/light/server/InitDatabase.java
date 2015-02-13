@@ -24,7 +24,6 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +60,9 @@ public class InitDatabase {
         initCatalog();
         initProduct();
         initCounter();
+        //initClient();
+        initAccess();
+        initProxy();
         refreshDoc();
         logger.debug("End initdb()");
     }
@@ -235,6 +237,7 @@ public class InitDatabase {
             db.close();
         }
     }
+
 
     public static void initEvent() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
@@ -709,6 +712,97 @@ public class InitDatabase {
         }
     }
 
+    /**
+     * Client
+     */
+    /*
+    public static void initClient() {
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSchema schema = db.getMetadata().getSchema();
+            if (schema.existsClass("Client")) {
+                for (ODocument doc : db.browseClass("Client")) {
+                    doc.delete();
+                }
+                schema.dropClass("Client");
+            }
+            OClass client = schema.createClass("Client");
+            // www.networknt.com@Browser www.networknt.com@Android www.networknt.com@iOS
+            client.createProperty("id", OType.STRING);
+            client.createProperty("type", OType.INTEGER); // 0 - CONFIDENTIAL, 1 - PUBLIC
+            client.createProperty("secret", OType.STRING);
+            client.createProperty("desc", OType.STRING);
+            client.createProperty("createDate", OType.DATETIME);
+            client.createProperty("createUserId", OType.STRING);
+            client.createProperty("updateDate", OType.DATETIME);
+            client.createProperty("updateUserId", OType.STRING);
+            client.createIndex("Client.id", OClass.INDEX_TYPE.UNIQUE, "id");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+    */
+
+    /**
+     * Client is a piece of info in the jwt to indicate where the request coming from.
+     */
+    public static void initAccess() {
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSchema schema = db.getMetadata().getSchema();
+            if (schema.existsClass("Access")) {
+                for (ODocument doc : db.browseClass("Access")) {
+                    doc.delete();
+                }
+                schema.dropClass("Access");
+            }
+            OClass access = schema.createClass("Access");
+            access.createProperty("ruleClass", OType.STRING);
+            access.createProperty("accessLevel", OType.STRING); // C/R/U/CR/CU/RU/CRU
+            access.createProperty("clients", OType.EMBEDDEDLIST); // usually host + device. Browser/Andrioid/iOS
+            access.createProperty("roles", OType.EMBEDDEDLIST);
+            access.createProperty("users", OType.EMBEDDEDLIST);
+            access.createProperty("createDate", OType.DATETIME);
+            access.createProperty("createUserId", OType.STRING);
+            access.createProperty("updateDate", OType.DATETIME);
+            access.createProperty("updateUserId", OType.STRING);
+            access.createIndex("Access.ruleClass", OClass.INDEX_TYPE.UNIQUE, "ruleClass");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    public static void initProxy() {
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSchema schema = db.getMetadata().getSchema();
+            if (schema.existsClass("Proxy")) {
+                for (ODocument doc : db.browseClass("Proxy")) {
+                    doc.delete();
+                }
+                schema.dropClass("Proxy");
+            }
+            OClass proxy = schema.createClass("Proxy");
+            proxy.createProperty("ruleClass", OType.STRING);
+            proxy.createProperty("hosts", OType.EMBEDDEDLIST);   // ip and port with rest api for the rule.
+            proxy.createProperty("createDate", OType.DATETIME);
+            proxy.createProperty("createUserId", OType.STRING);
+            proxy.createProperty("updateDate", OType.DATETIME);
+            proxy.createProperty("updateUserId", OType.STRING);
+            proxy.createIndex("Proxy.ruleClass", OClass.INDEX_TYPE.UNIQUE, "ruleClass");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
 
     public static void initWorkflow() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
@@ -1108,6 +1202,22 @@ public class InitDatabase {
             user2.field("createDate", new java.util.Date());
             user2.save();
 
+            ODocument m_accessAdmin = new ODocument(schema.getClass("MenuItem"));
+            m_accessAdmin.field("id", "accessAdmin");
+            m_accessAdmin.field("label", "Access Admin");
+            m_accessAdmin.field("path", "/page/com-networknt-light-v-access-admin-home");
+            m_accessAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            m_accessAdmin.field("createDate", new java.util.Date());
+            m_accessAdmin.save();
+
+            ODocument m_proxyAdmin = new ODocument(schema.getClass("MenuItem"));
+            m_proxyAdmin.field("id", "proxyAdmin");
+            m_proxyAdmin.field("label", "Proxy Admin");
+            m_proxyAdmin.field("path", "/page/com-networknt-light-v-proxy-admin-home");
+            m_proxyAdmin.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            m_proxyAdmin.field("createDate", new java.util.Date());
+            m_proxyAdmin.save();
+
             ODocument m_hostAdmin = new ODocument(schema.getClass("MenuItem"));
             m_hostAdmin.field("id", "hostAdmin");
             m_hostAdmin.field("label", "Host Admin");
@@ -1207,6 +1317,8 @@ public class InitDatabase {
 
             List<ODocument> menuItems = new ArrayList<ODocument>();
             menuItems.add(m_ruleAdmin);
+            menuItems.add(m_accessAdmin);
+            menuItems.add(m_proxyAdmin);
             menuItems.add(m_hostAdmin);
             menuItems.add(m_roleAdmin);
             menuItems.add(m_userAdmin);
@@ -1351,47 +1463,1610 @@ public class InitDatabase {
 
             // create rules to bootstrap the installation through event replay.
             // need signIn, replayEvent and impRule to start up.
+
+            ODocument abstractRule = new ODocument(schema.getClass("Rule"));
+            abstractRule.field("ruleClass", "com.networknt.light.rule.user.AbstractRule");
+            abstractRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule;\n" +
+                    "\n" +
+                    "import com.fasterxml.jackson.core.type.TypeReference;\n" +
+                    "import com.fasterxml.jackson.databind.ObjectMapper;\n" +
+                    "import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\n" +
+                    "import com.networknt.light.server.DbService;\n" +
+                    "import com.networknt.light.util.ServiceLocator;\n" +
+                    "import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\n" +
+                    "import com.orientechnologies.orient.core.db.record.OIdentifiable;\n" +
+                    "import com.orientechnologies.orient.core.index.OCompositeKey;\n" +
+                    "import com.orientechnologies.orient.core.index.OIndex;\n" +
+                    "import com.orientechnologies.orient.core.metadata.schema.OSchema;\n" +
+                    "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
+                    "import org.slf4j.Logger;\n" +
+                    "import org.slf4j.LoggerFactory;\n" +
+                    "\n" +
+                    "import java.util.Date;\n" +
+                    "import java.util.HashMap;\n" +
+                    "import java.util.Map;\n" +
+                    "import java.util.concurrent.ConcurrentMap;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by husteve on 10/14/2014.\n" +
+                    " */\n" +
+                    "public abstract class AbstractRule implements Rule {\n" +
+                    "    static final Logger logger = LoggerFactory.getLogger(AbstractRule.class);\n" +
+                    "\n" +
+                    "    protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n" +
+                    "    public abstract boolean execute (Object ...objects) throws Exception;\n" +
+                    "\n" +
+                    "    protected ODocument getCategoryByRid(String categoryRid) {\n" +
+                    "        Map<String, Object> categoryMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage(\"categoryMap\");\n" +
+                    "        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)categoryMap.get(\"cache\");\n" +
+                    "        if(cache == null) {\n" +
+                    "            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n" +
+                    "                    .maximumWeightedCapacity(1000)\n" +
+                    "                    .build();\n" +
+                    "            categoryMap.put(\"cache\", cache);\n" +
+                    "        }\n" +
+                    "        ODocument category = (ODocument)cache.get(\"categoryRid\");\n" +
+                    "        if(category == null) {\n" +
+                    "            // TODO warning to increase cache if this happens.\n" +
+                    "            category = DbService.getODocumentByRid(categoryRid);\n" +
+                    "            // put it into the category cache.\n" +
+                    "            if(category != null) {\n" +
+                    "                cache.put(categoryRid, category);\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "        return category;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument getProductByRid(String productRid) {\n" +
+                    "        Map<String, Object> productMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage(\"productMap\");\n" +
+                    "        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)productMap.get(\"cache\");\n" +
+                    "        if(cache == null) {\n" +
+                    "            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n" +
+                    "                    .maximumWeightedCapacity(1000)\n" +
+                    "                    .build();\n" +
+                    "            productMap.put(\"cache\", cache);\n" +
+                    "        }\n" +
+                    "        ODocument product = (ODocument)cache.get(\"productRid\");\n" +
+                    "        if(product == null) {\n" +
+                    "            // TODO warning to increase cache if this happens.\n" +
+                    "            product = DbService.getODocumentByRid(productRid);\n" +
+                    "            if(product != null) {\n" +
+                    "                cache.put(productRid, product);\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "        return product;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected Map<String, Object> getEventMap(Map<String, Object> inputMap) {\n" +
+                    "        Map<String, Object> eventMap = new HashMap<String, Object>();\n" +
+                    "        Map<String, Object> payload = (Map<String, Object>)inputMap.get(\"payload\");\n" +
+                    "        if(payload != null) {\n" +
+                    "            Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n" +
+                    "            if(user != null)  eventMap.put(\"createUserId\", user.get(\"userId\"));\n" +
+                    "        }\n" +
+                    "        // IP address is used to identify event owner if user is not logged in.\n" +
+                    "        if(inputMap.get(\"ipAddress\") != null) {\n" +
+                    "            eventMap.put(\"ipAddress\", inputMap.get(\"ipAddress\"));\n" +
+                    "        }\n" +
+                    "        if(inputMap.get(\"host\") != null) {\n" +
+                    "            eventMap.put(\"host\", inputMap.get(\"host\"));\n" +
+                    "        }\n" +
+                    "        if(inputMap.get(\"app\") != null) {\n" +
+                    "            eventMap.put(\"app\", inputMap.get(\"app\"));\n" +
+                    "        }\n" +
+                    "        eventMap.put(\"category\", inputMap.get(\"category\"));\n" +
+                    "        eventMap.put(\"name\", inputMap.get(\"name\"));\n" +
+                    "        eventMap.put(\"createDate\", new java.util.Date());\n" +
+                    "        eventMap.put(\"data\", new HashMap<String, Object>());\n" +
+                    "        return eventMap;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument getODocumentByHostId(String index, String host, String id) {\n" +
+                    "        ODocument doc = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OIndex<?> hostIdIdx = db.getMetadata().getIndexManager().getIndex(index);\n" +
+                    "            // this is a unique index, so it retrieves a OIdentifiable\n" +
+                    "            OCompositeKey key = new OCompositeKey(host, id);\n" +
+                    "            OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);\n" +
+                    "            if (oid != null) {\n" +
+                    "                doc = (ODocument)oid.getRecord();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return doc;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    public Map<String, Object> getAccessByRuleClass(String ruleClass) throws Exception {\n" +
+                    "        Map<String, Object> access = null;\n" +
+                    "        Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage(\"accessMap\");\n" +
+                    "        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get(\"cache\");\n" +
+                    "        if(cache == null) {\n" +
+                    "            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n" +
+                    "                    .maximumWeightedCapacity(1000)\n" +
+                    "                    .build();\n" +
+                    "            accessMap.put(\"cache\", cache);\n" +
+                    "            logger.error(\"accessMap cache created =\" + cache);\n" +
+                    "        } else {\n" +
+                    "            access = (Map<String, Object>)cache.get(ruleClass);\n" +
+                    "        }\n" +
+                    "        if(access == null) {\n" +
+                    "            logger.error(\"access is null, cache =\" + cache);\n" +
+                    "            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "            try {\n" +
+                    "                OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex(\"Access.ruleClass\");\n" +
+                    "                // this is a unique index, so it retrieves a OIdentifiable\n" +
+                    "                OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(ruleClass);\n" +
+                    "                if (oid != null && oid.getRecord() != null) {\n" +
+                    "                    String json = oid.getRecord().toJSON();\n" +
+                    "                    access = mapper.readValue(json,\n" +
+                    "                            new TypeReference<HashMap<String, Object>>() {\n" +
+                    "                            });\n" +
+                    "                    cache.put(ruleClass, access);\n" +
+                    "                }\n" +
+                    "            } catch (Exception e) {\n" +
+                    "                logger.error(\"Exception:\", e);\n" +
+                    "                throw e;\n" +
+                    "            } finally {\n" +
+                    "                db.close();\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "        return access;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "}\n");
+            abstractRule.field("createDate", new java.util.Date());
+            abstractRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            abstractRule.save();
+
+            ODocument abstractRuleRule = new ODocument(schema.getClass("Rule"));
+            abstractRuleRule.field("ruleClass", "com.networknt.light.rule.user.AbstractRuleRule");
+            abstractRuleRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule.rule;\n" +
+                    "\n" +
+                    "import com.fasterxml.jackson.core.type.TypeReference;\n" +
+                    "import com.fasterxml.jackson.databind.ObjectMapper;\n" +
+                    "import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\n" +
+                    "import com.networknt.light.rule.AbstractRule;\n" +
+                    "import com.networknt.light.rule.Rule;\n" +
+                    "import com.networknt.light.util.ServiceLocator;\n" +
+                    "import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\n" +
+                    "import com.orientechnologies.orient.core.db.record.OIdentifiable;\n" +
+                    "import com.orientechnologies.orient.core.index.OIndex;\n" +
+                    "import com.orientechnologies.orient.core.metadata.schema.OSchema;\n" +
+                    "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
+                    "import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;\n" +
+                    "import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;\n" +
+                    "import org.slf4j.LoggerFactory;\n" +
+                    "\n" +
+                    "import java.util.*;\n" +
+                    "import java.util.concurrent.ConcurrentMap;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by husteve on 10/8/2014.\n" +
+                    " */\n" +
+                    "public abstract class AbstractRuleRule extends AbstractRule implements Rule {\n" +
+                    "    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractRuleRule.class);\n" +
+                    "\n" +
+                    "    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n" +
+                    "\n" +
+                    "    public abstract boolean execute (Object ...objects) throws Exception;\n" +
+                    "\n" +
+                    "    protected String getRuleByRuleClass(String ruleClass) {\n" +
+                    "        String json = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex(\"Rule.ruleClass\");\n" +
+                    "            // this is a unique index, so it retrieves a OIdentifiable\n" +
+                    "            OIdentifiable rule = (OIdentifiable) ruleClassIdx.get(ruleClass);\n" +
+                    "            if (rule != null && rule.getRecord() != null) {\n" +
+                    "                json = ((ODocument) rule.getRecord()).toJSON();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return json;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected String addRule(Map<String, Object> data) throws Exception {\n" +
+                    "        String json = null;\n" +
+                    "        ODocument access = null;\n" +
+                    "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                    "        String createUserId = (String)data.get(\"createUserId\");\n" +
+                    "        Date createDate = (Date)data.get(\"createDate\");\n" +
+                    "        String host = (String)data.get(\"host\");\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        OSchema schema = db.getMetadata().getSchema();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            ODocument rule = new ODocument(schema.getClass(\"Rule\"));\n" +
+                    "            rule.field(\"ruleClass\", ruleClass);\n" +
+                    "            if(host != null) rule.field(\"host\", host);\n" +
+                    "            rule.field(\"sourceCode\", data.get(\"sourceCode\"));\n" +
+                    "            rule.field(\"createDate\", createDate);\n" +
+                    "            rule.field(\"createUserId\", createUserId);\n" +
+                    "            rule.save();\n" +
+                    "\n" +
+                    "            // For all the newly added rules, the default security access is role based and only\n" +
+                    "            // owner can access. For some of the rules, like getForm, getMenu, they are granted\n" +
+                    "            // to anyone in the db script. Don't overwrite if access exists for these rules.\n" +
+                    "\n" +
+                    "            // check if access exists for the ruleClass and add access if not.\n" +
+                    "            Map<String, Object> accessMap = getAccessByRuleClass(ruleClass);\n" +
+                    "            if(accessMap == null) {\n" +
+                    "                access = new ODocument(schema.getClass(\"Access\"));\n" +
+                    "                access.field(\"ruleClass\", ruleClass);\n" +
+                    "                access.field(\"accessLevel\", \"R\"); // role level access\n" +
+                    "                List roles = new ArrayList();\n" +
+                    "                roles.add(\"owner\");  // give owner access for all the rules by default.\n" +
+                    "                access.field(\"roles\", roles);\n" +
+                    "                access.field(\"createDate\", createDate);\n" +
+                    "                access.field(\"createUserId\", createUserId);\n" +
+                    "                access.save();\n" +
+                    "            }\n" +
+                    "            db.commit();\n" +
+                    "            json  = rule.toJSON();\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        if(access != null) {\n" +
+                    "            Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage(\"accessMap\");\n" +
+                    "            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get(\"cache\");\n" +
+                    "            if(cache == null) {\n" +
+                    "                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n" +
+                    "                        .maximumWeightedCapacity(1000)\n" +
+                    "                        .build();\n" +
+                    "                accessMap.put(\"cache\", cache);\n" +
+                    "            }\n" +
+                    "            cache.put(ruleClass, mapper.readValue(access.toJSON(),\n" +
+                    "                    new TypeReference<HashMap<String, Object>>() {\n" +
+                    "                    }));\n" +
+                    "        }\n" +
+                    "        return json;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected String impRule(Map<String, Object> data) throws Exception {\n" +
+                    "        String json = null;\n" +
+                    "        ODocument access = null;\n" +
+                    "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                    "        String createUserId = (String)data.get(\"createUserId\");\n" +
+                    "        Date createDate = (Date)data.get(\"createDate\");\n" +
+                    "        String host = (String)data.get(\"host\");\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        OSchema schema = db.getMetadata().getSchema();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            // remove the existing rule if there is.\n" +
+                    "            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex(\"Rule.ruleClass\");\n" +
+                    "            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get(\"ruleClass\"));\n" +
+                    "            if (oid != null) {\n" +
+                    "                ((ODocument) oid.getRecord()).delete();\n" +
+                    "            }\n" +
+                    "            // create a new rule\n" +
+                    "            ODocument rule = new ODocument(schema.getClass(\"Rule\"));\n" +
+                    "            rule.field(\"ruleClass\", ruleClass);\n" +
+                    "            if(host != null) rule.field(\"host\", host);\n" +
+                    "            rule.field(\"sourceCode\", data.get(\"sourceCode\"));\n" +
+                    "            rule.field(\"createDate\", createDate);\n" +
+                    "            rule.field(\"createUserId\", createUserId);\n" +
+                    "            rule.save();\n" +
+                    "            // For all the newly added rules, the default security access is role based and only\n" +
+                    "            // owner can access. For some of the rules, like getForm, getMenu, they are granted\n" +
+                    "            // to anyone in the db script. Don't overwrite if access exists for these rules.\n" +
+                    "\n" +
+                    "            // check if access exists for the ruleClass and add access if not.\n" +
+                    "            Map<String, Object> accessMap = getAccessByRuleClass(ruleClass);\n" +
+                    "            if(accessMap == null) {\n" +
+                    "                access = new ODocument(schema.getClass(\"Access\"));\n" +
+                    "                access.field(\"ruleClass\", ruleClass);\n" +
+                    "                access.field(\"accessLevel\", \"R\"); // role level access\n" +
+                    "                List roles = new ArrayList();\n" +
+                    "                roles.add(\"owner\");  // give owner access for all the rules by default.\n" +
+                    "                access.field(\"roles\", roles);\n" +
+                    "                access.field(\"createDate\", createDate);\n" +
+                    "                access.field(\"createUserId\", createUserId);\n" +
+                    "                access.save();\n" +
+                    "            }\n" +
+                    "            db.commit();\n" +
+                    "            json  = rule.toJSON();\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        if(access != null) {\n" +
+                    "            Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage(\"accessMap\");\n" +
+                    "            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get(\"cache\");\n" +
+                    "            if(cache == null) {\n" +
+                    "                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n" +
+                    "                        .maximumWeightedCapacity(1000)\n" +
+                    "                        .build();\n" +
+                    "                accessMap.put(\"cache\", cache);\n" +
+                    "            }\n" +
+                    "            cache.put(ruleClass, mapper.readValue(access.toJSON(),\n" +
+                    "                    new TypeReference<HashMap<String, Object>>() {\n" +
+                    "                    }));\n" +
+                    "        }\n" +
+                    "        return json;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "\n" +
+                    "    protected void updRule(Map<String, Object> data) throws Exception {\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex(\"Rule.ruleClass\");\n" +
+                    "            // this is a unique index, so it retrieves a OIdentifiable\n" +
+                    "            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get(\"ruleClass\"));\n" +
+                    "            if (oid != null && oid.getRecord() != null) {\n" +
+                    "                ODocument rule = (ODocument) oid.getRecord();\n" +
+                    "                String sourceCode = (String)data.get(\"sourceCode\");\n" +
+                    "                if(sourceCode != null && !sourceCode.equals(rule.field(\"sourceCode\"))) {\n" +
+                    "                    rule.field(\"sourceCode\", sourceCode);\n" +
+                    "                }\n" +
+                    "                rule.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "                rule.field(\"updateUserId\", data.get(\"updateUserId\"));\n" +
+                    "                rule.save();\n" +
+                    "            }\n" +
+                    "            db.commit();\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected void delRule(Map<String, Object> data) throws Exception {\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "\n" +
+                    "            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex(\"Rule.ruleClass\");\n" +
+                    "            // this is a unique index, so it retrieves a OIdentifiable\n" +
+                    "            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get(\"ruleClass\"));\n" +
+                    "            if (oid != null && oid.getRecord() != null) {\n" +
+                    "                ODocument rule = (ODocument) oid.getRecord();\n" +
+                    "                rule.delete();\n" +
+                    "            }\n" +
+                    "            db.commit();\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected String getRules(String host) {\n" +
+                    "        String sql = \"SELECT FROM Rule\";\n" +
+                    "        if(host != null) {\n" +
+                    "            sql = sql + \" WHERE host = '\" + host;\n" +
+                    "        }\n" +
+                    "        String json = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);\n" +
+                    "            List<ODocument> rules = db.command(query).execute();\n" +
+                    "            json = OJSONWriter.listToJSON(rules, null);\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return json;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected String getRuleDropdown(String host) {\n" +
+                    "        String sql = \"SELECT FROM Rule\";\n" +
+                    "        if(host != null) {\n" +
+                    "            sql = sql + \" WHERE host = '\" + host + \"' OR host IS NULL\";\n" +
+                    "        }\n" +
+                    "        String json = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);\n" +
+                    "            List<ODocument> rules = db.command(query).execute();\n" +
+                    "            if(rules.size() > 0) {\n" +
+                    "                List<Map<String, String>> list = new ArrayList<Map<String, String>>();\n" +
+                    "                for(ODocument doc: rules) {\n" +
+                    "                    Map<String, String> map = new HashMap<String, String>();\n" +
+                    "                    String ruleClass = doc.field(\"ruleClass\");\n" +
+                    "                    map.put(\"label\", ruleClass);\n" +
+                    "                    map.put(\"value\", ruleClass);\n" +
+                    "                    list.add(map);\n" +
+                    "                }\n" +
+                    "                json = mapper.writeValueAsString(list);\n" +
+                    "            }\n" +
+                    "\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            //throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return json;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "}\n");
+            abstractRuleRule.field("createDate", new java.util.Date());
+            abstractRuleRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            abstractRuleRule.save();
+
             ODocument abstractUserRule = new ODocument(schema.getClass("Rule"));
             abstractUserRule.field("ruleClass", "com.networknt.light.rule.user.AbstractUserRule");
-            abstractUserRule.field("sourceCode", "package com.networknt.light.rule.user;\n\nimport com.fasterxml.jackson.core.type.TypeReference;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\nimport com.networknt.light.rule.AbstractRule;\nimport com.networknt.light.rule.Rule;\nimport com.networknt.light.server.DbService;\nimport com.networknt.light.util.HashUtil;\nimport com.networknt.light.util.JwtUtil;\nimport com.networknt.light.util.ServiceLocator;\nimport com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\nimport com.orientechnologies.orient.core.db.record.OIdentifiable;\nimport com.orientechnologies.orient.core.id.ORecordId;\nimport com.orientechnologies.orient.core.index.OIndex;\nimport com.orientechnologies.orient.core.metadata.schema.OSchema;\nimport com.orientechnologies.orient.core.record.ORecord;\nimport com.orientechnologies.orient.core.record.impl.ODocument;\nimport com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;\nimport com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;\nimport org.slf4j.LoggerFactory;\n\nimport java.time.Instant;\nimport java.time.LocalDate;\nimport java.time.ZoneId;\nimport java.util.*;\nimport java.util.concurrent.ConcurrentMap;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\n\n/**\n * Created by steve on 9/23/2014.\n */\npublic abstract class AbstractUserRule extends AbstractRule implements Rule {\n    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractUserRule.class);\n\n    public static final String EMAIL_PATTERN = \"^[_A-Za-z0-9-\\\\+]+(\\\\.[_A-Za-z0-9-]+)*@\"\n        + \"[A-Za-z0-9-]+(\\\\.[A-Za-z0-9]+)*(\\\\.[A-Za-z]{2,})$\";\n    Pattern pattern = Pattern.compile(EMAIL_PATTERN);\n\n    public abstract boolean execute (Object ...objects) throws Exception;\n    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n\n    protected boolean isUserInDbByEmail(String email) {\n        boolean userInDb = false;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            OIndex<?> emailIdx = db.getMetadata().getIndexManager().getIndex(\"User.email\");\n            // this is a unique index, so it retrieves a OIdentifiable\n            userInDb = emailIdx.contains(email);\n        } catch (Exception e) {\n            e.printStackTrace();\n        } finally {\n            db.close();\n        }\n        return userInDb;\n    }\n\n    protected boolean isUserInDbByUserId(String userId) {\n        boolean userInDb = false;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n            // this is a unique index, so it retrieves a OIdentifiable\n            userInDb = userIdIdx.contains(userId);\n\n        } catch (Exception e) {\n            e.printStackTrace();\n        } finally {\n            db.close();\n        }\n        return userInDb;\n    }\n\n    protected ODocument getUserByUserId(String userId) {\n        ODocument user = null;\n        StringBuilder sb = new StringBuilder(\"SELECT FROM User WHERE userId = '\");\n        sb.append(userId).append(\"'\");\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sb.toString());\n            List<ODocument> list = db.command(query.setFetchPlan(\"*:-1\")).execute();\n            if(list.size() > 0) {\n                user = list.get(0);\n            }\n        } catch (Exception e) {\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return user;\n    }\n\n    protected ODocument getUserByEmail(String email) {\n        ODocument user = null;\n        StringBuilder sb = new StringBuilder(\"SELECT FROM User WHERE email = '\");\n        sb.append(email).append(\"' FETCHPLAN credential:1\");\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sb.toString());\n            List<ODocument> list = db.command(query).execute();\n            if(list.size() > 0) {\n                user = list.get(0);\n            }\n        } catch (Exception e) {\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return user;\n    }\n\n    protected ODocument addUser(Map<String, Object> data) throws Exception {\n        ODocument user = null;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            OSchema schema = db.getMetadata().getSchema();\n            ODocument credential = new ODocument(schema.getClass(\"Credential\"));\n            credential.field(\"password\", data.get(\"password\"));\n            credential.save();\n            user = new ODocument(schema.getClass(\"User\"));\n            user.field(\"host\", data.get(\"host\"));\n            user.field(\"userId\", data.get(\"userId\"));\n            user.field(\"email\", data.get(\"email\"));\n            user.field(\"firstName\", data.get(\"firstName\"));\n            user.field(\"lastName\", data.get(\"lastName\"));\n            user.field(\"karma\", 0);\n            List<String> roles = new ArrayList<String>();\n            roles.add(\"user\"); // default role for sign up users, more roles can be added later by admin\n            user.field(\"roles\", roles);\n            user.field(\"credential\", credential);\n            user.field(\"createDate\", new java.util.Date());\n            user.save();\n            db.commit();\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return user;\n    }\n\n    protected boolean delUser(Map<String, Object> data) throws Exception {\n        boolean result = false;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n            if (oid != null) {\n                ODocument user = (ODocument) oid.getRecord();\n                ODocument credential = (ODocument)user.field(\"credential\");\n                credential.delete();\n                user.delete();\n                db.commit();\n                result = true;\n            }\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return result;\n    }\n\n    protected ODocument updPassword(Map<String, Object> data) throws Exception {\n        ODocument credential = null;\n        ODocument user = getUserByUserId((String)data.get(\"userId\"));\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            user.field(\"updateDate\", data.get(\"updateDate\"));\n            user.save();\n            credential = user.field(\"credential\");\n            if (credential != null) {\n                credential.field(\"password\", data.get(\"password\"));\n                credential.save();\n            }\n            db.commit();\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return credential;\n    }\n\n    protected ODocument addRole(Map<String, Object> data) throws Exception {\n        ODocument user = null;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n            if (oid != null) {\n                user = (ODocument) oid.getRecord();\n                List roles = user.field(\"roles\");\n                roles.add((String)data.get(\"role\"));\n                user.field(\"updateDate\", data.get(\"updateDate\"));\n                user.field(\"updateUserId\", data.get(\"updateUserId\"));\n                user.save();\n                db.commit();\n            }\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return user;\n    }\n\n    protected ODocument delRole(Map<String, Object> data) throws Exception {\n        ODocument user = null;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n            if (oid != null) {\n                user = (ODocument) oid.getRecord();\n                List roles = user.field(\"roles\");\n                roles.remove((String)data.get(\"role\"));\n                user.field(\"updateDate\", data.get(\"updateDate\"));\n                user.field(\"updateUserId\", data.get(\"updateUserId\"));\n                user.save();\n                db.commit();\n            }\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return user;\n    }\n\n    protected ODocument updLockByUserId(Map<String, Object> data) throws Exception {\n        ODocument user = null;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n            if (oid != null) {\n                user = (ODocument) oid.getRecord();\n                user.field(\"locked\", data.get(\"locked\"));\n                user.field(\"updateDate\", data.get(\"updateDate\"));\n                user.field(\"updateUserId\", data.get(\"updateUserId\"));\n                user.save();\n                db.commit();\n            }\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return user;\n    }\n\n    protected ODocument updUser(Map<String, Object> data) throws Exception {\n        ODocument user = null;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n            if (oid != null) {\n                user = (ODocument) oid.getRecord();\n                String firstName = (String)data.get(\"firstName\");\n                if(firstName != null && !firstName.equals(user.field(\"firstName\"))) {\n                    user.field(\"firstName\", firstName);\n                }\n                String lastName = (String)data.get(\"lastName\");\n                if(lastName != null && !lastName.equals(user.field(\"lastName\"))) {\n                    user.field(\"lastName\", lastName);\n                }\n                user.field(\"updateDate\", data.get(\"updateDate\"));\n                user.save();\n                db.commit();\n            }\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n        return user;\n    }\n\n    protected void signIn(Map<String, Object> data) throws Exception {\n        String hashedRefreshToken = (String)data.get(\"hashedRefreshToken\");\n        if(hashedRefreshToken != null) {\n            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n            try {\n                db.begin();\n                OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n                OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n                if (oid != null) {\n                    ODocument user = (ODocument) oid.getRecord();\n                    ODocument credential = (ODocument)user.field(\"credential\");\n                    if(credential != null) {\n                        String host = (String)data.get(\"host\");\n                        // get hostRefreshTokens map here.\n                        Map hostRefreshTokens = credential.field(\"hostRefreshTokens\");\n                        if(hostRefreshTokens != null) {\n                            // logged in before, check if logged in from the host.\n                            List<String> refreshTokens = (List)hostRefreshTokens.get(host);\n                            if(refreshTokens != null) {\n                                // max refresh tokens for user is 10. max 10 devices.\n                                if(refreshTokens.size() >= 10) {\n                                    refreshTokens.remove(0);\n                                }\n                                refreshTokens.add(hashedRefreshToken);\n                            } else {\n                                refreshTokens = new ArrayList<String>();\n                                refreshTokens.add(hashedRefreshToken);\n                                hostRefreshTokens.put(host, refreshTokens);\n                            }\n\n                        } else {\n                            // never logged in, create the map.\n                            hostRefreshTokens = new HashMap<String, List<String>>();\n                            List<String> refreshTokens = new ArrayList<String>();\n                            refreshTokens.add(hashedRefreshToken);\n                            hostRefreshTokens.put(host, refreshTokens);\n                            credential.field(\"hostRefreshTokens\", hostRefreshTokens);\n                        }\n                        credential.save();\n                        db.commit();\n                    }\n                }\n            } catch (Exception e) {\n                db.rollback();\n                logger.error(\"Exception:\", e);\n                throw e;\n            } finally {\n                db.close();\n            }\n        } else {\n            logger.debug(\"There is no hashedRefreshToken as user didn't select remember me. Do nothing\");\n        }\n    }\n\n    protected void logOut(Map<String, Object> data) throws Exception {\n        String refreshToken = (String)data.get(\"refreshToken\");\n        if(refreshToken != null) {\n            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n            try {\n                db.begin();\n                OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n                OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n                if (oid != null) {\n                    ODocument user = (ODocument) oid.getRecord();\n                    ODocument credential = (ODocument)user.field(\"credential\");\n                    if(credential != null) {\n                        // now remove the refresh token\n                        String host = (String)data.get(\"host\");\n                        logger.debug(\"logOut to remove refreshToken {} from host {}\" , refreshToken, host);\n                        Map hostRefreshTokens = credential.field(\"hostRefreshTokens\");\n                        if(hostRefreshTokens != null) {\n                            // logged in before, check if logged in from the host.\n                            List<String> refreshTokens = (List)hostRefreshTokens.get(host);\n                            if(refreshTokens != null) {\n                                String hashedRefreshToken = HashUtil.md5(refreshToken);\n                                refreshTokens.remove(hashedRefreshToken);\n                            }\n                        } else {\n                            logger.error(\"There is no refresh tokens\");\n                        }\n                        credential.save();\n                        db.commit();\n                    }\n                }\n            } catch (Exception e) {\n                db.rollback();\n                e.printStackTrace();\n                throw e;\n            } finally {\n                db.close();\n            }\n        } else {\n            logger.debug(\"There is no hashedRefreshToken as user didn't pass in refresh token when logging out. Do nothing\");\n        }\n    }\n\n    boolean checkRefreshToken(ODocument credential, String host, String refreshToken) throws Exception {\n        boolean result = false;\n        if(credential != null && refreshToken != null) {\n            Map hostRefreshTokens = credential.field(\"hostRefreshTokens\");\n            if(hostRefreshTokens != null) {\n                List<String> refreshTokens = (List)hostRefreshTokens.get(host);\n                if(refreshTokens != null) {\n                    String hashedRefreshToken = HashUtil.md5(refreshToken);\n                    for(String token: refreshTokens) {\n                        if(hashedRefreshToken.equals(token)) {\n                            result = true;\n                            break;\n                        }\n                    }\n                }\n            } else {\n                logger.error(\"There is no refresh tokens\");\n            }\n        }\n        return result;\n    }\n\n    protected void upVoteUser(Map<String, Object> data) {\n        ODocument user = null;\n        ODocument voteUser = null;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n            OIdentifiable userOid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n            OIdentifiable voteUserOid = (OIdentifiable)userIdIdx.get((String)data.get(\"voteUserId\"));\n            if (userOid != null && voteUserOid != null) {\n                user = (ODocument) userOid.getRecord();\n                voteUser = (ODocument)voteUserOid.getRecord();\n                Set upSet = user.field(\"upUsers\");\n                if(upSet == null) {\n                    upSet = new HashSet<String>();\n                    upSet.add(voteUser);\n                    user.field(\"upUsers\", upSet);\n                } else {\n                    upSet.add(voteUser);\n                }\n                Set downSet = user.field(\"downUsers\");\n                if(downSet != null) {\n                    downSet.remove(voteUser);\n                }\n                user.field(\"updateDate\", data.get(\"updateDate\"));\n                user.save();\n                db.commit();\n            }\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n    }\n\n    protected void downVoteUser(Map<String, Object> data) {\n        ODocument user = null;\n        ODocument voteUser = null;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            db.begin();\n            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n            OIdentifiable userOid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n            OIdentifiable voteUserOid = (OIdentifiable)userIdIdx.get((String)data.get(\"voteUserId\"));\n            if (userOid != null && voteUserOid != null) {\n                user = (ODocument) userOid.getRecord();\n                voteUser = (ODocument)voteUserOid.getRecord();\n                Set downSet = user.field(\"downUsers\");\n                if(downSet == null) {\n                    downSet = new HashSet<String>();\n                    downSet.add(voteUser);\n                    user.field(\"downUsers\", downSet);\n                } else {\n                    downSet.add(voteUser);\n                }\n                Set upSet = user.field(\"upUsers\");\n                if(upSet != null) {\n                    upSet.remove(voteUser);\n                }\n                user.field(\"updateDate\", data.get(\"updateDate\"));\n                user.save();\n                db.commit();\n            }\n        } catch (Exception e) {\n            db.rollback();\n            e.printStackTrace();\n            throw e;\n        } finally {\n            db.close();\n        }\n    }\n\n    // TODO refactor it to be generic. table name as part of the criteria? or a parameter?\n    protected long getTotalNumberUserFromDb(Map<String, Object> criteria) {\n        long total = 0;\n        StringBuilder sql = new StringBuilder(\"SELECT COUNT(*) as count FROM User\");\n\n        String whereClause = DbService.getWhereClause(criteria);\n        if(whereClause != null && whereClause.length() > 0) {\n            sql.append(whereClause);\n        }\n\n        System.out.println(\"sql=\" + sql);\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            total = ((ODocument)db.query(new OSQLSynchQuery<ODocument>(sql.toString())).get(0)).field(\"count\");\n        } catch (Exception e) {\n            e.printStackTrace();\n        } finally {\n            db.close();\n        }\n        return total;\n    }\n\n    protected List<String> getRoles() {\n        List<String> roles = null;\n        String sql = \"SELECT id FROM Role\";\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> list = db.command(query).execute();\n            if(list.size() > 0) {\n                roles = new ArrayList<String>();\n                for(ODocument doc: list) {\n                    roles.add(doc.field(\"id\"));\n                }\n            }\n        } catch (Exception e) {\n            e.printStackTrace();\n        } finally {\n            db.close();\n        }\n        return roles;\n    }\n\n    protected String getUserFromDb(Map<String, Object> criteria) {\n        String json = null;\n        StringBuilder sql = new StringBuilder(\"SELECT FROM User \");\n        String whereClause = DbService.getWhereClause(criteria);\n        if(whereClause != null && whereClause.length() > 0) {\n            sql.append(whereClause);\n        }\n\n        String sortedBy = (String)criteria.get(\"sortedBy\");\n        String sortDir = (String)criteria.get(\"sortDir\");\n        if(sortedBy != null) {\n            sql.append(\" ORDER BY \").append(sortedBy);\n            if(sortDir != null) {\n                sql.append(\" \").append(sortDir);\n            }\n        }\n        Integer pageSize = (Integer)criteria.get(\"pageSize\");\n        Integer pageNo = (Integer)criteria.get(\"pageNo\");\n        if(pageNo != null && pageSize != null) {\n            sql.append(\" SKIP \").append((pageNo - 1) * pageSize);\n            sql.append(\" LIMIT \").append(pageSize);\n        }\n        System.out.println(\"sql=\" + sql);\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());\n            List<ODocument> list = db.command(query).execute();\n            if(list.size() > 0) {\n                json = OJSONWriter.listToJSON(list, null);\n            }\n        } catch (Exception e) {\n            e.printStackTrace();\n        } finally {\n            db.close();\n        }\n        return json;\n    }\n\n    boolean isEmail(String userIdEmail) {\n        Matcher matcher = pattern.matcher(userIdEmail);\n        return matcher.matches();\n    }\n\n    String generateToken(ODocument user) throws Exception {\n        Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();\n        jwtMap.put(\"@rid\", user.field(\"@rid\").toString());\n        jwtMap.put(\"userId\", user.field(\"userId\"));\n        if(user.field(\"host\") != null) {\n            jwtMap.put(\"host\", user.field(\"host\"));\n        }\n        jwtMap.put(\"roles\", user.field(\"roles\"));\n        return JwtUtil.getJwt(jwtMap);\n    }\n\n    boolean checkPassword(ODocument user, String inputPassword) throws Exception {\n        ODocument credential = (ODocument)user.field(\"credential\");\n        String storedPassword = (String) credential.field(\"password\");\n        return HashUtil.validatePassword(inputPassword, storedPassword);\n    }\n\n}\n");
+            abstractUserRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule.user;\n" +
+                    "\n" +
+                    "import com.fasterxml.jackson.databind.ObjectMapper;\n" +
+                    "import com.networknt.light.rule.AbstractRule;\n" +
+                    "import com.networknt.light.rule.Rule;\n" +
+                    "import com.networknt.light.server.DbService;\n" +
+                    "import com.networknt.light.util.HashUtil;\n" +
+                    "import com.networknt.light.util.JwtUtil;\n" +
+                    "import com.networknt.light.util.ServiceLocator;\n" +
+                    "import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\n" +
+                    "import com.orientechnologies.orient.core.db.record.OIdentifiable;\n" +
+                    "import com.orientechnologies.orient.core.index.OIndex;\n" +
+                    "import com.orientechnologies.orient.core.metadata.schema.OSchema;\n" +
+                    "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
+                    "import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;\n" +
+                    "import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;\n" +
+                    "import org.slf4j.LoggerFactory;\n" +
+                    "\n" +
+                    "import java.util.*;\n" +
+                    "import java.util.regex.Matcher;\n" +
+                    "import java.util.regex.Pattern;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by steve on 9/23/2014.\n" +
+                    " */\n" +
+                    "public abstract class AbstractUserRule extends AbstractRule implements Rule {\n" +
+                    "    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractUserRule.class);\n" +
+                    "\n" +
+                    "    public static final String EMAIL_PATTERN = \"^[_A-Za-z0-9-\\\\+]+(\\\\.[_A-Za-z0-9-]+)*@\"\n" +
+                    "        + \"[A-Za-z0-9-]+(\\\\.[A-Za-z0-9]+)*(\\\\.[A-Za-z]{2,})$\";\n" +
+                    "    Pattern pattern = Pattern.compile(EMAIL_PATTERN);\n" +
+                    "\n" +
+                    "    public abstract boolean execute (Object ...objects) throws Exception;\n" +
+                    "    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n" +
+                    "\n" +
+                    "    protected boolean isUserInDbByEmail(String email) {\n" +
+                    "        boolean userInDb = false;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OIndex<?> emailIdx = db.getMetadata().getIndexManager().getIndex(\"User.email\");\n" +
+                    "            // this is a unique index, so it retrieves a OIdentifiable\n" +
+                    "            userInDb = emailIdx.contains(email);\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return userInDb;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected boolean isUserInDbByUserId(String userId) {\n" +
+                    "        boolean userInDb = false;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            // this is a unique index, so it retrieves a OIdentifiable\n" +
+                    "            userInDb = userIdIdx.contains(userId);\n" +
+                    "\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return userInDb;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument getUserByUserId(String userId) {\n" +
+                    "        ODocument user = null;\n" +
+                    "        StringBuilder sb = new StringBuilder(\"SELECT FROM User WHERE userId = '\");\n" +
+                    "        sb.append(userId).append(\"'\");\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sb.toString());\n" +
+                    "            List<ODocument> list = db.command(query.setFetchPlan(\"*:-1\")).execute();\n" +
+                    "            if(list.size() > 0) {\n" +
+                    "                user = list.get(0);\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return user;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument getUserByEmail(String email) {\n" +
+                    "        ODocument user = null;\n" +
+                    "        StringBuilder sb = new StringBuilder(\"SELECT FROM User WHERE email = '\");\n" +
+                    "        sb.append(email).append(\"' FETCHPLAN credential:1\");\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sb.toString());\n" +
+                    "            List<ODocument> list = db.command(query).execute();\n" +
+                    "            if(list.size() > 0) {\n" +
+                    "                user = list.get(0);\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return user;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument addUser(Map<String, Object> data) throws Exception {\n" +
+                    "        ODocument user = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OSchema schema = db.getMetadata().getSchema();\n" +
+                    "            ODocument credential = new ODocument(schema.getClass(\"Credential\"));\n" +
+                    "            credential.field(\"password\", data.get(\"password\"));\n" +
+                    "            credential.save();\n" +
+                    "            user = new ODocument(schema.getClass(\"User\"));\n" +
+                    "            user.field(\"host\", data.get(\"host\"));\n" +
+                    "            user.field(\"userId\", data.get(\"userId\"));\n" +
+                    "            user.field(\"email\", data.get(\"email\"));\n" +
+                    "            user.field(\"firstName\", data.get(\"firstName\"));\n" +
+                    "            user.field(\"lastName\", data.get(\"lastName\"));\n" +
+                    "            user.field(\"karma\", 0);\n" +
+                    "            List<String> roles = new ArrayList<String>();\n" +
+                    "            roles.add(\"user\"); // default role for sign up users, more roles can be added later by admin\n" +
+                    "            user.field(\"roles\", roles);\n" +
+                    "            user.field(\"credential\", credential);\n" +
+                    "            user.field(\"createDate\", new java.util.Date());\n" +
+                    "            user.save();\n" +
+                    "            db.commit();\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return user;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected boolean delUser(Map<String, Object> data) throws Exception {\n" +
+                    "        boolean result = false;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            if (oid != null) {\n" +
+                    "                ODocument user = (ODocument) oid.getRecord();\n" +
+                    "                ODocument credential = (ODocument)user.field(\"credential\");\n" +
+                    "                credential.delete();\n" +
+                    "                user.delete();\n" +
+                    "                db.commit();\n" +
+                    "                result = true;\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return result;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument updPassword(Map<String, Object> data) throws Exception {\n" +
+                    "        ODocument credential = null;\n" +
+                    "        ODocument user = getUserByUserId((String)data.get(\"userId\"));\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            user.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "            user.save();\n" +
+                    "            credential = user.field(\"credential\");\n" +
+                    "            if (credential != null) {\n" +
+                    "                credential.field(\"password\", data.get(\"password\"));\n" +
+                    "                credential.save();\n" +
+                    "            }\n" +
+                    "            db.commit();\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return credential;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument updRole(Map<String, Object> data) throws Exception {\n" +
+                    "        ODocument user = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            if (oid != null) {\n" +
+                    "                user = (ODocument) oid.getRecord();\n" +
+                    "                user.field(\"roles\", data.get(\"roles\"));\n" +
+                    "                user.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "                user.field(\"updateUserId\", data.get(\"updateUserId\"));\n" +
+                    "                user.save();\n" +
+                    "                db.commit();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return user;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument addRole(Map<String, Object> data) throws Exception {\n" +
+                    "        ODocument user = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            if (oid != null) {\n" +
+                    "                user = (ODocument) oid.getRecord();\n" +
+                    "                List roles = user.field(\"roles\");\n" +
+                    "                roles.add((String)data.get(\"role\"));\n" +
+                    "                user.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "                user.field(\"updateUserId\", data.get(\"updateUserId\"));\n" +
+                    "                user.save();\n" +
+                    "                db.commit();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return user;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument delRole(Map<String, Object> data) throws Exception {\n" +
+                    "        ODocument user = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            if (oid != null) {\n" +
+                    "                user = (ODocument) oid.getRecord();\n" +
+                    "                List roles = user.field(\"roles\");\n" +
+                    "                roles.remove((String)data.get(\"role\"));\n" +
+                    "                user.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "                user.field(\"updateUserId\", data.get(\"updateUserId\"));\n" +
+                    "                user.save();\n" +
+                    "                db.commit();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return user;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument updLockByUserId(Map<String, Object> data) throws Exception {\n" +
+                    "        ODocument user = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            if (oid != null) {\n" +
+                    "                user = (ODocument) oid.getRecord();\n" +
+                    "                user.field(\"locked\", data.get(\"locked\"));\n" +
+                    "                user.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "                user.field(\"updateUserId\", data.get(\"updateUserId\"));\n" +
+                    "                user.save();\n" +
+                    "                db.commit();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return user;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected ODocument updUser(Map<String, Object> data) throws Exception {\n" +
+                    "        ODocument user = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            if (oid != null) {\n" +
+                    "                user = (ODocument) oid.getRecord();\n" +
+                    "                String firstName = (String)data.get(\"firstName\");\n" +
+                    "                if(firstName != null && !firstName.equals(user.field(\"firstName\"))) {\n" +
+                    "                    user.field(\"firstName\", firstName);\n" +
+                    "                }\n" +
+                    "                String lastName = (String)data.get(\"lastName\");\n" +
+                    "                if(lastName != null && !lastName.equals(user.field(\"lastName\"))) {\n" +
+                    "                    user.field(\"lastName\", lastName);\n" +
+                    "                }\n" +
+                    "                user.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "                user.save();\n" +
+                    "                db.commit();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return user;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected void revokeRefreshToken(Map<String, Object> data) throws Exception {\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            if (oid != null) {\n" +
+                    "                ODocument user = (ODocument) oid.getRecord();\n" +
+                    "                ODocument credential = (ODocument)user.field(\"credential\");\n" +
+                    "                if(credential != null) {\n" +
+                    "                    // remove hostRefreshTokens map here. That means all the refresh token will be\n" +
+                    "                    // removed for the user even the token is for other hosts.\n" +
+                    "                    credential.removeField(\"hostRefreshTokens\");\n" +
+                    "                    credential.save();\n" +
+                    "                    db.commit();\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "\n" +
+                    "    protected void signIn(Map<String, Object> data) throws Exception {\n" +
+                    "        String hashedRefreshToken = (String)data.get(\"hashedRefreshToken\");\n" +
+                    "        if(hashedRefreshToken != null) {\n" +
+                    "            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "            try {\n" +
+                    "                db.begin();\n" +
+                    "                OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "                OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "                if (oid != null) {\n" +
+                    "                    ODocument user = (ODocument) oid.getRecord();\n" +
+                    "                    ODocument credential = (ODocument)user.field(\"credential\");\n" +
+                    "                    if(credential != null) {\n" +
+                    "                        String host = (String)data.get(\"host\");\n" +
+                    "                        // get hostRefreshTokens map here.\n" +
+                    "                        Map hostRefreshTokens = credential.field(\"hostRefreshTokens\");\n" +
+                    "                        if(hostRefreshTokens != null) {\n" +
+                    "                            // logged in before, check if logged in from the host.\n" +
+                    "                            List<String> refreshTokens = (List)hostRefreshTokens.get(host);\n" +
+                    "                            if(refreshTokens != null) {\n" +
+                    "                                // max refresh tokens for user is 10. max 10 devices.\n" +
+                    "                                if(refreshTokens.size() >= 10) {\n" +
+                    "                                    refreshTokens.remove(0);\n" +
+                    "                                }\n" +
+                    "                                refreshTokens.add(hashedRefreshToken);\n" +
+                    "                            } else {\n" +
+                    "                                refreshTokens = new ArrayList<String>();\n" +
+                    "                                refreshTokens.add(hashedRefreshToken);\n" +
+                    "                                hostRefreshTokens.put(host, refreshTokens);\n" +
+                    "                            }\n" +
+                    "\n" +
+                    "                        } else {\n" +
+                    "                            // never logged in, create the map.\n" +
+                    "                            hostRefreshTokens = new HashMap<String, List<String>>();\n" +
+                    "                            List<String> refreshTokens = new ArrayList<String>();\n" +
+                    "                            refreshTokens.add(hashedRefreshToken);\n" +
+                    "                            hostRefreshTokens.put(host, refreshTokens);\n" +
+                    "                            credential.field(\"hostRefreshTokens\", hostRefreshTokens);\n" +
+                    "                        }\n" +
+                    "                        credential.save();\n" +
+                    "                        db.commit();\n" +
+                    "                    }\n" +
+                    "                }\n" +
+                    "            } catch (Exception e) {\n" +
+                    "                db.rollback();\n" +
+                    "                logger.error(\"Exception:\", e);\n" +
+                    "                throw e;\n" +
+                    "            } finally {\n" +
+                    "                db.close();\n" +
+                    "            }\n" +
+                    "        } else {\n" +
+                    "            logger.debug(\"There is no hashedRefreshToken as user didn't select remember me. Do nothing\");\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected void logOut(Map<String, Object> data) throws Exception {\n" +
+                    "        String refreshToken = (String)data.get(\"refreshToken\");\n" +
+                    "        if(refreshToken != null) {\n" +
+                    "            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "            try {\n" +
+                    "                db.begin();\n" +
+                    "                OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "                OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "                if (oid != null) {\n" +
+                    "                    ODocument user = (ODocument) oid.getRecord();\n" +
+                    "                    ODocument credential = (ODocument)user.field(\"credential\");\n" +
+                    "                    if(credential != null) {\n" +
+                    "                        // now remove the refresh token\n" +
+                    "                        String host = (String)data.get(\"host\");\n" +
+                    "                        logger.debug(\"logOut to remove refreshToken {} from host {}\" , refreshToken, host);\n" +
+                    "                        Map hostRefreshTokens = credential.field(\"hostRefreshTokens\");\n" +
+                    "                        if(hostRefreshTokens != null) {\n" +
+                    "                            // logged in before, check if logged in from the host.\n" +
+                    "                            List<String> refreshTokens = (List)hostRefreshTokens.get(host);\n" +
+                    "                            if(refreshTokens != null) {\n" +
+                    "                                String hashedRefreshToken = HashUtil.md5(refreshToken);\n" +
+                    "                                refreshTokens.remove(hashedRefreshToken);\n" +
+                    "                            }\n" +
+                    "                        } else {\n" +
+                    "                            logger.error(\"There is no refresh tokens\");\n" +
+                    "                        }\n" +
+                    "                        credential.save();\n" +
+                    "                        db.commit();\n" +
+                    "                    }\n" +
+                    "                }\n" +
+                    "            } catch (Exception e) {\n" +
+                    "                db.rollback();\n" +
+                    "                e.printStackTrace();\n" +
+                    "                throw e;\n" +
+                    "            } finally {\n" +
+                    "                db.close();\n" +
+                    "            }\n" +
+                    "        } else {\n" +
+                    "            logger.debug(\"There is no hashedRefreshToken as user didn't pass in refresh token when logging out. Do nothing\");\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    boolean checkRefreshToken(ODocument credential, String host, String refreshToken) throws Exception {\n" +
+                    "        boolean result = false;\n" +
+                    "        if(credential != null && refreshToken != null) {\n" +
+                    "            Map hostRefreshTokens = credential.field(\"hostRefreshTokens\");\n" +
+                    "            if(hostRefreshTokens != null) {\n" +
+                    "                List<String> refreshTokens = (List)hostRefreshTokens.get(host);\n" +
+                    "                if(refreshTokens != null) {\n" +
+                    "                    String hashedRefreshToken = HashUtil.md5(refreshToken);\n" +
+                    "                    for(String token: refreshTokens) {\n" +
+                    "                        if(hashedRefreshToken.equals(token)) {\n" +
+                    "                            result = true;\n" +
+                    "                            break;\n" +
+                    "                        }\n" +
+                    "                    }\n" +
+                    "                }\n" +
+                    "            } else {\n" +
+                    "                logger.error(\"There is no refresh tokens\");\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "        return result;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected void upVoteUser(Map<String, Object> data) {\n" +
+                    "        ODocument user = null;\n" +
+                    "        ODocument voteUser = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable userOid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            OIdentifiable voteUserOid = (OIdentifiable)userIdIdx.get((String)data.get(\"voteUserId\"));\n" +
+                    "            if (userOid != null && voteUserOid != null) {\n" +
+                    "                user = (ODocument) userOid.getRecord();\n" +
+                    "                voteUser = (ODocument)voteUserOid.getRecord();\n" +
+                    "                Set upSet = user.field(\"upUsers\");\n" +
+                    "                if(upSet == null) {\n" +
+                    "                    upSet = new HashSet<String>();\n" +
+                    "                    upSet.add(voteUser);\n" +
+                    "                    user.field(\"upUsers\", upSet);\n" +
+                    "                } else {\n" +
+                    "                    upSet.add(voteUser);\n" +
+                    "                }\n" +
+                    "                Set downSet = user.field(\"downUsers\");\n" +
+                    "                if(downSet != null) {\n" +
+                    "                    downSet.remove(voteUser);\n" +
+                    "                }\n" +
+                    "                user.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "                user.save();\n" +
+                    "                db.commit();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected void downVoteUser(Map<String, Object> data) {\n" +
+                    "        ODocument user = null;\n" +
+                    "        ODocument voteUser = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            db.begin();\n" +
+                    "            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex(\"User.userId\");\n" +
+                    "            OIdentifiable userOid = (OIdentifiable) userIdIdx.get((String)data.get(\"userId\"));\n" +
+                    "            OIdentifiable voteUserOid = (OIdentifiable)userIdIdx.get((String)data.get(\"voteUserId\"));\n" +
+                    "            if (userOid != null && voteUserOid != null) {\n" +
+                    "                user = (ODocument) userOid.getRecord();\n" +
+                    "                voteUser = (ODocument)voteUserOid.getRecord();\n" +
+                    "                Set downSet = user.field(\"downUsers\");\n" +
+                    "                if(downSet == null) {\n" +
+                    "                    downSet = new HashSet<String>();\n" +
+                    "                    downSet.add(voteUser);\n" +
+                    "                    user.field(\"downUsers\", downSet);\n" +
+                    "                } else {\n" +
+                    "                    downSet.add(voteUser);\n" +
+                    "                }\n" +
+                    "                Set upSet = user.field(\"upUsers\");\n" +
+                    "                if(upSet != null) {\n" +
+                    "                    upSet.remove(voteUser);\n" +
+                    "                }\n" +
+                    "                user.field(\"updateDate\", data.get(\"updateDate\"));\n" +
+                    "                user.save();\n" +
+                    "                db.commit();\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            db.rollback();\n" +
+                    "            e.printStackTrace();\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    // TODO refactor it to be generic. table name as part of the criteria? or a parameter?\n" +
+                    "    protected long getTotalNumberUserFromDb(Map<String, Object> criteria) {\n" +
+                    "        long total = 0;\n" +
+                    "        StringBuilder sql = new StringBuilder(\"SELECT COUNT(*) as count FROM User\");\n" +
+                    "\n" +
+                    "        String whereClause = DbService.getWhereClause(criteria);\n" +
+                    "        if(whereClause != null && whereClause.length() > 0) {\n" +
+                    "            sql.append(whereClause);\n" +
+                    "        }\n" +
+                    "\n" +
+                    "        System.out.println(\"sql=\" + sql);\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            total = ((ODocument)db.query(new OSQLSynchQuery<ODocument>(sql.toString())).get(0)).field(\"count\");\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return total;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected List<String> getRoles() {\n" +
+                    "        List<String> roles = null;\n" +
+                    "        String sql = \"SELECT id FROM Role\";\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n" +
+                    "            List<ODocument> list = db.command(query).execute();\n" +
+                    "            if(list.size() > 0) {\n" +
+                    "                roles = new ArrayList<String>();\n" +
+                    "                for(ODocument doc: list) {\n" +
+                    "                    roles.add((String)doc.field(\"id\"));\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return roles;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected String getUserFromDb(Map<String, Object> criteria) {\n" +
+                    "        String json = null;\n" +
+                    "        StringBuilder sql = new StringBuilder(\"SELECT FROM User \");\n" +
+                    "        String whereClause = DbService.getWhereClause(criteria);\n" +
+                    "        if(whereClause != null && whereClause.length() > 0) {\n" +
+                    "            sql.append(whereClause);\n" +
+                    "        }\n" +
+                    "\n" +
+                    "        String sortedBy = (String)criteria.get(\"sortedBy\");\n" +
+                    "        String sortDir = (String)criteria.get(\"sortDir\");\n" +
+                    "        if(sortedBy != null) {\n" +
+                    "            sql.append(\" ORDER BY \").append(sortedBy);\n" +
+                    "            if(sortDir != null) {\n" +
+                    "                sql.append(\" \").append(sortDir);\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "        Integer pageSize = (Integer)criteria.get(\"pageSize\");\n" +
+                    "        Integer pageNo = (Integer)criteria.get(\"pageNo\");\n" +
+                    "        if(pageNo != null && pageSize != null) {\n" +
+                    "            sql.append(\" SKIP \").append((pageNo - 1) * pageSize);\n" +
+                    "            sql.append(\" LIMIT \").append(pageSize);\n" +
+                    "        }\n" +
+                    "        System.out.println(\"sql=\" + sql);\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());\n" +
+                    "            List<ODocument> list = db.command(query).execute();\n" +
+                    "            if(list.size() > 0) {\n" +
+                    "                json = OJSONWriter.listToJSON(list, null);\n" +
+                    "            }\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            e.printStackTrace();\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return json;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    boolean isEmail(String userIdEmail) {\n" +
+                    "        Matcher matcher = pattern.matcher(userIdEmail);\n" +
+                    "        return matcher.matches();\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    String generateToken(ODocument user, String clientId) throws Exception {\n" +
+                    "        Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();\n" +
+                    "        jwtMap.put(\"userId\", user.field(\"userId\"));\n" +
+                    "        jwtMap.put(\"clientId\", clientId);\n" +
+                    "        jwtMap.put(\"roles\", user.field(\"roles\"));\n" +
+                    "        return JwtUtil.getJwt(jwtMap);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    boolean checkPassword(ODocument user, String inputPassword) throws Exception {\n" +
+                    "        ODocument credential = (ODocument)user.field(\"credential\");\n" +
+                    "        String storedPassword = (String) credential.field(\"password\");\n" +
+                    "        return HashUtil.validatePassword(inputPassword, storedPassword);\n" +
+                    "    }\n" +
+                    "\n" +
+                    "}\n");
             abstractUserRule.field("createDate", new java.util.Date());
             abstractUserRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             abstractUserRule.save();
 
             ODocument signinUserRule = new ODocument(schema.getClass("Rule"));
             signinUserRule.field("ruleClass", "com.networknt.light.rule.user.SignInUserRule");
-            signinUserRule.field("sourceCode", "package com.networknt.light.rule.user;\n\nimport com.fasterxml.jackson.core.type.TypeReference;\nimport com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\nimport com.networknt.light.rule.Rule;\nimport com.networknt.light.util.HashUtil;\nimport com.networknt.light.util.JwtUtil;\nimport com.networknt.light.util.ServiceLocator;\nimport com.orientechnologies.orient.core.record.impl.ODocument;\n\nimport java.time.Instant;\nimport java.util.*;\n\n/**\n * Created by steve on 14/09/14.\n *\n */\npublic class SignInUserRule extends AbstractUserRule implements Rule {\n    public boolean execute (Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) inputMap.get(\"data\");\n        String userIdEmail = (String) data.get(\"userIdEmail\");\n        String inputPassword = (String) data.get(\"password\");\n        Boolean rememberMe = (Boolean)data.get(\"rememberMe\");\n\n        String error = null;\n        ODocument user = null;\n        if(isEmail(userIdEmail)) {\n            user = getUserByEmail(userIdEmail);\n        } else {\n            user = getUserByUserId(userIdEmail);\n        }\n        if(user != null) {\n            if(checkPassword(user, inputPassword)) {\n                String jwt = generateToken(user);\n                if(jwt != null) {\n                    Map eventMap = getEventMap(inputMap);\n                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n                    inputMap.put(\"eventMap\", eventMap);\n                    Map<String, String> tokens = new HashMap<String, String>();\n                    tokens.put(\"accessToken\", jwt);\n                    if(rememberMe != null && rememberMe) {\n                        // generate refreshToken\n                        String refreshToken = HashUtil.generateUUID();\n                        tokens.put(\"refreshToken\", refreshToken);\n                        String hashedRefreshToken = HashUtil.md5(refreshToken);\n                        eventData.put(\"hashedRefreshToken\", hashedRefreshToken);\n                    }\n                    inputMap.put(\"result\", mapper.writeValueAsString(tokens));\n                    eventData.put(\"userId\", user.field(\"userId\"));\n                    eventData.put(\"host\", data.get(\"host\"));  // add host as refreshToken will be associate with host.\n                    eventData.put(\"logInDate\", new java.util.Date());\n                }\n            } else {\n                error = \"Invalid password\";\n                inputMap.put(\"responseCode\", 400);\n            }\n        } else {\n            error = \"Invalid userId or email\";\n            inputMap.put(\"responseCode\", 400);\n        }\n        if(error != null) {\n            inputMap.put(\"error\", error);\n            return false;\n        } else {\n            return true;\n        }\n    }\n}\n");
+            signinUserRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule.user;\n" +
+                    "\n" +
+                    "import com.networknt.light.rule.Rule;\n" +
+                    "import com.networknt.light.util.HashUtil;\n" +
+                    "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
+                    "\n" +
+                    "import java.util.HashMap;\n" +
+                    "import java.util.Map;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by steve on 14/09/14.\n" +
+                    " *\n" +
+                    " */\n" +
+                    "public class SignInUserRule extends AbstractUserRule implements Rule {\n" +
+                    "    public boolean execute (Object ...objects) throws Exception {\n" +
+                    "        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n" +
+                    "        Map<String, Object> data = (Map<String, Object>) inputMap.get(\"data\");\n" +
+                    "        String userIdEmail = (String) data.get(\"userIdEmail\");\n" +
+                    "        String inputPassword = (String) data.get(\"password\");\n" +
+                    "        Boolean rememberMe = (Boolean)data.get(\"rememberMe\");\n" +
+                    "        String clientId = (String)data.get(\"clientId\");\n" +
+                    "        String error = null;\n" +
+                    "        // check if clientId is passed in.\n" +
+                    "        if(clientId == null || clientId.trim().length() == 0) {\n" +
+                    "            error = \"ClientId is required\";\n" +
+                    "            inputMap.put(\"responseCode\", 400);\n" +
+                    "        } else {\n" +
+                    "            ODocument user = null;\n" +
+                    "            if(isEmail(userIdEmail)) {\n" +
+                    "                user = getUserByEmail(userIdEmail);\n" +
+                    "            } else {\n" +
+                    "                user = getUserByUserId(userIdEmail);\n" +
+                    "            }\n" +
+                    "            if(user != null) {\n" +
+                    "                if(checkPassword(user, inputPassword)) {\n" +
+                    "                    String jwt = generateToken(user, clientId);\n" +
+                    "                    if(jwt != null) {\n" +
+                    "                        Map eventMap = getEventMap(inputMap);\n" +
+                    "                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n" +
+                    "                        inputMap.put(\"eventMap\", eventMap);\n" +
+                    "                        Map<String, String> tokens = new HashMap<String, String>();\n" +
+                    "                        tokens.put(\"accessToken\", jwt);\n" +
+                    "                        if(rememberMe != null && rememberMe) {\n" +
+                    "                            // generate refreshToken\n" +
+                    "                            String refreshToken = HashUtil.generateUUID();\n" +
+                    "                            tokens.put(\"refreshToken\", refreshToken);\n" +
+                    "                            String hashedRefreshToken = HashUtil.md5(refreshToken);\n" +
+                    "                            eventData.put(\"hashedRefreshToken\", hashedRefreshToken);\n" +
+                    "                        }\n" +
+                    "                        inputMap.put(\"result\", mapper.writeValueAsString(tokens));\n" +
+                    "                        eventData.put(\"userId\", user.field(\"userId\"));\n" +
+                    "                        eventData.put(\"host\", data.get(\"host\"));  // add host as refreshToken will be associate with host.\n" +
+                    "                        eventData.put(\"logInDate\", new java.util.Date());\n" +
+                    "                    }\n" +
+                    "                } else {\n" +
+                    "                    error = \"Invalid password\";\n" +
+                    "                    inputMap.put(\"responseCode\", 400);\n" +
+                    "                }\n" +
+                    "            } else {\n" +
+                    "                error = \"Invalid userId or email\";\n" +
+                    "                inputMap.put(\"responseCode\", 400);\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "        if(error != null) {\n" +
+                    "            inputMap.put(\"error\", error);\n" +
+                    "            return false;\n" +
+                    "        } else {\n" +
+                    "            return true;\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}\n");
             signinUserRule.field("createDate", new java.util.Date());
             signinUserRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             signinUserRule.save();
 
             ODocument signinUserEvRule = new ODocument(schema.getClass("Rule"));
             signinUserEvRule.field("ruleClass", "com.networknt.light.rule.user.SignInUserEvRule");
-            signinUserEvRule.field("sourceCode", "package com.networknt.light.rule.user;\n\nimport com.networknt.light.rule.Rule;\nimport com.networknt.light.util.HashUtil;\nimport com.networknt.light.util.JwtUtil;\nimport com.networknt.light.util.ServiceLocator;\nimport com.orientechnologies.orient.core.record.impl.ODocument;\n\nimport java.util.ArrayList;\nimport java.util.LinkedHashMap;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * Created by husteve on 8/28/2014.\n */\npublic class SignInUserEvRule extends AbstractUserRule implements Rule {\n    public boolean execute (Object ...objects) throws Exception {\n        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n        signIn(data);\n\n        // TODO update global online user count\n        return true;\n    }\n}\n");
+            signinUserEvRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule.user;\n" +
+                    "\n" +
+                    "import com.networknt.light.rule.Rule;\n" +
+                    "\n" +
+                    "import java.util.Map;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by husteve on 8/28/2014.\n" +
+                    " */\n" +
+                    "public class SignInUserEvRule extends AbstractUserRule implements Rule {\n" +
+                    "    public boolean execute (Object ...objects) throws Exception {\n" +
+                    "        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n" +
+                    "        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n" +
+                    "        signIn(data);\n" +
+                    "\n" +
+                    "        // TODO update global online user count\n" +
+                    "        return true;\n" +
+                    "    }\n" +
+                    "}\n");
             signinUserEvRule.field("createDate", new java.util.Date());
             signinUserEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             signinUserEvRule.save();
 
             ODocument replayEventRule = new ODocument(schema.getClass("Rule"));
             replayEventRule.field("ruleClass", "com.networknt.light.rule.db.ReplayEventRule");
-            replayEventRule.field("sourceCode", "package com.networknt.light.rule.db;\n\nimport com.fasterxml.jackson.core.type.TypeReference;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.networknt.light.rule.Rule;\nimport com.networknt.light.rule.RuleEngine;\nimport com.networknt.light.util.ServiceLocator;\nimport com.networknt.light.util.Util;\nimport org.slf4j.LoggerFactory;\n\nimport java.io.File;\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * Created by steve on 14/12/14.\n */\npublic class ReplayEventRule implements Rule {\n    static final org.slf4j.Logger logger = LoggerFactory.getLogger(ReplayEventRule.class);\n    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n\n    public boolean execute (Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>)objects[0];\n        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n        String error = null;\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        if(payload == null) {\n            error = \"Login is required\";\n            inputMap.put(\"responseCode\", 401);\n        } else {\n            Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n            List roles = (List)user.get(\"roles\");\n            if(!roles.contains(\"owner\") && !roles.contains(\"admin\") && !roles.contains(\"dbAdmin\")) {\n                error = \"Role owner or admin or dbAdmin is required to replay events\";\n                inputMap.put(\"responseCode\", 403);\n            } else {\n                String content = (String)data.get(\"content\");\n                // content may contains several events, parse it.\n                List<Map<String, Object>> events = mapper.readValue(content,\n                    new TypeReference<List<HashMap<String, Object>>>() {});\n\n                // replay event one by one.\n                for(Map<String, Object> event: events) {\n                    RuleEngine.getInstance().executeRuleAsync(Util.getEventRuleId(event), event);\n                }\n            }\n        }\n        if(error != null) {\n            inputMap.put(\"error\", error);\n            return false;\n        } else {\n            return true;\n        }\n    }\n}\n");
+            replayEventRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule.db;\n" +
+                    "\n" +
+                    "import com.fasterxml.jackson.core.type.TypeReference;\n" +
+                    "import com.fasterxml.jackson.databind.ObjectMapper;\n" +
+                    "import com.networknt.light.rule.Rule;\n" +
+                    "import com.networknt.light.rule.RuleEngine;\n" +
+                    "import com.networknt.light.util.ServiceLocator;\n" +
+                    "import com.networknt.light.util.Util;\n" +
+                    "import org.slf4j.LoggerFactory;\n" +
+                    "\n" +
+                    "import java.util.HashMap;\n" +
+                    "import java.util.List;\n" +
+                    "import java.util.Map;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by steve on 14/12/14.\n" +
+                    " */\n" +
+                    "public class ReplayEventRule implements Rule {\n" +
+                    "    static final org.slf4j.Logger logger = LoggerFactory.getLogger(ReplayEventRule.class);\n" +
+                    "    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n" +
+                    "\n" +
+                    "    public boolean execute (Object ...objects) throws Exception {\n" +
+                    "        Map<String, Object> inputMap = (Map<String, Object>)objects[0];\n" +
+                    "        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n" +
+                    "        String error = null;\n" +
+                    "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
+                    "        if(payload == null) {\n" +
+                    "            error = \"Login is required\";\n" +
+                    "            inputMap.put(\"responseCode\", 401);\n" +
+                    "        } else {\n" +
+                    "            Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n" +
+                    "            List roles = (List)user.get(\"roles\");\n" +
+                    "            if(!roles.contains(\"owner\") && !roles.contains(\"admin\") && !roles.contains(\"dbAdmin\")) {\n" +
+                    "                error = \"Role owner or admin or dbAdmin is required to replay events\";\n" +
+                    "                inputMap.put(\"responseCode\", 403);\n" +
+                    "            } else {\n" +
+                    "                String content = (String)data.get(\"content\");\n" +
+                    "                // content may contains several events, parse it.\n" +
+                    "                List<Map<String, Object>> events = mapper.readValue(content,\n" +
+                    "                    new TypeReference<List<HashMap<String, Object>>>() {});\n" +
+                    "\n" +
+                    "                // replay event one by one.\n" +
+                    "                for(Map<String, Object> event: events) {\n" +
+                    "                    RuleEngine.getInstance().executeRuleAsync(Util.getEventRuleId(event), event);\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "        if(error != null) {\n" +
+                    "            inputMap.put(\"error\", error);\n" +
+                    "            return false;\n" +
+                    "        } else {\n" +
+                    "            return true;\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}\n");
             replayEventRule.field("createDate", new java.util.Date());
             replayEventRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             replayEventRule.save();
 
             ODocument impRuleRule = new ODocument(schema.getClass("Rule"));
             impRuleRule.field("ruleClass", "com.networknt.light.rule.rule.ImpRuleRule");
-            impRuleRule.field("sourceCode", "package com.networknt.light.rule.rule;\n\nimport com.networknt.light.rule.AbstractRule;\nimport com.networknt.light.rule.Rule;\nimport com.networknt.light.util.ServiceLocator;\nimport com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\nimport com.orientechnologies.orient.core.metadata.schema.OSchema;\nimport com.orientechnologies.orient.core.metadata.schema.OType;\nimport com.orientechnologies.orient.core.record.impl.ODocument;\n\nimport java.util.List;\nimport java.util.Map;\n\n/**\n * Created by steve on 30/12/14.\n * This is the rule that will be loaded by the db script in initDatabase to bootstrap rule\n * loading for others. Also, it can be used to import rules developed and tested locally from\n * Rule Admin interface.\n *\n * Warning: it will replace any existing rules if Rule Class is the same.\n *\n */\npublic class ImpRuleRule extends AbstractRule implements Rule {\n    public boolean execute (Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>)objects[0];\n        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        String error = null;\n        if(payload == null) {\n            error = \"Login is required\";\n            inputMap.put(\"responseCode\", 401);\n        } else {\n            Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n            List roles = (List)user.get(\"roles\");\n            if(!roles.contains(\"owner\") && !roles.contains(\"admin\") && !roles.contains(\"ruleAdmin\")) {\n                error = \"Role owner or admin or ruleAdmin is required to add rule\";\n                inputMap.put(\"responseCode\", 401);\n            } else {\n                String host = (String)user.get(\"host\");\n                if(host != null) {\n                    if(!host.equals(data.get(\"host\"))) {\n                        error = \"User can only add rule from host: \" + host;\n                        inputMap.put(\"responseCode\", 401);\n                    } else {\n                        // Won't check if rule exists or not here.\n                        Map eventMap = getEventMap(inputMap);\n                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n                        inputMap.put(\"eventMap\", eventMap);\n                        eventData.put(\"ruleClass\", data.get(\"ruleClass\"));\n                        eventData.put(\"host\", host);\n                        eventData.put(\"sourceCode\", data.get(\"sourceCode\"));\n                        eventData.put(\"createDate\", new java.util.Date());\n                        eventData.put(\"createUserId\", user.get(\"userId\"));\n                    }\n                } else {\n                    // This is owner to import rule\n                    Map eventMap = getEventMap(inputMap);\n                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n                    inputMap.put(\"eventMap\", eventMap);\n                    eventData.put(\"ruleClass\", data.get(\"ruleClass\"));\n                    eventData.put(\"sourceCode\", data.get(\"sourceCode\"));\n                    eventData.put(\"createDate\", new java.util.Date());\n                    eventData.put(\"createUserId\", user.get(\"userId\"));\n                }\n            }\n        }\n        if(error != null) {\n            inputMap.put(\"error\", error);\n            return false;\n        } else {\n            return true;\n        }\n    }\n}\n");
+            impRuleRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule.rule;\n" +
+                    "\n" +
+                    "import com.networknt.light.rule.AbstractRule;\n" +
+                    "import com.networknt.light.rule.Rule;\n" +
+                    "import com.networknt.light.rule.RuleEngine;\n" +
+                    "\n" +
+                    "import java.util.List;\n" +
+                    "import java.util.Map;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by steve on 30/12/14.\n" +
+                    " * This is the rule that will be loaded by the db script in initDatabase to bootstrap rule\n" +
+                    " * loading for others. Also, it can be used to import rules developed and tested locally from\n" +
+                    " * Rule Admin interface.\n" +
+                    " *\n" +
+                    " * Warning: it will replace any existing rules if Rule Class is the same.\n" +
+                    " *\n" +
+                    " */\n" +
+                    "public class ImpRuleRule extends AbstractRule implements Rule {\n" +
+                    "    public boolean execute (Object ...objects) throws Exception {\n" +
+                    "        Map<String, Object> inputMap = (Map<String, Object>)objects[0];\n" +
+                    "        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n" +
+                    "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
+                    "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                    "        String error = null;\n" +
+                    "        if(payload == null) {\n" +
+                    "            error = \"Login is required\";\n" +
+                    "            inputMap.put(\"responseCode\", 401);\n" +
+                    "        } else {\n" +
+                    "            Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n" +
+                    "            List roles = (List)user.get(\"roles\");\n" +
+                    "            if(!roles.contains(\"owner\") && !roles.contains(\"admin\") && !roles.contains(\"ruleAdmin\")) {\n" +
+                    "                error = \"Role owner or admin or ruleAdmin is required to add rule\";\n" +
+                    "                inputMap.put(\"responseCode\", 403);\n" +
+                    "            } else {\n" +
+                    "                String host = (String)user.get(\"host\");\n" +
+                    "                if(host != null) {\n" +
+                    "                    if(!host.equals(data.get(\"host\"))) {\n" +
+                    "                        error = \"User can only import rule from host: \" + host;\n" +
+                    "                        inputMap.put(\"responseCode\", 403);\n" +
+                    "                    } else {\n" +
+                    "                        // make sure the ruleClass contains the host.\n" +
+                    "                        if(!ruleClass.contains(host)) {\n" +
+                    "                            // you are not allowed to update rule as it is not owned by the host.\n" +
+                    "                            error = \"ruleClass is not owned by the host: \" + host;\n" +
+                    "                            inputMap.put(\"responseCode\", 403);\n" +
+                    "                        } else {\n" +
+                    "                            // remove the rule instance from Rule Engine Cache\n" +
+                    "                            RuleEngine.getInstance().removeRule(ruleClass);\n" +
+                    "\n" +
+                    "                            // Won't check if rule exists or not here.\n" +
+                    "                            Map eventMap = getEventMap(inputMap);\n" +
+                    "                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n" +
+                    "                            inputMap.put(\"eventMap\", eventMap);\n" +
+                    "                            eventData.put(\"host\", host);\n" +
+                    "\n" +
+                    "                            eventData.put(\"ruleClass\", ruleClass);\n" +
+                    "                            eventData.put(\"sourceCode\", data.get(\"sourceCode\"));\n" +
+                    "                            eventData.put(\"createDate\", new java.util.Date());\n" +
+                    "                            eventData.put(\"createUserId\", user.get(\"userId\"));\n" +
+                    "                        }\n" +
+                    "                    }\n" +
+                    "                } else {\n" +
+                    "                    // check if access exist for the rule exists or not. If exists, then there is\n" +
+                    "                    // remove the rule instance from Rule Engine Cache\n" +
+                    "                    RuleEngine.getInstance().removeRule(ruleClass);\n" +
+                    "\n" +
+                    "                    // This is owner to import rule, notice that no host is passed in.\n" +
+                    "                    Map eventMap = getEventMap(inputMap);\n" +
+                    "                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n" +
+                    "                    inputMap.put(\"eventMap\", eventMap);\n" +
+                    "\n" +
+                    "                    eventData.put(\"ruleClass\", ruleClass);\n" +
+                    "                    eventData.put(\"sourceCode\", data.get(\"sourceCode\"));\n" +
+                    "                    eventData.put(\"createDate\", new java.util.Date());\n" +
+                    "                    eventData.put(\"createUserId\", user.get(\"userId\"));\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "        if(error != null) {\n" +
+                    "            inputMap.put(\"error\", error);\n" +
+                    "            return false;\n" +
+                    "        } else {\n" +
+                    "            return true;\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}\n");
             impRuleRule.field("createDate", new java.util.Date());
             impRuleRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             impRuleRule.save();
 
             ODocument impRuleEvRule = new ODocument(schema.getClass("Rule"));
             impRuleEvRule.field("ruleClass", "com.networknt.light.rule.rule.ImpRuleEvRule");
-            impRuleEvRule.field("sourceCode", "package com.networknt.light.rule.rule;\n\nimport com.networknt.light.rule.Rule;\nimport com.networknt.light.util.ServiceLocator;\nimport com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\nimport com.orientechnologies.orient.core.db.record.OIdentifiable;\nimport com.orientechnologies.orient.core.index.OIndex;\nimport com.orientechnologies.orient.core.metadata.schema.OSchema;\nimport com.orientechnologies.orient.core.record.impl.ODocument;\nimport org.slf4j.LoggerFactory;\n\nimport java.util.Map;\n\n/**\n * Created by steve on 30/12/14.\n */\npublic class ImpRuleEvRule implements Rule {\n    static final org.slf4j.Logger logger = LoggerFactory.getLogger(ImpRuleEvRule.class);\n\n    public boolean execute (Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>)objects[0];\n        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n        impRule(data);\n        return true;\n    }\n\n    private String impRule(Map<String, Object> data) throws Exception {\n        String json = null;\n        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n        OSchema schema = db.getMetadata().getSchema();\n        try {\n            db.begin();\n            // remove the existing rule if there is.\n            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex(\"Rule.ruleClass\");\n            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get(\"ruleClass\"));\n            if (oid != null) {\n                logger.info(\"Rule {} exists in db. Removing...\", data.get(\"ruleClass\"));\n                db.delete((ODocument) oid.getRecord());\n            }\n            // create a new rule\n            ODocument rule = new ODocument(schema.getClass(\"Rule\"));\n            rule.field(\"ruleClass\", data.get(\"ruleClass\"));\n            if(data.get(\"host\") != null) rule.field(\"host\", data.get(\"host\"));\n            rule.field(\"sourceCode\", data.get(\"sourceCode\"));\n            rule.field(\"createDate\", data.get(\"createDate\"));\n            rule.field(\"createUserId\", data.get(\"createUserId\"));\n            rule.save();\n            db.commit();\n            json  = rule.toJSON();\n        } catch (Exception e) {\n            db.rollback();\n            logger.error(\"Exception:\", e);\n            throw e;\n        } finally {\n            db.close();\n        }\n        return json;\n    }\n}\n");
+            impRuleEvRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule.rule;\n" +
+                    "\n" +
+                    "import com.fasterxml.jackson.core.type.TypeReference;\n" +
+                    "import com.fasterxml.jackson.databind.ObjectMapper;\n" +
+                    "import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\n" +
+                    "import com.networknt.light.rule.Rule;\n" +
+                    "import com.networknt.light.util.ServiceLocator;\n" +
+                    "import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\n" +
+                    "import com.orientechnologies.orient.core.db.record.OIdentifiable;\n" +
+                    "import com.orientechnologies.orient.core.index.OIndex;\n" +
+                    "import com.orientechnologies.orient.core.metadata.schema.OSchema;\n" +
+                    "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
+                    "import org.slf4j.LoggerFactory;\n" +
+                    "\n" +
+                    "import java.util.*;\n" +
+                    "import java.util.concurrent.ConcurrentMap;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by steve on 30/12/14.\n" +
+                    " */\n" +
+                    "public class ImpRuleEvRule extends AbstractRuleRule implements Rule {\n" +
+                    "    static final org.slf4j.Logger logger = LoggerFactory.getLogger(ImpRuleEvRule.class);\n" +
+                    "    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n" +
+                    "\n" +
+                    "    public boolean execute (Object ...objects) throws Exception {\n" +
+                    "        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n" +
+                    "        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n" +
+                    "        impRule(data);\n" +
+                    "        return true;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "}\n");
             impRuleEvRule.field("createDate", new java.util.Date());
             impRuleEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             impRuleEvRule.save();
+
+
+            // grant access to certain rules to everybody.
+            ODocument accessGetMenuRule = new ODocument(schema.getClass("Access"));
+            accessGetMenuRule.field("ruleClass", "com.networknt.light.rule.menu.GetMenuRule");
+            accessGetMenuRule.field("accessLevel", "A");
+            accessGetMenuRule.field("createDate", new java.util.Date());
+            accessGetMenuRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessGetMenuRule.save();
+
+            ODocument accessGetFormRule = new ODocument(schema.getClass("Access"));
+            accessGetFormRule.field("ruleClass", "com.networknt.light.rule.form.GetFormRule");
+            accessGetFormRule.field("accessLevel", "A");
+            accessGetFormRule.field("createDate", new java.util.Date());
+            accessGetFormRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessGetFormRule.save();
+
+            ODocument accessLogEventRule = new ODocument(schema.getClass("Access"));
+            accessLogEventRule.field("ruleClass", "com.networknt.light.rule.log.LogEventRule");
+            accessLogEventRule.field("accessLevel", "A");
+            accessLogEventRule.field("createDate", new java.util.Date());
+            accessLogEventRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessLogEventRule.save();
+
+            ODocument accessLogEventEvRule = new ODocument(schema.getClass("Access"));
+            accessLogEventEvRule.field("ruleClass", "com.networknt.light.rule.log.LogEventEvRule");
+            accessLogEventEvRule.field("accessLevel", "A");
+            accessLogEventEvRule.field("createDate", new java.util.Date());
+            accessLogEventEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessLogEventEvRule.save();
+
+            ODocument accessSignInUserRule = new ODocument(schema.getClass("Access"));
+            accessSignInUserRule.field("ruleClass", "com.networknt.light.rule.user.SignInUserRule");
+            accessSignInUserRule.field("accessLevel", "A");
+            accessSignInUserRule.field("createDate", new java.util.Date());
+            accessSignInUserRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessSignInUserRule.save();
+
+            ODocument accessSignInUserEvRule = new ODocument(schema.getClass("Access"));
+            accessSignInUserEvRule.field("ruleClass", "com.networknt.light.rule.log.SignInUserEvRule");
+            accessSignInUserEvRule.field("accessLevel", "A");
+            accessSignInUserEvRule.field("createDate", new java.util.Date());
+            accessSignInUserEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessSignInUserEvRule.save();
+
+            ODocument accessGetPageRule = new ODocument(schema.getClass("Access"));
+            accessGetPageRule.field("ruleClass", "com.networknt.light.rule.page.GetPageRule");
+            accessGetPageRule.field("accessLevel", "A");
+            accessGetPageRule.field("createDate", new java.util.Date());
+            accessGetPageRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessGetPageRule.save();
+
+            ODocument accessRefreshTokenRule = new ODocument(schema.getClass("Access"));
+            accessRefreshTokenRule.field("ruleClass", "com.networknt.light.rule.user.RefreshTokenRule");
+            accessRefreshTokenRule.field("accessLevel", "A");
+            accessRefreshTokenRule.field("createDate", new java.util.Date());
+            accessRefreshTokenRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessRefreshTokenRule.save();
+
+            ODocument accessSignUpUserRule = new ODocument(schema.getClass("Access"));
+            accessSignUpUserRule.field("ruleClass", "com.networknt.light.rule.user.SignUpUserRule");
+            accessSignUpUserRule.field("accessLevel", "A");
+            accessSignUpUserRule.field("createDate", new java.util.Date());
+            accessSignUpUserRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessSignUpUserRule.save();
+
+            ODocument accessSignUpUserEvRule = new ODocument(schema.getClass("Access"));
+            accessSignUpUserEvRule.field("ruleClass", "com.networknt.light.rule.log.SignUpUserEvRule");
+            accessSignUpUserEvRule.field("accessLevel", "A");
+            accessSignUpUserEvRule.field("createDate", new java.util.Date());
+            accessSignUpUserEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessSignUpUserEvRule.save();
+
+            ODocument accessGetRoleDropdownRule = new ODocument(schema.getClass("Access"));
+            accessGetRoleDropdownRule.field("ruleClass", "com.networknt.light.rule.role.GetRoleDropdownRule");
+            accessGetRoleDropdownRule.field("accessLevel", "R");
+            roles = new ArrayList<String>();
+            roles.add("user");
+            accessGetRoleDropdownRule.field("roles", roles);
+            accessGetRoleDropdownRule.field("createDate", new java.util.Date());
+            accessGetRoleDropdownRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessGetRoleDropdownRule.save();
+
+            ODocument accessGetClientDropdownRule = new ODocument(schema.getClass("Access"));
+            accessSignUpUserEvRule.field("ruleClass", "com.networknt.light.rule.client.GetClientDropdownRule");
+            accessSignUpUserEvRule.field("accessLevel", "R");
+            roles = new ArrayList<String>();
+            roles.add("user");
+            accessGetRoleDropdownRule.field("roles", roles);
+            accessSignUpUserEvRule.field("createDate", new java.util.Date());
+            accessSignUpUserEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessSignUpUserEvRule.save();
 
 
             // create a counter for feed injector requestId

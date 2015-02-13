@@ -16,6 +16,7 @@
 
 package com.networknt.light.rule;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.server.DbService;
@@ -24,8 +25,12 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.index.OCompositeKey;
 import com.orientechnologies.orient.core.index.OIndex;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -34,7 +39,9 @@ import java.util.concurrent.ConcurrentMap;
  * Created by husteve on 10/14/2014.
  */
 public abstract class AbstractRule implements Rule {
-    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
+    static final Logger logger = LoggerFactory.getLogger(AbstractRule.class);
+
+    protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
     public abstract boolean execute (Object ...objects) throws Exception;
 
     protected ODocument getCategoryByRid(String categoryRid) {
@@ -119,6 +126,43 @@ public abstract class AbstractRule implements Rule {
             db.close();
         }
         return doc;
+    }
+
+    public Map<String, Object> getAccessByRuleClass(String ruleClass) throws Exception {
+        Map<String, Object> access = null;
+        Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
+        if(cache == null) {
+            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(1000)
+                    .build();
+            accessMap.put("cache", cache);
+            logger.error("accessMap cache created =" + cache);
+        } else {
+            access = (Map<String, Object>)cache.get(ruleClass);
+        }
+        if(access == null) {
+            logger.error("access is null, cache =" + cache);
+            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            try {
+                OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Access.ruleClass");
+                // this is a unique index, so it retrieves a OIdentifiable
+                OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(ruleClass);
+                if (oid != null && oid.getRecord() != null) {
+                    String json = oid.getRecord().toJSON();
+                    access = mapper.readValue(json,
+                            new TypeReference<HashMap<String, Object>>() {
+                            });
+                    cache.put(ruleClass, access);
+                }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                db.close();
+            }
+        }
+        return access;
     }
 
 }

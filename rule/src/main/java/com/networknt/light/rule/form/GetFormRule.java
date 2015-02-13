@@ -42,39 +42,9 @@ public class GetFormRule extends AbstractFormRule implements Rule {
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String host = (String)data.get("host");
         String id = (String)data.get("id");
-        String json = getFormById(id);
+        String json = getFormById(inputMap);
         if(json != null) {
-            // check if the form needs dynamically load dropdown list.
-            if(id.endsWith("_d")) {
-                Pattern pattern = Pattern.compile("\\[\"@\",([^]]+)\\]");
-                Matcher m = pattern.matcher(json);
-                StringBuffer sb = new StringBuffer(json.length());
-                while (m.find()) {
-                    String text = m.group(1);
-                    // get the values from rules.
-                    logger.debug("text = {}", text);
-                    Map<String, Object> jsonMap = mapper.readValue(text,
-                            new TypeReference<HashMap<String, Object>>() {});
-                    jsonMap.put("payload", inputMap.get("payload"));
-                    // inject host into data here.
-                    Map<String, Object> dataMap = new HashMap<String, Object>();
-                    dataMap.put("host", host);
-                    jsonMap.put("data", dataMap);
-                    RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
-                    String result = (String)jsonMap.get("result");
-                    logger.debug("result = {}", result);
-                    if(result != null && result.length() > 0) {
-                        m.appendReplacement(sb, Matcher.quoteReplacement(result));
-                    } else {
-                        m.appendReplacement(sb, Matcher.quoteReplacement("[ ]"));
-                    }
-                }
-                m.appendTail(sb);
-                logger.debug("form = {}", sb.toString());
-                inputMap.put("result", sb.toString());
-            } else {
-                inputMap.put("result", json);
-            }
+            inputMap.put("result", json);
             return true;
         } else {
             inputMap.put("result", "Form with " + id + " cannot be found.");

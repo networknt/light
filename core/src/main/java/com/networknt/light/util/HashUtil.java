@@ -16,9 +16,11 @@
 
 package com.networknt.light.util;
 
+import org.apache.commons.codec.binary.Base64;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -30,8 +32,12 @@ import java.util.UUID;
  */
 public class HashUtil {
 
-    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException
+    public static void main(String[] args) throws Exception
     {
+
+        String uuid = generateUUID();
+        System.out.println("uuid =" + uuid);
+
         String  originalPassword = "password";
         String generatedSecuredPasswordHash = generateStorngPasswordHash(originalPassword);
         System.out.println(generatedSecuredPasswordHash);
@@ -54,6 +60,8 @@ public class HashUtil {
 
 
     }
+
+    private HashUtil() {throw new UnsupportedOperationException("do not instantiate");}
 
     public static String generateUUID() {
         UUID id = UUID.randomUUID();
@@ -144,4 +152,5 @@ public class HashUtil {
         }
         return bytes;
     }
+
 }

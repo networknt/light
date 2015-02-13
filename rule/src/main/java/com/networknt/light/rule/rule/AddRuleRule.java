@@ -35,6 +35,7 @@ public class AddRuleRule extends AbstractRuleRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        String ruleClass = (String)data.get("ruleClass");
         String error = null;
         if(payload == null) {
             error = "Login is required";
@@ -52,21 +53,26 @@ public class AddRuleRule extends AbstractRuleRule implements Rule {
                         error = "User can only add rule from host: " + host;
                         inputMap.put("responseCode", 403);
                     } else {
-                        // check if the rule exists or not
-                        String json = getRuleByRuleClass((String)data.get("ruleClass"));
-                        if(json != null) {
-                            error = "ruleClass for the rule exists";
-                            inputMap.put("responseCode", 400);
+                        if(host != null && !ruleClass.contains(host)) {
+                            // you are not allowed to add rule as it is not belong to the host.
+                            error = "ruleClass is not owned by the host: " + host;
+                            inputMap.put("responseCode", 403);
                         } else {
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
-                            eventData.put("host", host);
-
-                            eventData.put("ruleClass", data.get("ruleClass"));
-                            eventData.put("sourceCode", data.get("sourceCode"));
-                            eventData.put("createDate", new java.util.Date());
-                            eventData.put("createUserId", user.get("userId"));
+                            // check if the rule exists or not
+                            String json = getRuleByRuleClass(ruleClass);
+                            if(json != null) {
+                                error = "ruleClass for the rule exists";
+                                inputMap.put("responseCode", 400);
+                            } else {
+                                Map eventMap = getEventMap(inputMap);
+                                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                                inputMap.put("eventMap", eventMap);
+                                eventData.put("host", host);
+                                eventData.put("ruleClass", data.get("ruleClass"));
+                                eventData.put("sourceCode", data.get("sourceCode"));
+                                eventData.put("createDate", new java.util.Date());
+                                eventData.put("createUserId", user.get("userId"));
+                            }
                         }
                     }
                 } else {

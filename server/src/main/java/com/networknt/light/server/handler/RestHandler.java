@@ -18,11 +18,14 @@ package com.networknt.light.server.handler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.RuleEngine;
+import com.networknt.light.rule.access.AbstractAccessRule;
+import com.networknt.light.rule.access.GetAccessRule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.server.ServerConstants;
 import com.networknt.light.util.JwtUtil;
 import com.networknt.light.util.ServiceLocator;
 import com.networknt.light.util.Util;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderMap;
@@ -34,10 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -80,8 +80,9 @@ public class RestHandler implements HttpHandler {
         // TODO check if login times in token is the same as in userMap.
         // this is to prevent stolen token after user is logged out.
         
-        // if the token is expired, then you will have an exception here. angular should be responsible to renew token
-        // during the session and in init method to make sure no expired token going to be passed here.
+        // if the token is expired, then you will have 401 token_expired sent back to angular.
+        // Angular should intercept the response code and refresh the token and replay the same
+        // request with renewed access token.
         HeaderMap headerMap = exchange.getRequestHeaders();
         Map<String, Object> payload = null;
         try {
@@ -102,27 +103,240 @@ public class RestHandler implements HttpHandler {
         Map<String, Object> jsonMap =
                 ServiceLocator.getInstance().getMapper()
                         .readValue(json, new TypeReference<HashMap<String, Object>>() {});
-
-        // get jwt payload, pass it to every rule and validate it if permission is required.
-        // TODO First check if token is expired, second check if login time in token is the same as in userMap.
-        // this is to prevent stolen token after user is logged out.
-        // Angular needs to make sure no expired token will be sent.
-
-        //"payload": {
-        //    "iss": "networknt.com",
-        //            "aud": "networknt.com",
-        //            "typ": "networknt.com/auth/v1",
-        //            "iat": 1411136595,
-        //            "exp": 1411140195,
-        //            "user": {
-        //        "email": "steve@gmail.com"
-        //    }
-        //}
+        // TODO rewrite with case now check if the request is authorized to access the command rule.
+        String cmdRuleClass = Util.getCommandRuleId(jsonMap);
+        GetAccessRule rule = new GetAccessRule();
+        Map<String, Object> access = rule.getAccessByRuleClass(cmdRuleClass);
+        if(access != null) {
+            // authorization rule available, check it.
+            String accessLevel = (String)access.get("accessLevel");
+            switch (accessLevel) {
+                case "A":
+                    // Access by anyone.
+                    break;
+                case "N":
+                    // Not accessible
+                    exchange.setResponseCode(400);
+                    exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                    exchange.getResponseSender().send((ByteBuffer.wrap("Not accessible".getBytes("utf-8"))));
+                    return;
+                case "C":
+                    // client id is in the jwt token like userId and roles.
+                    if(payload == null) {
+                        exchange.setResponseCode(401);
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        return;
+                    } else {
+                        Map<String, Object> user = (Map<String, Object>) payload.get("user");
+                        String clientId = (String) user.get("clientId");
+                        List<String> clients = (List)access.get("clients");
+                        if(!clients.contains(clientId)) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("Client permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                    }
+                    break;
+                case "R":
+                    // role only
+                    if(payload == null) {
+                        exchange.setResponseCode(401);
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        return;
+                    } else {
+                        Map<String, Object> user = (Map<String, Object>) payload.get("user");
+                        List userRoles = (List) user.get("roles");
+                        List<String> accessRoles = (List)access.get("roles");
+                        boolean found = false;
+                        for (String role : accessRoles) {
+                            if (userRoles.contains(role)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("Role permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                    }
+                    break;
+                case "U":
+                    //user only
+                    if(payload == null) {
+                        exchange.setResponseCode(401);
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        return;
+                    } else {
+                        Map<String, Object> user = (Map<String, Object>) payload.get("user");
+                        String userId = (String) user.get("userId");
+                        List<String> users = (List)access.get("users");
+                        if(!users.contains(userId)) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("User permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                    }
+                    break;
+                case "CR":
+                    // client and role
+                    if(payload == null) {
+                        exchange.setResponseCode(401);
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        return;
+                    } else {
+                        Map<String, Object> user = (Map<String, Object>) payload.get("user");
+                        String clientId = (String) user.get("clientId");
+                        List<String> clients = (List)access.get("clients");
+                        if(!clients.contains(clientId)) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("Client permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                        // client is ok, check roles
+                        List userRoles = (List) user.get("roles");
+                        List<String> accessRoles = (List)access.get("roles");
+                        boolean found = false;
+                        for (String role : accessRoles) {
+                            if (userRoles.contains(role)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("Role permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                    }
+                    break;
+                case "CU":
+                    // client and user
+                    if(payload == null) {
+                        exchange.setResponseCode(401);
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        return;
+                    } else {
+                        Map<String, Object> user = (Map<String, Object>) payload.get("user");
+                        String clientId = (String) user.get("clientId");
+                        List<String> clients = (List)access.get("clients");
+                        if(!clients.contains(clientId)) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("Client permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                        // client is ok, check user
+                        String userId = (String) user.get("userId");
+                        List<String> users = (List)access.get("users");
+                        if(!users.contains(userId)) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("User permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                    }
+                    break;
+                case "RU":
+                    // role and user
+                    if(payload == null) {
+                        exchange.setResponseCode(401);
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        return;
+                    } else {
+                        Map<String, Object> user = (Map<String, Object>) payload.get("user");
+                        List userRoles = (List) user.get("roles");
+                        List<String> accessRoles = (List)access.get("roles");
+                        boolean found = false;
+                        for (String role : accessRoles) {
+                            if (userRoles.contains(role)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("Role permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                        // role is OK, now check userId
+                        String userId = (String) user.get("userId");
+                        List<String> users = (List)access.get("users");
+                        if(!users.contains(userId)) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("User permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                   }
+                    break;
+                case "CRU":
+                    // client, role and user
+                    if(payload == null) {
+                        exchange.setResponseCode(401);
+                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        return;
+                    } else {
+                        Map<String, Object> user = (Map<String, Object>) payload.get("user");
+                        String clientId = (String) user.get("clientId");
+                        List<String> clients = (List)access.get("clients");
+                        if(!clients.contains(clientId)) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("Client permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                        // client is ok, check roles
+                        List userRoles = (List) user.get("roles");
+                        List<String> accessRoles = (List)access.get("roles");
+                        boolean found = false;
+                        for (String role : accessRoles) {
+                            if (userRoles.contains(role)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("Role permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                        // role is OK, now check userId
+                        String userId = (String) user.get("userId");
+                        List<String> users = (List)access.get("users");
+                        if(!users.contains(userId)) {
+                            exchange.setResponseCode(403);
+                            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                            exchange.getResponseSender().send((ByteBuffer.wrap("User permission denied".getBytes("utf-8"))));
+                            return;
+                        }
+                    }
+                    break;
+                default:
+                    logger.error("Invalid Access Level: " + accessLevel);
+            }
+        }
 
         if(payload != null) {
             // put payload as part of the map
             jsonMap.put("payload", payload);
         }
+
+
         // TODO should I remove the port number here?
         // inject host into the data in command if there is no host in the json map.
         // that means the rules to be accessed are common and host should be part of the data.

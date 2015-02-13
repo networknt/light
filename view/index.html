@@ -87,6 +87,60 @@
             <a class="btn btn-primary" onclick="window.open('/chat.html', '_blank', 'location=no,menubar=no,toolbar=no,height=570,width=520,scrollbars=yes,status=yes');">Chat With Me</a>
         </div>
     </footer>
+    <!-- global error handler outside of AngularJS -->
+    <script>
+        window.onerror = function(message, source, line, column) {
+            try {
+                var escape = function(x) { return x.replace('\\', '\\\\').replace('\"', '\\"'); };
+                var XHR = window.XMLHttpRequest || function() {
+                            try { return new ActiveXObject("Msxml3.XMLHTTP"); } catch (e0) {}
+                            try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
+                            try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
+                            try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
+                            try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch (e4) {}
+                        };
+                var xhr = new XHR();
+                xhr.open('POST', '/api/rs', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+
+                var error = '{"category": "log", "name": "logEvent", "readOnly":false, "data": {' +
+                '"message": "' + escape(message || '') + '",' +
+                '"source": "' + escape(source || '') + '",' +
+                '"url": "' + escape(window.location.href) + '",' +
+                '"line": "' + (line || 0) + '",' +
+                '"column": "' + (column || 0) + '"' +
+                '}}';
+                console.log("error", error);
+                xhr.send(error);
+            }
+            finally {
+                window.onload = function() {
+                    if (document.getElementById('page-error')) return; // The error is already displayed
+                    var errorMessage = document.createElement('div');
+                    errorMessage.setAttribute('id', 'page-error');
+                    errorMessage.innerHTML = 'An error has occured and the details have been logged. ' +
+                    'Please contact customer support for assistance.';
+                    document.body.appendChild(errorMessage);
+                }
+            }
+        };
+    </script>
+
+    <!--
+    // test case that triggers global error handler above.
+    <script>
+        function a() {
+            b();
+        }
+
+        function b() {
+            c();
+        }
+
+        a(); // Throws an error since c is undefined
+    </script>
+    -->
+
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <!--
     <script>
@@ -102,13 +156,13 @@
 
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/stacktrace-js/stacktrace.js"></script>
     <script src="bower_components/underscore/underscore-min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>

@@ -34,6 +34,7 @@ public class DelRuleRule extends AbstractRuleRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         String rid = (String)data.get("@rid");
         int inputVersion = (int)data.get("@version");
+        String ruleClass = (String)data.get("ruleClass");
         String error = null;
         if(payload == null) {
             error = "Login is required";
@@ -55,21 +56,27 @@ public class DelRuleRule extends AbstractRuleRule implements Rule {
                         error = "Rule with @rid " + rid + " cannot be found";
                         inputMap.put("responseCode", 404);
                     } else {
-                        int storedVersion = rule.field("@version");
-                        if(inputVersion != storedVersion) {
-                            error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
-                            inputMap.put("responseCode", 400);
+                        // check if the ruleClass contains the host.
+                        if(host != null && !ruleClass.contains(host)) {
+                            // you are not allowed to delete access control to the rule as it is not belong to the host.
+                            error = "ruleClass is not owned by the host: " + host;
+                            inputMap.put("responseCode", 403);
                         } else {
-                            // remove the rule instance from Rule Engine Cache
-                            String ruleClass = (String)data.get("ruleClass");
-                            RuleEngine.getInstance().removeRule(ruleClass);
+                            int storedVersion = rule.field("@version");
+                            if(inputVersion != storedVersion) {
+                                error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
+                                inputMap.put("responseCode", 400);
+                            } else {
+                                // remove the rule instance from Rule Engine Cache
+                                RuleEngine.getInstance().removeRule(ruleClass);
 
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
-                            eventData.put("ruleClass", ruleClass);
-                            eventData.put("updateDate", new java.util.Date());
-                            eventData.put("updateUserId", user.get("userId"));
+                                Map eventMap = getEventMap(inputMap);
+                                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                                inputMap.put("eventMap", eventMap);
+                                eventData.put("ruleClass", ruleClass);
+                                eventData.put("updateDate", new java.util.Date());
+                                eventData.put("updateUserId", user.get("userId"));
+                            }
                         }
                     }
                 }

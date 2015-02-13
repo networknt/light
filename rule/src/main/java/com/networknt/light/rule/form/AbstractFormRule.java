@@ -16,11 +16,14 @@
 
 package com.networknt.light.rule.form;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.util.ServiceLocator;
+import com.networknt.light.util.Util;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.index.OIndex;
@@ -30,9 +33,12 @@ import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by steve on 23/09/14.
@@ -44,7 +50,9 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
 
     public abstract boolean execute (Object ...objects) throws Exception;
 
-    protected String getFormById(String id) {
+    protected String getFormById(Map<String, Object> inputMap) throws Exception {
+        Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        String id = (String)data.get("id");
         String json  = null;
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
@@ -64,6 +72,10 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                 OIdentifiable oid = (OIdentifiable) formIdIdx.get(id);
                 if (oid != null && oid.getRecord() != null) {
                     json = ((ODocument) oid.getRecord()).toJSON();
+                    if(id.endsWith("_d")) {
+                        // enrich the form with dynamicOptions for drop down values
+                        json = enrichForm(json, inputMap);
+                    }
                     cache.put(id, json);
                 }
             } catch (Exception e) {
@@ -76,15 +88,48 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         return json;
     }
 
+    protected String enrichForm(String json, Map<String, Object> inputMap)  throws Exception {
+    	Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        Pattern pattern = Pattern.compile("\\[\\{\"label\":\"dynamic\",([^]]+)\\}\\]");
+        Matcher m = pattern.matcher(json);
+        StringBuffer sb = new StringBuffer(json.length());
+        while (m.find()) {
+            String text = m.group(1);
+            // get the values from rules.
+            logger.debug("text = {}", text);
+            text = text.substring(8);
+            logger.debug("text = {}", text);
+            Map<String, Object> jsonMap = mapper.readValue(text,
+                    new TypeReference<HashMap<String, Object>>() {});
+            jsonMap.put("payload", inputMap.get("payload"));
+            // inject host into data here.
+            Map<String, Object> dataMap = new HashMap<String, Object>();
+            dataMap.put("host", data.get("host"));
+            jsonMap.put("data", dataMap);
+            RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
+            String result = (String)jsonMap.get("result");
+            logger.debug("result = {}", result);
+            if(result != null && result.length() > 0) {
+                m.appendReplacement(sb, Matcher.quoteReplacement(result));
+            } else {
+                m.appendReplacement(sb, Matcher.quoteReplacement("[ ]"));
+            }
+        }
+        m.appendTail(sb);
+        logger.debug("form = {}", sb.toString());
+        return sb.toString();
+    }
+
     protected String addForm(Map<String, Object> data) throws Exception {
         String json = null;
+        String id = (String)data.get("id");
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         OSchema schema = db.getMetadata().getSchema();
         try {
             db.begin();
             ODocument form = new ODocument(schema.getClass("Form"));
             if(data.get("host") != null) form.field("host", data.get("host"));
-            form.field("id", data.get("id"));
+            form.field("id", id);
             form.field("action", data.get("action"));
             form.field("schema", data.get("schema"));
             form.field("form", data.get("form"));
@@ -109,7 +154,12 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                     .build();
             formMap.put("cache", cache);
         }
-        cache.put(data.get("id"), json);
+        if(id.endsWith("_d")) {
+            // remove it from the cache so that the next getForm will enrich the dynamic form
+            cache.remove(id);
+        } else {
+            cache.put(id, json);
+        }
         return json;
     }
 
@@ -139,12 +189,13 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
 
     protected String updForm(Map<String, Object> data) {
         String json = null;
+        String id = (String)data.get("id");
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             db.begin();
             OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
             // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oId = (OIdentifiable) userIdIdx.get(data.get("id"));
+            OIdentifiable oId = (OIdentifiable) userIdIdx.get(id);
             if (oId != null) {
                 ODocument doc = oId.getRecord();
                 doc.field("action", data.get("action"));
@@ -171,26 +222,32 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                     .build();
             formMap.put("cache", cache);
         }
-        cache.put(data.get("id"), json);
+        if(id.endsWith("_d")) {
+            // remove it from the cache so that the next getForm will enrich the dynamic form
+            cache.remove(id);
+        } else {
+            cache.put(id, json);
+        }
         return json;
     }
 
     protected String impForm(Map<String, Object> data) throws Exception {
         String json = null;
+        String id = (String)data.get("id");
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         OSchema schema = db.getMetadata().getSchema();
         try {
             db.begin();
             OIndex<?> formIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
             // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) formIdIdx.get(data.get("id"));
+            OIdentifiable oid = (OIdentifiable) formIdIdx.get(id);
             if (oid != null && oid.getRecord() != null) {
                 oid.getRecord().delete();
             }
 
             ODocument form = new ODocument(schema.getClass("Form"));
             if(data.get("host") != null) form.field("host", data.get("host"));
-            form.field("id", data.get("id"));
+            form.field("id", id);
             form.field("action", data.get("action"));
             form.field("schema", data.get("schema"));
             form.field("form", data.get("form"));
@@ -215,7 +272,12 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                     .build();
             formMap.put("cache", cache);
         }
-        cache.put(data.get("id"), json);
+        if(id.endsWith("_d")) {
+            // remove it from the cache so that the next getForm will enrich the dynamic form
+            cache.remove(id);
+        } else {
+            cache.put(id, json);
+        }
         return json;
     }
 
@@ -241,4 +303,3 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         return json;
     }
 }
-
