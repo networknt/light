@@ -1,8 +1,6 @@
 package com.networknt.light.rule.user;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.server.DbService;
-import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import java.util.List;
 import java.util.Map;

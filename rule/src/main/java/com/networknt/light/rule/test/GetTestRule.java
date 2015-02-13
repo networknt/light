@@ -16,14 +16,9 @@
 
 package com.networknt.light.rule.test;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.server.DbService;
-import com.networknt.light.util.ServiceLocator;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

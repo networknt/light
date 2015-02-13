@@ -18,7 +18,8 @@ package com.networknt.light.rule.menu;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.light.rule.user.*;
+import com.networknt.light.rule.user.SignInUserEvRule;
+import com.networknt.light.rule.user.SignInUserRule;
 import com.networknt.light.util.JwtUtil;
 import junit.framework.Test;
 import junit.framework.TestCase;

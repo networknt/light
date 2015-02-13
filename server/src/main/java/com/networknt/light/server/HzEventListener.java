@@ -15,13 +15,13 @@
  */
 
 package com.networknt.light.server;
-import javax.annotation.PostConstruct;
 
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ITopic;
 import com.hazelcast.core.Message;
 import com.hazelcast.core.MessageListener;
 
+import javax.annotation.PostConstruct;
 import java.util.Map;
 
 /**

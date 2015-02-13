@@ -17,7 +17,6 @@
 package com.networknt.light.rule.category;
 
 import com.networknt.light.rule.Rule;
-import com.orientechnologies.orient.core.metadata.schema.OType;
 
 import java.util.Map;
 

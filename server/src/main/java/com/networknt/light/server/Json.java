@@ -17,13 +17,8 @@
 package com.networknt.light.server;
 
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Json {
 	public static void main(String[] args) { 

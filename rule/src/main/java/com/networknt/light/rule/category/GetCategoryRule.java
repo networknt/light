@@ -16,12 +16,9 @@
 
 package com.networknt.light.rule.category;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.blog.AbstractBlogRule;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

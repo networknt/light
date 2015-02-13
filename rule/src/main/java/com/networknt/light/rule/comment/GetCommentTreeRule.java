@@ -17,7 +17,6 @@
 package com.networknt.light.rule.comment;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.forum.AbstractForumRule;
 
 import java.util.Map;
 

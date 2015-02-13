@@ -17,7 +17,6 @@
 package com.networknt.light.rule.product;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.category.AbstractCategoryRule;
 
 import java.util.Map;
 

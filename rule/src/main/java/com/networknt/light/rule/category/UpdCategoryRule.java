@@ -19,8 +19,6 @@ package com.networknt.light.rule.category;
 import com.networknt.light.rule.Rule;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**

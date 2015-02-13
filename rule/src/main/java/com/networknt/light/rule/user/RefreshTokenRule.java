@@ -16,16 +16,11 @@
 
 package com.networknt.light.rule.user;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.util.HashUtil;
-import com.networknt.light.util.JwtUtil;
-import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import net.oauth.jsontoken.JsonToken;
 
-import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by steve on 19/09/14.

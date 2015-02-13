@@ -1,7 +1,6 @@
 package com.networknt.light.rule.host;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.host.AbstractHostRule;
 import com.networknt.light.util.ServiceLocator;
 
 import java.util.List;

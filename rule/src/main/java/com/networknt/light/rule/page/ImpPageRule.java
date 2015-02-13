@@ -17,9 +17,6 @@
 package com.networknt.light.rule.page;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.form.AbstractFormRule;
-import com.networknt.light.util.ServiceLocator;
-import com.orientechnologies.orient.core.metadata.schema.OType;
 
 import java.util.List;
 import java.util.Map;

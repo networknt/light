@@ -28,14 +28,11 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 
 /**
  * Created by steve on 9/19/2014.
@@ -132,7 +129,7 @@ public abstract class FeedRule implements Rule {
             if(list.size() > 0) {
                 items = new ArrayList<String>();
                 for(ODocument doc: list) {
-                    items.add(doc.field("DISTINCT"));
+                    items.add((String)doc.field("DISTINCT"));
                 }
             }
         } catch (Exception e) {
@@ -153,7 +150,7 @@ public abstract class FeedRule implements Rule {
             if(list.size() > 0) {
                 items = new ArrayList<String>();
                 for(ODocument doc: list) {
-                    items.add(doc.field("DISTINCT"));
+                    items.add((String)doc.field("DISTINCT"));
                 }
             }
         } catch (Exception e) {
@@ -174,7 +171,7 @@ public abstract class FeedRule implements Rule {
             if(list.size() > 0) {
                 items = new ArrayList<String> ();
                 for(ODocument doc: list) {
-                    items.add(doc.field("DISTINCT"));
+                    items.add((String)doc.field("DISTINCT"));
                 }
             }
         } catch (Exception e) {
@@ -195,7 +192,7 @@ public abstract class FeedRule implements Rule {
             if(list.size() > 0) {
                 items = new ArrayList<String> ();
                 for(ODocument doc: list) {
-                    items.add(doc.field("DISTINCT"));
+                    items.add((String)doc.field("DISTINCT"));
                 }
             }
         } catch (Exception e) {
@@ -216,7 +213,7 @@ public abstract class FeedRule implements Rule {
             if(list.size() > 0) {
                 items = new ArrayList<String> ();
                 for(ODocument doc: list) {
-                    items.add(doc.field("DISTINCT"));
+                    items.add((String)doc.field("DISTINCT"));
                 }
             }
         } catch (Exception e) {

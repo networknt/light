@@ -16,7 +16,6 @@
 
 package com.networknt.light.server.handler.loader;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

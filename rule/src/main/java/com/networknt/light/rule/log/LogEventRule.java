@@ -3,7 +3,6 @@ package com.networknt.light.rule.log;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 
-import java.util.List;
 import java.util.Map;
 
 /**

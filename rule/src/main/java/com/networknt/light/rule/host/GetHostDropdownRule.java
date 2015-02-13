@@ -1,9 +1,7 @@
 package com.networknt.light.rule.host;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.role.AbstractRoleRule;
 import com.networknt.light.util.ServiceLocator;
-import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import java.util.*;
 

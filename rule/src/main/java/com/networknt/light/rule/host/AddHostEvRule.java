@@ -1,7 +1,6 @@
 package com.networknt.light.rule.host;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.role.AbstractRoleRule;
 
 import java.util.Map;
 

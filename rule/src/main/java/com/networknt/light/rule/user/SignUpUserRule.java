@@ -18,10 +18,7 @@ package com.networknt.light.rule.user;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.HashUtil;
-import com.networknt.light.util.ServiceLocator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**

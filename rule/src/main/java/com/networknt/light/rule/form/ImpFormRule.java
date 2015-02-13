@@ -18,12 +18,7 @@ package com.networknt.light.rule.form;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.util.ServiceLocator;
-import com.orientechnologies.orient.core.metadata.schema.OType;
 
-import javax.xml.ws.Service;
-import java.rmi.server.ServerCloneException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

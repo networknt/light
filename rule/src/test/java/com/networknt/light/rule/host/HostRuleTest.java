@@ -2,7 +2,6 @@ package com.networknt.light.rule.host;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.light.rule.role.*;
 import com.networknt.light.rule.user.SignInUserEvRule;
 import com.networknt.light.rule.user.SignInUserRule;
 import com.networknt.light.util.JwtUtil;
@@ -11,7 +10,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.oauth.jsontoken.JsonToken;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Steve Hu on 2015-01-19.

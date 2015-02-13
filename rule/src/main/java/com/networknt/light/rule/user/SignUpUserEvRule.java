@@ -16,12 +16,8 @@
 
 package com.networknt.light.rule.user;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.util.ServiceLocator;
-import com.orientechnologies.orient.core.record.impl.ODocument;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

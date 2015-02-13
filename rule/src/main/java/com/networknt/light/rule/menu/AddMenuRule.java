@@ -17,7 +17,6 @@
 package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.blog.AbstractBlogRule;
 import com.networknt.light.server.DbService;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
@@ -74,7 +73,7 @@ public class AddMenuRule extends AbstractMenuRule implements Rule {
                                         inputMap.put("responseCode", 404);
                                         break;
                                     } else {
-                                        menuItemIds.add(menuItem.field("id"));
+                                        menuItemIds.add((String)menuItem.field("id"));
                                     }
                                 }
                             }

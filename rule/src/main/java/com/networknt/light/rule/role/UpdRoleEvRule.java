@@ -17,7 +17,6 @@
 package com.networknt.light.rule.role;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.menu.AbstractMenuRule;
 
 import java.util.Map;
 
