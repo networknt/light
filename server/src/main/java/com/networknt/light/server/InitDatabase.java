@@ -1771,7 +1771,6 @@ public class InitDatabase {
                     "        ODocument access = null;\n" +
                     "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
                     "        String createUserId = (String)data.get(\"createUserId\");\n" +
-                    "        Date createDate = (Date)data.get(\"createDate\");\n" +
                     "        String host = (String)data.get(\"host\");\n" +
                     "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
                     "        OSchema schema = db.getMetadata().getSchema();\n" +
@@ -1788,7 +1787,7 @@ public class InitDatabase {
                     "            rule.field(\"ruleClass\", ruleClass);\n" +
                     "            if(host != null) rule.field(\"host\", host);\n" +
                     "            rule.field(\"sourceCode\", data.get(\"sourceCode\"));\n" +
-                    "            rule.field(\"createDate\", createDate);\n" +
+                    "            rule.field(\"createDate\", data.get(\"createDate\"));\n" +
                     "            rule.field(\"createUserId\", createUserId);\n" +
                     "            rule.save();\n" +
                     "            // For all the newly added rules, the default security access is role based and only\n" +
@@ -1804,7 +1803,7 @@ public class InitDatabase {
                     "                List roles = new ArrayList();\n" +
                     "                roles.add(\"owner\");  // give owner access for all the rules by default.\n" +
                     "                access.field(\"roles\", roles);\n" +
-                    "                access.field(\"createDate\", createDate);\n" +
+                    "                access.field(\"createDate\", data.get(\"createDate\"));\n" +
                     "                access.field(\"createUserId\", createUserId);\n" +
                     "                access.save();\n" +
                     "            }\n" +
@@ -1894,6 +1893,33 @@ public class InitDatabase {
                     "            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);\n" +
                     "            List<ODocument> rules = db.command(query).execute();\n" +
                     "            json = OJSONWriter.listToJSON(rules, null);\n" +
+                    "        } catch (Exception e) {\n" +
+                    "            logger.error(\"Exception:\", e);\n" +
+                    "            throw e;\n" +
+                    "        } finally {\n" +
+                    "            db.close();\n" +
+                    "        }\n" +
+                    "        return json;\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    protected String getRuleMap(String host) throws Exception {\n" +
+                    "        String sql = \"SELECT FROM Rule\";\n" +
+                    "        if(host != null) {\n" +
+                    "            sql = sql + \" WHERE host = '\" + host;\n" +
+                    "        }\n" +
+                    "        String json = null;\n" +
+                    "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
+                    "        try {\n" +
+                    "            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);\n" +
+                    "            List<ODocument> rules = db.command(query).execute();\n" +
+                    "            if(rules != null && rules.size() > 0) {\n" +
+                    "                // covert list to map\n" +
+                    "                Map<String, String> ruleMap = new HashMap<String, String> ();\n" +
+                    "                for(ODocument rule: rules) {\n" +
+                    "                    ruleMap.put((String)rule.field(\"ruleClass\"), (String)rule.field(\"sourceCode\"));\n" +
+                    "                }\n" +
+                    "                json = mapper.writeValueAsString(ruleMap);\n" +
+                    "            }\n" +
                     "        } catch (Exception e) {\n" +
                     "            logger.error(\"Exception:\", e);\n" +
                     "            throw e;\n" +

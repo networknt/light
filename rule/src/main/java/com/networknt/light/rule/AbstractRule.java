@@ -142,7 +142,7 @@ public abstract class AbstractRule implements Rule {
             access = (Map<String, Object>)cache.get(ruleClass);
         }
         if(access == null) {
-            logger.error("access is null, cache =" + cache);
+            //logger.error("access is null, cache =" + cache);
             ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
             try {
                 OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Access.ruleClass");
