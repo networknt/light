@@ -36,6 +36,7 @@ public class ServiceLocator {
     static final Logger logger = LoggerFactory.getLogger(ServiceLocator.class);
 
     ObjectMapper mapper = new ObjectMapper();
+
     Map<String, String> serverMap = null;
     Map<String, Object> hostMap = null;
 

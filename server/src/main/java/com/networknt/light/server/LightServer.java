@@ -36,6 +36,7 @@ import io.undertow.util.Headers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.ws.Service;
 import java.io.File;
 import java.io.InputStream;
 import java.util.*;
@@ -157,7 +158,7 @@ public class LightServer {
             }
             scanner.close();
 
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
             if(sb.length() > 0) {
                 // if you want to generate the initdb.json from your dev env, then you should make this
                 // file as empty in server resources folder and load all objects again.

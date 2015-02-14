@@ -129,7 +129,6 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
         ODocument access = null;
         String ruleClass = (String)data.get("ruleClass");
         String createUserId = (String)data.get("createUserId");
-        Date createDate = (Date)data.get("createDate");
         String host = (String)data.get("host");
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         OSchema schema = db.getMetadata().getSchema();
@@ -146,7 +145,7 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             rule.field("ruleClass", ruleClass);
             if(host != null) rule.field("host", host);
             rule.field("sourceCode", data.get("sourceCode"));
-            rule.field("createDate", createDate);
+            rule.field("createDate", data.get("createDate"));
             rule.field("createUserId", createUserId);
             rule.save();
             // For all the newly added rules, the default security access is role based and only
@@ -162,7 +161,7 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                 List roles = new ArrayList();
                 roles.add("owner");  // give owner access for all the rules by default.
                 access.field("roles", roles);
-                access.field("createDate", createDate);
+                access.field("createDate", data.get("createDate"));
                 access.field("createUserId", createUserId);
                 access.save();
             }
@@ -252,6 +251,33 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
             List<ODocument> rules = db.command(query).execute();
             json = OJSONWriter.listToJSON(rules, null);
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            db.close();
+        }
+        return json;
+    }
+
+    protected String getRuleMap(String host) throws Exception {
+        String sql = "SELECT FROM Rule";
+        if(host != null) {
+            sql = sql + " WHERE host = '" + host;
+        }
+        String json = null;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
+            List<ODocument> rules = db.command(query).execute();
+            if(rules != null && rules.size() > 0) {
+                // covert list to map
+                Map<String, String> ruleMap = new HashMap<String, String> ();
+                for(ODocument rule: rules) {
+                    ruleMap.put((String)rule.field("ruleClass"), (String)rule.field("sourceCode"));
+                }
+                json = mapper.writeValueAsString(ruleMap);
+            }
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
