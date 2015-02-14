@@ -151,16 +151,21 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             // For all the newly added rules, the default security access is role based and only
             // owner can access. For some of the rules, like getForm, getMenu, they are granted
             // to anyone in the db script. Don't overwrite if access exists for these rules.
+            // Also, if ruleClass contains "Abstract" then its access level should be N.
 
             // check if access exists for the ruleClass and add access if not.
             Map<String, Object> accessMap = getAccessByRuleClass(ruleClass);
             if(accessMap == null) {
                 access = new ODocument(schema.getClass("Access"));
                 access.field("ruleClass", ruleClass);
-                access.field("accessLevel", "R"); // role level access
-                List roles = new ArrayList();
-                roles.add("owner");  // give owner access for all the rules by default.
-                access.field("roles", roles);
+                if(ruleClass.contains("Abstract")) {
+                    access.field("accessLevel", "N");
+                } else {
+                    access.field("accessLevel", "R"); // role level access
+                    List roles = new ArrayList();
+                    roles.add("owner");  // give owner access for the rule by default.
+                    access.field("roles", roles);
+                }
                 access.field("createDate", data.get("createDate"));
                 access.field("createUserId", createUserId);
                 access.save();

@@ -1793,16 +1793,21 @@ public class InitDatabase {
                     "            // For all the newly added rules, the default security access is role based and only\n" +
                     "            // owner can access. For some of the rules, like getForm, getMenu, they are granted\n" +
                     "            // to anyone in the db script. Don't overwrite if access exists for these rules.\n" +
+                    "            // Also, if ruleClass contains \"Abstract\" then its access level should be N.\n" +
                     "\n" +
                     "            // check if access exists for the ruleClass and add access if not.\n" +
                     "            Map<String, Object> accessMap = getAccessByRuleClass(ruleClass);\n" +
                     "            if(accessMap == null) {\n" +
                     "                access = new ODocument(schema.getClass(\"Access\"));\n" +
                     "                access.field(\"ruleClass\", ruleClass);\n" +
-                    "                access.field(\"accessLevel\", \"R\"); // role level access\n" +
-                    "                List roles = new ArrayList();\n" +
-                    "                roles.add(\"owner\");  // give owner access for all the rules by default.\n" +
-                    "                access.field(\"roles\", roles);\n" +
+                    "                if(ruleClass.contains(\"Abstract\")) {\n" +
+                    "                    access.field(\"accessLevel\", \"N\");\n" +
+                    "                } else {\n" +
+                    "                    access.field(\"accessLevel\", \"R\"); // role level access\n" +
+                    "                    List roles = new ArrayList();\n" +
+                    "                    roles.add(\"owner\");  // give owner access for the rule by default.\n" +
+                    "                    access.field(\"roles\", roles);\n" +
+                    "                }\n" +
                     "                access.field(\"createDate\", data.get(\"createDate\"));\n" +
                     "                access.field(\"createUserId\", createUserId);\n" +
                     "                access.save();\n" +

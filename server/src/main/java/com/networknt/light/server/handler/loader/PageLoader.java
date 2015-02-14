@@ -38,7 +38,7 @@ import java.util.Scanner;
  */
 public class PageLoader extends Loader {
     static String pageFolder = "page";
-    static Map<String, String> pageMap = null;
+    static Map<String, String> pageMap = new HashMap<String, String>();
 
     public static void main(String[] args) {
         try {
@@ -106,9 +106,11 @@ public class PageLoader extends Loader {
             }
             EntityUtils.consume(entity);
             System.out.println("Got page map from server");
-            pageMap = ServiceLocator.getInstance().getMapper().readValue(json,
-                    new TypeReference<HashMap<String, String>>() {
-                    });
+            if(json != null && json.trim().length() > 0) {
+                pageMap = ServiceLocator.getInstance().getMapper().readValue(json,
+                        new TypeReference<HashMap<String, String>>() {
+                        });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -131,8 +133,8 @@ public class PageLoader extends Loader {
             String id = file.getName();
             id = id.substring(0, id.lastIndexOf('.'));
             if(content != null && !content.equals(pageMap.get(id))) {
-                System.out.println(content);
-                System.out.println(pageMap.get(id));
+                //System.out.println(content);
+                //System.out.println(pageMap.get(id));
                 Map<String, Object> inputMap = new HashMap<String, Object>();
                 inputMap.put("category", "page");
                 inputMap.put("name", "impPage");
