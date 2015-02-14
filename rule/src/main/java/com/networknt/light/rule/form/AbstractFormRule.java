@@ -302,4 +302,37 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         }
         return json;
     }
+
+    protected String getFormMap(String host) throws Exception {
+        String sql = "SELECT FROM Form";
+        if(host != null) {
+            sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
+        }
+        String json = null;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
+            List<ODocument> forms = db.command(query).execute();
+            if(forms != null && forms.size() > 0) {
+                // covert list to map
+                Map<String, Map<String, Object>> formMap = new HashMap<String, Map<String, Object>>();
+                for(ODocument form: forms) {
+                    Map<String, Object> contentMap = new HashMap<String, Object>();
+                    contentMap.put("action", form.field("action"));
+                    contentMap.put("schema", form.field("schema"));
+                    contentMap.put("form", form.field("form"));
+                    contentMap.put("modelData", form.field("modelData"));
+                    formMap.put((String)form.field("id"), contentMap);
+                }
+                json = mapper.writeValueAsString(formMap);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            db.close();
+        }
+        return json;
+    }
+
 }
