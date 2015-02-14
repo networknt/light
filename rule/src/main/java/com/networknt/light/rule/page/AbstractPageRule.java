@@ -26,9 +26,11 @@ import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -49,7 +51,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
         if(cache == null) {
             cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(100)
+                    .maximumWeightedCapacity(1000)
                     .build();
             pageMap.put("cache", cache);
         } else {
@@ -100,7 +102,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
         if(cache == null) {
             cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(100)
+                    .maximumWeightedCapacity(1000)
                     .build();
             pageMap.put("cache", cache);
         }
@@ -159,7 +161,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
         if(cache == null) {
             cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(100)
+                    .maximumWeightedCapacity(1000)
                     .build();
             pageMap.put("cache", cache);
         }
@@ -199,7 +201,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
         if(cache == null) {
             cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(100)
+                    .maximumWeightedCapacity(1000)
                     .build();
             pageMap.put("cache", cache);
         }
@@ -207,8 +209,8 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected List<ODocument> getAllPage(String host) {
-        List<ODocument> pages = null;
+    protected String getAllPage(String host) {
+        String json = null;
         String sql = "SELECT FROM Page";
         if(host != null) {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
@@ -216,26 +218,40 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            pages = db.command(query).execute();
+            List<ODocument> pages = db.command(query).execute();
+            json = OJSONWriter.listToJSON(pages, null);
         } catch (Exception e) {
             logger.error("Exception:", e);
         } finally {
             db.close();
         }
-        if(pages != null && pages.size() > 0) {
-            Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
-            if(cache == null) {
-                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                        .maximumWeightedCapacity(100)
-                        .build();
-                pageMap.put("cache", cache);
-            }
-            for(ODocument page: pages) {
-                cache.put(page.field("id"), page.toJSON());
-            }
+        return json;
+    }
+
+    protected String getPageMap(String host) {
+        String json = null;
+        String sql = "SELECT FROM Page";
+        if(host != null) {
+            sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
         }
-        return pages;
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
+            List<ODocument> pages = db.command(query).execute();
+            if(pages != null && pages.size() > 0) {
+                // covert list to map
+                Map<String, String> pageMap = new HashMap<String, String>();
+                for(ODocument page: pages) {
+                    pageMap.put((String)page.field("id"), (String)page.field("content"));
+                }
+                json = mapper.writeValueAsString(pageMap);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            db.close();
+        }
+        return json;
     }
 
 }

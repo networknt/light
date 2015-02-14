@@ -36,19 +36,9 @@ public class GetAllPageRule extends AbstractPageRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String)user.get("host");
-
-        Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(100)
-                    .build();
-            formMap.put("cache", cache);
-        }
-
-        List<ODocument> pages = getAllPage(host);
+        String pages = getAllPage(host);
         if(pages != null) {
-            inputMap.put("result", OJSONWriter.listToJSON(pages, null));
+            inputMap.put("result", pages);
             return true;
         } else {
             inputMap.put("result", "No page can be found.");
