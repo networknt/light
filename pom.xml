@@ -61,7 +61,7 @@
         <jna.version>4.0.0</jna.version>
         <snappy.version>1.1.0.1</snappy.version>
         <jsontoken.version>1.2.1</jsontoken.version>
-        <rule-engine.version>1.0.0.0.0</rule-engine.version>
+        <rule-engine.version>1.0.0.0.1</rule-engine.version>
         <mail.version>1.5.0-b01</mail.version>
         <json-schema-validator.version>2.2.5</json-schema-validator.version>
         <joda.time.version>2.2</joda.time.version>
@@ -159,10 +159,6 @@
                 <version>${rule-engine.version}</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <dbType>orientdb</dbType>
-                    <dbName>lightdb</dbName>
-                    <dbUser>admin</dbUser>
-                    <dbPass>admin</dbPass>
                     <serverUrl>http://example:8080</serverUrl>
                     <serverUser>stevehu</serverUser>
                     <serverPass>123456</serverPass>
