@@ -2839,6 +2839,61 @@ public class InitDatabase {
             replayEventRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             replayEventRule.save();
 
+            ODocument getRuleMapRule = new ODocument(schema.getClass("Rule"));
+            getRuleMapRule.field("ruleClass", "com.networknt.light.rule.rule.GetRuleMapRule");
+            getRuleMapRule.field("sourceCode", "/*\n" +
+                    " * Copyright 2015 Network New Technologies Inc.\n" +
+                    " *\n" +
+                    " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
+                    " * you may not use this file except in compliance with the License.\n" +
+                    " * You may obtain a copy of the License at\n" +
+                    " *\n" +
+                    " *     http://www.apache.org/licenses/LICENSE-2.0\n" +
+                    " *\n" +
+                    " * Unless required by applicable law or agreed to in writing, software\n" +
+                    " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
+                    " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
+                    " * See the License for the specific language governing permissions and\n" +
+                    " * limitations under the License.\n" +
+                    " */\n" +
+                    "\n" +
+                    "package com.networknt.light.rule.rule;\n" +
+                    "\n" +
+                    "import com.networknt.light.rule.Rule;\n" +
+                    "\n" +
+                    "import java.util.List;\n" +
+                    "import java.util.Map;\n" +
+                    "\n" +
+                    "/**\n" +
+                    " * Created by steve on 14/02/15.\n" +
+                    " *\n" +
+                    " * This rule is used by the rule:load plugin in maven-plugin project to check if source code\n" +
+                    " * has been changed. It returns a map from ruleClass to sourceCode for easy comparison.\n" +
+                    " *\n" +
+                    " * accessLevel is owner by default\n" +
+                    " *\n" +
+                    " */\n" +
+                    "public class GetRuleMapRule extends AbstractRuleRule implements Rule {\n" +
+                    "    public boolean execute (Object ...objects) throws Exception {\n" +
+                    "        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n" +
+                    "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
+                    "        Map<String, Object> user = (Map<String, Object>) payload.get(\"user\");\n" +
+                    "        String host = (String) user.get(\"host\");\n" +
+                    "        String hostRuleMap = getRuleMap(host);\n" +
+                    "        if(hostRuleMap != null) {\n" +
+                    "            inputMap.put(\"result\", hostRuleMap);\n" +
+                    "            return true;\n" +
+                    "        } else {\n" +
+                    "            inputMap.put(\"result\", \"No rule can be found.\");\n" +
+                    "            inputMap.put(\"responseCode\", 404);\n" +
+                    "            return false;\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}\n");
+            getRuleMapRule.field("createDate", new java.util.Date());
+            getRuleMapRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            getRuleMapRule.save();
+
             ODocument impRuleRule = new ODocument(schema.getClass("Rule"));
             impRuleRule.field("ruleClass", "com.networknt.light.rule.rule.ImpRuleRule");
             impRuleRule.field("sourceCode", "/*\n" +
