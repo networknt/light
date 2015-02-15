@@ -27,6 +27,10 @@ public class Util {
     public static String getCommandRuleId(Map<String, Object> jsonMap) throws Exception {
         Class c = Class.forName("com.networknt.light.rule.Rule");
         String commandName = (String) jsonMap.get("name");
+        // Ev rules should only be called internally not from browser.
+        if(commandName.endsWith("Ev")) {
+            throw new Exception("Invalid command name: " + commandName);
+        }
         String ruleId = commandName.substring(0, 1).toUpperCase() + commandName.substring(1) + "Rule";
         ruleId = c.getPackage().getName() + "." +
                 (jsonMap.get("host") == null? "" : jsonMap.get("host") + ".") +

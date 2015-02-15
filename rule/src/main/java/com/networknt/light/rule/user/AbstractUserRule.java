@@ -642,6 +642,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
 
     String generateToken(ODocument user, String clientId) throws Exception {
         Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();
+        jwtMap.put("@rid", user.field("@rid").toString());
         jwtMap.put("userId", user.field("userId"));
         jwtMap.put("clientId", clientId);
         jwtMap.put("roles", user.field("roles"));

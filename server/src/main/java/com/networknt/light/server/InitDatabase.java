@@ -1802,6 +1802,8 @@ public class InitDatabase {
                     "                access.field(\"ruleClass\", ruleClass);\n" +
                     "                if(ruleClass.contains(\"Abstract\")) {\n" +
                     "                    access.field(\"accessLevel\", \"N\");\n" +
+                    "                } else if(ruleClass.endsWith(\"EvRule\")) {\n" +
+                    "                    access.field(\"accessLevel\", \"A\"); // event rule can be only called internally.\n" +
                     "                } else {\n" +
                     "                    access.field(\"accessLevel\", \"R\"); // role level access\n" +
                     "                    List roles = new ArrayList();\n" +

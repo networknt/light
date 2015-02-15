@@ -160,6 +160,8 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                 access.field("ruleClass", ruleClass);
                 if(ruleClass.contains("Abstract")) {
                     access.field("accessLevel", "N");
+                } else if(ruleClass.endsWith("EvRule")) {
+                    access.field("accessLevel", "A"); // event rule can be only called internally.
                 } else {
                     access.field("accessLevel", "R"); // role level access
                     List roles = new ArrayList();
