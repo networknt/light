@@ -44,6 +44,11 @@ angular.module('lightApp')
             };
         }
     ])
+    .filter('timeago', function() {
+        return function(date) {
+            return moment(date).fromNow();
+        };
+    })
     .filter('trust', ['$sce', function ($sce) {
         return function (val) {
             return $sce.trustAsHtml(val);
