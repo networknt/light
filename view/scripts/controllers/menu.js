@@ -1,7 +1,6 @@
 'use strict';
 
 angular.module('lightApp').controller('menuCtrl', ['$scope', '$http', 'authService', function($scope, $http, authService) {
-    console.log("Now we are in menuCtrl");
     $scope.menuSettings = {isCollapsed : true};
     $scope.tree = [];
 
@@ -10,14 +9,13 @@ angular.module('lightApp').controller('menuCtrl', ['$scope', '$http', 'authServi
         name : 'getMenu',
         readOnly: true,
         data : {
-            host : 'www.networknt.com'
+            host : 'example'
         }
     };
 
     $http.post('api/rs', getMenuPost)
         .success(function(result, status, headers, config) {
             $scope.tree = result.menuItems;
-            console.log("get menus", $scope.tree);
         });
 
     $scope.toggleCollapsed = function () {

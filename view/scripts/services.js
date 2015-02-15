@@ -1,6 +1,9 @@
 'use strict';
 
 angular.module('lightApp')
+    .constant('CLIENT', {
+        'clientId': 'example@Browser'
+    })
     .factory('base64', function() {
         return {
             // This is used to parse the profile.
@@ -59,8 +62,8 @@ angular.module('lightApp')
         var _responseError = function (rejection) {
             console.log("responseError: rejection", rejection);
             var deferred = $q.defer();
-            var authService = $injector.get('authService');
             if (rejection.status === 401) {
+            var authService = $injector.get('authService');
                 if(rejection.data === 'token_expired') {
                     console.log("token expired, renewing...")
                     httpBuffer.append(rejection.config, deferred);
@@ -89,22 +92,22 @@ angular.module('lightApp')
                     });
                 } else {
                     // 401 but not token expired the user is not logged in yet.
+                    // or invalid token due to signature verification failed.
                     toaster.pop('error', rejection.status, rejection.data, 5000);
                     httpBuffer.rejectAll();
                     httpBuffer.saveAttemptUrl();
+                    authService.logOut();
                     $location.path('/signin');
                     deferred.reject(rejection);
                 }
             } else if (rejection.status === 403) {
                 // 403 forbidden. The user is logged in but doesn't have permission for the request.
                 // logout and redirect to login page.
-                // it is not a good idea to redirect to login page
                 toaster.pop('error', rejection.status, rejection.data, 5000);
                 httpBuffer.rejectAll();
-                ///httpBuffer.saveAttemptUrl();
-                //authService.logOut();
-                //$location.path('/signin');
-                $location.path('/');
+                httpBuffer.saveAttemptUrl();
+                authService.logOut();
+                $location.path('/signin');
                 deferred.reject(rejection);
             } else if (rejection.status === 404) {
                 // 404 not found. don't do anything here just let it go. as the controller might try
@@ -124,7 +127,7 @@ angular.module('lightApp')
 
         return authInterceptorServiceFactory;
     }])
-    .factory('authService', ['$q', '$injector', 'localStorageService', 'base64', function ($q, $injector, localStorageService, base64) {
+    .factory('authService', ['$q', '$injector', 'localStorageService', 'base64', 'CLIENT', function ($q, $injector, localStorageService, base64, CLIENT) {
 
         var $http;
         var authServiceFactory = {};
@@ -170,7 +173,7 @@ angular.module('lightApp')
             var authorizationData = localStorageService.get('authorizationData');
             console.log("authService:_refreshToken:authorizationData before refresh", authorizationData);
             if (authorizationData && authorizationData.useRefreshTokens) {
-                refreshTokenPost.data = {refreshToken : authorizationData.refreshToken, userId: authorizationData.currentUser.userId};
+                refreshTokenPost.data = {refreshToken : authorizationData.refreshToken, userId: authorizationData.currentUser.userId, clientId: CLIENT.clientId};
                 // The authorizationData must be removed before calling refreshToken api as the old expired token will be sent again
                 // and cause infinite loop. Once it is removed, not access token will be sent to the server along with the request.
                 // TODO but we have another issue that some other requests might be sent during this time slot. It is better to check
