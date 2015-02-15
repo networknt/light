@@ -26,6 +26,10 @@ import java.util.Map;
  * Created by steve on 8/28/2014.
  * The password field will be remove before returning to the client.
  *
+ * Get a single user profile
+ *
+ * AccessLevel R [user]
+ *
  */
 public class GetUserRule extends AbstractUserRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

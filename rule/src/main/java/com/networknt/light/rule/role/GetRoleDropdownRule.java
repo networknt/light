@@ -22,6 +22,8 @@ import java.util.Map;
 
 /**
  * Created by steve on 21/11/14.
+ *
+ * AccessLevel R [user]
  */
 public class GetRoleDropdownRule extends AbstractRoleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

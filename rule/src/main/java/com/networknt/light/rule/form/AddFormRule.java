@@ -21,6 +21,11 @@ import com.networknt.light.rule.Rule;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Add a new form on the server. only owner can add form without host naming space.
+ *
+ * AccessLevel R [owner, admin, formAdmin]
+ */
 public class AddFormRule extends AbstractFormRule implements Rule {
 
     public boolean execute (Object ...objects) throws Exception {
@@ -29,35 +34,18 @@ public class AddFormRule extends AbstractFormRule implements Rule {
         String id = (String)data.get("id");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        if(payload == null) {
-            error = "Login is required";
-            inputMap.put("responseCode", 401);
-        } else {
-            Map<String, Object> user = (Map<String, Object>)payload.get("user");
-            List roles = (List)user.get("roles");
-            if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("formAdmin")) {
-                error = "Role owner or admin or formAdmin is required to add form";
-                inputMap.put("responseCode", 401);
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+
+        String host = (String)user.get("host");
+        if(host != null) {
+            if(!host.equals(data.get("host"))) {
+                error = "User can only add form from host: " + host;
+                inputMap.put("responseCode", 403);
             } else {
-                String host = (String)user.get("host");
-                if(host != null) {
-                    if(!host.equals(data.get("host"))) {
-                        error = "User can only add form from host: " + host;
-                        inputMap.put("responseCode", 401);
-                    } else {
-                        String json = getFormById(inputMap);
-                        if(json != null) {
-                            error = "Form with the same id exists";
-                            inputMap.put("responseCode", 400);
-                        } else {
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
-                            eventData.putAll((Map<String, Object>)inputMap.get("data"));
-                            eventData.put("createDate", new java.util.Date());
-                            eventData.put("createUserId", user.get("userId"));
-                        }
-                    }
+                if(!id.contains(host)) {
+                    // you are not allowed to add form as it is not owned by the host.
+                    error = "form id doesn't contain host: " + host;
+                    inputMap.put("responseCode", 403);
                 } else {
                     String json = getFormById(inputMap);
                     if(json != null) {
@@ -70,10 +58,23 @@ public class AddFormRule extends AbstractFormRule implements Rule {
                         eventData.putAll((Map<String, Object>)inputMap.get("data"));
                         eventData.put("createDate", new java.util.Date());
                         eventData.put("createUserId", user.get("userId"));
-                        // remove host from data as this is owner adding role
-                        eventData.remove("host");
                     }
                 }
+            }
+        } else {
+            String json = getFormById(inputMap);
+            if(json != null) {
+                error = "Form with the same id exists";
+                inputMap.put("responseCode", 400);
+            } else {
+                Map eventMap = getEventMap(inputMap);
+                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                inputMap.put("eventMap", eventMap);
+                eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                eventData.put("createDate", new java.util.Date());
+                eventData.put("createUserId", user.get("userId"));
+                // remove host from data as this is owner adding role
+                eventData.remove("host");
             }
         }
         if(error != null) {

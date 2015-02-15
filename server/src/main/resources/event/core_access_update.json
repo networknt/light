@@ -1,200 +1,942 @@
 [
   {
     "@type": "d",
-    "@rid": "#15:220",
+    "@rid": "#15:28",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T15:47:48.389",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.AbstractRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:37:51.243"
+      "roles": [
+        "admin",
+        "owner",
+        "ruleAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.access.DelAccessRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:37:51.243",
+    "createDate": "2015-02-15T15:47:48.389",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:221",
+    "@rid": "#15:29",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T15:50:09.588",
+      "accessLevel": "A",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.AbstractRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:37:51.772"
+      "ruleClass": "com.networknt.light.rule.access.GetAccessRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:37:51.772",
+    "createDate": "2015-02-15T15:50:09.588",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:222",
+    "@rid": "#15:30",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T15:51:40.484",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.access.AbstractAccessRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:38:12.744"
+      "roles": [
+        "admin",
+        "owner",
+        "ruleAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.access.GetAllAccessRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:38:12.744",
+    "createDate": "2015-02-15T15:51:40.484",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:223",
+    "@rid": "#15:31",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T15:52:55.221",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.db.AbstractDbRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:38:26.842"
+      "roles": [
+        "admin",
+        "owner",
+        "ruleAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.access.UpdAccessRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:38:26.842",
+    "createDate": "2015-02-15T15:52:55.221",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:224",
+    "@rid": "#15:3",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T18:51:34.810",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.form.AbstractFormRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:38:37.991"
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.db.DownloadEventRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:38:37.991",
+    "createDate": "2015-02-15T18:51:34.810",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:225",
+    "@rid": "#15:15",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T20:51:15.661",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.host.AbstractHostRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:38:50.906"
+      "roles": [
+        "admin",
+        "owner",
+        "formAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.form.AddFormRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:38:50.906",
+    "createDate": "2015-02-15T20:51:15.661",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:226",
+    "@rid": "#15:16",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T20:51:34.547",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.menu.AbstractMenuRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:39:11.453"
+      "roles": [
+        "admin",
+        "owner",
+        "formAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.form.DelFormRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:39:11.453",
+    "createDate": "2015-02-15T20:51:34.546",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:227",
+    "@rid": "#15:17",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T20:51:50.520",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.page.AbstractPageRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:39:23.183"
+      "roles": [
+        "admin",
+        "owner",
+        "formAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.form.ImpFormRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:39:23.183",
+    "createDate": "2015-02-15T20:51:50.520",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:228",
+    "@rid": "#15:18",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T20:52:16.011",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.role.AbstractRoleRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:39:34.340"
+      "roles": [
+        "admin",
+        "owner",
+        "formAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.form.GetAllFormRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:39:34.340",
+    "createDate": "2015-02-15T20:52:16.011",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:229",
+    "@rid": "#15:19",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T20:52:33.304",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.rule.AbstractRuleRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:39:52.016"
+      "roles": [
+        "admin",
+        "owner",
+        "formAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.form.UpdFormRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:39:52.016",
+    "createDate": "2015-02-15T20:52:33.304",
     "@fieldTypes": "createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#15:230",
+    "@rid": "#15:20",
     "@version": 1,
     "@class": "Event",
-    "ipAddress": "49.16.240.224",
+    "ipAddress": "127.0.0.1",
     "category": "access",
     "name": "updAccess",
     "data": {
+      "updateDate": "2015-02-15T21:08:20.093",
+      "accessLevel": "R",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.user.AbstractUserRule",
-      "accessLevel": "N",
-      "updateDate": "2015-02-12T13:40:12.063"
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.host.GetHostDropdownRule"
     },
     "createUserId": "stevehu",
-    "createDate": "2015-02-12T13:40:12.063",
+    "createDate": "2015-02-15T21:08:20.093",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:21",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:25:03.720",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "menuAdmin",
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.menu.AddMenuItemRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:25:03.720",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:22",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:25:18.736",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "menuAdmin",
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.menu.UpdMenuItemRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:25:18.736",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:23",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:25:36.978",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "menuAdmin",
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.menu.GetAllMenuItemRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:25:36.978",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:24",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:25:58.730",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "menuAdmin",
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.menu.GetAllMenuRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:25:58.730",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:25",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:26:18.282",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "menuAdmin",
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.menu.UpdMenuRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:26:18.282",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:26",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:26:32.661",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "menuAdmin",
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.menu.DelMenuItemRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:26:32.661",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:27",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:36:03.063",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "pageAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.page.GetAllPageRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:36:03.063",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:28",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:36:18.678",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "pageAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.page.AddPageRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:36:18.678",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:29",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:36:35.553",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "pageAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.page.UpdPageRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:36:35.553",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:30",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:36:53.971",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "pageAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.page.ImpPageRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:36:53.971",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:31",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:37:11.567",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "pageAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.page.DelPageRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:37:11.567",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:32",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:43:28.750",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.role.UpdRoleRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:43:28.750",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:33",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:43:40.278",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.role.DelRoleRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:43:40.278",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:34",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:43:51.157",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.role.GetRoleRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:43:51.157",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:35",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:44:06.709",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.role.AddRoleRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:44:06.709",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:36",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:53:25.868",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.rule.GetRuleDropdownRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:53:25.868",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:37",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T21:53:45.949",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "ruleAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.rule.GetRuleRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T21:53:45.949",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:38",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:14:26.140",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "userAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.AddRoleRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:14:26.140",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:39",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:15:02.573",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "userAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.DelRoleRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:15:02.573",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:40",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:16:32.088",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "userAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.DelUserRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:16:32.088",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:41",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:16:57.409",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.DownUserRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:16:57.409",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:42",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:17:23.916",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "userAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.GetAllUserRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:17:23.916",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:43",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:17:46.763",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.GetUserRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:17:46.763",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:44",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:18:12.279",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "userAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.LockUserRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:18:12.279",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:45",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:18:42.869",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.LogOutUserRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:18:42.869",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:46",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:19:13.636",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user",
+        "admin",
+        "owner",
+        "userAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.RevokeRefreshTokenRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:19:13.636",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:47",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:19:41.952",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "userAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.UnlockUserRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:19:41.952",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:48",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:20:30.173",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.UpdPasswordRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:20:30.173",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:49",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:20:48.576",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.UpdProfileRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:20:48.576",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:50",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:21:19.124",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "userAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.UpdRoleRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:21:19.124",
+    "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#15:51",
+    "@version": 1,
+    "@class": "Event",
+    "ipAddress": "127.0.0.1",
+    "category": "access",
+    "name": "updAccess",
+    "data": {
+      "updateDate": "2015-02-15T23:21:40.961",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.user.UpUserRule"
+    },
+    "createUserId": "stevehu",
+    "createDate": "2015-02-15T23:21:40.961",
     "@fieldTypes": "createDate=t"
   }
 ]

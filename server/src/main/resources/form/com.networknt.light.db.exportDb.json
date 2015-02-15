@@ -3,7 +3,7 @@
     "version": 1,
     "action" : [{
         "category" : "db",
-        "name" : "exportDb",
+        "name" : "expDb",
         "readOnly": true,
         "title": "Export",
         "success" : "/page/com-networknt-light-v-db-admin-home"

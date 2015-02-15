@@ -1173,6 +1173,7 @@ public class InitDatabase {
 
             List roles = new ArrayList<String>();
             roles.add("owner");
+            roles.add("user");
 
             ODocument credential1 = new ODocument(schema.getClass("Credential"));
             credential1.field("password", HashUtil.generateStorngPasswordHash(ServiceLocator.getInstance().getOwnerPass()));
@@ -3087,26 +3088,12 @@ public class InitDatabase {
             accessLogEventRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             accessLogEventRule.save();
 
-            ODocument accessLogEventEvRule = new ODocument(schema.getClass("Access"));
-            accessLogEventEvRule.field("ruleClass", "com.networknt.light.rule.log.LogEventEvRule");
-            accessLogEventEvRule.field("accessLevel", "A");
-            accessLogEventEvRule.field("createDate", new java.util.Date());
-            accessLogEventEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
-            accessLogEventEvRule.save();
-
             ODocument accessSignInUserRule = new ODocument(schema.getClass("Access"));
             accessSignInUserRule.field("ruleClass", "com.networknt.light.rule.user.SignInUserRule");
             accessSignInUserRule.field("accessLevel", "A");
             accessSignInUserRule.field("createDate", new java.util.Date());
             accessSignInUserRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             accessSignInUserRule.save();
-
-            ODocument accessSignInUserEvRule = new ODocument(schema.getClass("Access"));
-            accessSignInUserEvRule.field("ruleClass", "com.networknt.light.rule.log.SignInUserEvRule");
-            accessSignInUserEvRule.field("accessLevel", "A");
-            accessSignInUserEvRule.field("createDate", new java.util.Date());
-            accessSignInUserEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
-            accessSignInUserEvRule.save();
 
             ODocument accessGetPageRule = new ODocument(schema.getClass("Access"));
             accessGetPageRule.field("ruleClass", "com.networknt.light.rule.page.GetPageRule");
@@ -3129,12 +3116,6 @@ public class InitDatabase {
             accessSignUpUserRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             accessSignUpUserRule.save();
 
-            ODocument accessSignUpUserEvRule = new ODocument(schema.getClass("Access"));
-            accessSignUpUserEvRule.field("ruleClass", "com.networknt.light.rule.log.SignUpUserEvRule");
-            accessSignUpUserEvRule.field("accessLevel", "A");
-            accessSignUpUserEvRule.field("createDate", new java.util.Date());
-            accessSignUpUserEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
-            accessSignUpUserEvRule.save();
 
             ODocument accessGetRoleDropdownRule = new ODocument(schema.getClass("Access"));
             accessGetRoleDropdownRule.field("ruleClass", "com.networknt.light.rule.role.GetRoleDropdownRule");
@@ -3147,14 +3128,14 @@ public class InitDatabase {
             accessGetRoleDropdownRule.save();
 
             ODocument accessGetClientDropdownRule = new ODocument(schema.getClass("Access"));
-            accessSignUpUserEvRule.field("ruleClass", "com.networknt.light.rule.client.GetClientDropdownRule");
-            accessSignUpUserEvRule.field("accessLevel", "R");
+            accessGetClientDropdownRule.field("ruleClass", "com.networknt.light.rule.client.GetClientDropdownRule");
+            accessGetClientDropdownRule.field("accessLevel", "R");
             roles = new ArrayList<String>();
             roles.add("user");
-            accessGetRoleDropdownRule.field("roles", roles);
-            accessSignUpUserEvRule.field("createDate", new java.util.Date());
-            accessSignUpUserEvRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
-            accessSignUpUserEvRule.save();
+            accessGetClientDropdownRule.field("roles", roles);
+            accessGetClientDropdownRule.field("createDate", new java.util.Date());
+            accessGetClientDropdownRule.field("createUserId", ServiceLocator.getInstance().getOwnerId());
+            accessGetClientDropdownRule.save();
 
 
             // create a counter for feed injector requestId

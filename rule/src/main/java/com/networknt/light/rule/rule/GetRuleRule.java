@@ -23,6 +23,9 @@ import java.util.Map;
 
 /**
  * Created by steve on 08/10/14.
+ *
+ * AccessLevel R [owner, admin, ruleAdmin]
+ *
  */
 public class GetRuleRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

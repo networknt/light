@@ -30,6 +30,13 @@ import java.util.Map;
 
 /**
  * Created by steve on 14/12/14.
+ *
+ * Replay event file to create or recreate aggregation. This rule does update db but
+ * there is no EvRule available. This is a very special rule or endpoint.
+ *
+ * AccessLevel R [owner, admin, dbAdmin]
+ *
+ * Current AccessLevel R [owner] TODO access control for host
  */
 public class ReplayEventRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(ReplayEventRule.class);

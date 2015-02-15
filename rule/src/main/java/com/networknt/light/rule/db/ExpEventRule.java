@@ -24,8 +24,15 @@ import java.util.Map;
 
 /**
  * Created by steve on 12/12/14.
+ *
+ * Export only the event store for backup. There is no UI as of yet. TODO.
+ *
+ * Only owner can export the entire event store
+ *
+ * AccessLevel R [owner]
+ *
  */
-public class ExportEventRule extends AbstractDbRule implements Rule {
+public class ExpEventRule extends AbstractDbRule implements Rule {
 
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];

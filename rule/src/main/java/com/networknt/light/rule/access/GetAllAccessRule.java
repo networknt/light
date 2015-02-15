@@ -23,6 +23,13 @@ import java.util.Map;
 
 /**
  * Created by steve on 01/02/15.
+ *
+ * Get all the access control list policies for access admin page.
+ *
+ * Due to the importance of the API, the code level access control is in place.
+ *
+ * AccessLevel R [owner,admin, ruleAdmin]
+ *
  */
 public class GetAllAccessRule extends AbstractAccessRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

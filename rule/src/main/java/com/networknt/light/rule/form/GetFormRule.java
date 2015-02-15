@@ -33,6 +33,8 @@ import java.util.regex.Pattern;
  * You don't need to check if the form is in db or not as the form should be cached
  * in memory image already while starting the server.
  *
+ * AccessLevel A
+ *
  */
 public class GetFormRule extends AbstractFormRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(GetFormRule.class);

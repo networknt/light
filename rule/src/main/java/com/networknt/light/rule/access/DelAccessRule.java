@@ -27,6 +27,16 @@ import java.util.Map;
 
 /**
  * Created by steve on 30/01/15.
+ *
+ * This is used in access admin to delete an access control for endpoints.
+ *
+ * owner can delete access control for any endpoint and host admin and ruleAdmin
+ * can delete endpoint for their own host.
+ *
+ * Due to the importance of the API, the code level access control is in place.
+ *
+ * AccessLevel R [owner, admin, ruleAdmin]
+ *
  */
 public class DelAccessRule extends AbstractAccessRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
