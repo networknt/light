@@ -423,7 +423,14 @@ section {
     color: #888888;
     font-weight: normal;
 }
-
-.flow-drag-enter {
-    background: green;
+.short {
+    width: 200px;
+}
+.ui-select-bootstrap > .ui-select-match > .caret {
+    display: none;
+}
+.ui-state-highlight {
+    display: inline-block;
+    width: 50px;
+    min-height: 100%;
 }

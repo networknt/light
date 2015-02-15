@@ -16,7 +16,6 @@ angular.module('lightApp').controller('menuCtrl', ['$scope', '$http', 'authServi
     $http.post('api/rs', getMenuPost)
         .success(function(result, status, headers, config) {
             $scope.tree = result.menuItems;
-            //console.log("get menus", $scope.tree);
         });
 
     $scope.toggleCollapsed = function () {

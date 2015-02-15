@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$http', '$location', 'localStorageService', 'base64', 'authService', 'httpBuffer', 'toaster', function($rootScope, $scope, $http, $location, localStorageService, base64, authService, httpBuffer, toaster) {
+angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$http', '$location', 'localStorageService', 'base64', 'authService', 'httpBuffer', 'toaster', 'CLIENT', function($rootScope, $scope, $http, $location, localStorageService, base64, authService, httpBuffer, toaster, CLIENT) {
     $scope.message = '';
     $scope.error = false;
 
@@ -37,8 +37,10 @@ angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$h
         $scope.$broadcast('schemaFormValidate');
         // Then we check if the form is valid
         if (form.$valid) {
-            $scope.modelData.clientId = 'www.networknt.com@Browser';
+            // inject client id into the modelData
+            $scope.modelData.clientId = CLIENT.clientId;
             $scope.action[0].data = $scope.modelData;
+            console.log('modelData = ', $scope.modelData);
             $http.post('/api/rs', $scope.action[0])
                 .success(function (data, status, headers, config) {
                     // Successfully logged in and get access token back. If remember me is checked, then a refresh token is returned as well.
