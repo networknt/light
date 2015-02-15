@@ -6,6 +6,9 @@ import java.util.Map;
 
 /**
  * Created by steve on 31/01/15.
+ *
+ * AccessLevel R [user]
+ *
  */
 public class GetRuleDropdownRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

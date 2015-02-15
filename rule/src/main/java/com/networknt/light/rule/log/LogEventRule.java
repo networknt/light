@@ -13,6 +13,8 @@ import java.util.Map;
  * the client side. The data payload is a flexible structure and it is up to you
  * to define what and when to be logged.
  *
+ * AccessLevel A
+ *
  */
 public class LogEventRule extends AbstractRule implements Rule {
 

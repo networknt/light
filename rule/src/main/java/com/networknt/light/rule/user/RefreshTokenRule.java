@@ -24,6 +24,10 @@ import java.util.Map;
 
 /**
  * Created by steve on 19/09/14.
+ *
+ * get an access token with a refresh token
+ *
+ * AccessLevel R [user]
  */
 public class RefreshTokenRule extends AbstractUserRule implements Rule {
 

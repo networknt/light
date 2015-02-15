@@ -23,6 +23,15 @@ import java.util.Map;
 
 /**
  * Created by steve on 11/12/14.
+ *
+ * Execute database command so that it can create schemas or other objects.
+ *
+ * Due to the importance of the API, the code level access control is in place.
+ *
+ * AccessLevel R [owner, admin, dbAdmin]
+ *
+ * Current AccessLevel R [owner]
+ * as site level control is not done yet. TODO
  */
 public class ExecCommandRule extends AbstractDbRule implements Rule {
 

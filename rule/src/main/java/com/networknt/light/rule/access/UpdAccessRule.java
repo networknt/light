@@ -28,6 +28,13 @@ import java.util.Map;
 
 /**
  * Created by steve on 30/01/15.
+ *
+ * This is the endpoint that can update access control list.
+ *
+ * Due to the importance of the API, the code level access control is in place.
+ *
+ * AccessLevel R [owner,admin,ruleAdmin]
+ *
  */
 public class UpdAccessRule extends AbstractAccessRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

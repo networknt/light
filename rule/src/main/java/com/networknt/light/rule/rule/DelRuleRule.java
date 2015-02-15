@@ -26,62 +26,57 @@ import java.util.Map;
 
 /**
  * Created by steve on 07/11/14.
+ *
+ * AccessLevel R [owner, admin, ruleAdmin]
+ *
+ * current R [owner] until workflow approval is done.
+ *
  */
 public class DelRuleRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String rid = (String)data.get("@rid");
         int inputVersion = (int)data.get("@version");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;
-        if(payload == null) {
-            error = "Login is required";
-            inputMap.put("responseCode", 401);
+        String host = (String)user.get("host");
+        if(host != null && !host.equals(data.get("host"))) {
+            error = "User can only delete rule for host: " + host;
+            inputMap.put("responseCode", 403);
         } else {
-            Map<String, Object> user = (Map<String, Object>)payload.get("user");
-            List roles = (List)user.get("roles");
-            if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("ruleAdmin")) {
-                error = "Role owner or admin or ruleAdmin is required to delete rule";
-                inputMap.put("responseCode", 403);
+            ODocument rule = DbService.getODocumentByRid(rid);
+            if(rule == null) {
+                error = "Rule with @rid " + rid + " cannot be found";
+                inputMap.put("responseCode", 404);
             } else {
-                String host = (String)user.get("host");
-                if(host != null && !host.equals(data.get("host"))) {
-                    error = "User can only delete rule for host: " + host;
+                // check if the ruleClass contains the host.
+                if(host != null && !ruleClass.contains(host)) {
+                    // you are not allowed to delete access control to the rule as it is not belong to the host.
+                    error = "ruleClass is not owned by the host: " + host;
                     inputMap.put("responseCode", 403);
                 } else {
-                    ODocument rule = DbService.getODocumentByRid(rid);
-                    if(rule == null) {
-                        error = "Rule with @rid " + rid + " cannot be found";
-                        inputMap.put("responseCode", 404);
+                    int storedVersion = rule.field("@version");
+                    if(inputVersion != storedVersion) {
+                        error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
+                        inputMap.put("responseCode", 400);
                     } else {
-                        // check if the ruleClass contains the host.
-                        if(host != null && !ruleClass.contains(host)) {
-                            // you are not allowed to delete access control to the rule as it is not belong to the host.
-                            error = "ruleClass is not owned by the host: " + host;
-                            inputMap.put("responseCode", 403);
-                        } else {
-                            int storedVersion = rule.field("@version");
-                            if(inputVersion != storedVersion) {
-                                error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
-                                inputMap.put("responseCode", 400);
-                            } else {
-                                // remove the rule instance from Rule Engine Cache
-                                RuleEngine.getInstance().removeRule(ruleClass);
+                        // remove the rule instance from Rule Engine Cache
+                        RuleEngine.getInstance().removeRule(ruleClass);
 
-                                Map eventMap = getEventMap(inputMap);
-                                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                                inputMap.put("eventMap", eventMap);
-                                eventData.put("ruleClass", ruleClass);
-                                eventData.put("updateDate", new java.util.Date());
-                                eventData.put("updateUserId", user.get("userId"));
-                            }
-                        }
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
+                        eventData.put("ruleClass", ruleClass);
+                        eventData.put("updateDate", new java.util.Date());
+                        eventData.put("updateUserId", user.get("userId"));
                     }
                 }
             }
         }
+
         if(error != null) {
             inputMap.put("error", error);
             return false;

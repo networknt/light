@@ -23,27 +23,23 @@ import java.util.Map;
 
 /**
  * Created by steve on 13/11/14.
+ *
+ * AccessLevel R [owner, admin, menuAdmin]
+ *
  */
 public class GetAllMenuItemRule extends AbstractMenuRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>) payload.get("user");
-        List roles = (List)user.get("roles");
-        if(roles.contains("owner") || roles.contains("menuAdmin") || roles.contains("admin")) {
-            String host = (String) user.get("host");
-            String menuItems = getAllMenuItem(host);
-            if(menuItems != null) {
-                inputMap.put("result", menuItems);
-                return true;
-            } else {
-                inputMap.put("result", "No menuItem can be found.");
-                inputMap.put("responseCode", 404);
-                return false;
-            }
+        String host = (String) user.get("host");
+        String menuItems = getAllMenuItem(host);
+        if(menuItems != null) {
+            inputMap.put("result", menuItems);
+            return true;
         } else {
-            inputMap.put("result", "Permission denied");
-            inputMap.put("responseCode", 401);
+            inputMap.put("result", "No menuItem can be found.");
+            inputMap.put("responseCode", 404);
             return false;
         }
     }

@@ -26,6 +26,8 @@ import java.util.Map;
 /**
  * Created by steve on 14/09/14.
  *
+ * AccessLevel A
+ *
  */
 public class SignInUserRule extends AbstractUserRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

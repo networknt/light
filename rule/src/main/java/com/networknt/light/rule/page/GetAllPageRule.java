@@ -28,6 +28,9 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by husteve on 10/24/2014.
+ *
+ * AccessLevel R [owner, admin, pageAdmin]
+ *
  */
 public class GetAllPageRule extends AbstractPageRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

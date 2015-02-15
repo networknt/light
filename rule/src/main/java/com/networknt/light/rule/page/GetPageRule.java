@@ -22,6 +22,9 @@ import java.util.Map;
 
 /**
  * Created by husteve on 10/24/2014.
+ *
+ * AccessLevel A
+ *
  */
 public class GetPageRule extends AbstractPageRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

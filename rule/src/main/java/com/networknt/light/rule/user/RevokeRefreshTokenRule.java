@@ -24,6 +24,13 @@ import java.util.Map;
 
 /**
  * Created by steve on 20/01/15.
+ *
+ * revoke refresh token if user's device is lost or forget to log out on public computer.
+ *
+ * user role can only revoke refresh token belongs to the current user.
+ *
+ * AccessLevel R [owner, admin, userAdmin, user]
+ *
  */
 public class RevokeRefreshTokenRule extends AbstractUserRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
@@ -32,37 +39,32 @@ public class RevokeRefreshTokenRule extends AbstractUserRule implements Rule {
         String password = (String)data.get("password");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        if(payload == null) {
-            error = "Login is required";
-            inputMap.put("responseCode", 401);
-        } else {
-            Map<String, Object> userMap = (Map<String, Object>)payload.get("user");
-            String rid = (String)userMap.get("@rid");
-            ODocument user = DbService.getODocumentByRid(rid);
-            if(user != null) {
-                // check password again
-                if(checkPassword(user, password)) {
-                    // check if there are refresh tokens for the user
-                    ODocument credential = (ODocument)user.field("credential");
-                    if(credential != null) {
-                        Map hostRefreshTokens = credential.field("hostRefreshTokens");
-                        if(hostRefreshTokens != null) {
-                            // generate the event to remove it.
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
-                            eventData.put("userId", user.field("userId"));
-                            eventData.put("updateDate", new java.util.Date());
-                        }
+        Map<String, Object> userMap = (Map<String, Object>)payload.get("user");
+        String rid = (String)userMap.get("@rid");
+        ODocument user = DbService.getODocumentByRid(rid);
+        if(user != null) {
+            // check password again
+            if(checkPassword(user, password)) {
+                // check if there are refresh tokens for the user
+                ODocument credential = (ODocument)user.field("credential");
+                if(credential != null) {
+                    Map hostRefreshTokens = credential.field("hostRefreshTokens");
+                    if(hostRefreshTokens != null) {
+                        // generate the event to remove it.
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
+                        eventData.put("userId", user.field("userId"));
+                        eventData.put("updateDate", new java.util.Date());
                     }
-                } else {
-                    error = "Invalid password";
-                    inputMap.put("responseCode", 401);
                 }
             } else {
-                error = "User with rid " + rid + " cannot be found.";
-                inputMap.put("responseCode", 404);
+                error = "Invalid password";
+                inputMap.put("responseCode", 401);
             }
+        } else {
+            error = "User with rid " + rid + " cannot be found.";
+            inputMap.put("responseCode", 404);
         }
         if(error != null) {
             inputMap.put("error", error);

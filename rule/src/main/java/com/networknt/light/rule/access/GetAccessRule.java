@@ -26,6 +26,11 @@ import java.util.Map;
 
 /**
  * Created by steve on 30/01/15.
+ *
+ * This is the rule to get access control list for a particular endpoint.
+ *
+ * AccessLevel A
+ *
  */
 public class GetAccessRule extends AbstractAccessRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(GetAccessRule.class);

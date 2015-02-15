@@ -25,6 +25,8 @@ import java.util.Map;
  * Created by steve on 8/29/2014.
  * need to check both email and displayName uniqueness.
  *
+ * AccessLevel A
+ *
  */
 public class SignUpUserRule extends AbstractUserRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

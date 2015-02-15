@@ -14,39 +14,45 @@
  * limitations under the License.
  */
 
-package com.networknt.light.rule.host;
+package com.networknt.light.rule.db;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.util.ServiceLocator;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Steve Hu on 2015-01-19.
+ * Created by steve on 15/02/15.
+ *
+ * Export db into a json file and download to local hard drive for backup. This
+ * is for the entire database.
+ *
+ * TODO complete it.
+ *
+ * AccessLevel R [owner]
+ *
  */
-public class DelHostRule extends AbstractHostRule implements Rule {
+public class ExpDbRule extends AbstractDbRule implements Rule {
+
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
-        String error = null;
 
-        // check if the host exists or not.
-        Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
-        if(hostMap.containsKey(data.get("id"))) {
-            // host exists
-            Map eventMap = getEventMap(inputMap);
-            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-            inputMap.put("eventMap", eventMap);
-            eventData.put("id", data.get("id"));
-            eventData.put("updateDate", new java.util.Date());
-            eventData.put("updateUserId", user.get("userId"));
-        } else {
-            error = "Id for the host does not exist";
-            inputMap.put("responseCode", 400);
-        }
+        // export into a json in memory
+        //
+        // send to client for download
+
+        // once it is done, then create an event for persistence
+
+        Map eventMap = getEventMap(inputMap);
+        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+        inputMap.put("eventMap", eventMap);
+        eventData.put("createDate", new java.util.Date());
+        eventData.put("createUserId", user.get("userId"));
+
         if(error != null) {
             inputMap.put("error", error);
             return false;

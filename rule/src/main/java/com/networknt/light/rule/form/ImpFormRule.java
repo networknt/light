@@ -25,52 +25,40 @@ import java.util.Map;
 
 /**
  * Created by steve on 9/4/2014.
+ *
+ * Overwrite if the form exists in db.
+ *
+ * AccessLevel R [user, admin, formAdmin]
+ *
  */
 public class ImpFormRule extends AbstractFormRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String error = null;
-        if(payload == null) {
-            error = "Login is required";
-            inputMap.put("responseCode", 401);
-        } else {
-            Map<String, Object> user = (Map<String, Object>)payload.get("user");
-            List roles = (List)user.get("roles");
-            if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("formAdmin")) {
-                error = "Role owner or admin or formAdmin is required to import form";
+
+        String host = (String)user.get("host");
+        Map<String, Object> dataMap = mapper.readValue((String)data.get("content"), new TypeReference<HashMap<String, Object>>() {});
+        String id = (String)dataMap.get("id");
+        if(host != null) {
+            if(!host.equals(data.get("host"))) {
+                error = "User can only import form from host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
-                String host = (String)user.get("host");
-                Map<String, Object> dataMap = mapper.readValue((String)data.get("content"), new TypeReference<HashMap<String, Object>>() {});
-                if(host != null) {
-                    if(!host.equals(data.get("host"))) {
-                        error = "User can only import form from host: " + host;
-                        inputMap.put("responseCode", 403);
-                    } else {
-                        // Won't check if form exists or not here.
-                        Map eventMap = getEventMap(inputMap);
-                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                        inputMap.put("eventMap", eventMap);
-                        eventData.put("host", host);
-
-                        eventData.put("id", dataMap.get("id"));
-                        eventData.put("action", dataMap.get("action"));
-                        eventData.put("schema", dataMap.get("schema"));
-                        eventData.put("form", dataMap.get("form"));
-                        eventData.put("modelData", dataMap.get("modelData"));
-
-                        eventData.put("createDate", new java.util.Date());
-                        eventData.put("createUserId", user.get("userId"));
-                    }
+                if(!id.contains(host)) {
+                    // you are not allowed to add form as it is not owned by the host.
+                    error = "form id doesn't contain host: " + host;
+                    inputMap.put("responseCode", 403);
                 } else {
-                    // This is owner to import form, notice no host is passed in.
+                    // Won't check if form exists or not here.
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
+                    eventData.put("host", host);
 
-                    eventData.put("id", dataMap.get("id"));
+                    eventData.put("id", id);
                     eventData.put("action", dataMap.get("action"));
                     eventData.put("schema", dataMap.get("schema"));
                     eventData.put("form", dataMap.get("form"));
@@ -80,7 +68,22 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
                     eventData.put("createUserId", user.get("userId"));
                 }
             }
+        } else {
+            // This is owner to import form, notice no host is passed in.
+            Map eventMap = getEventMap(inputMap);
+            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+            inputMap.put("eventMap", eventMap);
+
+            eventData.put("id", id);
+            eventData.put("action", dataMap.get("action"));
+            eventData.put("schema", dataMap.get("schema"));
+            eventData.put("form", dataMap.get("form"));
+            eventData.put("modelData", dataMap.get("modelData"));
+
+            eventData.put("createDate", new java.util.Date());
+            eventData.put("createUserId", user.get("userId"));
         }
+
         if(error != null) {
             inputMap.put("error", error);
             return false;

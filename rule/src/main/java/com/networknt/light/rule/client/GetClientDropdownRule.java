@@ -25,38 +25,32 @@ import java.util.*;
  * Created by steve on 31/01/15.
  * Now, we only support Browser, Android and iOS
  *
+ * AccessLevel R [user]
  */
 public class GetClientDropdownRule extends AbstractRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        if(payload == null) {
-            inputMap.put("result", "Login is required");
-            inputMap.put("responseCode", 401);
-            return false;
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        Set<String> keys = ServiceLocator.getInstance().getHostMap().keySet();
+        for(String key: keys) {
+            Map<String, Object> hostMap = (Map<String, Object>)ServiceLocator.getInstance().getHostMap().get(key);
+            List<String> supportDevices = (List)hostMap.get("supportDevices");
+            for(String device: supportDevices) {
+                String client = key + "@" + device;
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("label", client);
+                map.put("value", client);
+                list.add(map);
+            }
+        }
+        String clientDropdown = mapper.writeValueAsString(list);
+        if(clientDropdown != null) {
+            inputMap.put("result", clientDropdown);
+            return true;
         } else {
-            List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-            Set<String> keys = ServiceLocator.getInstance().getHostMap().keySet();
-            for(String key: keys) {
-                Map<String, Object> hostMap = (Map<String, Object>)ServiceLocator.getInstance().getHostMap().get(key);
-                List<String> supportDevices = (List)hostMap.get("supportDevices");
-                for(String device: supportDevices) {
-                    String client = key + "@" + device;
-                    Map<String, String> map = new HashMap<String, String>();
-                    map.put("label", client);
-                    map.put("value", client);
-                    list.add(map);
-                }
-            }
-            String clientDropdown = mapper.writeValueAsString(list);
-            if(clientDropdown != null) {
-                inputMap.put("result", clientDropdown);
-                return true;
-            } else {
-                inputMap.put("result", "No client can be found.");
-                inputMap.put("responseCode", 404);
-                return false;
-            }
+            inputMap.put("result", "No client can be found.");
+            inputMap.put("responseCode", 404);
+            return false;
         }
     }
 }

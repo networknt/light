@@ -22,6 +22,8 @@ import java.util.Map;
 
 /**
  * Created by steve on 23/09/14.
+ *
+ * AccessLevel A
  */
 public class GetMenuRule extends AbstractMenuRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

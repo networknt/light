@@ -31,60 +31,39 @@ import java.util.Map;
  *
  * Warning: it will replace any existing rules if Rule Class is the same.
  *
+ * AccessLevel R [owner, admin, ruleAdmin]
+ *
+ * current R [owner] until workflow is done.
+ *
  */
 public class ImpRuleRule extends AbstractRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;
-        if(payload == null) {
-            error = "Login is required";
-            inputMap.put("responseCode", 401);
-        } else {
-            Map<String, Object> user = (Map<String, Object>)payload.get("user");
-            List roles = (List)user.get("roles");
-            if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("ruleAdmin")) {
-                error = "Role owner or admin or ruleAdmin is required to add rule";
+        String host = (String)user.get("host");
+        if(host != null) {
+            if(!host.equals(data.get("host"))) {
+                error = "User can only import rule from host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
-                String host = (String)user.get("host");
-                if(host != null) {
-                    if(!host.equals(data.get("host"))) {
-                        error = "User can only import rule from host: " + host;
-                        inputMap.put("responseCode", 403);
-                    } else {
-                        // make sure the ruleClass contains the host.
-                        if(host != null && !ruleClass.contains(host)) {
-                            // you are not allowed to update rule as it is not owned by the host.
-                            error = "ruleClass is not owned by the host: " + host;
-                            inputMap.put("responseCode", 403);
-                        } else {
-                            // remove the rule instance from Rule Engine Cache
-                            RuleEngine.getInstance().removeRule(ruleClass);
-
-                            // Won't check if rule exists or not here.
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
-                            eventData.put("host", host);
-
-                            eventData.put("ruleClass", ruleClass);
-                            eventData.put("sourceCode", data.get("sourceCode"));
-                            eventData.put("createDate", new java.util.Date());
-                            eventData.put("createUserId", user.get("userId"));
-                        }
-                    }
+                // make sure the ruleClass contains the host.
+                if(host != null && !ruleClass.contains(host)) {
+                    // you are not allowed to update rule as it is not owned by the host.
+                    error = "ruleClass is not owned by the host: " + host;
+                    inputMap.put("responseCode", 403);
                 } else {
-                    // check if access exist for the rule exists or not. If exists, then there is
                     // remove the rule instance from Rule Engine Cache
                     RuleEngine.getInstance().removeRule(ruleClass);
 
-                    // This is owner to import rule, notice that no host is passed in.
+                    // Won't check if rule exists or not here.
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
+                    eventData.put("host", host);
 
                     eventData.put("ruleClass", ruleClass);
                     eventData.put("sourceCode", data.get("sourceCode"));
@@ -92,7 +71,22 @@ public class ImpRuleRule extends AbstractRule implements Rule {
                     eventData.put("createUserId", user.get("userId"));
                 }
             }
+        } else {
+            // check if access exist for the rule exists or not. If exists, then there is
+            // remove the rule instance from Rule Engine Cache
+            RuleEngine.getInstance().removeRule(ruleClass);
+
+            // This is owner to import rule, notice that no host is passed in.
+            Map eventMap = getEventMap(inputMap);
+            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+            inputMap.put("eventMap", eventMap);
+
+            eventData.put("ruleClass", ruleClass);
+            eventData.put("sourceCode", data.get("sourceCode"));
+            eventData.put("createDate", new java.util.Date());
+            eventData.put("createUserId", user.get("userId"));
         }
+
         if(error != null) {
             inputMap.put("error", error);
             return false;

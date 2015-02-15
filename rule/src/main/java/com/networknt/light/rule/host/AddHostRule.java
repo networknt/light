@@ -35,35 +35,24 @@ public class AddHostRule extends AbstractHostRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String error = null;
-        if(payload == null) {
-            error = "Login is required";
-            inputMap.put("responseCode", 401);
+
+        // check if the host exists or not.
+        Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
+        if(hostMap.containsKey(data.get("id"))) {
+            // host exists
+            error = "Id for the host exists";
+            inputMap.put("responseCode", 400);
         } else {
-            Map<String, Object> user = (Map<String, Object>)payload.get("user");
-            List roles = (List)user.get("roles");
-            if(!roles.contains("owner")) {
-                error = "Role owner is required to add host";
-                inputMap.put("responseCode", 403);
-            } else {
-                // check if the host exists or not.
-                Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
-                if(hostMap.containsKey(data.get("id"))) {
-                    // host exists
-                    error = "Id for the host exists";
-                    inputMap.put("responseCode", 400);
-                } else {
-                    // TODO add host into virtualhost.json here in the command or in event?
-                    Map eventMap = getEventMap(inputMap);
-                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                    inputMap.put("eventMap", eventMap);
-                    eventData.put("id", data.get("id"));
-                    eventData.put("base", data.get("base"));
-                    eventData.put("transferMinSize", data.get("transferMinSize"));
-                    eventData.put("createDate", new java.util.Date());
-                    eventData.put("createUserId", user.get("userId"));
-                }
-            }
+            Map eventMap = getEventMap(inputMap);
+            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+            inputMap.put("eventMap", eventMap);
+            eventData.put("id", data.get("id"));
+            eventData.put("base", data.get("base"));
+            eventData.put("transferMinSize", data.get("transferMinSize"));
+            eventData.put("createDate", new java.util.Date());
+            eventData.put("createUserId", user.get("userId"));
         }
         if(error != null) {
             inputMap.put("error", error);
