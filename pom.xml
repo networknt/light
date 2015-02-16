@@ -55,8 +55,8 @@
         <xnio.version>3.3.0.Beta1</xnio.version>
         <undertow.version>1.1.0.Beta6</undertow.version>
         <hazelcast.version>3.3</hazelcast.version>
-        <orientdb.verion>2.0-M1</orientdb.verion>
-        <orient.verion>2.0-M1</orient.verion>
+        <orientdb.version>2.0-M1</orientdb.version>
+        <orient.version>2.0-M1</orient.version>
         <concurrentlinkedhashmap.version>1.4</concurrentlinkedhashmap.version>
         <jna.version>4.0.0</jna.version>
         <snappy.version>1.1.0.1</snappy.version>
@@ -374,17 +374,17 @@
             <dependency>
                 <groupId>com.orientechnologies</groupId>
                 <artifactId>orientdb-nativeos</artifactId>
-                <version>${orient.verion}</version>
+                <version>${orient.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.orientechnologies</groupId>
                 <artifactId>orient-commons</artifactId>
-                <version>${orient.verion}</version>
+                <version>${orient.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.orientechnologies</groupId>
                 <artifactId>orientdb-core</artifactId>
-                <version>${orientdb.verion}</version>
+                <version>${orientdb.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.googlecode.jsontoken</groupId>
