@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.rule.access.AbstractAccessRule;
 import com.networknt.light.rule.access.GetAccessRule;
+import com.networknt.light.rule.transform.GetRequestTransformRule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.server.ServerConstants;
 import com.networknt.light.util.JwtUtil;
@@ -109,7 +110,6 @@ public class RestHandler implements HttpHandler {
         Map<String, Object> jsonMap =
                 ServiceLocator.getInstance().getMapper()
                         .readValue(json, new TypeReference<HashMap<String, Object>>() {});
-        // TODO rewrite with case now check if the request is authorized to access the command rule.
         String cmdRuleClass = Util.getCommandRuleId(jsonMap);
         GetAccessRule rule = new GetAccessRule();
         Map<String, Object> access = rule.getAccessByRuleClass(cmdRuleClass);
@@ -337,6 +337,7 @@ public class RestHandler implements HttpHandler {
             }
         }
 
+
         if(payload != null) {
             // put payload as part of the map
             jsonMap.put("payload", payload);
@@ -369,6 +370,15 @@ public class RestHandler implements HttpHandler {
         // inject ip address into the command here and saved as part of event in order to  identify
         // users that are not logged in.
         jsonMap.put("ipAddress", getIpAddress(exchange));
+
+        // TODO Apply request transform rules. For example routing here for A/B testing.
+
+        GetRequestTransformRule transformRule = new GetRequestTransformRule();
+        List<Map<String, Object>> transforms = transformRule.getRequestTransform(cmdRuleClass);
+        for(Map<String, Object> transform: transforms) {
+            jsonMap.put("transformData", transform.get("transformData"));
+            RuleEngine.getInstance().executeRule((String)transform.get("transformRule"), jsonMap);
+        }
 
         boolean readOnly = (boolean)jsonMap.get("readOnly");
         // two types of rules (Command Rule and Event Rule)
@@ -412,6 +422,9 @@ public class RestHandler implements HttpHandler {
         } else {
             //  no error
             result = (String)jsonMap.get("result");
+
+            // TODO apply response transform rule. Not supported currently yet.
+
             logger.debug("response success: {} ", result);
         }
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
