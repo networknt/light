@@ -43,6 +43,7 @@ angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$h
             console.log('modelData = ', $scope.modelData);
             $http.post('/api/rs', $scope.action[0])
                 .success(function (data, status, headers, config) {
+                    console.log('data', data);
                     // Successfully logged in and get access token back. If remember me is checked, then a refresh token is returned as well.
                     authService.authentication.isAuth = true;
                     // Parse the Json Token and get uesr object which contains userId and roles.

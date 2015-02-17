@@ -1,5 +1,6 @@
 <script type='text/javascript'>
     angular.module('lightApp').controller('com.networknt.light.RuleAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+        console.log('local rule admin page is reached');
         $scope.getRule = {
             category : 'rule',
             name : 'getRule',
@@ -65,7 +66,8 @@
 
         $scope.update = function(rule) {
             modelDataService.setModelData(rule);
-            $location.path("/form/com.networknt.light.rule.update");
+            //$location.path("/form/com.networknt.light.rule.update");
+            $location.path("/page/com-networknt-light-v-rule-home");
         };
 
         $scope.add = function() {

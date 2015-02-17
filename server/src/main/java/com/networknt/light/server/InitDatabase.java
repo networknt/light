@@ -61,6 +61,8 @@ public class InitDatabase {
         initProduct();
         initCounter();
         //initClient();
+        initRequestTransform();
+        initResponseTransform();
         initAccess();
         initProxy();
         refreshDoc();
@@ -746,7 +748,73 @@ public class InitDatabase {
     */
 
     /**
-     * Client is a piece of info in the jwt to indicate where the request coming from.
+     * For each rule class you can define a list of rules to be applied on request before
+     * the endpoint is called
+     *
+     */
+    public static void initRequestTransform() {
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSchema schema = db.getMetadata().getSchema();
+            if (schema.existsClass("RequestTransform")) {
+                for (ODocument doc : db.browseClass("RequestTransform")) {
+                    doc.delete();
+                }
+                schema.dropClass("RequestTransform");
+            }
+            OClass requestTransform = schema.createClass("RequestTransform");
+            requestTransform.createProperty("ruleClass", OType.STRING);
+            requestTransform.createProperty("sequence", OType.INTEGER); // execution sequence of each phase.
+            requestTransform.createProperty("transformRule", OType.STRING);
+            requestTransform.createProperty("transformData", OType.EMBEDDEDMAP);
+            requestTransform.createProperty("createDate", OType.DATETIME);
+            requestTransform.createProperty("createUserId", OType.STRING);
+            requestTransform.createProperty("updateDate", OType.DATETIME);
+            requestTransform.createProperty("updateUserId", OType.STRING);
+            requestTransform.createIndex("ReqRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    /**
+     * For each rule class you can define a list of rules to be applied on response after
+     * the endpoint is called
+     *
+     */
+    public static void initResponseTransform() {
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSchema schema = db.getMetadata().getSchema();
+            if (schema.existsClass("ResponseTransform")) {
+                for (ODocument doc : db.browseClass("ResponseTransform")) {
+                    doc.delete();
+                }
+                schema.dropClass("ResponseTransform");
+            }
+            OClass responseTransform = schema.createClass("ResponseTransform");
+            responseTransform.createProperty("ruleClass", OType.STRING);
+            responseTransform.createProperty("sequence", OType.INTEGER); // execution sequence of each phase.
+            responseTransform.createProperty("transformRule", OType.STRING);
+            responseTransform.createProperty("transformData", OType.EMBEDDEDMAP);
+            responseTransform.createProperty("createDate", OType.DATETIME);
+            responseTransform.createProperty("createUserId", OType.STRING);
+            responseTransform.createProperty("updateDate", OType.DATETIME);
+            responseTransform.createProperty("updateUserId", OType.STRING);
+            responseTransform.createIndex("ResRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    /**
+     * access is a piece of info that controls how endpoints are accessed from client
      */
     public static void initAccess() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
