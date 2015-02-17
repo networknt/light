@@ -91,11 +91,17 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             if(accessMap == null) {
                 access = new ODocument(schema.getClass("Access"));
                 access.field("ruleClass", ruleClass);
-                access.field("accessLevel", "R"); // role level access
-                List roles = new ArrayList();
-                roles.add("owner");  // give owner access for all the rules by default.
-                access.field("roles", roles);
-                access.field("createDate", createDate);
+                if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
+                    access.field("accessLevel", "N"); // abstract rule and internal beta tester rule
+                } else if(ruleClass.endsWith("EvRule")) {
+                    access.field("accessLevel", "A"); // event rule can be only called internally.
+                } else {
+                    access.field("accessLevel", "R"); // role level access
+                    List roles = new ArrayList();
+                    roles.add("owner");  // give owner access for the rule by default.
+                    access.field("roles", roles);
+                }
+                access.field("createDate", data.get("createDate"));
                 access.field("createUserId", createUserId);
                 access.save();
             }
@@ -158,8 +164,8 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             if(accessMap == null) {
                 access = new ODocument(schema.getClass("Access"));
                 access.field("ruleClass", ruleClass);
-                if(ruleClass.contains("Abstract")) {
-                    access.field("accessLevel", "N");
+                if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
+                    access.field("accessLevel", "N"); // abstract and internal beta tester rule
                 } else if(ruleClass.endsWith("EvRule")) {
                     access.field("accessLevel", "A"); // event rule can be only called internally.
                 } else {
