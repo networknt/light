@@ -16,7 +16,9 @@
 <script type='text/javascript'>
     angular.module('lightApp').controller('com.networknt.light.HelloWorldCtrl', ['$scope', '$http', '$location', '$filter', 'transformService', 'modelDataService', function ($scope, $http, $location, $filter, transformService, modelDataService) {
         var getHelloWorld = {
-            category : 'test',
+            host: 'example',
+            app: 'main',
+            category : 'perf',
             name : 'helloWorld',
             readOnly: true,
             data : {
@@ -27,13 +29,10 @@
             }
         };
 
-        console.log('uri', transformService.json2uri(getHelloWorld));
-
-
         $scope.data = '';
 
         $scope.fetchResult = function () {
-            $http.get('api/rs?' + transformService.json2uri(getHelloWorld))
+            $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify(getHelloWorld))}})
                     .success(function (result, status, headers, config) {
                         $scope.data = result;
                         console.log($scope.data);
