@@ -60,10 +60,10 @@ public class RestHandler implements HttpHandler {
         exchange.startBlocking();
         // check if it is get or post
         String json = null;
+        Map<String, Object> jsonMap = null;
         if(Methods.GET.equals(exchange.getRequestMethod())) {
             Map params = exchange.getQueryParameters();
-            String cmd = ((Deque<String>)params.get("cmd")).getFirst();
-            json = URLDecoder.decode(cmd, "UTF8");
+            jsonMap = params2json(params);
         } else if (Methods.POST.equals(exchange.getRequestMethod())) {
             json = new Scanner(exchange.getInputStream(),"UTF-8").useDelimiter("\\A").next();
         } else {
@@ -73,7 +73,7 @@ public class RestHandler implements HttpHandler {
             exchange.getResponseSender().send((ByteBuffer.wrap("Invalid Request Method".getBytes("utf-8"))));
             return;
         }
-        logger.debug("request json = {}", json);
+
         // TODO validate with json schema to make sure the input json is valid. return an error message otherwise.
         // you need to get the schema from db again for the one sent from browser might be modified.
 
@@ -107,9 +107,10 @@ public class RestHandler implements HttpHandler {
         }
 
         // convert json string to map here.
-        Map<String, Object> jsonMap =
-                ServiceLocator.getInstance().getMapper()
-                        .readValue(json, new TypeReference<HashMap<String, Object>>() {});
+        if(jsonMap == null) {
+            jsonMap = ServiceLocator.getInstance().getMapper()
+                    .readValue(json, new TypeReference<HashMap<String, Object>>() {});
+        }
         String cmdRuleClass = Util.getCommandRuleId(jsonMap);
         GetAccessRule rule = new GetAccessRule();
         Map<String, Object> access = rule.getAccessByRuleClass(cmdRuleClass);
@@ -482,5 +483,36 @@ public class RestHandler implements HttpHandler {
         }
         logger.debug("ip = {}", ipAddress);
         return ipAddress;
+    }
+
+    private Map<String, Object> params2json(Map params) {
+        Map<String, Object> jsonMap = new HashMap<String, Object> ();
+        Iterator iterator = params.keySet().iterator();
+        while(iterator.hasNext()) {
+            String key = (String)iterator.next();
+            int index = key.indexOf(":");
+            if(index > 0) {
+                String parentKey = key.substring(0, index);
+                String childKey = key.substring(index + 1);
+                Map<String, Object> childMap = (Map<String, Object>)jsonMap.get(parentKey);
+                if(childMap == null) {
+                    childMap = new HashMap<String, Object>();
+                    jsonMap.put(parentKey, childMap);
+                }
+                childMap.put(childKey, ((ArrayDeque)params.get(key)).getFirst());
+            } else {
+
+                jsonMap.put(key, getTypedValue(((ArrayDeque)params.get(key)).getFirst()));
+            }
+        }
+        return jsonMap;
+    }
+    // TODO not working yet.
+    private Object getTypedValue(Object value) {
+        if(value == null) return null;
+        Object obj = null;
+        if(value.equals("true")) obj = true;
+        if(value.equals("false")) obj = false;
+        return obj;
     }
 }

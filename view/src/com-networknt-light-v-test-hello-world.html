@@ -1,0 +1,52 @@
+<!--
+  ~ Copyright 2015 Network New Technologies Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<script type='text/javascript'>
+    angular.module('lightApp').controller('com.networknt.light.HelloWorldCtrl', ['$scope', '$http', '$location', '$filter', 'transformService', 'modelDataService', function ($scope, $http, $location, $filter, transformService, modelDataService) {
+        var getHelloWorld = {
+            category : 'test',
+            name : 'helloWorld',
+            readOnly: true,
+            data : {
+                pageSize : 10,
+                pageNo : 1,
+                sortDir : 'desc',
+                sortedBy : 'createDate'
+            }
+        };
+
+        console.log('uri', transformService.json2uri(getHelloWorld));
+
+        $scope.data = '';
+
+        $scope.fetchResult = function () {
+            $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify(getTest))}})
+                    .success(function (result, status, headers, config) {
+                        $scope.data = result;
+                        console.log($scope.data);
+                    })
+        };
+        //$scope.fetchResult();
+
+    }]);
+</script>
+<div class="container" ng-controller="com.networknt.light.HelloWorldCtrl">
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <button class="btn btn-info" ng-click="fetchResult()"><i class="glyphicon glyphicon-edit"></i>Fetch</button>
+            {{data}}
+        </div>
+    </div>
+</div>
