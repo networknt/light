@@ -74,44 +74,37 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
         } finally {
             db.close();
         }
+        // remove the cached list if in order to reload it
+        Map<String, Object> requestTransformMap = ServiceLocator.getInstance().getMemoryImage("requestTransformMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)requestTransformMap.get("cache");
+        if(cache != null) {
+            cache.remove(data.get("ruleClass"));
+        }
     }
 
-    protected void updAccess(Map<String, Object> data) throws Exception {
-        ODocument access = null;
+    protected void updRequestTransform(Map<String, Object> data) throws Exception {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             db.begin();
-            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Access.ruleClass");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
-            if (oid != null && oid.getRecord() != null) {
-                access = (ODocument) oid.getRecord();
-                access.field("accessLevel", data.get("accessLevel"));
-                List<String> clients = (List)data.get("clients");
-                if(clients != null && clients.size() > 0) {
-                    access.field("clients", clients);
-                } else {
-                    access.removeField("clients");
+            OIndex<?> reqRuleSequenceIdx = db.getMetadata().getIndexManager().getIndex("ReqRuleSequenceIdx");
+            OCompositeKey key = new OCompositeKey(data.get("ruleClass"), data.get("sequence"));
+            OIdentifiable oid = (OIdentifiable) reqRuleSequenceIdx.get(key);
+            if (oid != null) {
+                ODocument transform = (ODocument) oid.getRecord();
+                transform.field("transformRule", data.get("transformRule"));
+                // transformData is a json string, convert it to map.
+                Object transformData = data.get("transformData");
+                if(transformData != null) {
+                    Map<String, Object> map = mapper.readValue((String)transformData,
+                            new TypeReference<HashMap<String, Object>>() {
+                            });
+                    transform.field("transformData", map);
                 }
-
-                List<String> roles = (List)data.get("roles");
-                if(roles != null && roles.size() > 0) {
-                    access.field("roles", roles);
-                } else {
-                    access.removeField("roles");
-                }
-
-                List<String> users = (List)data.get("users");
-                if(users != null && users.size() > 0) {
-                    access.field("users", users);
-                } else {
-                    access.removeField("users");
-                }
-                access.field("updateDate", data.get("updateDate"));
-                access.field("updateUserId", data.get("updateUserId"));
-                access.save();
+                transform.field("updateDate", data.get("updateDate"));
+                transform.field("updateUserId", data.get("updateUserId"));
+                transform.save();
+                db.commit();
             }
-            db.commit();
         } catch (Exception e) {
             db.rollback();
             logger.error("Exception:", e);
@@ -119,32 +112,27 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
         } finally {
             db.close();
         }
-        Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
-                    .build();
-            accessMap.put("cache", cache);
+        // remove the cached list if in order to reload it
+        Map<String, Object> requestTransformMap = ServiceLocator.getInstance().getMemoryImage("requestTransformMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)requestTransformMap.get("cache");
+        if(cache != null) {
+            cache.remove(data.get("ruleClass"));
         }
-        String json = access.toJSON();
-        cache.put(data.get("ruleClass"), mapper.readValue(json,
-                new TypeReference<HashMap<String, Object>>() {
-                }));
     }
 
-    protected void delAccess(Map<String, Object> data) throws Exception {
+    protected void delRequestTransform(Map<String, Object> data) throws Exception {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             db.begin();
-            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Access.ruleClass");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
-            if (oid != null && oid.getRecord() != null) {
-                ODocument access = (ODocument) oid.getRecord();
-                access.delete();
+            OIndex<?> reqRuleSequenceIdx = db.getMetadata().getIndexManager().getIndex("ReqRuleSequenceIdx");
+            OCompositeKey key = new OCompositeKey(data.get("ruleClass"), data.get("sequence"));
+            OIdentifiable oid = (OIdentifiable) reqRuleSequenceIdx.get(key);
+            if (oid != null) {
+                ODocument transform = (ODocument) oid.getRecord();
+                transform.delete();
+                transform.save();
+                db.commit();
             }
-            db.commit();
         } catch (Exception e) {
             db.rollback();
             logger.error("Exception:", e);
@@ -152,8 +140,9 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
         } finally {
             db.close();
         }
-        Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
+        // remove the cached list if in order to reload it
+        Map<String, Object> requestTransformMap = ServiceLocator.getInstance().getMemoryImage("requestTransformMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)requestTransformMap.get("cache");
         if(cache != null) {
             cache.remove(data.get("ruleClass"));
         }

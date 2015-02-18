@@ -57,7 +57,10 @@ public class AddRequestTransformRule extends AbstractTransformRule implements Ru
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
-                        eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                        eventData.put("ruleClass", data.get("ruleClass"));
+                        eventData.put("sequence", data.get("sequence"));
+                        eventData.put("transformRule", data.get("transformRule"));
+                        eventData.put("transformData", data.get("transformData"));
                         eventData.put("createDate", new java.util.Date());
                         eventData.put("createUserId", user.get("userId"));
                     }

@@ -406,6 +406,47 @@ angular.module('lightApp')
             }
         });
     }])
+    .factory('transformService', function() {
+        return ({
+            /*
+             * guidj@bitbucket
+             */
+            json2uri : function mapJSONToUriParams(data, prefix, call){
+
+                prefix = typeof prefix !== 'undefined' ? prefix : "";
+                call = typeof call !== 'undefined' ? call : 0;
+
+                var map = [];
+
+                if( Object.prototype.toString.call( data ) === '[object Array]' ) {
+
+                    for (var ik = 0; ik < data.length; ik++){
+                        map.push(mapJSONToUriParams(data[ik], prefix + "[" + ik + "]", call + 1));
+                    };
+
+                }else if ( Object.prototype.toString.call( data ) === '[object Object]' ) {
+                    Object.keys(data).map(function(k){
+                        var sep = "";
+
+                        //not empty
+                        if (prefix !== ""){
+
+                            if (prefix.slice(-1) !== "]"){
+                                sep = ":";
+                            }
+                        }
+
+                        map.push(mapJSONToUriParams(data[k], prefix + sep + k, call + 1));
+                    });
+
+                }else{
+                    map.push(prefix + "=" + encodeURIComponent(data));
+                }
+
+                return map.join("&");
+            }
+        });
+    })
 /*
 .factory('restAPI', ['$resource',
     function ($resource) {

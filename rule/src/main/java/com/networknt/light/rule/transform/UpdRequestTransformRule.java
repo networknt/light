@@ -16,8 +16,78 @@
 
 package com.networknt.light.rule.transform;
 
+import com.networknt.light.rule.Rule;
+
+import java.util.Map;
+
 /**
  * Created by steve on 16/02/15.
+ *
+ * AccessLevel R [owner, admin, ruleAdmin]
+ *
  */
-public class UpdRequestTransformRule {
+public class UpdRequestTransformRule extends AbstractTransformRule implements Rule {
+    public boolean execute (Object ...objects) throws Exception {
+        Map<String, Object> inputMap = (Map<String, Object>)objects[0];
+        Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        String error = null;
+        String host = (String)user.get("host");
+        String ruleClass = (String)data.get("ruleClass");
+        Integer sequence = (Integer)data.get("sequence");
+        if(host != null) {
+            // admin or ruleAdmin adding transform rule for their site.
+            if(!host.equals(data.get("host"))) {
+                error = "User can only update transform rule from host: " + host;
+                inputMap.put("responseCode", 403);
+            } else {
+                // check if the ruleClass belongs to the host.
+                if(!ruleClass.contains(host)) {
+                    // you are not allowed to update transform rule to the rule as it is not owned by the host.
+                    error = "ruleClass is not owned by the host: " + host;
+                    inputMap.put("responseCode", 403);
+                } else {
+                    String json = getRequestTransformBySeq(ruleClass, sequence);
+                    if(json == null) {
+                        error = "Transform rule does not exist";
+                        inputMap.put("responseCode", 404);
+                    } else {
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
+                        eventData.put("ruleClass", data.get("ruleClass"));
+                        eventData.put("sequence", data.get("sequence"));
+                        eventData.put("transformRule", data.get("transformRule"));
+                        eventData.put("transformData", data.get("transformData"));
+                        eventData.put("updateDate", new java.util.Date());
+                        eventData.put("updateUserId", user.get("userId"));
+                    }
+                }
+            }
+        } else {
+            String json = getRequestTransformBySeq(ruleClass, sequence);
+            if(json == null) {
+                error = "Transform rule doesnot exist";
+                inputMap.put("responseCode", 404);
+            } else {
+                Map eventMap = getEventMap(inputMap);
+                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                inputMap.put("eventMap", eventMap);
+                eventData.put("ruleClass", data.get("ruleClass"));
+                eventData.put("sequence", data.get("sequence"));
+                eventData.put("transformRule", data.get("transformRule"));
+                eventData.put("transformData", data.get("transformData"));
+                eventData.put("updateDate", new java.util.Date());
+                eventData.put("updateUserId", user.get("userId"));
+            }
+        }
+
+        if(error != null) {
+            inputMap.put("error", error);
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

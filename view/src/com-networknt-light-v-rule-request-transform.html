@@ -86,6 +86,7 @@
 
 
         $scope.update = function(transform) {
+            transform.ruleClass = $scope.getRequestTransform.data.ruleClass;
             modelDataService.setModelData(transform);
             $location.path("/form/com.networknt.light.request.transform.update_d");
         };
