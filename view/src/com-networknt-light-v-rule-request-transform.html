@@ -87,6 +87,8 @@
 
         $scope.update = function(transform) {
             transform.ruleClass = $scope.getRequestTransform.data.ruleClass;
+            // convert transformData from map to string in order to display in the text area.
+            transform.transformData = JSON.stringify(transform.transformData);
             modelDataService.setModelData(transform);
             $location.path("/form/com.networknt.light.request.transform.update_d");
         };
