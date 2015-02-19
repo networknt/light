@@ -1,5 +1,5 @@
 {
-    "id": "com.cibc.rop.feeds",
+    "id": "com.networknt.light.feeds",
     "version": 1,
     "action" : [{
         "host" : "injector",
