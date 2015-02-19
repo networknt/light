@@ -18,10 +18,13 @@
         "title": "Roles",
         "type": "array",
         "format": "uiselect",
-        "items": ["@",
+        "items": [
           {
-            "category": "role",
-            "name": "getRoleDropdown"
+            "label": "dynamic",
+            "value": {
+              "category": "role",
+              "name": "getRoleDropdown"
+            }
           }
         ]
       }

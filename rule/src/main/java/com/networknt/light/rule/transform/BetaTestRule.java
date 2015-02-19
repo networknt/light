@@ -53,7 +53,7 @@ public class BetaTestRule extends AbstractRule implements Rule {
         if(payload != null) {
             Map<String, Object> user = (Map<String, Object>) payload.get("user");
             List roles = (List) user.get("roles");
-            if (!roles.contains("betaTester")) {
+            if (roles.contains("betaTester")) {
                 inputMap.put("name", transformData.get("beta"));
             } else {
                 inputMap.put("name", transformData.get("production"));

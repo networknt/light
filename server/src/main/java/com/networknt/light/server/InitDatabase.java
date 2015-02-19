@@ -1238,6 +1238,11 @@ public class InitDatabase {
             owner.field("desc", "owner of the site who can do anything");
             owner.save();
 
+            ODocument betaTester = new ODocument(schema.getClass("Role"));
+            betaTester.field("id", "betaTester");
+            betaTester.field("desc", "Beta Tester that can be routed to differnt version of API");
+            betaTester.save();
+
 
             List roles = new ArrayList<String>();
             roles.add("owner");
