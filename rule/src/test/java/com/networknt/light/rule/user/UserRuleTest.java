@@ -35,19 +35,19 @@ import java.util.Map;
  */
 public class UserRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
-    String signInAdmin = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInAdmin = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
     String signUpUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signUpUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"email\":\"steve@gmail.com\",\"password\":\"abcdefg\",\"passwordConfirm\":\"abcdefg\",\"firstName\":\"steve\",\"lastName\":\"hu\"}}";
     String getUserByEmail = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"host\":\"www.example.com\",\"email\":\"steve@gmail.com\"}}";
     String getUserByUserId = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\"}}";
     String getUserByRid = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"host\":\"www.exmaple.com\"}}";
 
-    String signInUserByEmail = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"steve@gmail.com\",\"password\":\"abcdefg\",\"rememberMe\":false}}";
-    String signInUserByUserId = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"steve\",\"password\":\"abcdefg\",\"rememberMe\":true}}";
+    String signInUserByEmail = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"steve@gmail.com\",\"password\":\"abcdefg\",\"rememberMe\":false,\"clientId\":\"example@Browser\"}}";
+    String signInUserByUserId = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"steve\",\"password\":\"abcdefg\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
     String logOutUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"logOutUser\",\"data\":{\"host\":\"www.example.com\"}}";
 
     String updUserPassword = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updPassword\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"password\":\"abcdefg\",\"newPassword\":\"123456\",\"passwordConfirm\":\"123456\"}}";
-    String signInUserNewPass = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"steve@gmail.com\",\"password\":\"123456\"}}";
+    String signInUserNewPass = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"steve@gmail.com\",\"password\":\"123456\",\"clientId\":\"example@Browser\"}}";
 
     String updUserProfile = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updProfile\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"firstName\":\"Steve\",\"lastName\":\"Hu\"}}";
 
