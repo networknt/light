@@ -35,8 +35,8 @@ import java.util.Map;
 public class FormRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
 
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
     String addForm = "{\"readOnly\":false,\"category\":\"form\",\"name\":\"addForm\",\"data\":{\"id\":\"com.networknt.light.common.test.json\",\"schema\":{\"type\":\"object\",\"title\":\"Comment\",\"properties\":{\"name\":{\"title\":\"Name\",\"type\":\"string\"},\"email\":{\"title\":\"Email\",\"type\":\"string\",\"pattern\":\"^\\\\S+@\\\\S+$\",\"description\":\"Email will be used for evil.\"},\"comment\":{\"title\":\"Comment\",\"type\":\"string\",\"maxLength\":20,\"validationMessage\":\"Don't be greedy!\"}},\"required\":[\"name\",\"email\",\"comment\"]},\"form\":[\"name\",\"email\",{\"key\":\"comment\",\"type\":\"textarea\"},{\"type\":\"submit\",\"style\":\"btn-info\",\"title\":\"OK\"}]}}";
     String getForm = "{\"readOnly\":true,\"category\":\"form\",\"name\":\"getForm\",\"data\":{\"id\":\"com.networknt.light.common.test.json\"}}";

@@ -33,8 +33,8 @@ import java.util.*;
  */
 public class MenuRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
-    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true}}";
-    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true}}";
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
+    String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
     String getMenuInjector = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenu\", \"data\": {\"host\":\"injector\"}}";
     String getMenuEdibleForestGarden = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenu\", \"data\": {\"host\":\"www.edibleforestgarden.ca\"}}";
@@ -155,7 +155,8 @@ public class MenuRuleTest extends TestCase {
                 System.out.println("result = " + result);
             }
 
-            // get menus by test
+            // get menus by test.
+            // for unit test, the rule is called without access control.
             {
                 jsonMap = mapper.readValue(getAllMenu,
                         new TypeReference<HashMap<String, Object>>() {
@@ -164,9 +165,7 @@ public class MenuRuleTest extends TestCase {
 
                 GetAllMenuRule rule = new GetAllMenuRule();
                 ruleResult = rule.execute(jsonMap);
-                assertFalse(ruleResult);
-                String result = (String)jsonMap.get("result");
-                assertEquals("Permission denied", result);
+                assertTrue(ruleResult);
             }
 
             // get menus by menuAdmin
