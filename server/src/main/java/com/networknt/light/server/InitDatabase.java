@@ -50,6 +50,7 @@ public class InitDatabase {
         initMenu();
         initForm();
         initPage();
+        /*
         initFeed();
         initTag();
         initBlog();
@@ -59,12 +60,13 @@ public class InitDatabase {
         initComment();
         initCatalog();
         initProduct();
+        */
         initCounter();
         //initClient();
         initRequestTransform();
         initResponseTransform();
         initAccess();
-        initProxy();
+        //initProxy();
         refreshDoc();
         logger.debug("End initdb()");
     }
@@ -411,7 +413,7 @@ public class InitDatabase {
             db.close();
         }
     }
-
+    /*
     public static void initFeed() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
@@ -713,6 +715,7 @@ public class InitDatabase {
             db.close();
         }
     }
+    */
 
     /**
      * Client
@@ -844,7 +847,7 @@ public class InitDatabase {
             db.close();
         }
     }
-
+    /*
     public static void initProxy() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
@@ -870,7 +873,7 @@ public class InitDatabase {
             db.close();
         }
     }
-
+    */
 
     public static void initWorkflow() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
@@ -1198,6 +1201,19 @@ public class InitDatabase {
             ruleAdmin.field("desc", "admin rules for the host");
             ruleAdmin.save();
 
+            /*
+
+            ODocument categoryAdmin = new ODocument(schema.getClass("Role"));
+            categoryAdmin.field("id", "categoryAdmin");
+            categoryAdmin.field("desc", "admin category for the host");
+            categoryAdmin.save();
+
+            ODocument prodAdmin = new ODocument(schema.getClass("Role"));
+            prodAdmin.field("id", "productAdmin");
+            prodAdmin.field("desc", "admin user that can do anything with product");
+            prodAdmin.save();
+
+
             ODocument blogAdmin = new ODocument(schema.getClass("Role"));
             blogAdmin.field("id", "blogAdmin");
             blogAdmin.field("desc", "admin user that can do anything with blog");
@@ -1208,20 +1224,11 @@ public class InitDatabase {
             blogUser.field("desc", "user that can post blog and update his own blog");
             blogUser.save();
 
-            ODocument categoryAdmin = new ODocument(schema.getClass("Role"));
-            categoryAdmin.field("id", "categoryAdmin");
-            categoryAdmin.field("desc", "admin category for the host");
-            categoryAdmin.save();
-
             ODocument forumAdmin = new ODocument(schema.getClass("Role"));
             forumAdmin.field("id", "forumAdmin");
             forumAdmin.field("desc", "admin user that can do anything with forum");
             forumAdmin.save();
-
-            ODocument prodAdmin = new ODocument(schema.getClass("Role"));
-            prodAdmin.field("id", "productAdmin");
-            prodAdmin.field("desc", "admin user that can do anything with product");
-            prodAdmin.save();
+            */
 
             ODocument menuAdmin = new ODocument(schema.getClass("Role"));
             menuAdmin.field("id", "menuAdmin");
@@ -1341,6 +1348,7 @@ public class InitDatabase {
             m_dbAdmin.field("createDate", new java.util.Date());
             m_dbAdmin.save();
 
+            /*
             ODocument m_productAdmin = new ODocument(schema.getClass("MenuItem"));
             m_productAdmin.field("id", "productAdmin");
             m_productAdmin.field("label", "Product Admin");
@@ -1373,6 +1381,8 @@ public class InitDatabase {
             m_newsAdmin.field("createDate", new java.util.Date());
             m_newsAdmin.save();
 
+            */
+
             ODocument m_userAdmin = new ODocument(schema.getClass("MenuItem"));
             m_userAdmin.field("id", "userAdmin");
             m_userAdmin.field("label", "User Admin");
@@ -1400,10 +1410,10 @@ public class InitDatabase {
             menuItems.add(m_menuAdmin);
             menuItems.add(m_formAdmin);
             menuItems.add(m_pageAdmin);
-            menuItems.add(m_blogAdmin);
-            menuItems.add(m_newsAdmin);
-            menuItems.add(m_forumAdmin);
-            menuItems.add(m_productAdmin);
+            //menuItems.add(m_blogAdmin);
+            //menuItems.add(m_newsAdmin);
+            //menuItems.add(m_forumAdmin);
+            //menuItems.add(m_productAdmin);
 
             ODocument m_admin = new ODocument(schema.getClass("MenuItem"));
             m_admin.field("id", "admin");
@@ -1439,6 +1449,7 @@ public class InitDatabase {
             m_logIn.field("createDate", new java.util.Date());
             m_logIn.save();
 
+            /*
             ODocument m_blog = new ODocument(schema.getClass("MenuItem"));
             m_blog.field("id", "blog");
             m_blog.field("label", "Blog");
@@ -1478,6 +1489,7 @@ public class InitDatabase {
             m_product.field("createUserId", ServiceLocator.getInstance().getOwnerId());
             m_product.field("createDate", new java.util.Date());
             m_product.save();
+            */
 
             ODocument m_signUp = new ODocument(schema.getClass("MenuItem"));
             m_signUp.field("id", "signUp");
@@ -1506,10 +1518,10 @@ public class InitDatabase {
 
             menuItems = new ArrayList<ODocument>();
             menuItems.add(m_admin);
-            menuItems.add(m_news);
-            menuItems.add(m_blog);
-            menuItems.add(m_forum);
-            menuItems.add(m_product);
+            //menuItems.add(m_news);
+            //menuItems.add(m_blog);
+            //menuItems.add(m_forum);
+            //menuItems.add(m_product);
             menuItems.add(m_logOut);
             menuItems.add(m_logIn);
             menuItems.add(m_signUp);
