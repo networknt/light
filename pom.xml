@@ -66,7 +66,7 @@
         <page-loader.version>1.0.0.0.1</page-loader.version>
         <form-loader.version>1.0.0.0.1</form-loader.version>
         <mail.version>1.5.0-b01</mail.version>
-        <json-schema-validator.version>2.2.5</json-schema-validator.version>
+        <json-schema-validator.version>2.2.6</json-schema-validator.version>
         <httpclient.version>4.3.5</httpclient.version>
         <httpcore.version>4.3.2</httpcore.version>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>

@@ -1,0 +1,65 @@
+{
+  "id": "com.networknt.light.transform.request.update_d",
+  "version": 1,
+  "action": [
+    {
+      "category": "transform",
+      "name": "updTransformRequest",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-rule-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Update Request Transform Rule",
+    "required": [
+      "ruleClass",
+      "sequence",
+      "transformRule"
+    ],
+    "properties": {
+      "ruleClass": {
+        "title": "Rule Class",
+        "type": "string",
+        "readonly": true
+      },
+      "sequence": {
+        "title": "Sequence",
+        "type": "number",
+        "readonly": true
+      },
+      "transformRule": {
+        "title": "Transform Rule",
+        "type": "string",
+        "format": "uiselect",
+        "items": [
+          {
+            "label": "dynamic",
+            "value": {
+              "category": "rule",
+              "name": "getRuleDropdown"
+            }
+          }
+        ]
+      },
+      "transformData": {
+        "title": "Transform Data",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    "ruleClass",
+    "sequence",
+    "transformRule",
+    {
+      "key": "transformData",
+      "type": "ace",
+      "aceOptions": {
+        "theme": "eclipse",
+        "mode" : "json"
+      }
+    }
+  ]
+}

@@ -17,6 +17,7 @@
 package com.networknt.light.rule.form;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.AbstractRule;
@@ -33,6 +34,7 @@ import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,6 +139,15 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             form.field("createDate", data.get("createDate"));
             form.field("createUserId", data.get("createUserId"));
             form.save();
+            // According to action in the list, populate validation schema.
+            List<Map<String, Object>> actions = form.field("action");
+            for(Map<String, Object> action: actions) {
+                String ruleClass = Util.getCommandRuleId(action);
+                ODocument validation = new ODocument(schema.getClass("Validation"));
+                validation.field("ruleClass", ruleClass);
+                validation.field("schema", data.get("schema"));
+                validation.save();
+            }
             db.commit();
             json = form.toJSON();
         } catch (Exception e) {
@@ -148,17 +159,8 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         }
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(100)
-                    .build();
-            formMap.put("cache", cache);
-        }
-        if(id.endsWith("_d")) {
-            // remove it from the cache so that the next getForm will enrich the dynamic form
+        if(cache != null) {
             cache.remove(id);
-        } else {
-            cache.put(id, json);
         }
         return json;
     }
@@ -171,7 +173,18 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             // this is a unique index, so it retrieves a OIdentifiable
             OIdentifiable oid = (OIdentifiable) formIdIdx.get(id);
             if (oid != null && oid.getRecord() != null) {
-                oid.getRecord().delete();
+                ODocument form = oid.getRecord();
+                List<Map<String, Object>> actions = form.field("action");
+                for(Map<String, Object> action: actions) {
+                    String ruleClass = Util.getCommandRuleId(action);
+                    OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
+                    OIdentifiable vid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
+                    if (vid != null) {
+                        ODocument validation = vid.getRecord();
+                        validation.delete();
+                    }
+                }
+                form.delete();
             }
             db.commit();
         } catch (Exception e) {
@@ -187,15 +200,15 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         }
     }
 
-    protected String updForm(Map<String, Object> data) {
+    protected String updForm(Map<String, Object> data) throws Exception {
         String json = null;
         String id = (String)data.get("id");
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
+            OIndex<?> formIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
             // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oId = (OIdentifiable) userIdIdx.get(id);
+            OIdentifiable oId = (OIdentifiable) formIdIdx.get(id);
             if (oId != null) {
                 ODocument doc = oId.getRecord();
                 doc.field("action", data.get("action"));
@@ -205,6 +218,19 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                 doc.field("updateDate", data.get("updateDate"));
                 doc.field("updateUserId", data.get("updateUserId"));
                 doc.save();
+
+                // According to action in the list, populate validation schema.
+                List<Map<String, Object>> actions = doc.field("action");
+                for(Map<String, Object> action: actions) {
+                    String ruleClass = Util.getCommandRuleId(action);
+                    OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
+                    OIdentifiable vid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
+                    if (vid != null) {
+                        ODocument validation = vid.getRecord();
+                        validation.field("schema", data.get("schema"));
+                        validation.save();
+                    }
+                }
                 db.commit();
                 json = doc.toJSON();
             }
@@ -216,17 +242,8 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         }
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(100)
-                    .build();
-            formMap.put("cache", cache);
-        }
-        if(id.endsWith("_d")) {
-            // remove it from the cache so that the next getForm will enrich the dynamic form
+        if(cache != null) {
             cache.remove(id);
-        } else {
-            cache.put(id, json);
         }
         return json;
     }
@@ -242,7 +259,18 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             // this is a unique index, so it retrieves a OIdentifiable
             OIdentifiable oid = (OIdentifiable) formIdIdx.get(id);
             if (oid != null && oid.getRecord() != null) {
-                oid.getRecord().delete();
+                ODocument doc = oid.getRecord();
+                List<Map<String, Object>> actions = doc.field("action");
+                for(Map<String, Object> action: actions) {
+                    String ruleClass = Util.getCommandRuleId(action);
+                    OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
+                    OIdentifiable vid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
+                    if (vid != null) {
+                        ODocument validation = vid.getRecord();
+                        validation.delete();
+                    }
+                }
+                doc.delete();
             }
 
             ODocument form = new ODocument(schema.getClass("Form"));
@@ -255,6 +283,19 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             form.field("createDate", data.get("createDate"));
             form.field("createUserId", data.get("createUserId"));
             form.save();
+            // According to action in the list, populate validation schema.
+            List<Map<String, Object>> actions = form.field("action");
+            if(actions != null) {
+                for(Map<String, Object> action: actions) {
+                    String ruleClass = Util.getCommandRuleId(action);
+                    ODocument validation = new ODocument(schema.getClass("Validation"));
+                    validation.field("ruleClass", ruleClass);
+                    validation.field("schema", data.get("schema"));
+                    validation.save();
+                }
+            } else {
+                logger.error("No action is defined for form: " + id);
+            }
             db.commit();
             json = form.toJSON();
         } catch (Exception e) {
@@ -266,17 +307,8 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         }
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(100)
-                    .build();
-            formMap.put("cache", cache);
-        }
-        if(id.endsWith("_d")) {
-            // remove it from the cache so that the next getForm will enrich the dynamic form
+        if(cache != null) {
             cache.remove(id);
-        } else {
-            cache.put(id, json);
         }
         return json;
     }

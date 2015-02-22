@@ -17,16 +17,22 @@
 package com.networknt.light.server.handler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonschema.core.report.ListProcessingReport;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.networknt.light.rule.RuleEngine;
-import com.networknt.light.rule.access.AbstractAccessRule;
 import com.networknt.light.rule.access.GetAccessRule;
-import com.networknt.light.rule.transform.GetRequestTransformRule;
+import com.networknt.light.rule.transform.GetTransformRequestRule;
+import com.networknt.light.rule.validation.AbstractValidationRule;
+import com.networknt.light.rule.validation.GetValidationRule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.server.ServerConstants;
 import com.networknt.light.util.JwtUtil;
 import com.networknt.light.util.ServiceLocator;
 import com.networknt.light.util.Util;
-import com.orientechnologies.orient.core.record.impl.ODocument;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderMap;
@@ -46,6 +52,7 @@ import java.util.regex.Pattern;
  */
 public class RestHandler implements HttpHandler {
     static final Logger logger = LoggerFactory.getLogger(RestHandler.class);
+    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
     public RestHandler() {
     }
@@ -65,7 +72,6 @@ public class RestHandler implements HttpHandler {
             Map params = exchange.getQueryParameters();
             String cmd = ((Deque<String>)params.get("cmd")).getFirst();
             json = URLDecoder.decode(cmd, "UTF8");
-            //jsonMap = params2json(params);
         } else if (Methods.POST.equals(exchange.getRequestMethod())) {
             json = new Scanner(exchange.getInputStream(),"UTF-8").useDelimiter("\\A").next();
         } else {
@@ -75,17 +81,42 @@ public class RestHandler implements HttpHandler {
             exchange.getResponseSender().send((ByteBuffer.wrap("Invalid Request Method".getBytes("utf-8"))));
             return;
         }
+        logger.debug("json = {}", json);
+
+        // convert json string to map here. It it cannot be converted, then it is invalid command.
+        try {
+            jsonMap = ServiceLocator.getInstance().getMapper()
+                    .readValue(json, new TypeReference<HashMap<String, Object>>() {
+                    });
+        } catch (Exception e) {
+            exchange.setResponseCode(400);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+            exchange.getResponseSender().send((ByteBuffer.wrap("invalid_command".getBytes("utf-8"))));
+            return;
+        }
 
         // TODO validate with json schema to make sure the input json is valid. return an error message otherwise.
         // you need to get the schema from db again for the one sent from browser might be modified.
+        String cmdRuleClass = Util.getCommandRuleId(jsonMap);
+        boolean readOnly = (boolean)jsonMap.get("readOnly");
+        if(!readOnly) {
+            JsonSchema schema = AbstractValidationRule.getSchema(cmdRuleClass);
+            if(schema != null) {
+                // validate only if schema is not null.
+                JsonNode jsonNode = mapper.valueToTree(jsonMap);
+                ProcessingReport report = schema.validate(jsonNode.get("data"));
+                logger.debug("report" + report);
+                if(!report.isSuccess()) {
+                    exchange.setResponseCode(400);
+                    exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+                    JsonNode messages = ((ListProcessingReport) report).asJson();
+                    exchange.getResponseSender().send((ByteBuffer.wrap(messages.toString().getBytes("utf-8"))));
+                    return;
+                }
+            }
+        }
 
-        // get jwt payload, pass it to every rule and validate it if permission is required.
-        // TODO check if login times in token is the same as in userMap.
-        // this is to prevent stolen token after user is logged out.
-        
-        // if the token is expired, then you will have 401 token_expired sent back to angular.
-        // Angular should intercept the response code and refresh the token and replay the same
-        // request with renewed access token.
+
         HeaderMap headerMap = exchange.getRequestHeaders();
         Map<String, Object> payload = null;
         try {
@@ -108,12 +139,7 @@ public class RestHandler implements HttpHandler {
             }
         }
 
-        // convert json string to map here.
-        if(jsonMap == null) {
-            jsonMap = ServiceLocator.getInstance().getMapper()
-                    .readValue(json, new TypeReference<HashMap<String, Object>>() {});
-        }
-        String cmdRuleClass = Util.getCommandRuleId(jsonMap);
+
         GetAccessRule rule = new GetAccessRule();
         Map<String, Object> access = rule.getAccessByRuleClass(cmdRuleClass);
         if(access != null) {
@@ -376,14 +402,13 @@ public class RestHandler implements HttpHandler {
 
         // TODO Apply request transform rules. For example routing here for A/B testing.
 
-        GetRequestTransformRule transformRule = new GetRequestTransformRule();
-        List<Map<String, Object>> transforms = transformRule.getRequestTransform(cmdRuleClass);
+        GetTransformRequestRule transformRule = new GetTransformRequestRule();
+        List<Map<String, Object>> transforms = transformRule.getTransformRequest(cmdRuleClass);
         for(Map<String, Object> transform: transforms) {
             jsonMap.put("transformData", transform.get("transformData"));
             RuleEngine.getInstance().executeRule((String)transform.get("transformRule"), jsonMap);
         }
 
-        boolean readOnly = (boolean)jsonMap.get("readOnly");
         // two types of rules (Command Rule and Event Rule)
         // Command Rule is responsible for validation and return result to client and enrich the command to event that
         // can be replayed at anytime without side effect.Once this is done, return to client. Also, it there are any
@@ -487,34 +512,4 @@ public class RestHandler implements HttpHandler {
         return ipAddress;
     }
 
-    private Map<String, Object> params2json(Map params) {
-        Map<String, Object> jsonMap = new HashMap<String, Object> ();
-        Iterator iterator = params.keySet().iterator();
-        while(iterator.hasNext()) {
-            String key = (String)iterator.next();
-            int index = key.indexOf(":");
-            if(index > 0) {
-                String parentKey = key.substring(0, index);
-                String childKey = key.substring(index + 1);
-                Map<String, Object> childMap = (Map<String, Object>)jsonMap.get(parentKey);
-                if(childMap == null) {
-                    childMap = new HashMap<String, Object>();
-                    jsonMap.put(parentKey, childMap);
-                }
-                childMap.put(childKey, ((ArrayDeque)params.get(key)).getFirst());
-            } else {
-
-                jsonMap.put(key, getTypedValue(((ArrayDeque)params.get(key)).getFirst()));
-            }
-        }
-        return jsonMap;
-    }
-    // TODO not working yet.
-    private Object getTypedValue(Object value) {
-        if(value == null) return null;
-        Object obj = null;
-        if(value.equals("true")) obj = true;
-        if(value.equals("false")) obj = false;
-        return obj;
-    }
 }

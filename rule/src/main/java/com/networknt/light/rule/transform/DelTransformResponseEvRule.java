@@ -17,18 +17,17 @@
 package com.networknt.light.rule.transform;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.access.AbstractAccessRule;
 
 import java.util.Map;
 
 /**
- * Created by steve on 16/02/15.
+ * Created by steve on 21/02/15.
  */
-public class AddRequestTransformEvRule extends AbstractTransformRule implements Rule {
+public class DelTransformResponseEvRule extends AbstractTransformRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        addRequestTransform(data);
+        delTransformResponse(data);
         return true;
     }
 }

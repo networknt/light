@@ -1,10 +1,10 @@
 {
-  "id": "com.networknt.light.request.transform.add_d",
+  "id": "com.networknt.light.transform.request.add_d",
   "version": 1,
   "action": [
     {
       "category": "transform",
-      "name": "addRequestTransform",
+      "name": "addTransformRequest",
       "readOnly": false,
       "title": "Submit",
       "success": "/page/com-networknt-light-v-rule-admin-home"
@@ -54,7 +54,11 @@
     "transformRule",
     {
       "key": "transformData",
-      "type": "textarea"
+      "type": "ace",
+      "aceOptions": {
+        "theme": "eclipse",
+        "mode" : "json"
+      }
     }
   ]
 }

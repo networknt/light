@@ -21,12 +21,12 @@ import com.networknt.light.rule.Rule;
 import java.util.Map;
 
 /**
- * Created by steve on 16/02/15.
+ * Created by steve on 21/02/15.
  *
  * AccessLevel R [owner, admin, ruleAdmin]
  *
  */
-public class UpdRequestTransformRule extends AbstractTransformRule implements Rule {
+public class AddTransformResponseRule extends AbstractTransformRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
@@ -39,7 +39,7 @@ public class UpdRequestTransformRule extends AbstractTransformRule implements Ru
         if(host != null) {
             // admin or ruleAdmin adding transform rule for their site.
             if(!host.equals(data.get("host"))) {
-                error = "User can only update transform rule from host: " + host;
+                error = "User can only add transform rule from host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
                 // check if the ruleClass belongs to the host.
@@ -48,10 +48,10 @@ public class UpdRequestTransformRule extends AbstractTransformRule implements Ru
                     error = "ruleClass is not owned by the host: " + host;
                     inputMap.put("responseCode", 403);
                 } else {
-                    String json = getRequestTransformBySeq(ruleClass, sequence);
-                    if(json == null) {
-                        error = "Transform rule does not exist";
-                        inputMap.put("responseCode", 404);
+                    String json = getTransformResponseBySeq(ruleClass, sequence);
+                    if(json != null) {
+                        error = "Transform rule exists for the sequence";
+                        inputMap.put("responseCode", 400);
                     } else {
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
@@ -60,16 +60,16 @@ public class UpdRequestTransformRule extends AbstractTransformRule implements Ru
                         eventData.put("sequence", data.get("sequence"));
                         eventData.put("transformRule", data.get("transformRule"));
                         eventData.put("transformData", data.get("transformData"));
-                        eventData.put("updateDate", new java.util.Date());
-                        eventData.put("updateUserId", user.get("userId"));
+                        eventData.put("createDate", new java.util.Date());
+                        eventData.put("createUserId", user.get("userId"));
                     }
                 }
             }
         } else {
-            String json = getRequestTransformBySeq(ruleClass, sequence);
-            if(json == null) {
-                error = "Transform rule doesnot exist";
-                inputMap.put("responseCode", 404);
+            String json = getTransformResponseBySeq(ruleClass, sequence);
+            if(json != null) {
+                error = "Transform rule exists for the sequence";
+                inputMap.put("responseCode", 400);
             } else {
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
@@ -78,8 +78,8 @@ public class UpdRequestTransformRule extends AbstractTransformRule implements Ru
                 eventData.put("sequence", data.get("sequence"));
                 eventData.put("transformRule", data.get("transformRule"));
                 eventData.put("transformData", data.get("transformData"));
-                eventData.put("updateDate", new java.util.Date());
-                eventData.put("updateUserId", user.get("userId"));
+                eventData.put("createDate", new java.util.Date());
+                eventData.put("createUserId", user.get("userId"));
             }
         }
 
