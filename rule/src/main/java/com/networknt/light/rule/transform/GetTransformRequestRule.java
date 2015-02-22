@@ -17,7 +17,6 @@
 package com.networknt.light.rule.transform;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.access.AbstractAccessRule;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
@@ -31,13 +30,13 @@ import java.util.Map;
  * AccessLevel R [owner, admin, ruleAdmin]
  *
  */
-public class GetRequestTransformRule extends AbstractTransformRule implements Rule {
-    static final org.slf4j.Logger logger = LoggerFactory.getLogger(GetRequestTransformRule.class);
+public class GetTransformRequestRule extends AbstractTransformRule implements Rule {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(GetTransformRequestRule.class);
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String ruleClass = (String)data.get("ruleClass");
-        List<Map<String, Object>> transforms = getRequestTransform(ruleClass);
+        List<Map<String, Object>> transforms = getTransformRequest(ruleClass);
         if(transforms != null) {
             inputMap.put("result", mapper.writeValueAsString(transforms));
             return true;

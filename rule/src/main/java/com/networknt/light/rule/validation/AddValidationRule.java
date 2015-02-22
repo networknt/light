@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package com.networknt.light.rule.transform;
+package com.networknt.light.rule.validation;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.role.AbstractRoleRule;
+import com.networknt.light.rule.transform.AbstractTransformRule;
 
 import java.util.Map;
 
 /**
- * Created by steve on 16/02/15.
+ * Created by steve on 21/02/15.
  *
  * AccessLevel R [owner, admin, ruleAdmin]
  *
  */
-public class AddRequestTransformRule extends AbstractTransformRule implements Rule {
+public class AddValidationRule extends AbstractValidationRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
@@ -38,10 +38,10 @@ public class AddRequestTransformRule extends AbstractTransformRule implements Ru
         String ruleClass = (String)data.get("ruleClass");
         Integer sequence = (Integer)data.get("sequence");
         if(host != null) {
-            // admin or ruleAdmin adding transform rule for their site.
+            // admin or ruleAdmin adding validation schema for their site.
             if(!host.equals(data.get("host"))) {
-                error = "User can only add transform rule from host: " + host;
-                inputMap.put("responseCode", 401);
+                error = "User can only add validation schema from host: " + host;
+                inputMap.put("responseCode", 403);
             } else {
                 // check if the ruleClass belongs to the host.
                 if(!ruleClass.contains(host)) {
@@ -49,41 +49,36 @@ public class AddRequestTransformRule extends AbstractTransformRule implements Ru
                     error = "ruleClass is not owned by the host: " + host;
                     inputMap.put("responseCode", 403);
                 } else {
-                    String json = getRequestTransformBySeq(ruleClass, sequence);
+                    String json = getValidation(ruleClass);
                     if(json != null) {
-                        error = "Transform rule exists for the sequence";
+                        error = "Validation schema exists for the rule";
                         inputMap.put("responseCode", 400);
                     } else {
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
                         eventData.put("ruleClass", data.get("ruleClass"));
-                        eventData.put("sequence", data.get("sequence"));
-                        eventData.put("transformRule", data.get("transformRule"));
-                        eventData.put("transformData", data.get("transformData"));
+                        eventData.put("schema", data.get("schema"));
                         eventData.put("createDate", new java.util.Date());
                         eventData.put("createUserId", user.get("userId"));
                     }
                 }
             }
         } else {
-            String json = getRequestTransformBySeq(ruleClass, sequence);
+            String json = getValidation(ruleClass);
             if(json != null) {
-                error = "Transform rule exists for the sequence";
+                error = "Validation schema exists for the rule";
                 inputMap.put("responseCode", 400);
             } else {
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.put("ruleClass", data.get("ruleClass"));
-                eventData.put("sequence", data.get("sequence"));
-                eventData.put("transformRule", data.get("transformRule"));
-                eventData.put("transformData", data.get("transformData"));
+                eventData.put("schema", data.get("schema"));
                 eventData.put("createDate", new java.util.Date());
                 eventData.put("createUserId", user.get("userId"));
             }
         }
-
         if(error != null) {
             inputMap.put("error", error);
             return false;

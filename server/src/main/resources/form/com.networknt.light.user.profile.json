@@ -4,18 +4,6 @@
     "action" : [
         {
             "category" : "user",
-            "name" : "updProfile",
-            "readOnly": false,
-            "title" : "Update Profile"
-        },
-        {
-            "category" : "user",
-            "name" : "updPassword",
-            "readOnly": false,
-            "title" : "Change Password"
-        },
-        {
-            "category" : "user",
             "name" : "lockUser",
             "readOnly": false,
             "title" : "Lock User"

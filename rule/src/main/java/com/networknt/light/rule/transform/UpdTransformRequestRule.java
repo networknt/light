@@ -24,8 +24,9 @@ import java.util.Map;
  * Created by steve on 16/02/15.
  *
  * AccessLevel R [owner, admin, ruleAdmin]
+ *
  */
-public class DelRequestTransformRule extends AbstractTransformRule implements Rule {
+public class UpdTransformRequestRule extends AbstractTransformRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
@@ -36,17 +37,18 @@ public class DelRequestTransformRule extends AbstractTransformRule implements Ru
         String ruleClass = (String)data.get("ruleClass");
         Integer sequence = (Integer)data.get("sequence");
         if(host != null) {
-            // admin or ruleAdmin deleting transform rule for their site.
+            // admin or ruleAdmin adding transform rule for their site.
             if(!host.equals(data.get("host"))) {
-                error = "User can only delete transform rule from host: " + host;
+                error = "User can only update transform rule from host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
                 // check if the ruleClass belongs to the host.
                 if(!ruleClass.contains(host)) {
+                    // you are not allowed to update transform rule to the rule as it is not owned by the host.
                     error = "ruleClass is not owned by the host: " + host;
                     inputMap.put("responseCode", 403);
                 } else {
-                    String json = getRequestTransformBySeq(ruleClass, sequence);
+                    String json = getTransformRequestBySeq(ruleClass, sequence);
                     if(json == null) {
                         error = "Transform rule does not exist";
                         inputMap.put("responseCode", 404);
@@ -56,13 +58,17 @@ public class DelRequestTransformRule extends AbstractTransformRule implements Ru
                         inputMap.put("eventMap", eventMap);
                         eventData.put("ruleClass", data.get("ruleClass"));
                         eventData.put("sequence", data.get("sequence"));
+                        eventData.put("transformRule", data.get("transformRule"));
+                        eventData.put("transformData", data.get("transformData"));
+                        eventData.put("updateDate", new java.util.Date());
+                        eventData.put("updateUserId", user.get("userId"));
                     }
                 }
             }
         } else {
-            String json = getRequestTransformBySeq(ruleClass, sequence);
+            String json = getTransformRequestBySeq(ruleClass, sequence);
             if(json == null) {
-                error = "Transform rule does not exist";
+                error = "Transform rule doesnot exist";
                 inputMap.put("responseCode", 404);
             } else {
                 Map eventMap = getEventMap(inputMap);
@@ -70,6 +76,10 @@ public class DelRequestTransformRule extends AbstractTransformRule implements Ru
                 inputMap.put("eventMap", eventMap);
                 eventData.put("ruleClass", data.get("ruleClass"));
                 eventData.put("sequence", data.get("sequence"));
+                eventData.put("transformRule", data.get("transformRule"));
+                eventData.put("transformData", data.get("transformData"));
+                eventData.put("updateDate", new java.util.Date());
+                eventData.put("updateUserId", user.get("userId"));
             }
         }
 

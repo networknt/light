@@ -63,8 +63,9 @@ public class InitDatabase {
         */
         initCounter();
         //initClient();
-        initRequestTransform();
-        initResponseTransform();
+        initTransformRequest();
+        initTransformResponse();
+        initValidation();
         initAccess();
         //initProxy();
         refreshDoc();
@@ -755,26 +756,26 @@ public class InitDatabase {
      * the endpoint is called
      *
      */
-    public static void initRequestTransform() {
+    public static void initTransformRequest() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             OSchema schema = db.getMetadata().getSchema();
-            if (schema.existsClass("RequestTransform")) {
-                for (ODocument doc : db.browseClass("RequestTransform")) {
+            if (schema.existsClass("TransformRequest")) {
+                for (ODocument doc : db.browseClass("TransformRequest")) {
                     doc.delete();
                 }
-                schema.dropClass("RequestTransform");
+                schema.dropClass("TransformRequest");
             }
-            OClass requestTransform = schema.createClass("RequestTransform");
-            requestTransform.createProperty("ruleClass", OType.STRING);
-            requestTransform.createProperty("sequence", OType.INTEGER); // execution sequence of each phase.
-            requestTransform.createProperty("transformRule", OType.STRING);
-            requestTransform.createProperty("transformData", OType.EMBEDDEDMAP);
-            requestTransform.createProperty("createDate", OType.DATETIME);
-            requestTransform.createProperty("createUserId", OType.STRING);
-            requestTransform.createProperty("updateDate", OType.DATETIME);
-            requestTransform.createProperty("updateUserId", OType.STRING);
-            requestTransform.createIndex("ReqRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
+            OClass transformRequest = schema.createClass("TransformRequest");
+            transformRequest.createProperty("ruleClass", OType.STRING);
+            transformRequest.createProperty("sequence", OType.INTEGER); // execution sequence of each phase.
+            transformRequest.createProperty("transformRule", OType.STRING);
+            transformRequest.createProperty("transformData", OType.EMBEDDEDMAP);
+            transformRequest.createProperty("createDate", OType.DATETIME);
+            transformRequest.createProperty("createUserId", OType.STRING);
+            transformRequest.createProperty("updateDate", OType.DATETIME);
+            transformRequest.createProperty("updateUserId", OType.STRING);
+            transformRequest.createIndex("ReqRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -788,26 +789,26 @@ public class InitDatabase {
      * the endpoint is called
      *
      */
-    public static void initResponseTransform() {
+    public static void initTransformResponse() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             OSchema schema = db.getMetadata().getSchema();
-            if (schema.existsClass("ResponseTransform")) {
-                for (ODocument doc : db.browseClass("ResponseTransform")) {
+            if (schema.existsClass("TransformResponse")) {
+                for (ODocument doc : db.browseClass("TransformResponse")) {
                     doc.delete();
                 }
-                schema.dropClass("ResponseTransform");
+                schema.dropClass("TransformResponse");
             }
-            OClass responseTransform = schema.createClass("ResponseTransform");
-            responseTransform.createProperty("ruleClass", OType.STRING);
-            responseTransform.createProperty("sequence", OType.INTEGER); // execution sequence of each phase.
-            responseTransform.createProperty("transformRule", OType.STRING);
-            responseTransform.createProperty("transformData", OType.EMBEDDEDMAP);
-            responseTransform.createProperty("createDate", OType.DATETIME);
-            responseTransform.createProperty("createUserId", OType.STRING);
-            responseTransform.createProperty("updateDate", OType.DATETIME);
-            responseTransform.createProperty("updateUserId", OType.STRING);
-            responseTransform.createIndex("ResRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
+            OClass transformResponse = schema.createClass("TransformResponse");
+            transformResponse.createProperty("ruleClass", OType.STRING);
+            transformResponse.createProperty("sequence", OType.INTEGER); // execution sequence of each phase.
+            transformResponse.createProperty("transformRule", OType.STRING);
+            transformResponse.createProperty("transformData", OType.EMBEDDEDMAP);
+            transformResponse.createProperty("createDate", OType.DATETIME);
+            transformResponse.createProperty("createUserId", OType.STRING);
+            transformResponse.createProperty("updateDate", OType.DATETIME);
+            transformResponse.createProperty("updateUserId", OType.STRING);
+            transformResponse.createIndex("ResRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -815,6 +816,41 @@ public class InitDatabase {
             db.close();
         }
     }
+
+    /**
+     * For each rule class you can define a form id or a json schema for request validation
+     * before the endpoint is called. If the end point is a form action then this schema is
+     * auto populated when form is add/import/update/delete. Otherwise, it needs to be populated
+     * manually with json schema.
+     *
+     * Note: the validation is for the data payload of the command only.
+     *
+     */
+    public static void initValidation() {
+        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        try {
+            OSchema schema = db.getMetadata().getSchema();
+            if (schema.existsClass("Validation")) {
+                for (ODocument doc : db.browseClass("Validation")) {
+                    doc.delete();
+                }
+                schema.dropClass("Validation");
+            }
+            OClass validation = schema.createClass("Validation");
+            validation.createProperty("ruleClass", OType.STRING);
+            validation.createProperty("schema", OType.EMBEDDEDMAP);
+            validation.createProperty("createDate", OType.DATETIME);
+            validation.createProperty("createUserId", OType.STRING);
+            validation.createProperty("updateDate", OType.DATETIME);
+            validation.createProperty("updateUserId", OType.STRING);
+            validation.createIndex("Validation.ruleClass", OClass.INDEX_TYPE.UNIQUE, "ruleClass");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
 
     /**
      * access is a piece of info that controls how endpoints are accessed from client
