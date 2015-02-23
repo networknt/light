@@ -45,7 +45,7 @@
         }
 
 
-        $http.post('api/rs', getForm)
+        $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify(getForm))}})
                 .success(function(result, status, headers, config) {
                     $scope.schema = result.schema;
                     console.log('schema = ', $scope.schema);
