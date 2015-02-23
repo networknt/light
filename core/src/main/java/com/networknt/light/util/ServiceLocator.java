@@ -149,6 +149,12 @@ public class ServiceLocator {
         return valueMap;
     }
 
+    // for replay event. clear all cache for simple event replay deployment.
+    public void clearMemoryImage() {
+        memoryImage.clear();
+    }
+
+
     private void loadServerConfig() {
         if(serverMap == null) {
             synchronized (ServiceLocator.class) {

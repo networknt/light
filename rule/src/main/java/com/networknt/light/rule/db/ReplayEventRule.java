@@ -61,7 +61,9 @@ public class ReplayEventRule implements Rule {
                 // content may contains several events, parse it.
                 List<Map<String, Object>> events = mapper.readValue(content,
                     new TypeReference<List<HashMap<String, Object>>>() {});
-
+                // clear all cache before replay. in the future it might be clear only the category
+                // that the events involved. TODO
+                ServiceLocator.getInstance().clearMemoryImage();
                 // replay event one by one.
                 for(Map<String, Object> event: events) {
                     RuleEngine.getInstance().executeRuleAsync(Util.getEventRuleId(event), event);
