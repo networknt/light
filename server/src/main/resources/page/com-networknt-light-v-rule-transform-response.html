@@ -14,17 +14,17 @@
   ~ limitations under the License.
   -->
 <script type='text/javascript'>
-    angular.module('lightApp').controller('com.networknt.light.RequestTransformAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
-        $scope.getRequestTransform = {
+    angular.module('lightApp').controller('com.networknt.light.TransformResponseAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+        $scope.getTransformResponse = {
             category : 'transform',
-            name : 'getRequestTransform',
+            name : 'getTransformResponse',
             readOnly: true,
             data: {}
         };
 
-        $scope.delRequestTransform = {
+        $scope.delTransformResponse = {
             category : 'transform',
-            name : 'delRequestTransform',
+            name : 'delTransformResponse',
             readOnly: false
         };
 
@@ -76,8 +76,8 @@
         };
 
         $scope.delete = function(transform) {
-            $scope.delRequestTransform.data = transform;
-            $http.post('api/rs', $scope.delRequestTransform)
+            $scope.delTransformResponse.data = transform;
+            $http.post('api/rs', $scope.delTransformResponse)
                     .success(function (data, status, headers, config) {
                         $scope.transforms.splice($scope.transforms.indexOf(transform), 1);
                         toaster.pop('success', status, data, 3000);
@@ -86,21 +86,21 @@
 
 
         $scope.update = function(transform) {
-            transform.ruleClass = $scope.getRequestTransform.data.ruleClass;
+            transform.ruleClass = $scope.getTransformResponse.data.ruleClass;
             // convert transformData from map to string in order to display in the text area.
-            transform.transformData = JSON.stringify(transform.transformData);
+            transform.transformData = JSON.stringify(transform.transformData, undefined, 2);
             modelDataService.setModelData(transform);
-            $location.path("/form/com.networknt.light.request.transform.update_d");
+            $location.path("/form/com.networknt.light.transform.response.update_d");
         };
 
         $scope.add = function() {
-            $location.path("/form/com.networknt.light.request.transform.add_d");
+            $location.path("/form/com.networknt.light.transform.response.add_d");
         };
 
         $scope.fetchResult = function () {
-            $scope.getRequestTransform.data.ruleClass = modelDataService.getModelData().ruleClass;
-            console.log("ruleClass", $scope.getRequestTransform.data.ruleClass);
-            $http.post('api/rs', $scope.getRequestTransform)
+            $scope.getTransformResponse.data.ruleClass = modelDataService.getModelData().ruleClass;
+            console.log("ruleClass", $scope.getTransformResponse.data.ruleClass);
+            $http.post('api/rs', {params: {cmd: encodeURIComponent(JSON.stringify($scope.getTransformResponse))}})
                     .success(function (result, status, headers, config) {
                         $scope.transforms = result;
                     })
@@ -108,14 +108,14 @@
         $scope.fetchResult();
     }]);
 </script>
-<div class="container" ng-controller="com.networknt.light.RequestTransformAdminHomeCtrl">
+<div class="container" ng-controller="com.networknt.light.TransformResponseAdminHomeCtrl">
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
                 <button class="btn btn-info" ng-click="add()"><i class="glyphicon glyphicon-edit"></i>Add</button>
             </div>
             <tabset>
-                <tab heading={{getRequestTransform.data.ruleClass}}>
+                <tab heading={{getTransformResponse.data.ruleClass}}>
                     <table class="table table-striped">
                         <thead>
                         <tr>

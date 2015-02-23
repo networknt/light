@@ -79,7 +79,7 @@
 
         //The function that is responsible of fetching the result from the server and setting the grid to the new result
         $scope.fetchResult = function () {
-            $http.post('api/rs', $scope.getAllPage)
+            $http.get('api/rs', {params: {cmd: encodeURIComponent(JSON.stringify($scope.getAllPage))}})
                     .success(function (result, status, headers, config) {
                         $scope.pages = result;
                         //console.log($scope.pages);

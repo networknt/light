@@ -77,7 +77,7 @@
         };
 
         $scope.fetchResult = function () {
-            $http.post('api/rs', $scope.getAllForm)
+            $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify($scope.getAllForm))}})
                     .success(function (result, status, headers, config) {
                         $scope.forms = result;
                         console.log($scope.forms);

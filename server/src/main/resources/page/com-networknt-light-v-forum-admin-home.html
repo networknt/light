@@ -72,7 +72,7 @@
         };
 
         $scope.fetchResult = function () {
-            $http.post('api/rs', $scope.getForum)
+            $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify($scope.getForum))}})
                     .success(function (result, status, headers, config) {
                         $scope.forums = result;
                         console.log($scope.forums);
