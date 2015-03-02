@@ -11,10 +11,10 @@
     "schema": {
         "type": "object",
         "title": "Import Page File",
-        "required": ["id", "content"],
+        "required": ["pageId", "content"],
         "properties": {
-            "id": {
-                "title": "Id",
+            "pageId": {
+                "title": "Page Id",
                 "type": "string"
             },
             "content": {
@@ -25,7 +25,7 @@
         }
     },
     "form": [
-        "id",
+        "pageId",
         "content"
     ]
 }
