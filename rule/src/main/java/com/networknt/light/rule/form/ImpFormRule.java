@@ -41,13 +41,13 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
 
         String host = (String)user.get("host");
         Map<String, Object> dataMap = mapper.readValue((String)data.get("content"), new TypeReference<HashMap<String, Object>>() {});
-        String id = (String)dataMap.get("id");
+        String formId = (String)dataMap.get("formId");
         if(host != null) {
             if(!host.equals(data.get("host"))) {
                 error = "User can only import form from host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
-                if(!id.contains(host)) {
+                if(!formId.contains(host)) {
                     // you are not allowed to add form as it is not owned by the host.
                     error = "form id doesn't contain host: " + host;
                     inputMap.put("responseCode", 403);
@@ -58,7 +58,7 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
                     inputMap.put("eventMap", eventMap);
                     eventData.put("host", host);
 
-                    eventData.put("id", id);
+                    eventData.put("formId", formId);
                     eventData.put("action", dataMap.get("action"));
                     eventData.put("schema", dataMap.get("schema"));
                     eventData.put("form", dataMap.get("form"));
@@ -74,7 +74,7 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
             inputMap.put("eventMap", eventMap);
 
-            eventData.put("id", id);
+            eventData.put("formId", formId);
             eventData.put("action", dataMap.get("action"));
             eventData.put("schema", dataMap.get("schema"));
             eventData.put("form", dataMap.get("form"));

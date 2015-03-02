@@ -22,13 +22,19 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
+import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -40,79 +46,52 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class AbstractRuleRule extends AbstractRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractRuleRule.class);
 
-    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
-
     public abstract boolean execute (Object ...objects) throws Exception;
 
     protected String getRuleByRuleClass(String ruleClass) {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Rule.ruleClass");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable rule = (OIdentifiable) ruleClassIdx.get(ruleClass);
-            if (rule != null && rule.getRecord() != null) {
-                json = ((ODocument) rule.getRecord()).toJSON();
+            OrientVertex rule = (OrientVertex)graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            if(rule != null) {
+                json = rule.getRecord().toJSON();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
-    protected String addRule(Map<String, Object> data) throws Exception {
-        String json = null;
-        ODocument access = null;
+    protected void addRule(OrientGraph graph, Map<String, Object> data) throws Exception {
+        OrientVertex access = null;
         String ruleClass = (String)data.get("ruleClass");
-        String createUserId = (String)data.get("createUserId");
-        Date createDate = (Date)data.get("createDate");
-        String host = (String)data.get("host");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
-        try {
-            db.begin();
-            ODocument rule = new ODocument(schema.getClass("Rule"));
-            rule.field("ruleClass", ruleClass);
-            if(host != null) rule.field("host", host);
-            rule.field("sourceCode", data.get("sourceCode"));
-            rule.field("createDate", createDate);
-            rule.field("createUserId", createUserId);
-            rule.save();
+        Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+        OrientVertex rule = graph.addVertex("class:Rule", data);
+        createUser.addEdge("Create", rule);
 
-            // For all the newly added rules, the default security access is role based and only
-            // owner can access. For some of the rules, like getForm, getMenu, they are granted
-            // to anyone in the db script. Don't overwrite if access exists for these rules.
+        // For all the newly added rules, the default security access is role based and only
+        // owner can access. For some of the rules, like getForm, getMenu, they are granted
+        // to anyone in the db script. Don't overwrite if access exists for these rules.
 
-            // check if access exists for the ruleClass and add access if not.
-            Map<String, Object> accessMap = getAccessByRuleClass(ruleClass);
-            if(accessMap == null) {
-                access = new ODocument(schema.getClass("Access"));
-                access.field("ruleClass", ruleClass);
-                if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
-                    access.field("accessLevel", "N"); // abstract rule and internal beta tester rule
-                } else if(ruleClass.endsWith("EvRule")) {
-                    access.field("accessLevel", "A"); // event rule can be only called internally.
-                } else {
-                    access.field("accessLevel", "R"); // role level access
-                    List roles = new ArrayList();
-                    roles.add("owner");  // give owner access for the rule by default.
-                    access.field("roles", roles);
-                }
-                access.field("createDate", data.get("createDate"));
-                access.field("createUserId", createUserId);
-                access.save();
+        // check if access exists for the ruleClass and add access if not.
+        if(getAccessByRuleClass(ruleClass) == null) {
+            access = graph.addVertex("class:Access");
+            access.setProperty("ruleClass", ruleClass);
+            if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
+                access.setProperty("accessLevel", "N"); // abstract rule and internal beta tester rule
+            } else if(ruleClass.endsWith("EvRule")) {
+                access.setProperty("accessLevel", "A"); // event rule can be only called internally.
+            } else {
+                access.setProperty("accessLevel", "R"); // role level access
+                List roles = new ArrayList();
+                roles.add("owner");  // give owner access for the rule by default.
+                access.setProperty("roles", roles);
             }
-            db.commit();
-            json  = rule.toJSON();
-        } catch (Exception e) {
-            db.rollback();
-            logger.error("Exception:", e);
-            throw e;
-        } finally {
-            db.close();
+            access.setProperty("createDate", data.get("createDate"));
+            createUser.addEdge("Create", access);
         }
         if(access != null) {
             Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
@@ -123,69 +102,44 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                         .build();
                 accessMap.put("cache", cache);
             }
-            cache.put(ruleClass, mapper.readValue(access.toJSON(),
+            cache.put(ruleClass, mapper.readValue(access.getRecord().toJSON(),
                     new TypeReference<HashMap<String, Object>>() {
                     }));
         }
-        return json;
     }
 
-    protected String impRule(Map<String, Object> data) throws Exception {
-        String json = null;
-        ODocument access = null;
+    protected void impRule(OrientGraph graph, Map<String, Object> data) throws Exception {
         String ruleClass = (String)data.get("ruleClass");
-        String createUserId = (String)data.get("createUserId");
-        String host = (String)data.get("host");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
-        try {
-            db.begin();
-            // remove the existing rule if there is.
-            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Rule.ruleClass");
-            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
-            if (oid != null) {
-                ((ODocument) oid.getRecord()).delete();
-            }
-            // create a new rule
-            ODocument rule = new ODocument(schema.getClass("Rule"));
-            rule.field("ruleClass", ruleClass);
-            if(host != null) rule.field("host", host);
-            rule.field("sourceCode", data.get("sourceCode"));
-            rule.field("createDate", data.get("createDate"));
-            rule.field("createUserId", createUserId);
-            rule.save();
-            // For all the newly added rules, the default security access is role based and only
-            // owner can access. For some of the rules, like getForm, getMenu, they are granted
-            // to anyone in the db script. Don't overwrite if access exists for these rules.
-            // Also, if ruleClass contains "Abstract" then its access level should be N.
+        Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+        // remove the existing rule if there is.
+        if(rule != null) {
+            graph.removeVertex(rule);
+        }
+        // create a new rule
+        Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+        rule = graph.addVertex("class:Rule", data);
+        createUser.addEdge("Create", rule);
+        // For all the newly added rules, the default security access is role based and only
+        // owner can access. For some of the rules, like getForm, getMenu, they are granted
+        // to anyone in the db script. Don't overwrite if access exists for these rules.
+        // Also, if ruleClass contains "Abstract" then its access level should be N.
 
-            // check if access exists for the ruleClass and add access if not.
-            Map<String, Object> accessMap = getAccessByRuleClass(ruleClass);
-            if(accessMap == null) {
-                access = new ODocument(schema.getClass("Access"));
-                access.field("ruleClass", ruleClass);
-                if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
-                    access.field("accessLevel", "N"); // abstract and internal beta tester rule
-                } else if(ruleClass.endsWith("EvRule")) {
-                    access.field("accessLevel", "A"); // event rule can be only called internally.
-                } else {
-                    access.field("accessLevel", "R"); // role level access
-                    List roles = new ArrayList();
-                    roles.add("owner");  // give owner access for the rule by default.
-                    access.field("roles", roles);
-                }
-                access.field("createDate", data.get("createDate"));
-                access.field("createUserId", createUserId);
-                access.save();
+        // check if access exists for the ruleClass and add access if not.
+        OrientVertex access = null;
+        if(getAccessByRuleClass(ruleClass) == null) {
+            access = graph.addVertex("class:Access");
+            access.setProperty("ruleClass", ruleClass);
+            if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
+                access.setProperty("accessLevel", "N"); // abstract and internal beta tester rule
+            } else if(ruleClass.endsWith("EvRule")) {
+                access.setProperty("accessLevel", "A"); // event rule can be only called internally.
+            } else {
+                access.setProperty("accessLevel", "R"); // role level access
+                List roles = new ArrayList();
+                roles.add("owner");  // give owner access for the rule by default.
+                access.setProperty("roles", roles);
             }
-            db.commit();
-            json  = rule.toJSON();
-        } catch (Exception e) {
-            db.rollback();
-            logger.error("Exception:", e);
-            throw e;
-        } finally {
-            db.close();
+            access.setProperty("createDate", data.get("createDate"));
         }
         if(access != null) {
             Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
@@ -196,60 +150,31 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                         .build();
                 accessMap.put("cache", cache);
             }
-            cache.put(ruleClass, mapper.readValue(access.toJSON(),
+            cache.put(ruleClass, mapper.readValue(access.getRecord().toJSON(),
                     new TypeReference<HashMap<String, Object>>() {
                     }));
         }
-        return json;
     }
 
-
-    protected void updRule(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            db.begin();
-            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Rule.ruleClass");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
-            if (oid != null && oid.getRecord() != null) {
-                ODocument rule = (ODocument) oid.getRecord();
-                String sourceCode = (String)data.get("sourceCode");
-                if(sourceCode != null && !sourceCode.equals(rule.field("sourceCode"))) {
-                    rule.field("sourceCode", sourceCode);
-                }
-                rule.field("updateDate", data.get("updateDate"));
-                rule.field("updateUserId", data.get("updateUserId"));
-                rule.save();
+    protected void updRule(OrientGraph graph, Map<String, Object> data) throws Exception {
+        Vertex rule = graph.getVertexByKey("Rule.ruleClass", data.get("ruleClass"));
+        if(rule != null) {
+            String sourceCode = (String)data.get("sourceCode");
+            if(sourceCode != null && !sourceCode.equals(rule.getProperty("sourceCode"))) {
+                rule.setProperty("sourceCode", sourceCode);
             }
-            db.commit();
-        } catch (Exception e) {
-            db.rollback();
-            logger.error("Exception:", e);
-            throw e;
-        } finally {
-            db.close();
+            rule.setProperty("updateDate", data.get("updateDate"));
+            Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+            if(updateUser != null) {
+                updateUser.addEdge("Update", rule);
+            }
         }
     }
 
-    protected void delRule(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            db.begin();
-
-            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Rule.ruleClass");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
-            if (oid != null && oid.getRecord() != null) {
-                ODocument rule = (ODocument) oid.getRecord();
-                rule.delete();
-            }
-            db.commit();
-        } catch (Exception e) {
-            db.rollback();
-            logger.error("Exception:", e);
-            throw e;
-        } finally {
-            db.close();
+    protected void delRule(OrientGraph graph, Map<String, Object> data) throws Exception {
+        Vertex rule = graph.getVertexByKey("Rule.ruleClass", data.get("ruleClass"));
+        if(rule != null) {
+            graph.removeVertex(rule);
         }
     }
 
@@ -259,43 +184,37 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             sql = sql + " WHERE host = '" + host;
         }
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> rules = db.command(query).execute();
+            List<ODocument> rules = graph.getRawGraph().command(query).execute();
             json = OJSONWriter.listToJSON(rules, null);
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
-    protected String getRuleMap(String host) throws Exception {
+    protected String getRuleMap(OrientGraphNoTx graph, String host) throws Exception {
         String sql = "SELECT FROM Rule";
         if(host != null) {
             sql = sql + " WHERE host = '" + host;
         }
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> rules = db.command(query).execute();
-            if(rules != null && rules.size() > 0) {
-                // covert list to map
-                Map<String, String> ruleMap = new HashMap<String, String> ();
-                for(ODocument rule: rules) {
-                    ruleMap.put((String)rule.field("ruleClass"), (String)rule.field("sourceCode"));
-                }
-                json = mapper.writeValueAsString(ruleMap);
+            Map<String, String> ruleMap = new HashMap<String, String> ();
+            for (Vertex rule : (Iterable<Vertex>) graph.command(new OCommandSQL(sql)).execute()) {
+                ruleMap.put((String) rule.getProperty("ruleClass"), (String) rule.getProperty("sourceCode"));
             }
+            json = mapper.writeValueAsString(ruleMap);
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
@@ -306,10 +225,10 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
         }
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> rules = db.command(query).execute();
+            List<ODocument> rules = graph.getRawGraph().command(query).execute();
             if(rules.size() > 0) {
                 List<Map<String, String>> list = new ArrayList<Map<String, String>>();
                 for(ODocument doc: rules) {
@@ -326,7 +245,7 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             logger.error("Exception:", e);
             //throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }

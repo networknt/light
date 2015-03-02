@@ -27,8 +27,8 @@ public class DelRoleEvRule extends AbstractRoleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        String id = (String)data.get("id");
-        delRole(id);
+        String roleId = (String)data.get("roleId");
+        delRole(roleId);
         return true;
     }
 }

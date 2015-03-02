@@ -40,7 +40,7 @@ public class AddRoleRule extends AbstractRoleRule implements Rule {
                 error = "User can only add role from host: " + host;
                 inputMap.put("responseCode", 401);
             } else {
-                String json = getRoleById((String)data.get("id"));
+                String json = getRoleById((String)data.get("roleId"));
                 if(json != null) {
                     error = "Id for the role exists";
                     inputMap.put("responseCode", 400);
@@ -54,7 +54,7 @@ public class AddRoleRule extends AbstractRoleRule implements Rule {
                 }
             }
         } else {
-            String json = getRoleById((String)data.get("id"));
+            String json = getRoleById((String)data.get("roleId"));
             if(json != null) {
                 error = "Id for the role exists";
                 inputMap.put("responseCode", 400);

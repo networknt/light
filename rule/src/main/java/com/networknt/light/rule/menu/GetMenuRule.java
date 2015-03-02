@@ -17,7 +17,13 @@
 package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,7 +36,16 @@ public class GetMenuRule extends AbstractMenuRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String host = (String) data.get("host");
-        String json = getMenu(host);
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        String json = null;
+        try {
+            json = getMenu(graph, host);
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
         if(json != null) {
             inputMap.put("result", json);
             return true;

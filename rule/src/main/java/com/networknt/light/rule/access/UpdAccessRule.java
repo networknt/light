@@ -45,6 +45,7 @@ public class UpdAccessRule extends AbstractAccessRule implements Rule {
         String rid = (String)data.get("@rid");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;
+        /*
         if(payload == null) {
             error = "Login is required";
             inputMap.put("responseCode", 401);
@@ -277,6 +278,7 @@ public class UpdAccessRule extends AbstractAccessRule implements Rule {
                 }
             }
         }
+        */
         if(error != null) {
             inputMap.put("error", error);
             return false;

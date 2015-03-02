@@ -28,6 +28,11 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,158 +43,138 @@ import java.util.Map;
  * Created by husteve on 10/31/2014.
  */
 public abstract class AbstractRoleRule extends AbstractRule implements Rule {
-    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractRoleRule.class);
 
     public abstract boolean execute (Object ...objects) throws Exception;
 
-    protected String getRoleById(String id) {
+    protected String getRoleById(String roleId) {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OIndex<?> roleIdIdx = db.getMetadata().getIndexManager().getIndex("Role.id");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) roleIdIdx.get(id);
-            if (oid != null) {
-                ODocument role = (ODocument)oid.getRecord();
-                json = role.toJSON();
+            OrientVertex role = (OrientVertex)graph.getVertexByKey("Role.roleId", roleId);
+            if(role != null) {
+                json = role.getRecord().toJSON();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
     protected void addRole(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            ODocument role = new ODocument(schema.getClass("Role"));
-            role.field("id", data.get("id"));
-            if(data.get("host") != null) role.field("host", data.get("host"));
-            role.field("desc", data.get("desc"));
-            role.field("createDate", data.get("createDate"));
-            role.field("createUserId", data.get("createUserId"));
-            role.save();
-            db.commit();
+            graph.begin();
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            OrientVertex role = graph.addVertex("class:Role", data);
+            createUser.addEdge("Create", role);
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
     protected void updRole(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> roleIdIdx = db.getMetadata().getIndexManager().getIndex("Role.id");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) roleIdIdx.get(data.get("id"));
-            if (oid != null && oid.getRecord() != null) {
-                ODocument role = oid.getRecord();
-
-            }
-            db.commit();
-
-            ODocument role = db.load(new ORecordId((String)data.get("@rid")));
-            if (role != null) {
+            graph.begin();
+            Vertex updateUser = graph.getVertexByKey("User.userId", data.remove("updateUserId"));
+            Vertex role = graph.getVertexByKey("Role.roleId", data.get("roleId"));
+            if(role != null) {
                 String host = (String)data.get("host");
                 if(host != null && host.length() > 0) {
-                    if(!host.equals(role.field("host"))) role.field("host", host);
+                    if(!host.equals(role.getProperty("host"))) role.setProperty("host", host);
                 } else {
-                    role.removeField("host");
+                    role.removeProperty("host");
                 }
                 String desc = (String)data.get("desc");
-                if(desc != null && !desc.equals(role.field("desc"))) {
-                    role.field("desc", desc);
+                if(desc != null && !desc.equals(role.getProperty("desc"))) {
+                    role.setProperty("desc", desc);
                 }
-                role.field("updateDate", data.get("updateDate"));
-                role.field("updateUserId", data.get("updateUserId"));
-                role.save();
-                db.commit();
+                role.setProperty("updateDate", data.get("updateDate"));
+                updateUser.addEdge("Update", role);
             }
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
-    protected void delRole(String id) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void delRole(String roleId) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> roleIdIdx = db.getMetadata().getIndexManager().getIndex("Role.id");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) roleIdIdx.get(id);
-            if (oid != null && oid.getRecord() != null) {
-                oid.getRecord().delete();
+            graph.begin();
+            Vertex role = graph.getVertexByKey("Role.roleId", roleId);
+            if(role != null) {
+                graph.removeVertex(role);
             }
-            db.commit();
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
-    protected String getRoles(String host) {
+    protected String getRoles(OrientGraphNoTx graph, String host) {
         String sql = "SELECT FROM Role";
         if(host != null) {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
         }
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> roles = db.command(query).execute();
+            List<ODocument> roles = graph.getRawGraph().command(query).execute();
             json = OJSONWriter.listToJSON(roles, null);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
-    protected String getRoleDropdown(String host) {
+    protected String getRoleDropdown(String host) throws Exception {
         String sql = "SELECT FROM Role";
         if(host != null) {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
         }
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> roles = db.command(query).execute();
+            List<ODocument> roles = graph.command(query).execute();
             if(roles.size() > 0) {
                 List<Map<String, String>> list = new ArrayList<Map<String, String>>();
                 for(ODocument doc: roles) {
                     Map<String, String> map = new HashMap<String, String>();
-                    String id = doc.field("id");
-                    map.put("label", id);
-                    map.put("value", id);
+                    String roleId = doc.field("roleId");
+                    map.put("label", roleId);
+                    map.put("value", roleId);
                     list.add(map);
                 }
                 json = mapper.writeValueAsString(list);
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            // TODO throw e
+            logger.error("Exception:", e);
+            throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }

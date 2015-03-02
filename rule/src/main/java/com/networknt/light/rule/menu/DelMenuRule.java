@@ -18,7 +18,10 @@ package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -37,20 +40,29 @@ public class DelMenuRule extends AbstractMenuRule implements Rule {
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String rid = (String)data.get("@rid");
         String error = null;
+
         String host = (String)user.get("host");
         if(host != null && !host.equals(data.get("host"))) {
             error = "User can only delete menu for host: " + host;
-            inputMap.put("responseCode", 401);
+            inputMap.put("responseCode", 403);
         } else {
-            ODocument menu = DbService.getODocumentByRid(rid);
-            if(menu == null) {
-                error = "Menu with @rid " + rid + " cannot be found";
-                inputMap.put("responseCode", 404);
-            } else {
-                Map eventMap = getEventMap(inputMap);
-                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                inputMap.put("eventMap", eventMap);
-                eventData.put("host", menu.field("host"));// unique key
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+                Vertex menu = DbService.getVertexByRid(graph, rid);
+                if(menu == null) {
+                    error = "Menu with @rid " + rid + " cannot be found";
+                    inputMap.put("responseCode", 404);
+                } else {
+                    Map eventMap = getEventMap(inputMap);
+                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                    inputMap.put("eventMap", eventMap);
+                    eventData.put("host", menu.getProperty("host"));// unique key
+                }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
         if(error != null) {

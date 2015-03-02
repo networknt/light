@@ -24,6 +24,7 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
+import com.networknt.light.util.Util;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.index.OCompositeKey;
@@ -31,6 +32,9 @@ import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.sun.org.apache.bcel.internal.generic.RET;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,9 +69,9 @@ public abstract class AbstractValidationRule extends AbstractRule implements Rul
             }
         }
         if(schema == null) {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
-                OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
+                OIndex<?> validationRuleClassIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Validation.ruleClass");
                 OIdentifiable oid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
                 if (oid != null) {
                     ODocument validation = (ODocument) oid.getRecord();
@@ -99,7 +103,7 @@ public abstract class AbstractValidationRule extends AbstractRule implements Rul
                 logger.error("Exception:", e);
                 throw e;
             } finally {
-                db.close();
+                graph.shutdown();
             }
         }
         return schema;
@@ -107,9 +111,9 @@ public abstract class AbstractValidationRule extends AbstractRule implements Rul
 
     protected String getValidation(String ruleClass) throws Exception {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
+            OIndex<?> validationRuleClassIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Validation.ruleClass");
             OIdentifiable oid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
             if (oid != null) {
                 ODocument validation = (ODocument) oid.getRecord();
@@ -119,29 +123,26 @@ public abstract class AbstractValidationRule extends AbstractRule implements Rul
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
     protected void addValidation(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            ODocument validation = new ODocument(schema.getClass("Validation"));
-            validation.field("ruleClass", data.get("ruleClass"));
-            validation.field("schema", data.get("schema"));
-            validation.field("createDate", data.get("createDate"));
-            validation.field("createUserId", data.get("createUserId"));
-            validation.save();
-            db.commit();
+            graph.begin();
+            String createUserId = (String)data.remove("createUserId");
+            OrientVertex validation = graph.addVertex("class:Validation", data);
+            Vertex user = graph.getVertexByKey("User.userId", createUserId);
+            user.addEdge("Create", validation);
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            graph.rollback();
+            logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();;
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -152,22 +153,20 @@ public abstract class AbstractValidationRule extends AbstractRule implements Rul
     }
 
     protected void delValidation(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
-            OIdentifiable oid = (OIdentifiable) validationRuleClassIdx.get(data.get("ruleClass"));
-            if (oid != null) {
-                ODocument validation = (ODocument) oid.getRecord();
-                validation.delete();
-                db.commit();
+            graph.begin();
+            Vertex validation = graph.getVertexByKey("Validation.ruleClass", data.get("ruleClass"));
+            if(validation != null) {
+                graph.removeVertex(validation);
             }
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
             logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -178,26 +177,23 @@ public abstract class AbstractValidationRule extends AbstractRule implements Rul
     }
 
     protected void updValidation(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
-            OIdentifiable oid = (OIdentifiable) validationRuleClassIdx.get(data.get("ruleClass"));
-            if (oid != null) {
-                ODocument validation = (ODocument) oid.getRecord();
-
-                validation.field("schema", data.get("schema"));
-                validation.field("updateDate", data.get("updateDate"));
-                validation.field("updateUserId", data.get("updateUserId"));
-                validation.save();
-                db.commit();
+            graph.begin();
+            Vertex validation = graph.getVertexByKey("Validation.ruleClass", data.get("ruleClass"));
+            if(validation != null) {
+                validation.setProperty("schema", data.get("schema"));
+                validation.setProperty("updateDate", data.get("updateDate"));
             }
+            Vertex user = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+            user.addEdge("Update", validation);
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -206,6 +202,4 @@ public abstract class AbstractValidationRule extends AbstractRule implements Rul
             cache.remove(data.get("ruleClass"));
         }
     }
-
-
 }

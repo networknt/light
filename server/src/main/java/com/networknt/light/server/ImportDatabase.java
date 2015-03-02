@@ -20,6 +20,7 @@ import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.command.OCommandOutputListener;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.tool.ODatabaseImport;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ public class ImportDatabase {
 
     public static void imp() {
 
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
 
         try{
             OCommandOutputListener listener = new OCommandOutputListener() {
@@ -44,13 +45,13 @@ public class ImportDatabase {
                 }
             };
 
-            ODatabaseImport imp = new ODatabaseImport(db, "/temp/export/export.json.gz", listener);
+            ODatabaseImport imp = new ODatabaseImport(graph.getRawGraph(), "/temp/export/export.json.gz", listener);
             imp.importDatabase();
             imp.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {
-            db.close();
+            graph.shutdown();
         }
 
     }

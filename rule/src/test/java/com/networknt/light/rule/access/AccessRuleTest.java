@@ -14,24 +14,28 @@
  * limitations under the License.
  */
 
-package com.networknt.light.server.handler.loader;
+package com.networknt.light.rule.access;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Created by steve on 24/08/14.
+ * Created by steve on 01/03/15.
  */
-public class TemplateLoaderTest extends TestCase {
-    public TemplateLoaderTest(String name) {
+public class AccessRuleTest extends TestCase {
+    ObjectMapper mapper = new ObjectMapper();
+
+    String getClientDropdown = "{\"readOnly\":true,\"category\":\"client\",\"name\":\"getClientDropdown\"}";
+
+    public AccessRuleTest(String name) {
         super(name);
     }
 
     public static Test suite() {
         TestSuite suite = new TestSuite();
-        suite.addTestSuite(TemplateLoaderTest.class);
+        suite.addTestSuite(AccessRuleTest.class);
         return suite;
     }
 
@@ -43,11 +47,7 @@ public class TemplateLoaderTest extends TestCase {
         super.tearDown();
     }
 
-    public void testLoadTemplateOriental() throws Exception {
-        TemplateLoader.loadTemplateOriental();
-        boolean result = true;
-        assertTrue(result);
+    public void testExecute() throws Exception {
+
     }
-
-
 }

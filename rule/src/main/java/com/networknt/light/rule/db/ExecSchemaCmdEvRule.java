@@ -14,33 +14,20 @@
  * limitations under the License.
  */
 
-package com.networknt.light.rule.rule;
+package com.networknt.light.rule.db;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.util.ServiceLocator;
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 import java.util.Map;
 
 /**
- * Created by steve on 08/10/14.
+ * Created by steve on 01/03/15.
  */
-public class UpdRuleEvRule extends AbstractRuleRule implements Rule {
+public class ExecSchemaCmdEvRule extends AbstractDbRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        try {
-            graph.begin();
-            updRule(graph, data);
-            graph.commit();
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-            graph.rollback();
-            throw e;
-        } finally {
-            graph.shutdown();
-        }
+        execSchemaCmd(data);
         return true;
     }
 }

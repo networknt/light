@@ -17,12 +17,16 @@
 package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by steve on 29/10/14.
+ *
+ * Get All menus and menuItems for menu admin interface.
  *
  * AccessLevel R [owner, admin, menuAdmin]
  *
@@ -32,9 +36,17 @@ public class GetAllMenuRule extends AbstractMenuRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>) payload.get("user");
-        List roles = (List)user.get("roles");
         String host = (String) user.get("host");
-        String menus = getAllMenu(host);
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        String menus = null;
+        try {
+            menus = getAllMenu(graph, host);
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
         if(menus != null) {
             inputMap.put("result", menus);
             return true;

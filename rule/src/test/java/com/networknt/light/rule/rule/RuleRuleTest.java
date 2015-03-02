@@ -39,6 +39,7 @@ public class RuleRuleTest extends TestCase {
     String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
     String getRuleDropdown = "{\"readOnly\":true,\"category\":\"rule\",\"name\":\"getRuleDropdown\"}";
+    String getRuleMap = "{\"readOnly\":true,\"category\":\"rule\",\"name\":\"getRuleMap\"}";
 
     public RuleRuleTest(String name) {
         super(name);
@@ -110,6 +111,20 @@ public class RuleRuleTest extends TestCase {
                 jsonMap.put("payload", ownerToken.getPayload());
 
                 GetRuleDropdownRule rule = new GetRuleDropdownRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                String result = (String) jsonMap.get("result");
+                System.out.println("result = " + result);
+            }
+
+            // get rule map for rule-loader by owner
+            {
+                jsonMap = mapper.readValue(getRuleMap,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+
+                GetRuleMapRule rule = new GetRuleMapRule();
                 ruleResult = rule.execute(jsonMap);
                 assertTrue(ruleResult);
                 String result = (String) jsonMap.get("result");

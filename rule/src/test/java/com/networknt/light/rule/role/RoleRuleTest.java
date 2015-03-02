@@ -38,9 +38,9 @@ public class RoleRuleTest extends TestCase {
 
     String getRole = "{\"readOnly\":true,\"category\":\"role\",\"name\":\"getRole\"}";
 
-    String addRoleCommon = "{\"readOnly\":false,\"category\":\"role\",\"name\":\"addRole\",\"data\":{\"id\":\"commonRole\",\"host\":\"injector\",\"desc\":\"This is just a test role\"}}";
-    String addRoleExample = "{\"readOnly\":false,\"category\":\"role\",\"name\":\"addRole\",\"data\":{\"id\":\"exampleRole\",\"host\":\"www.example.com\",\"desc\":\"This is just a test role\"}}";
-    String addRoleInjector = "{\"readOnly\":false,\"category\":\"role\",\"name\":\"addRole\",\"data\":{\"id\":\"injectorRole\",\"host\":\"injector\",\"desc\":\"This is just a test role\"}}";
+    String addRoleCommon = "{\"readOnly\":false,\"category\":\"role\",\"name\":\"addRole\",\"data\":{\"roleId\":\"commonRole\",\"host\":\"injector\",\"desc\":\"This is just a test role\"}}";
+    String addRoleExample = "{\"readOnly\":false,\"category\":\"role\",\"name\":\"addRole\",\"data\":{\"roleId\":\"exampleRole\",\"host\":\"www.example.com\",\"desc\":\"This is just a test role\"}}";
+    String addRoleInjector = "{\"readOnly\":false,\"category\":\"role\",\"name\":\"addRole\",\"data\":{\"roleId\":\"injectorRole\",\"host\":\"injector\",\"desc\":\"This is just a test role\"}}";
     String updRole = "{\"readOnly\": false, \"category\": \"role\", \"name\": \"updRole\"}";
     String delRole = "{\"readOnly\": false, \"category\": \"role\", \"name\": \"delRole\"}";
 
@@ -126,7 +126,7 @@ public class RoleRuleTest extends TestCase {
 
             }
 
-            // get roles by owner
+            // get roles
             {
                 jsonMap = mapper.readValue(getRole,
                         new TypeReference<HashMap<String, Object>>() {

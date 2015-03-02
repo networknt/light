@@ -18,7 +18,11 @@ package com.networknt.light.rule.user;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.HashUtil;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +46,16 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
             error = "The email address " + email + " has been signed up. Please login or recover your password.";
             inputMap.put("responseCode", 400);
         } else {
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
+            }
+
             if(isUserInDbByUserId(userId)) {
                 error = "The userId " + userId + " has been used by another user.";
                 inputMap.put("responseCode", 400);
@@ -61,6 +75,12 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
                     // replace the password with the hashed password.
                     password = HashUtil.generateStorngPasswordHash(password);
                     eventData.put("password", password);
+                    // set default values here.
+                    eventData.put("karma", 0);
+                    List<String> roles = new ArrayList<String>();
+                    roles.add("user"); // default role for sign up users, more roles can be added later by admin
+                    eventData.put("roles", roles);
+                    eventData.put("createDate", new java.util.Date());
                 }
             }
         }

@@ -43,13 +43,13 @@ public class GetFormRule extends AbstractFormRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String host = (String)data.get("host");
-        String id = (String)data.get("id");
+        String formId = (String)data.get("formId");
         String json = getFormById(inputMap);
         if(json != null) {
             inputMap.put("result", json);
             return true;
         } else {
-            inputMap.put("result", "Form with " + id + " cannot be found.");
+            inputMap.put("result", "Form with " + formId + " cannot be found.");
             inputMap.put("responseCode", 404);
             return false;
         }

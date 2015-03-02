@@ -41,7 +41,7 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
         String rid = (String)data.get("@rid");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;
-
+        /*
         String host = (String)user.get("host");
         if(host != null) {
             if(!host.equals(data.get("host"))) {
@@ -101,6 +101,7 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
                 }
             }
         }
+        */
         if(error != null) {
             inputMap.put("error", error);
             return false;

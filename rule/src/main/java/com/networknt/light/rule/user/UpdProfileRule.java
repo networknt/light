@@ -18,7 +18,10 @@ package com.networknt.light.rule.user;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.Map;
 
@@ -38,17 +41,26 @@ public class UpdProfileRule extends AbstractUserRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String rid = (String)user.get("@rid");
-        ODocument updateUser = DbService.getODocumentByRid(rid);
-        if(updateUser != null) {
-            Map eventMap = getEventMap(inputMap);
-            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-            inputMap.put("eventMap", eventMap);
-            eventData.putAll(data);
-            eventData.put("updateDate", new java.util.Date());
-        } else {
-            error = "User with rid " + rid + " cannot be found.";
-            inputMap.put("responseCode", 404);
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        try {
+            Vertex updateUser = DbService.getVertexByRid(graph, rid);
+            if(updateUser != null) {
+                Map eventMap = getEventMap(inputMap);
+                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                inputMap.put("eventMap", eventMap);
+                eventData.putAll(data);
+                eventData.put("updateDate", new java.util.Date());
+            } else {
+                error = "User with rid " + rid + " cannot be found.";
+                inputMap.put("responseCode", 404);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
         }
+
         if(error != null) {
             inputMap.put("error", error);
             return false;

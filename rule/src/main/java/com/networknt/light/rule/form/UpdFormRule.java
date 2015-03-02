@@ -31,7 +31,7 @@ public class UpdFormRule extends AbstractFormRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        String id = (String)data.get("id");
+        String formId = (String)data.get("formId");
         String error = null;
 
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
@@ -43,14 +43,14 @@ public class UpdFormRule extends AbstractFormRule implements Rule {
                 error = "User can only update form from host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
-                if (!id.contains(host)) {
+                if (!formId.contains(host)) {
                     error = "form id doesn't contain host: " + host;
                     inputMap.put("responseCode", 403);
                 } else {
                     int inputVersion = (int)data.get("@version");
                     String json = getFormById(inputMap);
                     if(json == null) {
-                        error = "Form with id " + id + " cannot be found";
+                        error = "Form with id " + formId + " cannot be found";
                         inputMap.put("responseCode", 404);
                     } else {
                         Map<String, Object> form = mapper.readValue(json,
@@ -77,7 +77,7 @@ public class UpdFormRule extends AbstractFormRule implements Rule {
             int inputVersion = (int)data.get("@version");
             String json = getFormById(inputMap);
             if(json == null) {
-                error = "Form with id " + id + " cannot be found";
+                error = "Form with id " + formId + " cannot be found";
                 inputMap.put("responseCode", 404);
             } else {
                 Map<String, Object> form = mapper.readValue(json,

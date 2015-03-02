@@ -18,7 +18,10 @@ package com.networknt.light.rule.page;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -43,22 +46,30 @@ public class DelPageRule extends AbstractPageRule implements Rule {
             error = "User can only delete page from host: " + host;
             inputMap.put("responseCode", 401);
         } else {
-            ODocument page = DbService.getODocumentByRid(rid);
-            if(page != null) {
-                int inputVersion = (int)data.get("@version");
-                int storedVersion = page.field("@version");
-                if(inputVersion != storedVersion) {
-                    inputMap.put("responseCode", 400);
-                    error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+                Vertex page = DbService.getVertexByRid(graph, rid);
+                if(page != null) {
+                    int inputVersion = (int)data.get("@version");
+                    int storedVersion = page.getProperty("@version");
+                    if(inputVersion != storedVersion) {
+                        inputMap.put("responseCode", 400);
+                        error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
+                    } else {
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
+                        eventData.put("pageId", page.getProperty("pageId"));
+                    }
                 } else {
-                    Map eventMap = getEventMap(inputMap);
-                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                    inputMap.put("eventMap", eventMap);
-                    eventData.put("id", page.field("id"));
+                    error = "Page with @rid " + rid + " doesn't exist";
+                    inputMap.put("responseCode", 400);
                 }
-            } else {
-                error = "Page with @rid " + rid + " doesn't exist";
-                inputMap.put("responseCode", 400);
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
         if(error != null) {

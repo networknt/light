@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.JwtUtil;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -407,86 +409,6 @@ public class UserRuleTest extends TestCase {
 
             }
 
-            // add role
-            {
-                jsonMap = mapper.readValue(addRole,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
-                Map<String, Object> payload = userToken.getPayload();
-                Map<String, Object> user = (Map<String, Object>) payload.get("user");
-                data.put("@rid", user.get("@rid"));
-                payload = adminToken.getPayload();
-                jsonMap.put("payload", payload);
-
-                AddRoleRule rule = new AddRoleRule();
-                ruleResult = rule.execute(jsonMap);
-                assertTrue(ruleResult);
-                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                AddRoleEvRule evRule = new AddRoleEvRule();
-                ruleResult = evRule.execute(eventMap);
-                assertTrue(ruleResult);
-
-            }
-
-            // add role again and it fails
-            {
-                jsonMap = mapper.readValue(addRole,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
-                Map<String, Object> payload = userToken.getPayload();
-                Map<String, Object> user = (Map<String, Object>) payload.get("user");
-                data.put("@rid", user.get("@rid"));
-                payload = adminToken.getPayload();
-                jsonMap.put("payload", payload);
-
-                AddRoleRule rule = new AddRoleRule();
-                ruleResult = rule.execute(jsonMap);
-                assertFalse(ruleResult);
-
-            }
-
-            // del role
-            {
-                jsonMap = mapper.readValue(delRole,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
-                Map<String, Object> payload = userToken.getPayload();
-                Map<String, Object> user = (Map<String, Object>) payload.get("user");
-                data.put("@rid", user.get("@rid"));
-                payload = adminToken.getPayload();
-                jsonMap.put("payload", payload);
-
-                DelRoleRule rule = new DelRoleRule();
-                ruleResult = rule.execute(jsonMap);
-                assertTrue(ruleResult);
-                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                DelRoleEvRule evRule = new DelRoleEvRule();
-                ruleResult = evRule.execute(eventMap);
-                assertTrue(ruleResult);
-
-            }
-
-            // del role again and it fails
-            {
-                jsonMap = mapper.readValue(delRole,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
-                Map<String, Object> payload = userToken.getPayload();
-                Map<String, Object> user = (Map<String, Object>) payload.get("user");
-                data.put("@rid", user.get("@rid"));
-                payload = adminToken.getPayload();
-                jsonMap.put("payload", payload);
-
-                DelRoleRule rule = new DelRoleRule();
-                ruleResult = rule.execute(jsonMap);
-                assertFalse(ruleResult);
-
-            }
-
             // up vote by admin
             {
 
@@ -639,11 +561,4 @@ public class UserRuleTest extends TestCase {
         }
     }
 
-    public void testGetUserByUserId() throws Exception {
-        GetUserRule rule = new GetUserRule();
-        ODocument user = rule.getUserByUserId("stevehu");
-        assertNotNull(user);
-        String json = user.toJSON();
-        assertNotNull(json);
-    }
 }

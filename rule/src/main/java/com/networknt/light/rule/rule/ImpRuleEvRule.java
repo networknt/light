@@ -20,12 +20,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
+import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -36,12 +41,21 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class ImpRuleEvRule extends AbstractRuleRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(ImpRuleEvRule.class);
-    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
-
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        impRule(data);
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            impRule(graph, data);
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
         return true;
     }
 

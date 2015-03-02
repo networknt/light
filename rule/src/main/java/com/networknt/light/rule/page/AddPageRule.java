@@ -31,7 +31,7 @@ public class AddPageRule extends AbstractPageRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        String id = (String)data.get("id");
+        String pageId = (String)data.get("pageId");
         String host = (String)data.get("host");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
@@ -42,7 +42,7 @@ public class AddPageRule extends AbstractPageRule implements Rule {
                 error = "User can only add page from host: " + host;
                 inputMap.put("responseCode", 401);
             } else {
-                String json = getPageById(id);
+                String json = getPageById(pageId);
                 if(json != null) {
                     error = "Page with the same id exists";
                     inputMap.put("responseCode", 400);
@@ -56,7 +56,7 @@ public class AddPageRule extends AbstractPageRule implements Rule {
                 }
             }
         } else {
-            String json = getPageById(id);
+            String json = getPageById(pageId);
             if(json != null) {
                 error = "Page with the same id exists";
                 inputMap.put("responseCode", 400);
