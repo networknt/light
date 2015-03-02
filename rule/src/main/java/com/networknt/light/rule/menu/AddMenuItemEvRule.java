@@ -17,6 +17,8 @@
 package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 import java.util.Map;
 
@@ -27,7 +29,18 @@ public class AddMenuItemEvRule extends AbstractMenuRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        addMenuItem(data);
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            addMenuItem(graph, data);
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
         return true;
     }
 }

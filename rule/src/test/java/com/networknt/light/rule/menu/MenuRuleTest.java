@@ -44,10 +44,10 @@ public class MenuRuleTest extends TestCase {
     String getMenuItemMap = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenuItemMap\"}";
 
     String addMenu = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenu\",\"data\":{\"host\":\"www.example.com\"}}";
-    String addMenuItem1 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem1\",\"label\":\"MenuItem1\",\"host\":\"www.example.com\",\"path\":\"/menuItem1\",\"ctrl\":\"MenuItem1Ctrl\",\"left\":true,\"roles\":\"user\"}}";
-    String addMenuItem2 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem2\",\"label\":\"MenuItem2\",\"host\":\"www.example.com\",\"path\":\"/menuItem2\",\"ctrl\":\"MenuItem2Ctrl\",\"left\":false,\"roles\":\"user\"}}";
-    String addMenuItem3 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem3\",\"label\":\"MenuItem3\",\"host\":\"www.example.com\",\"path\":\"/menuItem3\",\"ctrl\":\"MenuItem3Ctrl\",\"left\":false,\"roles\":\"user\"}}";
-    String addMenuItemCommon = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItemCommon\",\"label\":\"MenuItemCommon\",\"path\":\"/menuItemCommon\",\"ctrl\":\"MenuItemCommonCtrl\",\"left\":false,\"roles\":\"user\"}}";
+    String addMenuItem1 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem1\",\"label\":\"MenuItem1\",\"host\":\"www.example.com\",\"path\":\"/menuItem1\",\"ctrl\":\"MenuItem1Ctrl\",\"left\":true,\"roles\":[\"user\"]}}";
+    String addMenuItem2 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem2\",\"label\":\"MenuItem2\",\"host\":\"www.example.com\",\"path\":\"/menuItem2\",\"ctrl\":\"MenuItem2Ctrl\",\"left\":false,\"roles\":[\"user\"]}}";
+    String addMenuItem3 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem3\",\"label\":\"MenuItem3\",\"host\":\"www.example.com\",\"path\":\"/menuItem3\",\"ctrl\":\"MenuItem3Ctrl\",\"left\":false,\"roles\":[\"user\"]}}";
+    String addMenuItemCommon = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItemCommon\",\"label\":\"MenuItemCommon\",\"path\":\"/menuItemCommon\",\"ctrl\":\"MenuItemCommonCtrl\",\"left\":false,\"roles\":[\"user\"]}}";
 
     String updMenu = "{\"readOnly\": false, \"category\": \"menu\", \"name\": \"updMenu\"}";
     String updMenuItem = "{\"readOnly\": false, \"category\": \"menu\", \"name\": \"updMenuItem\"}";
@@ -535,6 +535,11 @@ public class MenuRuleTest extends TestCase {
                 // update menuItemCommon by menuAdmin and it failed
                 // update it with owner
                 {
+                    result = addMenuItemEvRule.getMenuItem(graph, "MenuItemCommon");
+                    menuItemCommon = mapper.readValue(result,
+                            new TypeReference<HashMap<String, Object>>() {
+                            });
+
                     menuItemCommon.put("path", "/newPathForCommon");
                     jsonMap = mapper.readValue(updMenuItem,
                             new TypeReference<HashMap<String, Object>>() {
@@ -542,12 +547,6 @@ public class MenuRuleTest extends TestCase {
                     jsonMap.put("data", menuItemCommon);
                     jsonMap.put("payload", ownerToken.getPayload());
                     UpdMenuItemRule updMenuItemRule = new UpdMenuItemRule();
-                    ruleResult = updMenuItemRule.execute(jsonMap);
-                    assertFalse(ruleResult);
-
-                    jsonMap.put("data", menuItem1);
-                    jsonMap.put("payload", ownerToken.getPayload());
-                    updMenuItemRule = new UpdMenuItemRule();
                     ruleResult = updMenuItemRule.execute(jsonMap);
                     assertTrue(ruleResult);
                     eventMap = (Map<String, Object>)jsonMap.get("eventMap");
@@ -572,9 +571,15 @@ public class MenuRuleTest extends TestCase {
                             new TypeReference<HashMap<String, Object>>() {
                             });
                     menus = (List)data.get("menus");
-                    assertEquals(1, menus.size());
-                    menu = (Map<String, Object>)menus.get(0);
-
+                    if(menus != null) {
+                        // find www.example.com menu and delete it.
+                        for(Map map: menus) {
+                            String host = (String)map.get("host");
+                            if("www.example.com".equals(host)) {
+                                menu = map;
+                            }
+                        }
+                    }
 
                     menuItems.add(menuItem1.get("@rid"));
                     menuItems.add(menuItemCommon.get("@rid"));
@@ -597,10 +602,10 @@ public class MenuRuleTest extends TestCase {
                     jsonMap = mapper.readValue(result,
                             new TypeReference<HashMap<String, Object>>() {
                             });
-                    list = (List)jsonMap.get("menuItems");
+                    list = (List)jsonMap.get("out_Own");
                     assertEquals(2, list.size());
                     Map<String, Object> item1 = (Map<String, Object>)list.get(0);
-                    list = (List)item1.get("menuItems");
+                    list = (List)item1.get("out_Own");
                     assertEquals(2, list.size());
                 }
 
@@ -654,8 +659,15 @@ public class MenuRuleTest extends TestCase {
                             new TypeReference<HashMap<String, Object>>() {
                             });
                     menus = (List)data.get("menus");
-                    assertEquals(1, menus.size());
-                    menu = (Map<String, Object>)menus.get(0);
+                    if(menus != null) {
+                        // find www.example.com menu and delete it.
+                        for(Map map: menus) {
+                            String host = (String)map.get("host");
+                            if("www.example.com".equals(host)) {
+                                menu = map;
+                            }
+                        }
+                    }
 
                     menuItems.remove(menuItem1.get("@rid"));
                     menu.put("menuItems", menuItems);
@@ -676,8 +688,7 @@ public class MenuRuleTest extends TestCase {
                     jsonMap = mapper.readValue(result,
                             new TypeReference<HashMap<String, Object>>() {
                             });
-                    list = (List)jsonMap.get("menuItems");
-                    // there should be four menuItems
+                    list = (List)jsonMap.get("out_Own");
                     assertEquals(1, list.size());
 
                     json = rule.getMenuItem(graph, "MenuItem1");

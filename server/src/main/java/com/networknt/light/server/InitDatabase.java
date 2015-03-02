@@ -136,7 +136,7 @@ public class InitDatabase {
             menuItem.createProperty("tpl", OType.STRING);
             menuItem.createProperty("ctrl", OType.STRING);
             menuItem.createProperty("left", OType.BOOLEAN); // on the left side of nav bar if true
-            menuItem.createProperty("roles", OType.STRING);
+            menuItem.createProperty("roles", OType.EMBEDDEDLIST);
             menuItem.createProperty("createDate", OType.DATETIME);
             menuItem.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("menuItemId", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "MenuItem"));

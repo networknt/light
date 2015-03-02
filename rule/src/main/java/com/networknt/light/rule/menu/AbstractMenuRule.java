@@ -129,32 +129,18 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected String addMenuItem(Map<String, Object> data) throws Exception {
-        String json = null;
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        try {
-            graph.begin();
-            Vertex user = graph.getVertexByKey("User.userId", data.remove("createUserId"));
-            List<String> menuItemIds = (List<String>)data.remove("menuItems");
-            OrientVertex menuItem = graph.addVertex("class:MenuItem", data);
-            if(menuItemIds != null && menuItemIds.size() > 0) {
-                // find vertex for each menuItem id and create edge to it.
-                for(String menuItemId: menuItemIds) {
-                    Vertex childMenuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
-                    menuItem.addEdge("Own", childMenuItem);
-                }
+    protected void addMenuItem(OrientGraph graph, Map<String, Object> data) throws Exception {
+        Vertex user = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+        List<String> addMenuItems = (List<String>)data.remove("addMenuItems");
+        OrientVertex menuItem = graph.addVertex("class:MenuItem", data);
+        if(addMenuItems != null && addMenuItems.size() > 0) {
+            // find vertex for each menuItem id and create edge to it.
+            for(String menuItemId: addMenuItems) {
+                Vertex childMenuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+                menuItem.addEdge("Own", childMenuItem);
             }
-            user.addEdge("Create", menuItem);
-            graph.commit();
-            json = menuItem.getRecord().toJSON();
-        } catch (Exception e) {
-            graph.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            graph.shutdown();
         }
-        return json;
+        user.addEdge("Create", menuItem);
     }
 
     protected String getMenu(OrientGraphNoTx graph, String host) {
