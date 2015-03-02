@@ -40,15 +40,14 @@ public class UpdPageRule extends AbstractPageRule implements Rule {
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
         String error = null;
-
         String userHost = (String)user.get("host");
         if(userHost != null && !userHost.equals(host)) {
-            error = "User can only update page from host: " + host;
+            error = "You can only update page from host: " + host;
             inputMap.put("responseCode", 401);
         } else {
-            Vertex page = null;
             if(rid != null) {
                 OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+                Vertex page = null;
                 try {
                     page = DbService.getVertexByRid(graph, rid);
                     if(page != null) {
@@ -61,7 +60,8 @@ public class UpdPageRule extends AbstractPageRule implements Rule {
                             Map eventMap = getEventMap(inputMap);
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                             inputMap.put("eventMap", eventMap);
-                            eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                            eventData.put("pageId", data.get("pageId"));
+                            eventData.put("content", data.get("content"));
                             eventData.put("updateDate", new java.util.Date());
                             eventData.put("updateUserId", user.get("userId"));
                         }

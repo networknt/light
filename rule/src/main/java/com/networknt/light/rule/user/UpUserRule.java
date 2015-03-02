@@ -20,8 +20,11 @@ import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import java.util.Map;
 
@@ -39,22 +42,33 @@ public class UpUserRule extends AbstractUserRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         String error = null;
 
-        Map<String,Object> voteUser = (Map<String, Object>)payload.get("user");
-        String voteUserId = (String)voteUser.get("userId");
+        Map<String,Object> userMap = (Map<String, Object>)payload.get("user");
+        String voteUserId = (String)userMap.get("userId");
         String userRid = (String)data.get("@rid");
         OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
         try {
-            Vertex user = DbService.getVertexByRid(graph, userRid);
-            if(user == null) {
-                error = "User with @rid " + userRid + " cannot be found";
+            OrientVertex user = (OrientVertex)DbService.getVertexByRid(graph, userRid);
+            OrientVertex voteUser = (OrientVertex)graph.getVertexByKey("User.userId", voteUserId);
+            if(user == null || voteUser == null) {
+                error = "User or vote user cannot be found";
                 inputMap.put("responseCode", 404);
             } else {
-                Map eventMap = getEventMap(inputMap);
-                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                inputMap.put("eventMap", eventMap);
-                eventData.put("userId", user.getProperty("userId"));
-                eventData.put("voteUserId", voteUserId);
-                eventData.put("updateDate", new java.util.Date());
+                // check if this VoteUserId has down voted user before.
+                boolean voted = false;
+                for (Edge edge : voteUser.getEdges(user, Direction.OUT, "UpVote")) {
+                    if(edge.getVertex(Direction.IN).equals(user)) voted = true;
+                }
+                if(voted) {
+                    error = "You have up vote the user already";
+                    inputMap.put("responseCode", 400);
+                } else {
+                    Map eventMap = getEventMap(inputMap);
+                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                    inputMap.put("eventMap", eventMap);
+                    eventData.put("userId", user.getProperty("userId"));
+                    eventData.put("voteUserId", voteUserId);
+                    eventData.put("updateDate", new java.util.Date());
+                }
             }
         } catch (Exception e) {
             logger.error("Exception:", e);

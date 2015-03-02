@@ -17,6 +17,8 @@
 package com.networknt.light.rule.page;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.Map;
 
@@ -31,7 +33,16 @@ public class GetPageRule extends AbstractPageRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String pageId = (String)data.get("pageId");
-        String json = getPageById(pageId);
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        String json = null;
+        try {
+            json = getPageById(graph, pageId);
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
         if(json != null) {
             inputMap.put("result", json);
             return true;

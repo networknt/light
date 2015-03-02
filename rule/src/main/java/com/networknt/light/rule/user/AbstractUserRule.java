@@ -367,8 +367,8 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
             OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", data.get("userId"));
             OrientVertex voteUser = (OrientVertex)graph.getVertexByKey("User.userId", data.get("voteUserId"));
             if(user != null && voteUser != null) {
-                for (Edge e : voteUser.getEdges(user, Direction.OUT, "DownVote")) {
-                    graph.removeEdge(e);
+                for (Edge edge : voteUser.getEdges(user, Direction.OUT, "DownVote")) {
+                    if(edge.getVertex(Direction.IN).equals(user)) graph.removeEdge(edge);
                 }
                 voteUser.addEdge("UpVote", user);
             }
@@ -389,8 +389,8 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
             OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", data.get("userId"));
             OrientVertex voteUser = (OrientVertex)graph.getVertexByKey("User.userId", data.get("voteUserId"));
             if(user != null && voteUser != null) {
-                for (Edge e : voteUser.getEdges(user, Direction.OUT, "UpVote")) {
-                    graph.removeEdge(e);
+                for (Edge edge : voteUser.getEdges(user, Direction.OUT, "UpVote")) {
+                    if(edge.getVertex(Direction.IN).equals(user)) graph.removeEdge(edge);
                 }
                 voteUser.addEdge("DownVote", user);
             }
@@ -455,7 +455,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
 
     String generateToken(Vertex user, String clientId) throws Exception {
         Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();
-        jwtMap.put("@rid", user.getProperty("@rid").toString());
+        jwtMap.put("@rid", user.getId().toString());
         jwtMap.put("userId", user.getProperty("userId"));
         jwtMap.put("clientId", clientId);
         jwtMap.put("roles", user.getProperty("roles"));

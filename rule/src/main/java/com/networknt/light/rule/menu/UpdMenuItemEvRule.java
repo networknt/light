@@ -29,18 +29,7 @@ public class UpdMenuItemEvRule extends AbstractMenuRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        try {
-            graph.begin();
-            updMenuItem(graph, data);
-            graph.commit();
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-            graph.rollback();
-            throw e;
-        } finally {
-            graph.shutdown();
-        }
+        updMenuItem(data);
         return true;
     }
 }

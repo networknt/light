@@ -43,8 +43,8 @@ public class DelPageRule extends AbstractPageRule implements Rule {
         String error = null;
         String userHost = (String)user.get("host");
         if(userHost != null && !userHost.equals(host)) {
-            error = "User can only delete page from host: " + host;
-            inputMap.put("responseCode", 401);
+            error = "You can only delete page from host: " + host;
+            inputMap.put("responseCode", 403);
         } else {
             OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
             try {

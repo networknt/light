@@ -435,12 +435,12 @@ public class UserRuleTest extends TestCase {
                 jsonMap = mapper.readValue(b,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                List upList = (List) jsonMap.get("upUsers");
+                List upList = (List) jsonMap.get("in_UpVote");
                 assertEquals(1, upList.size());
-                List downList = (List) jsonMap.get("downUsers");
+                List downList = (List) jsonMap.get("in_DownVote");
                 assertNull(downList);
 
-                // up vote again and nothing should be changed.
+                // up vote again and it fails
                 jsonMap = mapper.readValue(upUser,
                         new TypeReference<HashMap<String, Object>>() {
                         });
@@ -452,20 +452,16 @@ public class UserRuleTest extends TestCase {
 
                 valRule = new UpUserRule();
                 ruleResult = valRule.execute(jsonMap);
-                assertTrue(ruleResult);
-                eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                rule = new UpUserEvRule();
-                ruleResult = rule.execute(eventMap);
-                assertTrue(ruleResult);
+                assertFalse(ruleResult);
 
                 // check admin upUsers and downUsers
                 b = DbService.getJsonByRid((String) user.get("@rid"));
                 jsonMap = mapper.readValue(b,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                upList = (List) jsonMap.get("upUsers");
+                upList = (List) jsonMap.get("in_UpVote");
                 assertEquals(1, upList.size());
-                downList = (List) jsonMap.get("downUsers");
+                downList = (List) jsonMap.get("in_DownVote");
                 assertNull(downList);
             }
 
@@ -495,9 +491,9 @@ public class UserRuleTest extends TestCase {
                 jsonMap = mapper.readValue(b,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                List upList = (List) jsonMap.get("upUsers");
+                List upList = (List) jsonMap.get("in_UpVote");
                 assertEquals(0, upList.size());
-                List downList = (List) jsonMap.get("downUsers");
+                List downList = (List) jsonMap.get("in_DownVote");
                 assertEquals(1, downList.size());
 
                 // down vote again and nothing should be changed.
@@ -512,20 +508,16 @@ public class UserRuleTest extends TestCase {
 
                 valRule = new DownUserRule();
                 ruleResult = valRule.execute(jsonMap);
-                assertTrue(ruleResult);
-                eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                rule = new DownUserEvRule();
-                ruleResult = rule.execute(eventMap);
-                assertTrue(ruleResult);
+                assertFalse(ruleResult);
 
                 // check upUsers and downUsers
                 b = DbService.getJsonByRid((String) user.get("@rid"));
                 jsonMap = mapper.readValue(b,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                upList = (List) jsonMap.get("upUsers");
+                upList = (List) jsonMap.get("in_UpVote");
                 assertEquals(0, upList.size());
-                downList = (List) jsonMap.get("downUsers");
+                downList = (List) jsonMap.get("in_DownVote");
                 assertEquals(1, downList.size());
             }
 

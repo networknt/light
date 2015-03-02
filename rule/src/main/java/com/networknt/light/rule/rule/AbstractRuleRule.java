@@ -65,116 +65,160 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected void addRule(OrientGraph graph, Map<String, Object> data) throws Exception {
+    protected void addRule(Map<String, Object> data) throws Exception {
         OrientVertex access = null;
         String ruleClass = (String)data.get("ruleClass");
-        Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
-        OrientVertex rule = graph.addVertex("class:Rule", data);
-        createUser.addEdge("Create", rule);
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            OrientVertex rule = graph.addVertex("class:Rule", data);
+            createUser.addEdge("Create", rule);
 
-        // For all the newly added rules, the default security access is role based and only
-        // owner can access. For some of the rules, like getForm, getMenu, they are granted
-        // to anyone in the db script. Don't overwrite if access exists for these rules.
+            // For all the newly added rules, the default security access is role based and only
+            // owner can access. For some of the rules, like getForm, getMenu, they are granted
+            // to anyone in the db script. Don't overwrite if access exists for these rules.
 
-        // check if access exists for the ruleClass and add access if not.
-        if(getAccessByRuleClass(ruleClass) == null) {
-            access = graph.addVertex("class:Access");
-            access.setProperty("ruleClass", ruleClass);
-            if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
-                access.setProperty("accessLevel", "N"); // abstract rule and internal beta tester rule
-            } else if(ruleClass.endsWith("EvRule")) {
-                access.setProperty("accessLevel", "A"); // event rule can be only called internally.
-            } else {
-                access.setProperty("accessLevel", "R"); // role level access
-                List roles = new ArrayList();
-                roles.add("owner");  // give owner access for the rule by default.
-                access.setProperty("roles", roles);
+            // check if access exists for the ruleClass and add access if not.
+            if(getAccessByRuleClass(ruleClass) == null) {
+                access = graph.addVertex("class:Access");
+                access.setProperty("ruleClass", ruleClass);
+                if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
+                    access.setProperty("accessLevel", "N"); // abstract rule and internal beta tester rule
+                } else if(ruleClass.endsWith("EvRule")) {
+                    access.setProperty("accessLevel", "A"); // event rule can be only called internally.
+                } else {
+                    access.setProperty("accessLevel", "R"); // role level access
+                    List roles = new ArrayList();
+                    roles.add("owner");  // give owner access for the rule by default.
+                    access.setProperty("roles", roles);
+                }
+                access.setProperty("createDate", data.get("createDate"));
+                createUser.addEdge("Create", access);
             }
-            access.setProperty("createDate", data.get("createDate"));
-            createUser.addEdge("Create", access);
-        }
-        if(access != null) {
-            Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
-            if(cache == null) {
-                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                        .maximumWeightedCapacity(1000)
-                        .build();
-                accessMap.put("cache", cache);
+            if(access != null) {
+                Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
+                ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
+                if(cache == null) {
+                    cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                            .maximumWeightedCapacity(1000)
+                            .build();
+                    accessMap.put("cache", cache);
+                }
+                cache.put(ruleClass, mapper.readValue(access.getRecord().toJSON(),
+                        new TypeReference<HashMap<String, Object>>() {
+                        }));
             }
-            cache.put(ruleClass, mapper.readValue(access.getRecord().toJSON(),
-                    new TypeReference<HashMap<String, Object>>() {
-                    }));
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
         }
     }
 
-    protected void impRule(OrientGraph graph, Map<String, Object> data) throws Exception {
+    protected void impRule(Map<String, Object> data) throws Exception {
         String ruleClass = (String)data.get("ruleClass");
-        Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
-        // remove the existing rule if there is.
-        if(rule != null) {
-            graph.removeVertex(rule);
-        }
-        // create a new rule
-        Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
-        rule = graph.addVertex("class:Rule", data);
-        createUser.addEdge("Create", rule);
-        // For all the newly added rules, the default security access is role based and only
-        // owner can access. For some of the rules, like getForm, getMenu, they are granted
-        // to anyone in the db script. Don't overwrite if access exists for these rules.
-        // Also, if ruleClass contains "Abstract" then its access level should be N.
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            // remove the existing rule if there is.
+            if(rule != null) {
+                graph.removeVertex(rule);
+            }
+            // create a new rule
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            rule = graph.addVertex("class:Rule", data);
+            createUser.addEdge("Create", rule);
+            // For all the newly added rules, the default security access is role based and only
+            // owner can access. For some of the rules, like getForm, getMenu, they are granted
+            // to anyone in the db script. Don't overwrite if access exists for these rules.
+            // Also, if ruleClass contains "Abstract" then its access level should be N.
 
-        // check if access exists for the ruleClass and add access if not.
-        OrientVertex access = null;
-        if(getAccessByRuleClass(ruleClass) == null) {
-            access = graph.addVertex("class:Access");
-            access.setProperty("ruleClass", ruleClass);
-            if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
-                access.setProperty("accessLevel", "N"); // abstract and internal beta tester rule
-            } else if(ruleClass.endsWith("EvRule")) {
-                access.setProperty("accessLevel", "A"); // event rule can be only called internally.
-            } else {
-                access.setProperty("accessLevel", "R"); // role level access
-                List roles = new ArrayList();
-                roles.add("owner");  // give owner access for the rule by default.
-                access.setProperty("roles", roles);
+            // check if access exists for the ruleClass and add access if not.
+            OrientVertex access = null;
+            if(getAccessByRuleClass(ruleClass) == null) {
+                access = graph.addVertex("class:Access");
+                access.setProperty("ruleClass", ruleClass);
+                if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
+                    access.setProperty("accessLevel", "N"); // abstract and internal beta tester rule
+                } else if(ruleClass.endsWith("EvRule")) {
+                    access.setProperty("accessLevel", "A"); // event rule can be only called internally.
+                } else {
+                    access.setProperty("accessLevel", "R"); // role level access
+                    List roles = new ArrayList();
+                    roles.add("owner");  // give owner access for the rule by default.
+                    access.setProperty("roles", roles);
+                }
+                access.setProperty("createDate", data.get("createDate"));
             }
-            access.setProperty("createDate", data.get("createDate"));
-        }
-        if(access != null) {
-            Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
-            if(cache == null) {
-                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                        .maximumWeightedCapacity(1000)
-                        .build();
-                accessMap.put("cache", cache);
+            if(access != null) {
+                Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
+                ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
+                if(cache == null) {
+                    cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                            .maximumWeightedCapacity(1000)
+                            .build();
+                    accessMap.put("cache", cache);
+                }
+                cache.put(ruleClass, mapper.readValue(access.getRecord().toJSON(),
+                        new TypeReference<HashMap<String, Object>>() {
+                        }));
             }
-            cache.put(ruleClass, mapper.readValue(access.getRecord().toJSON(),
-                    new TypeReference<HashMap<String, Object>>() {
-                    }));
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
         }
     }
 
-    protected void updRule(OrientGraph graph, Map<String, Object> data) throws Exception {
-        Vertex rule = graph.getVertexByKey("Rule.ruleClass", data.get("ruleClass"));
-        if(rule != null) {
-            String sourceCode = (String)data.get("sourceCode");
-            if(sourceCode != null && !sourceCode.equals(rule.getProperty("sourceCode"))) {
-                rule.setProperty("sourceCode", sourceCode);
+    protected void updRule(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", data.get("ruleClass"));
+            if(rule != null) {
+                String sourceCode = (String)data.get("sourceCode");
+                if(sourceCode != null && !sourceCode.equals(rule.getProperty("sourceCode"))) {
+                    rule.setProperty("sourceCode", sourceCode);
+                }
+                rule.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                if(updateUser != null) {
+                    updateUser.addEdge("Update", rule);
+                }
             }
-            rule.setProperty("updateDate", data.get("updateDate"));
-            Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
-            if(updateUser != null) {
-                updateUser.addEdge("Update", rule);
-            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
         }
     }
 
-    protected void delRule(OrientGraph graph, Map<String, Object> data) throws Exception {
-        Vertex rule = graph.getVertexByKey("Rule.ruleClass", data.get("ruleClass"));
-        if(rule != null) {
-            graph.removeVertex(rule);
+    protected void delRule(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", data.get("ruleClass"));
+            if(rule != null) {
+                graph.removeVertex(rule);
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
         }
     }
 
