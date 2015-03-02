@@ -161,7 +161,7 @@ public class InitDatabase {
             OrientVertexType page = graph.createVertexType("Page");
             page.createProperty("pageId", OType.STRING);    // unique id
             page.createProperty("host", OType.STRING);  // host
-            page.createProperty("content", OType.EMBEDDEDLIST);
+            page.createProperty("content", OType.STRING);
             page.createProperty("createDate", OType.DATETIME);
             page.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("pageId", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Page"));

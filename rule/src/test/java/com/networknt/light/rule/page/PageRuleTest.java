@@ -38,11 +38,11 @@ public class PageRuleTest extends TestCase {
     String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
     String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
-    String addPage = "{\"readOnly\":false,\"category\":\"page\",\"name\":\"addPage\",\"data\":{\"id\":\"com.networknt.light.common.test.html\",\"content\":\"<div>This is just a test html</div>\"}}";
-    String getPage = "{\"readOnly\":true,\"category\":\"page\",\"name\":\"getPage\",\"data\":{\"id\":\"com.networknt.light.common.test.html\"}}";
-    String updPage = "{\"readOnly\":false,\"category\":\"page\",\"name\":\"updPage\",\"data\":{\"id\":\"com.networknt.light.common.test.html\",\"content\":\"<div>Updated content</div>\"}}";
+    String addPage = "{\"readOnly\":false,\"category\":\"page\",\"name\":\"addPage\",\"data\":{\"pageId\":\"com.networknt.light.common.test.html\",\"content\":\"<div>This is just a test html</div>\"}}";
+    String getPage = "{\"readOnly\":true,\"category\":\"page\",\"name\":\"getPage\",\"data\":{\"pageId\":\"com.networknt.light.common.test.html\"}}";
+    String updPage = "{\"readOnly\":false,\"category\":\"page\",\"name\":\"updPage\",\"data\":{\"pageId\":\"com.networknt.light.common.test.html\",\"content\":\"<div>Updated content</div>\"}}";
     String getAllPage = "{\"readOnly\": true, \"category\": \"page\", \"name\": \"getAllPage\"}";
-    String delPage = "{\"readOnly\":false,\"category\":\"page\",\"name\":\"delPage\",\"data\":{\"id\":\"com.networknt.light.common.test.html\"}}";
+    String delPage = "{\"readOnly\":false,\"category\":\"page\",\"name\":\"delPage\",\"data\":{\"pageId\":\"com.networknt.light.common.test.html\"}}";
 
     public PageRuleTest(String name) {
         super(name);
@@ -164,7 +164,7 @@ public class PageRuleTest extends TestCase {
                         });
 
                 assertTrue(jsonMap.containsKey("content"));
-                assertTrue(jsonMap.containsKey("id"));
+                assertTrue(jsonMap.containsKey("pageId"));
             }
             // get all pages
             {
@@ -224,7 +224,7 @@ public class PageRuleTest extends TestCase {
 
                 // make sure we have content and id
                 assertTrue(jsonMap.containsKey("content"));
-                assertTrue(jsonMap.containsKey("id"));
+                assertTrue(jsonMap.containsKey("pageId"));
 
                 String content = (String)jsonMap.get("content");
                 assertEquals("<div>Updated content</div>", content);

@@ -77,6 +77,7 @@
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.orientechnologies</groupId>
             <artifactId>orientdb-nativeos</artifactId>
@@ -85,6 +86,7 @@
             <groupId>com.orientechnologies</groupId>
             <artifactId>orient-commons</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>com.orientechnologies</groupId>
             <artifactId>orientdb-core</artifactId>

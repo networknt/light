@@ -17,7 +17,12 @@
 package com.networknt.light.rule.page;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,25 +43,17 @@ public class AddPageRule extends AbstractPageRule implements Rule {
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String userHost = (String)user.get("host");
         if(userHost != null) {
-            if(!userHost.equals(host)) {
-                error = "User can only add page from host: " + host;
-                inputMap.put("responseCode", 401);
-            } else {
-                String json = getPageById(pageId);
-                if(json != null) {
-                    error = "Page with the same id exists";
-                    inputMap.put("responseCode", 400);
-                } else {
-                    Map eventMap = getEventMap(inputMap);
-                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                    inputMap.put("eventMap", eventMap);
-                    eventData.putAll((Map<String, Object>)inputMap.get("data"));
-                    eventData.put("createDate", new java.util.Date());
-                    eventData.put("createUserId", user.get("userId"));
-                }
+            if (!userHost.equals(host)) {
+                error = "You can only add page from host: " + host;
+                inputMap.put("responseCode", 403);
             }
         } else {
-            String json = getPageById(pageId);
+            // remove host as this is the owner
+            data.remove("host");
+        }
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        try {
+            String json = getPageById(graph, pageId);
             if(json != null) {
                 error = "Page with the same id exists";
                 inputMap.put("responseCode", 400);
@@ -64,12 +61,15 @@ public class AddPageRule extends AbstractPageRule implements Rule {
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
-                eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                eventData.putAll(data);
                 eventData.put("createDate", new java.util.Date());
                 eventData.put("createUserId", user.get("userId"));
-                // remove host from data as this is owner adding role
-                eventData.remove("host");
             }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
         }
         if(error != null) {
             inputMap.put("error", error);
