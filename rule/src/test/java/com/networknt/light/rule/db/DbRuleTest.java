@@ -38,7 +38,11 @@ public class DbRuleTest extends TestCase {
     String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
     String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
-    String addSchema = "{\"readOnly\":false,\"category\":\"db\",\"name\":\"cmdDb\",\"data\":{\"script\":\"DROP CLASS Test;\\\\nCREATE CLASS Test;\\\\nCREATE PROPERTY Test.id STRING;\\\\nCREATE PROPERTY Test.name STRING;\\\\nCREATE INDEX Test.id UNIQUE;\"}}";
+    String addSchema = "{\"readOnly\":false,\"category\":\"db\",\"name\":\"execSchemaCmd\",\"data\":{\"script\":\"create class Test extends V;\\\\ncreate property Test.name STRING;\\\\ncreate index Test.name UNIQUE;\"}}";
+    String addVertex = "{\"readOnly\":false,\"category\":\"db\",\"name\":\"execUpdateCmd\",\"data\":{\"script\":\"create vertex Test set name = 'fiat';\\\\ncreate vertex Test set name = 'fed';\"}}";
+    String queryVertex = "{\"readOnly\":true,\"category\":\"db\",\"name\":\"execQueryCmd\",\"data\":{\"script\":\"select from Test;\"}}";
+    String delVertex = "{\"readOnly\":false,\"category\":\"db\",\"name\":\"execUpdateCmd\",\"data\":{\"script\":\"delete vertex Test where name = 'fiat';\\\\ndelete vertex Test where name = 'fed';\"}}";
+    String delSchema = "{\"readOnly\":false,\"category\":\"db\",\"name\":\"execSchemaCmd\",\"data\":{\"script\":\"drop class Test;\"}}";
 
     public DbRuleTest(String name) {
         super(name);
@@ -105,41 +109,79 @@ public class DbRuleTest extends TestCase {
                 assertTrue(ruleResult);
             }
 
-            // execute commands anonymous
-            {
-                jsonMap = mapper.readValue(addSchema,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                ExecCommandRule rule = new ExecCommandRule();
-                ruleResult = rule.execute(jsonMap);
-                assertFalse(ruleResult);
-            }
-
-            // execute commands by user
-            {
-                jsonMap = mapper.readValue(addSchema,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-                jsonMap.put("payload", userToken.getPayload());
-                ExecCommandRule rule = new ExecCommandRule();
-                ruleResult = rule.execute(jsonMap);
-                assertFalse(ruleResult);
-            }
-
-            // execute commands by owner to create Test and id with index on it.
+            // execute commands to add Test class, property and index
             {
                 jsonMap = mapper.readValue(addSchema,
                         new TypeReference<HashMap<String, Object>>() {
                         });
                 jsonMap.put("payload", ownerToken.getPayload());
-                ExecCommandRule rule = new ExecCommandRule();
+                ExecSchemaCmdRule rule = new ExecSchemaCmdRule();
                 ruleResult = rule.execute(jsonMap);
                 assertTrue(ruleResult);
                 Map<String, Object> eventMap = (Map<String, Object>) jsonMap.get("eventMap");
-                ExecCommandEvRule evRule = new ExecCommandEvRule();
+                ExecSchemaCmdEvRule evRule = new ExecSchemaCmdEvRule();
                 ruleResult = evRule.execute(eventMap);
                 assertTrue(ruleResult);
+            }
 
+            // execute commands to add Vertex
+            {
+                jsonMap = mapper.readValue(addVertex,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+                ExecUpdateCmdRule rule = new ExecUpdateCmdRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>) jsonMap.get("eventMap");
+                ExecUpdateCmdEvRule evRule = new ExecUpdateCmdEvRule();
+                ruleResult = evRule.execute(eventMap);
+                assertTrue(ruleResult);
+            }
+
+            /*
+            TODO query doen't work yet.
+            // execute commands to query Vertex
+            {
+                jsonMap = mapper.readValue(queryVertex,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+                ExecQueryCmdRule rule = new ExecQueryCmdRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                String result = (String) jsonMap.get("result");
+                System.out.println("result = " + result);
+            }
+            */
+
+            // execute commands to delete Vertex
+            {
+                jsonMap = mapper.readValue(delVertex,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+                ExecUpdateCmdRule rule = new ExecUpdateCmdRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>) jsonMap.get("eventMap");
+                ExecUpdateCmdEvRule evRule = new ExecUpdateCmdEvRule();
+                ruleResult = evRule.execute(eventMap);
+                assertTrue(ruleResult);
+            }
+            // execute commands by remove Test class
+            {
+                jsonMap = mapper.readValue(delSchema,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+                ExecSchemaCmdRule rule = new ExecSchemaCmdRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>) jsonMap.get("eventMap");
+                ExecSchemaCmdEvRule evRule = new ExecSchemaCmdEvRule();
+                ruleResult = evRule.execute(eventMap);
+                assertTrue(ruleResult);
             }
 
         } catch (Exception e) {

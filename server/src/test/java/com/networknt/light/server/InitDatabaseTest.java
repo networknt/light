@@ -20,10 +20,12 @@ import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import javax.xml.ws.Service;
 import java.util.List;
 
 /**
@@ -76,9 +78,9 @@ public class InitDatabaseTest  extends TestCase {
 
     public void testMenu() {
         try {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select from Menu where host = ?");
-            List<ODocument> result = db.command(query).execute("injector");
+            List<ODocument> result = graph.command(query).execute("injector");
             if(result.size() > 0) {
                 ODocument doc = result.get(0);
                 System.out.println("doc=" + doc.toJSON());

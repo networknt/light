@@ -18,6 +18,7 @@ package com.networknt.light.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.util.ServiceLocator;
+import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
@@ -25,6 +26,11 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,42 +46,31 @@ public class DbService {
     static final Logger logger = LoggerFactory.getLogger(DbService.class);
 
     public static void persistEvent(Map<String, Object> eventMap) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
-        OSchema schema = db.getMetadata().getSchema();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            ODocument event = new ODocument(schema.getClass("Event"));
-            if(eventMap.get("host") != null) event.field("host", eventMap.get("host"));
-            if(eventMap.get("app") != null) event.field("app", eventMap.get("app"));
-            if(eventMap.get("ipAddress") != null) event.field("ipAddress", eventMap.get("ipAddress"));
-            event.field("category", eventMap.get("category"));
-            event.field("name", eventMap.get("name"));
-            event.field("data", eventMap.get("data"));
-            if(eventMap.get("createUserId") != null) event.field("createUserId", eventMap.get("createUserId"));
-            event.field("createDate", eventMap.get("createDate"));
-            event.save();
-            db.commit();
+            eventMap.put("eventId", incrementCounter("eventId"));
+            graph.addVertex("class:Event", eventMap);
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
-    public static long incrementCounter(String name) {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    public static int incrementCounter(String name) {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            List list = db.command(new OCommandSQL("update Counter INCREMENT value = 1 return after where name = '" + name + "'")).execute();
+            List list = graph.getRawGraph().command(new OCommandSQL("update Counter INCREMENT value = 1 return after where name = '" + name + "'")).execute();
             ODocument lastDoc = (ODocument)list.get(0);
-            return (Long) lastDoc.field("value");
+            return lastDoc.field("value");
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
@@ -132,14 +127,18 @@ public class DbService {
             sql.append(whereClause);
         }
         logger.debug("sql={}", sql);
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            count = ((ODocument)db.query(new OSQLSynchQuery<ODocument>(sql.toString())).get(0)).field("count");
+            Iterable<Vertex> it =  graph.command(new OCommandSQL(sql.toString())).execute();
+            if(it != null) {
+                Vertex v = it.iterator().next();
+                count = v.getProperty("count");
+            }
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return count;
     }
@@ -166,10 +165,9 @@ public class DbService {
             sql.append(" LIMIT ").append(pageSize);
         }
         logger.debug("sql={}", sql);
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql.toString());
-            List<ODocument> list = db.command(query).execute();
+            List<ODocument> list =  graph.command(new OCommandSQL(sql.toString())).execute();
             if(list.size() > 0) {
                 json = OJSONWriter.listToJSON(list, null);
             }
@@ -177,97 +175,69 @@ public class DbService {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
     public static int executeSqlCommand(String sql) {
         int recordsUpdated = 0;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            recordsUpdated = db.command(new OCommandSQL(sql)).execute();
-            db.commit();
+            recordsUpdated = graph.command(new OCommandSQL(sql)).execute();
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return recordsUpdated;
     }
 
-    public static ODocument getODocumentByRid(String rid) {
-        ODocument doc = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            doc = db.load(new ORecordId(rid));
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-            throw e;
-        } finally {
-            db.close();
-        }
-        return doc;
+    public static Vertex getVertexByRid(OrientGraphNoTx graph, String rid) {
+        return graph.getVertex(rid);
     }
 
     public static String getJsonByRid(String rid) {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            ODocument doc = db.load(new ORecordId(rid));
+            ODocument doc = graph.getVertex(rid).getRecord();
             if(doc != null) json = doc.toJSON();
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
-    public static ODocument delODocumentByRid(String rid) throws Exception {
-        ODocument doc = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    public static Vertex delVertexByRid(String rid) throws Exception {
+        Vertex v = null;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            doc = db.load(new ORecordId(rid));
-            doc.delete();
-            doc.save();
-            db.commit();
+            graph.begin();
+            v = graph.getVertex(rid);
+            graph.removeVertex(v);
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
-        return doc;
+        return v;
     }
-    public static boolean hasReference(String rid, String classList) throws Exception {
-        boolean hasReference = false;
-        StringBuilder sql = new StringBuilder("find references ").append(rid);
-        if(classList != null) {
-            sql.append(" [").append(classList).append("]");
+
+    public static boolean hasEdgeToClass(OrientGraphNoTx graph, OrientVertex vertex, String edgeName) throws Exception {
+        boolean result = false;
+        if(vertex.countEdges(Direction.IN, edgeName) > 0) {
+            result = true;
         }
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            List list = db.command(new OCommandSQL(sql.toString())).execute();
-            if(list != null && list.size() > 0) {
-                ODocument refer = (ODocument)list.get(0);
-                Set referSet = refer.field("referredBy");
-                if(referSet.size() > 0) {
-                    hasReference = true;
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-            throw e;
-        } finally {
-            db.close();
-        }
-        return hasReference;
+        return result;
     }
 }

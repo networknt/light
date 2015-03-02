@@ -30,6 +30,12 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
@@ -51,313 +57,193 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
 
     protected boolean isUserInDbByEmail(String email) {
         boolean userInDb = false;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OIndex<?> emailIdx = db.getMetadata().getIndexManager().getIndex("User.email");
-            // this is a unique index, so it retrieves a OIdentifiable
-            userInDb = emailIdx.contains(email);
+            Vertex user = graph.getVertexByKey("User.email", email);
+            if(user != null) {
+                userInDb = true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return userInDb;
     }
 
     protected boolean isUserInDbByUserId(String userId) {
         boolean userInDb = false;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            // this is a unique index, so it retrieves a OIdentifiable
-            userInDb = userIdIdx.contains(userId);
-
+            Vertex user = graph.getVertexByKey("User.userId", userId);
+            if(user != null) {
+                userInDb = true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return userInDb;
     }
 
-    protected ODocument getUserByUserId(String userId) {
-        ODocument user = null;
-        StringBuilder sb = new StringBuilder("SELECT FROM User WHERE userId = '");
-        sb.append(userId).append("'");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sb.toString());
-            List<ODocument> list = db.command(query.setFetchPlan("*:-1")).execute();
-            if(list.size() > 0) {
-                user = list.get(0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
-        }
-        return user;
+    protected Vertex getUserByUserId(OrientGraphNoTx graph, String userId) throws Exception {
+        return graph.getVertexByKey("User.userId", userId);
     }
 
-    protected ODocument getUserByEmail(String email) {
-        ODocument user = null;
-        StringBuilder sb = new StringBuilder("SELECT FROM User WHERE email = '");
-        sb.append(email).append("' FETCHPLAN credential:1");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sb.toString());
-            List<ODocument> list = db.command(query).execute();
-            if(list.size() > 0) {
-                user = list.get(0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
-        }
-        return user;
+    protected Vertex getUserByEmail(OrientGraphNoTx graph, String email) throws Exception {
+        return graph.getVertexByKey("User.email", email);
     }
 
-    protected ODocument addUser(Map<String, Object> data) throws Exception {
-        ODocument user = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            db.begin();
-            OSchema schema = db.getMetadata().getSchema();
-            ODocument credential = new ODocument(schema.getClass("Credential"));
-            credential.field("password", data.get("password"));
-            credential.save();
-            user = new ODocument(schema.getClass("User"));
-            user.field("host", data.get("host"));
-            user.field("userId", data.get("userId"));
-            user.field("email", data.get("email"));
-            user.field("firstName", data.get("firstName"));
-            user.field("lastName", data.get("lastName"));
-            user.field("karma", 0);
-            List<String> roles = new ArrayList<String>();
-            roles.add("user"); // default role for sign up users, more roles can be added later by admin
-            user.field("roles", roles);
-            user.field("credential", credential);
-            user.field("createDate", new java.util.Date());
-            user.save();
-            db.commit();
-        } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
-        }
-        return user;
+    protected Vertex getCredential(OrientGraphNoTx graph, Vertex user) throws Exception {
+        return graph.getVertex(user.getProperty("credential"));
     }
 
-    protected boolean delUser(Map<String, Object> data) throws Exception {
-        boolean result = false;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected Vertex addUser(Map<String, Object> data) throws Exception {
+        Vertex user = null;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            if (oid != null) {
-                ODocument user = (ODocument) oid.getRecord();
-                ODocument credential = (ODocument)user.field("credential");
-                credential.delete();
-                user.delete();
-                db.commit();
-                result = true;
-            }
+            graph.begin();
+            String password = (String)data.remove("password");
+            OrientVertex credential = graph.addVertex("class:Credential", "password", password);
+            data.put("credential", credential);
+            user = graph.addVertex("class:User", data);
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
-        }
-        return result;
-    }
-
-    protected ODocument updPassword(Map<String, Object> data) throws Exception {
-        ODocument credential = null;
-        ODocument user = getUserByUserId((String)data.get("userId"));
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            db.begin();
-            user.field("updateDate", data.get("updateDate"));
-            user.save();
-            credential = user.field("credential");
-            if (credential != null) {
-                credential.field("password", data.get("password"));
-                credential.save();
-            }
-            db.commit();
-        } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
-        }
-        return credential;
-    }
-
-    protected ODocument updRole(Map<String, Object> data) throws Exception {
-        ODocument user = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            if (oid != null) {
-                user = (ODocument) oid.getRecord();
-                user.field("roles", data.get("roles"));
-                user.field("updateDate", data.get("updateDate"));
-                user.field("updateUserId", data.get("updateUserId"));
-                user.save();
-                db.commit();
-            }
-        } catch (Exception e) {
-            db.rollback();
             logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return user;
     }
 
-    protected ODocument addRole(Map<String, Object> data) throws Exception {
-        ODocument user = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void delUser(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            if (oid != null) {
-                user = (ODocument) oid.getRecord();
-                List roles = user.field("roles");
-                roles.add((String)data.get("role"));
-                user.field("updateDate", data.get("updateDate"));
-                user.field("updateUserId", data.get("updateUserId"));
-                user.save();
-                db.commit();
+            graph.begin();
+            Vertex user = graph.getVertexByKey("User.userId", data.get("userId"));
+            if(user != null) {
+                graph.removeVertex(user.getProperty("credential"));
+                graph.removeVertex(user);
             }
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
-        return user;
     }
 
-    protected ODocument delRole(Map<String, Object> data) throws Exception {
-        ODocument user = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void updPassword(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            if (oid != null) {
-                user = (ODocument) oid.getRecord();
-                List roles = user.field("roles");
-                roles.remove((String)data.get("role"));
-                user.field("updateDate", data.get("updateDate"));
-                user.field("updateUserId", data.get("updateUserId"));
-                user.save();
-                db.commit();
+            graph.begin();
+            Vertex user = graph.getVertexByKey("User.userId", data.get("userId"));
+            user.setProperty("updateDate", data.get("updateDate"));
+            Vertex credential = user.getProperty("credential");
+            if (credential != null) {
+                credential.setProperty("password", data.get("password"));
             }
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
-        return user;
     }
 
-    protected ODocument updLockByUserId(Map<String, Object> data) throws Exception {
-        ODocument user = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void updRole(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            if (oid != null) {
-                user = (ODocument) oid.getRecord();
-                user.field("locked", data.get("locked"));
-                user.field("updateDate", data.get("updateDate"));
-                user.field("updateUserId", data.get("updateUserId"));
-                user.save();
-                db.commit();
+            graph.begin();
+            Vertex user = graph.getVertexByKey("User.userId", data.get("userId"));
+            if(user != null) {
+                user.setProperty("role", data.get("roles"));
+                user.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                updateUser.addEdge("Update", user);
             }
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
-        return user;
     }
 
-    protected ODocument updUser(Map<String, Object> data) throws Exception {
-        ODocument user = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void updLockByUserId(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            if (oid != null) {
-                user = (ODocument) oid.getRecord();
+            graph.begin();
+            Vertex user = graph.getVertexByKey("User.userId", data.get("userId"));
+            if(user != null) {
+                user.setProperty("locked", data.get("locked"));
+                user.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                updateUser.addEdge("Update", user);
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void updUser(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex user =  graph.getVertexByKey("User.userId", data.get("userId"));
+            if(user != null) {
                 String firstName = (String)data.get("firstName");
-                if(firstName != null && !firstName.equals(user.field("firstName"))) {
-                    user.field("firstName", firstName);
+                if(firstName != null && !firstName.equals(user.getProperty("firstName"))) {
+                    user.setProperty("firstName", firstName);
                 }
                 String lastName = (String)data.get("lastName");
-                if(lastName != null && !lastName.equals(user.field("lastName"))) {
-                    user.field("lastName", lastName);
+                if(lastName != null && !lastName.equals(user.getProperty("lastName"))) {
+                    user.setProperty("lastName", lastName);
                 }
-                user.field("updateDate", data.get("updateDate"));
-                user.save();
-                db.commit();
+                user.setProperty("updateDate", data.get("updateDate"));
             }
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
-        return user;
     }
 
+    // TODO need to know which clientId to remove only for that client or all?
     protected void revokeRefreshToken(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            if (oid != null) {
-                ODocument user = (ODocument) oid.getRecord();
-                ODocument credential = (ODocument)user.field("credential");
+            graph.begin();
+            Vertex user = graph.getVertexByKey("User.userId", data.get("userId"));
+            if(user != null) {
+                Vertex credential = user.getProperty("credential");
                 if(credential != null) {
-                    // remove hostRefreshTokens map here. That means all the refresh token will be
-                    // removed for the user even the token is for other hosts.
-                    credential.removeField("hostRefreshTokens");
-                    credential.save();
-                    db.commit();
+                    credential.removeProperty("clientRefreshTokens");
                 }
             }
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
             logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
@@ -365,21 +251,19 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
     protected void signIn(Map<String, Object> data) throws Exception {
         String hashedRefreshToken = (String)data.get("hashedRefreshToken");
         if(hashedRefreshToken != null) {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
-                db.begin();
-                OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-                OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-                if (oid != null) {
-                    ODocument user = (ODocument) oid.getRecord();
-                    ODocument credential = (ODocument)user.field("credential");
+                graph.begin();
+                Vertex user = graph.getVertexByKey("User.userId", data.get("userId"));
+                if(user != null) {
+                    Vertex credential = user.getProperty("credential");
                     if(credential != null) {
-                        String host = (String)data.get("host");
+                        String clientId = (String)data.get("clientId");
                         // get hostRefreshTokens map here.
-                        Map hostRefreshTokens = credential.field("hostRefreshTokens");
-                        if(hostRefreshTokens != null) {
+                        Map clientRefreshTokens = credential.getProperty("clientRefreshTokens");
+                        if(clientRefreshTokens != null) {
                             // logged in before, check if logged in from the host.
-                            List<String> refreshTokens = (List)hostRefreshTokens.get(host);
+                            List<String> refreshTokens = (List)clientRefreshTokens.get(clientId);
                             if(refreshTokens != null) {
                                 // max refresh tokens for user is 10. max 10 devices.
                                 if(refreshTokens.size() >= 10) {
@@ -389,27 +273,26 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
                             } else {
                                 refreshTokens = new ArrayList<String>();
                                 refreshTokens.add(hashedRefreshToken);
-                                hostRefreshTokens.put(host, refreshTokens);
+                                clientRefreshTokens.put(clientId, refreshTokens);
                             }
 
                         } else {
                             // never logged in, create the map.
-                            hostRefreshTokens = new HashMap<String, List<String>>();
+                            clientRefreshTokens = new HashMap<String, List<String>>();
                             List<String> refreshTokens = new ArrayList<String>();
                             refreshTokens.add(hashedRefreshToken);
-                            hostRefreshTokens.put(host, refreshTokens);
-                            credential.field("hostRefreshTokens", hostRefreshTokens);
+                            clientRefreshTokens.put(clientId, refreshTokens);
+                            credential.setProperty("clientRefreshTokens", clientRefreshTokens);
                         }
-                        credential.save();
-                        db.commit();
                     }
                 }
+                graph.commit();
             } catch (Exception e) {
-                db.rollback();
                 logger.error("Exception:", e);
+                graph.rollback();
                 throw e;
             } finally {
-                db.close();
+                graph.shutdown();
             }
         } else {
             logger.debug("There is no hashedRefreshToken as user didn't select remember me. Do nothing");
@@ -419,22 +302,20 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
     protected void logOut(Map<String, Object> data) throws Exception {
         String refreshToken = (String)data.get("refreshToken");
         if(refreshToken != null) {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
-                db.begin();
-                OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-                OIdentifiable oid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-                if (oid != null) {
-                    ODocument user = (ODocument) oid.getRecord();
-                    ODocument credential = (ODocument)user.field("credential");
+                graph.begin();
+                Vertex user = graph.getVertexByKey("User.userId", data.get("userId"));
+                if(user != null) {
+                    Vertex credential = user.getProperty("credential");
                     if(credential != null) {
                         // now remove the refresh token
-                        String host = (String)data.get("host");
-                        logger.debug("logOut to remove refreshToken {} from host {}" , refreshToken, host);
-                        Map hostRefreshTokens = credential.field("hostRefreshTokens");
-                        if(hostRefreshTokens != null) {
+                        String clientId = (String)data.get("clientId");
+                        logger.debug("logOut to remove refreshToken {} from clientId {}" , refreshToken, clientId);
+                        Map clientRefreshTokens = credential.getProperty("clientRefreshTokens");
+                        if(clientRefreshTokens != null) {
                             // logged in before, check if logged in from the host.
-                            List<String> refreshTokens = (List)hostRefreshTokens.get(host);
+                            List<String> refreshTokens = (List)clientRefreshTokens.get(clientId);
                             if(refreshTokens != null) {
                                 String hashedRefreshToken = HashUtil.md5(refreshToken);
                                 refreshTokens.remove(hashedRefreshToken);
@@ -442,28 +323,27 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
                         } else {
                             logger.error("There is no refresh tokens");
                         }
-                        credential.save();
-                        db.commit();
                     }
                 }
+                graph.commit();
             } catch (Exception e) {
-                db.rollback();
-                e.printStackTrace();
+                logger.error("Exception:", e);
+                graph.rollback();
                 throw e;
             } finally {
-                db.close();
+                graph.shutdown();
             }
         } else {
             logger.debug("There is no hashedRefreshToken as user didn't pass in refresh token when logging out. Do nothing");
         }
     }
 
-    boolean checkRefreshToken(ODocument credential, String host, String refreshToken) throws Exception {
+    boolean checkRefreshToken(Vertex credential, String host, String refreshToken) throws Exception {
         boolean result = false;
         if(credential != null && refreshToken != null) {
-            Map hostRefreshTokens = credential.field("hostRefreshTokens");
-            if(hostRefreshTokens != null) {
-                List<String> refreshTokens = (List)hostRefreshTokens.get(host);
+            Map clientRefreshTokens = credential.getProperty("clientRefreshTokens");
+            if(clientRefreshTokens != null) {
+                List<String> refreshTokens = (List)clientRefreshTokens.get(host);
                 if(refreshTokens != null) {
                     String hashedRefreshToken = HashUtil.md5(refreshToken);
                     for(String token: refreshTokens) {
@@ -481,123 +361,63 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
     }
 
     protected void upVoteUser(Map<String, Object> data) {
-        ODocument user = null;
-        ODocument voteUser = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable userOid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            OIdentifiable voteUserOid = (OIdentifiable)userIdIdx.get((String)data.get("voteUserId"));
-            if (userOid != null && voteUserOid != null) {
-                user = (ODocument) userOid.getRecord();
-                voteUser = (ODocument)voteUserOid.getRecord();
-                Set upSet = user.field("upUsers");
-                if(upSet == null) {
-                    upSet = new HashSet<String>();
-                    upSet.add(voteUser);
-                    user.field("upUsers", upSet);
-                } else {
-                    upSet.add(voteUser);
+            graph.begin();
+            OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", data.get("userId"));
+            OrientVertex voteUser = (OrientVertex)graph.getVertexByKey("User.userId", data.get("voteUserId"));
+            if(user != null && voteUser != null) {
+                for (Edge e : voteUser.getEdges(user, Direction.OUT, "DownVote")) {
+                    graph.removeEdge(e);
                 }
-                Set downSet = user.field("downUsers");
-                if(downSet != null) {
-                    downSet.remove(voteUser);
-                }
-                user.field("updateDate", data.get("updateDate"));
-                user.save();
-                db.commit();
+                voteUser.addEdge("UpVote", user);
             }
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
     protected void downVoteUser(Map<String, Object> data) {
-        ODocument user = null;
-        ODocument voteUser = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> userIdIdx = db.getMetadata().getIndexManager().getIndex("User.userId");
-            OIdentifiable userOid = (OIdentifiable) userIdIdx.get((String)data.get("userId"));
-            OIdentifiable voteUserOid = (OIdentifiable)userIdIdx.get((String)data.get("voteUserId"));
-            if (userOid != null && voteUserOid != null) {
-                user = (ODocument) userOid.getRecord();
-                voteUser = (ODocument)voteUserOid.getRecord();
-                Set downSet = user.field("downUsers");
-                if(downSet == null) {
-                    downSet = new HashSet<String>();
-                    downSet.add(voteUser);
-                    user.field("downUsers", downSet);
-                } else {
-                    downSet.add(voteUser);
+            graph.begin();
+            OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", data.get("userId"));
+            OrientVertex voteUser = (OrientVertex)graph.getVertexByKey("User.userId", data.get("voteUserId"));
+            if(user != null && voteUser != null) {
+                for (Edge e : voteUser.getEdges(user, Direction.OUT, "UpVote")) {
+                    graph.removeEdge(e);
                 }
-                Set upSet = user.field("upUsers");
-                if(upSet != null) {
-                    upSet.remove(voteUser);
-                }
-                user.field("updateDate", data.get("updateDate"));
-                user.save();
-                db.commit();
+                voteUser.addEdge("DownVote", user);
             }
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
     // TODO refactor it to be generic. table name as part of the criteria? or a parameter?
-    protected long getTotalNumberUserFromDb(Map<String, Object> criteria) {
-        long total = 0;
+    protected long getTotalNumberUserFromDb(OrientGraphNoTx graph, Map<String, Object> criteria) throws Exception {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) as count FROM User");
-
         String whereClause = DbService.getWhereClause(criteria);
         if(whereClause != null && whereClause.length() > 0) {
             sql.append(whereClause);
         }
-
-        System.out.println("sql=" + sql);
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            total = ((ODocument)db.query(new OSQLSynchQuery<ODocument>(sql.toString())).get(0)).field("count");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-        return total;
+        logger.debug("sql=" + sql);
+        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());
+        List<ODocument> list = graph.command(query).execute();
+        return list.get(0).field("count");
     }
 
-    protected List<String> getRoles() {
-        List<String> roles = null;
-        String sql = "SELECT id FROM Role";
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> list = db.command(query).execute();
-            if(list.size() > 0) {
-                roles = new ArrayList<String>();
-                for(ODocument doc: list) {
-                    roles.add((String)doc.field("id"));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-        return roles;
-    }
-
-    protected String getUserFromDb(Map<String, Object> criteria) {
+    protected String getUserFromDb(OrientGraphNoTx graph, Map<String, Object> criteria) throws Exception {
         String json = null;
         StringBuilder sql = new StringBuilder("SELECT FROM User ");
         String whereClause = DbService.getWhereClause(criteria);
@@ -619,18 +439,11 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
             sql.append(" SKIP ").append((pageNo - 1) * pageSize);
             sql.append(" LIMIT ").append(pageSize);
         }
-        System.out.println("sql=" + sql);
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());
-            List<ODocument> list = db.command(query).execute();
-            if(list.size() > 0) {
-                json = OJSONWriter.listToJSON(list, null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
+        logger.debug("sql=" + sql);
+        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());
+        List<ODocument> list = graph.command(query).execute();
+        if(list.size() > 0) {
+            json = OJSONWriter.listToJSON(list, null);
         }
         return json;
     }
@@ -640,18 +453,19 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return matcher.matches();
     }
 
-    String generateToken(ODocument user, String clientId) throws Exception {
+    String generateToken(Vertex user, String clientId) throws Exception {
         Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();
-        jwtMap.put("@rid", user.field("@rid").toString());
-        jwtMap.put("userId", user.field("userId"));
+        jwtMap.put("@rid", user.getProperty("@rid").toString());
+        jwtMap.put("userId", user.getProperty("userId"));
         jwtMap.put("clientId", clientId);
-        jwtMap.put("roles", user.field("roles"));
+        jwtMap.put("roles", user.getProperty("roles"));
         return JwtUtil.getJwt(jwtMap);
     }
 
-    boolean checkPassword(ODocument user, String inputPassword) throws Exception {
-        ODocument credential = (ODocument)user.field("credential");
-        String storedPassword = (String) credential.field("password");
+    boolean checkPassword(OrientGraphNoTx graph, Vertex user, String inputPassword) throws Exception {
+        Vertex credential = user.getProperty("credential");
+        //Vertex credential = getCredential(graph, user);
+        String storedPassword = (String) credential.getProperty("password");
         return HashUtil.validatePassword(inputPassword, storedPassword);
     }
 

@@ -17,6 +17,8 @@
 package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -27,13 +29,22 @@ import java.util.Map;
  * AccessLevel R [owner, admin, menuAdmin]
  *
  */
-public class GetAllMenuItemRule extends AbstractMenuRule implements Rule {
+public class GetMenuItemMapRule extends AbstractMenuRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>) payload.get("user");
         String host = (String) user.get("host");
-        String menuItems = getAllMenuItem(host);
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        String menuItems = null;
+        try {
+            menuItems = getMenuItemMap(graph, host);
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
         if(menuItems != null) {
             inputMap.put("result", menuItems);
             return true;

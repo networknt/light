@@ -18,7 +18,11 @@ package com.networknt.light.rule.user;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.HashUtil;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,41 +47,49 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
             error = "ClientId is required";
             inputMap.put("responseCode", 400);
         } else {
-            ODocument user = null;
-            if(isEmail(userIdEmail)) {
-                user = getUserByEmail(userIdEmail);
-            } else {
-                user = getUserByUserId(userIdEmail);
-            }
-            if(user != null) {
-                if(checkPassword(user, inputPassword)) {
-                    String jwt = generateToken(user, clientId);
-                    if(jwt != null) {
-                        Map eventMap = getEventMap(inputMap);
-                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                        inputMap.put("eventMap", eventMap);
-                        Map<String, String> tokens = new HashMap<String, String>();
-                        tokens.put("accessToken", jwt);
-                        if(rememberMe != null && rememberMe) {
-                            // generate refreshToken
-                            String refreshToken = HashUtil.generateUUID();
-                            tokens.put("refreshToken", refreshToken);
-                            String hashedRefreshToken = HashUtil.md5(refreshToken);
-                            eventData.put("hashedRefreshToken", hashedRefreshToken);
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+                Vertex user = null;
+                if(isEmail(userIdEmail)) {
+                    user = getUserByEmail(graph, userIdEmail);
+                } else {
+                    user = getUserByUserId(graph, userIdEmail);
+                }
+                if(user != null) {
+                    if(checkPassword(graph, user, inputPassword)) {
+                        String jwt = generateToken(user, clientId);
+                        if(jwt != null) {
+                            Map eventMap = getEventMap(inputMap);
+                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                            inputMap.put("eventMap", eventMap);
+                            Map<String, String> tokens = new HashMap<String, String>();
+                            tokens.put("accessToken", jwt);
+                            if(rememberMe != null && rememberMe) {
+                                // generate refreshToken
+                                String refreshToken = HashUtil.generateUUID();
+                                tokens.put("refreshToken", refreshToken);
+                                String hashedRefreshToken = HashUtil.md5(refreshToken);
+                                eventData.put("hashedRefreshToken", hashedRefreshToken);
+                            }
+                            inputMap.put("result", mapper.writeValueAsString(tokens));
+                            eventData.put("clientId", clientId);
+                            eventData.put("userId", user.getProperty("userId"));
+                            eventData.put("host", data.get("host"));  // add host as refreshToken will be associate with host.
+                            eventData.put("logInDate", new java.util.Date());
                         }
-                        inputMap.put("result", mapper.writeValueAsString(tokens));
-                        eventData.put("clientId", clientId);
-                        eventData.put("userId", user.field("userId"));
-                        eventData.put("host", data.get("host"));  // add host as refreshToken will be associate with host.
-                        eventData.put("logInDate", new java.util.Date());
+                    } else {
+                        error = "Invalid password";
+                        inputMap.put("responseCode", 400);
                     }
                 } else {
-                    error = "Invalid password";
+                    error = "Invalid userId or email";
                     inputMap.put("responseCode", 400);
                 }
-            } else {
-                error = "Invalid userId or email";
-                inputMap.put("responseCode", 400);
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
         if(error != null) {

@@ -20,6 +20,7 @@ import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.command.OCommandOutputListener;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.tool.ODatabaseExport;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 import java.io.IOException;
 
@@ -32,7 +33,7 @@ public class ExportDatabase {
     }
 
     public static void exp() {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             OCommandOutputListener listener = new OCommandOutputListener() {
                 @Override
@@ -41,13 +42,13 @@ public class ExportDatabase {
                 }
             };
 
-            ODatabaseExport export = new ODatabaseExport(db, "/tmp/export", listener);
+            ODatabaseExport export = new ODatabaseExport(graph.getRawGraph(), "/tmp/export", listener);
             export.exportDatabase();
             export.close();
         } catch(IOException ioe) {
             ioe.printStackTrace();
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 }

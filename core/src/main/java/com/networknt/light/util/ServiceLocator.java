@@ -18,8 +18,15 @@ package com.networknt.light.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +49,10 @@ public class ServiceLocator {
 
     Map<String, Map<String, Object>> memoryImage = new ConcurrentHashMap<String,Map<String, Object>>(10, 0.9f, 1);
 
+    //HazelcastInstance hzInstance = Hazelcast.newHazelcastInstance();
+
+    OrientGraphFactory factory = null;
+
     // This eager initialization. Assume service locator is always used.
     private static final ServiceLocator instance = new ServiceLocator();
     private ServiceLocator() {}
@@ -53,6 +64,11 @@ public class ServiceLocator {
         return mapper;
     }
 
+    /*
+    public HazelcastInstance getHzInstance() {
+        return hzInstance;
+    }
+    */
 
     public String getIp() {
         loadServerConfig();
@@ -126,13 +142,19 @@ public class ServiceLocator {
         return serverMap.get("jwtExpireInSecond");
     }
 
-    public ODatabaseDocumentTx getDb() {
-        loadServerConfig();
-        String dbName = serverMap.get("dbName");
-        String dbUser = serverMap.get("dbUser");
-        String dbPass = serverMap.get("dbPass");
-        String dbUrl = "plocal:"+ System.getProperty("user.home") + "/" + dbName;
-        return ODatabaseDocumentPool.global().acquire(dbUrl, dbUser, dbPass);
+    public OrientGraphFactory getFactory() {
+        if(factory == null) {
+            factory = new OrientGraphFactory(getDbUrl()).setupPool(1,100);
+        }
+        return factory;
+    }
+
+    public OrientGraph getGraph() {
+        return getFactory().getTx();
+    }
+
+    public OrientGraphNoTx getNoTxGraph() {
+        return getFactory().getNoTx();
     }
 
     public Map<String, Object> getHostMap() {

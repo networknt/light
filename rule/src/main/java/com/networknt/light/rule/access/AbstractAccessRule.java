@@ -30,6 +30,9 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,47 +52,42 @@ public abstract class AbstractAccessRule extends AbstractRule implements Rule {
     public abstract boolean execute (Object ...objects) throws Exception;
 
     protected void updAccess(Map<String, Object> data) throws Exception {
-        ODocument access = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        OrientVertex access = null;
         try {
-            db.begin();
-            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Access.ruleClass");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
-            if (oid != null && oid.getRecord() != null) {
-                access = (ODocument) oid.getRecord();
-                access.field("accessLevel", data.get("accessLevel"));
+            graph.begin();
+            access = (OrientVertex)graph.getVertexByKey("Access.ruleClass", data.get("ruleClass"));
+            if(access != null) {
+                access.setProperty("accessLevel", data.get("accessLevel"));
                 List<String> clients = (List)data.get("clients");
                 if(clients != null && clients.size() > 0) {
-                    access.field("clients", clients);
+                    access.setProperty("clients", clients);
                 } else {
-                    access.removeField("clients");
+                    access.removeProperty("clients");
                 }
-
                 List<String> roles = (List)data.get("roles");
                 if(roles != null && roles.size() > 0) {
-                    access.field("roles", roles);
+                    access.setProperty("roles", roles);
                 } else {
-                    access.removeField("roles");
+                    access.removeProperty("roles");
                 }
-
                 List<String> users = (List)data.get("users");
                 if(users != null && users.size() > 0) {
-                    access.field("users", users);
+                    access.setProperty("users", users);
                 } else {
-                    access.removeField("users");
+                    access.removeProperty("users");
                 }
-                access.field("updateDate", data.get("updateDate"));
-                access.field("updateUserId", data.get("updateUserId"));
-                access.save();
+                access.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                updateUser.addEdge("Update", access);
             }
-            db.commit();
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
             logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
@@ -99,30 +97,27 @@ public abstract class AbstractAccessRule extends AbstractRule implements Rule {
                     .build();
             accessMap.put("cache", cache);
         }
-        String json = access.toJSON();
+        String json = access.getRecord().toJSON();
         cache.put(data.get("ruleClass"), mapper.readValue(json,
                 new TypeReference<HashMap<String, Object>>() {
                 }));
     }
 
     protected void delAccess(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Access.ruleClass");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(data.get("ruleClass"));
-            if (oid != null && oid.getRecord() != null) {
-                ODocument access = (ODocument) oid.getRecord();
-                access.delete();
+            graph.begin();
+            Vertex access = graph.getVertexByKey("Access.ruleClass", data.get("ruleClass"));
+            if(access != null) {
+                graph.removeVertex(access);
             }
-            db.commit();
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
             logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
@@ -137,18 +132,17 @@ public abstract class AbstractAccessRule extends AbstractRule implements Rule {
             sql = sql + " WHERE host = '" + host;
         }
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> accesses = db.command(query).execute();
+            List<ODocument> accesses = graph.command(query).execute();
             json = OJSONWriter.listToJSON(accesses, null);
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
-
 }

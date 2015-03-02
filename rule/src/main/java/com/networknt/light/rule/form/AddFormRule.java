@@ -31,7 +31,7 @@ public class AddFormRule extends AbstractFormRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        String id = (String)data.get("id");
+        String formId = (String)data.get("formId");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -42,7 +42,7 @@ public class AddFormRule extends AbstractFormRule implements Rule {
                 error = "User can only add form from host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
-                if(!id.contains(host)) {
+                if(!formId.contains(host)) {
                     // you are not allowed to add form as it is not owned by the host.
                     error = "form id doesn't contain host: " + host;
                     inputMap.put("responseCode", 403);

@@ -20,6 +20,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import com.hazelcast.core.ITopic;
+import com.hazelcast.core.Message;
+import com.hazelcast.core.MessageListener;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.RuleEngine;
@@ -31,7 +34,11 @@ import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -48,13 +55,71 @@ import java.util.regex.Pattern;
 public abstract class AbstractFormRule extends AbstractRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractFormRule.class);
 
-    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
-
     public abstract boolean execute (Object ...objects) throws Exception;
 
+    /*
+    static {
+        System.out.println("AbstractFromRule is called");
+        ITopic<Map<String, Object>> rule = ServiceLocator.getInstance().getHzInstance().getTopic( "rule" );
+        rule.addMessageListener(new RuleMessageListenerImpl());
+
+        ITopic<Map<String, Object>> host = ServiceLocator.getInstance().getHzInstance().getTopic( "host" );
+        host.addMessageListener(new HostMessageListenerImpl());
+
+        ITopic<Map<String, Object>> role = ServiceLocator.getInstance().getHzInstance().getTopic( "role" );
+        role.addMessageListener(new RoleMessageListenerImpl());
+
+    }
+
+    private static class RuleMessageListenerImpl implements MessageListener<Map<String, Object>> {
+        @Override
+        public void onMessage(final Message<Map<String, Object>> message) {
+            Map<String, Object> eventMap = message.getMessageObject();
+            Map<String, Object> data = (Map<String, Object>)eventMap.get("data");
+            System.out.println("Received: " + eventMap);
+            // do we know which form to be removed from cache? Need to define the dependency between form
+            // and rule
+            Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
+            if(cache != null) {
+                cache.remove(data.get("formId"));
+            }
+        }
+    }
+
+    private static class HostMessageListenerImpl implements MessageListener<Map<String, Object>> {
+        @Override
+        public void onMessage(final Message<Map<String, Object>> message) {
+            Map<String, Object> eventMap = message.getMessageObject();
+            Map<String, Object> data = (Map<String, Object>)eventMap.get("data");
+            System.out.println("Received: " + eventMap);
+            // simply remove the page from cache in order to reload in the next getPage rule.
+            Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
+            if(cache != null) {
+                cache.remove(data.get("formId"));
+            }
+        }
+    }
+
+    private static class RoleMessageListenerImpl implements MessageListener<Map<String, Object>> {
+        @Override
+        public void onMessage(final Message<Map<String, Object>> message) {
+            Map<String, Object> eventMap = message.getMessageObject();
+            Map<String, Object> data = (Map<String, Object>)eventMap.get("data");
+            System.out.println("Received: " + eventMap);
+            // simply remove the page from cache in order to reload in the next getPage rule.
+            Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
+            if(cache != null) {
+                cache.remove(data.get("formId"));
+            }
+        }
+    }
+    */
     protected String getFormById(Map<String, Object> inputMap) throws Exception {
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        String id = (String)data.get("id");
+        String formId = (String)data.get("formId");
         String json  = null;
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
@@ -64,27 +129,25 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                     .build();
             formMap.put("cache", cache);
         } else {
-            json = (String)cache.get(id);
+            json = (String)cache.get(formId);
         }
         if(json == null) {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
-                OIndex<?> formIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
-                // this is a unique index, so it retrieves a OIdentifiable
-                OIdentifiable oid = (OIdentifiable) formIdIdx.get(id);
-                if (oid != null && oid.getRecord() != null) {
-                    json = ((ODocument) oid.getRecord()).toJSON();
-                    if(id.endsWith("_d")) {
+                OrientVertex form = (OrientVertex)graph.getVertexByKey("Form.formId", formId);
+                if(form != null) {
+                    json = form.getRecord().toJSON();
+                    if(formId.endsWith("_d")) {
                         // enrich the form with dynamicOptions for drop down values
                         json = enrichForm(json, inputMap);
                     }
-                    cache.put(id, json);
+                    cache.put(formId, json);
                 }
             } catch (Exception e) {
                 logger.error("Exception:", e);
                 throw e;
             } finally {
-                db.close();
+                graph.shutdown();
             }
         }
         return json;
@@ -124,91 +187,75 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
 
     protected String addForm(Map<String, Object> data) throws Exception {
         String json = null;
-        String id = (String)data.get("id");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        String formId = (String)data.get("formId");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            ODocument form = new ODocument(schema.getClass("Form"));
-            if(data.get("host") != null) form.field("host", data.get("host"));
-            form.field("id", id);
-            form.field("action", data.get("action"));
-            form.field("schema", data.get("schema"));
-            form.field("form", data.get("form"));
-            if(data.get("modelData") != null) form.field("modelData", data.get("modelData"));
-            form.field("createDate", data.get("createDate"));
-            form.field("createUserId", data.get("createUserId"));
-            form.save();
+            graph.begin();
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            OrientVertex form = graph.addVertex("class:Form", data);
+            createUser.addEdge("Create", form);
             // According to action in the list, populate validation schema.
-            List<Map<String, Object>> actions = form.field("action");
+            List<Map<String, Object>> actions = form.getProperty("action");
             for(Map<String, Object> action: actions) {
                 String ruleClass = Util.getCommandRuleId(action);
-                ODocument validation = new ODocument(schema.getClass("Validation"));
-                validation.field("ruleClass", ruleClass);
-                validation.field("schema", data.get("schema"));
-                validation.save();
+                Vertex validation = graph.addVertex("class:Validation", "ruleClass", ruleClass, "schema", data.get("schema"));
             }
-            db.commit();
-            json = form.toJSON();
+            graph.commit();
+            json = form.getRecord().toJSON();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
         if(cache != null) {
-            cache.remove(id);
+            cache.remove(formId);
         }
         return json;
     }
 
-    protected void delForm(String id) {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void delForm(String formId) {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> formIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) formIdIdx.get(id);
-            if (oid != null && oid.getRecord() != null) {
-                ODocument form = oid.getRecord();
-                List<Map<String, Object>> actions = form.field("action");
+            graph.begin();
+            Vertex form = graph.getVertexByKey("Form.formId", formId);
+            if(form != null) {
+                List<Map<String, Object>> actions = form.getProperty("action");
                 for(Map<String, Object> action: actions) {
                     String ruleClass = Util.getCommandRuleId(action);
-                    OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
-                    OIdentifiable vid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
-                    if (vid != null) {
-                        ODocument validation = vid.getRecord();
-                        validation.delete();
+                    Vertex validation = graph.getVertexByKey("Validation.ruleClass", ruleClass);
+                    if(validation != null) {
+                        graph.removeVertex(validation);
                     }
                 }
-                form.delete();
+                graph.removeVertex(form);
             }
-            db.commit();
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
         if(cache != null) {
-            cache.remove(id);
+            cache.remove(formId);
         }
     }
 
     protected String updForm(Map<String, Object> data) throws Exception {
         String json = null;
-        String id = (String)data.get("id");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        String formId = (String)data.get("formId");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> formIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
+            graph.begin();
+            OIndex<?> formIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Form.formId");
             // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oId = (OIdentifiable) formIdIdx.get(id);
+            OIdentifiable oId = (OIdentifiable) formIdIdx.get(formId);
             if (oId != null) {
                 ODocument doc = oId.getRecord();
                 doc.field("action", data.get("action"));
@@ -223,7 +270,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                 List<Map<String, Object>> actions = doc.field("action");
                 for(Map<String, Object> action: actions) {
                     String ruleClass = Util.getCommandRuleId(action);
-                    OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
+                    OIndex<?> validationRuleClassIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Validation.ruleClass");
                     OIdentifiable vid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
                     if (vid != null) {
                         ODocument validation = vid.getRecord();
@@ -231,39 +278,38 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                         validation.save();
                     }
                 }
-                db.commit();
+                graph.commit();
                 json = doc.toJSON();
             }
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
         if(cache != null) {
-            cache.remove(id);
+            cache.remove(formId);
         }
         return json;
     }
 
     protected String impForm(Map<String, Object> data) throws Exception {
         String json = null;
-        String id = (String)data.get("id");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        String formId = (String)data.get("formId");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> formIdIdx = db.getMetadata().getIndexManager().getIndex("Form.id");
+            graph.begin();
+            OIndex<?> formIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Form.formId");
             // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) formIdIdx.get(id);
+            OIdentifiable oid = (OIdentifiable) formIdIdx.get(formId);
             if (oid != null && oid.getRecord() != null) {
                 ODocument doc = oid.getRecord();
                 List<Map<String, Object>> actions = doc.field("action");
                 for(Map<String, Object> action: actions) {
                     String ruleClass = Util.getCommandRuleId(action);
-                    OIndex<?> validationRuleClassIdx = db.getMetadata().getIndexManager().getIndex("Validation.ruleClass");
+                    OIndex<?> validationRuleClassIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Validation.ruleClass");
                     OIdentifiable vid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
                     if (vid != null) {
                         ODocument validation = vid.getRecord();
@@ -273,42 +319,26 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                 doc.delete();
             }
 
-            ODocument form = new ODocument(schema.getClass("Form"));
-            if(data.get("host") != null) form.field("host", data.get("host"));
-            form.field("id", id);
-            form.field("action", data.get("action"));
-            form.field("schema", data.get("schema"));
-            form.field("form", data.get("form"));
-            if(data.get("modelData") != null) form.field("modelData", data.get("modelData"));
-            form.field("createDate", data.get("createDate"));
-            form.field("createUserId", data.get("createUserId"));
-            form.save();
+            OrientVertex form = graph.addVertex("class:Event", data);
             // According to action in the list, populate validation schema.
-            List<Map<String, Object>> actions = form.field("action");
-            if(actions != null) {
-                for(Map<String, Object> action: actions) {
-                    String ruleClass = Util.getCommandRuleId(action);
-                    ODocument validation = new ODocument(schema.getClass("Validation"));
-                    validation.field("ruleClass", ruleClass);
-                    validation.field("schema", data.get("schema"));
-                    validation.save();
-                }
-            } else {
-                logger.error("No action is defined for form: " + id);
+            List<Map<String, Object>> actions = form.getProperty("action");
+            for(Map<String, Object> action: actions) {
+                String ruleClass = Util.getCommandRuleId(action);
+                Vertex validation = graph.addVertex("class:Validation", "ruleClass", ruleClass, "schema", data.get("schema"));
             }
-            db.commit();
-            json = form.toJSON();
+            graph.commit();
+            json = form.getRecord().toJSON();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
         if(cache != null) {
-            cache.remove(id);
+            cache.remove(formId);
         }
         return json;
     }
@@ -319,10 +349,10 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
         }
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> forms = db.command(query).execute();
+            List<ODocument> forms = graph.getRawGraph().command(query).execute();
             if(forms != null && forms.size() > 0) {
                 json = OJSONWriter.listToJSON(forms, null);
             }
@@ -330,7 +360,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
@@ -341,28 +371,24 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
         }
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> forms = db.command(query).execute();
-            if(forms != null && forms.size() > 0) {
-                // covert list to map
-                Map<String, Map<String, Object>> formMap = new HashMap<String, Map<String, Object>>();
-                for(ODocument form: forms) {
-                    Map<String, Object> contentMap = new HashMap<String, Object>();
-                    contentMap.put("action", form.field("action"));
-                    contentMap.put("schema", form.field("schema"));
-                    contentMap.put("form", form.field("form"));
-                    contentMap.put("modelData", form.field("modelData"));
-                    formMap.put((String)form.field("id"), contentMap);
-                }
-                json = mapper.writeValueAsString(formMap);
+            Map<String, Map<String, Object>> formMap = new HashMap<String, Map<String, Object>>();
+            for (Vertex v : (Iterable<Vertex>) graph.command(
+                    new OCommandSQL(sql)).execute()) {
+                Map<String, Object> contentMap = new HashMap<String, Object>();
+                contentMap.put("action", v.getProperty("action"));
+                contentMap.put("schema", v.getProperty("schema"));
+                contentMap.put("form", v.getProperty("form"));
+                contentMap.put("modelData", v.getProperty("modelData"));
+                formMap.put(v.getProperty("formId"), contentMap);
             }
+            json = mapper.writeValueAsString(formMap);
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }

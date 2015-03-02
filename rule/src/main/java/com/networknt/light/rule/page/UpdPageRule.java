@@ -18,7 +18,10 @@ package com.networknt.light.rule.page;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -37,38 +40,46 @@ public class UpdPageRule extends AbstractPageRule implements Rule {
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
         String error = null;
+
         String userHost = (String)user.get("host");
         if(userHost != null && !userHost.equals(host)) {
             error = "User can only update page from host: " + host;
             inputMap.put("responseCode", 401);
         } else {
-            ODocument page = null;
+            Vertex page = null;
             if(rid != null) {
-                page = DbService.getODocumentByRid(rid);
-                if(page != null) {
-                    int inputVersion = (int)data.get("@version");
-                    int storedVersion = page.field("@version");
-                    if(inputVersion != storedVersion) {
-                        inputMap.put("responseCode", 400);
-                        error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
+                OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+                try {
+                    page = DbService.getVertexByRid(graph, rid);
+                    if(page != null) {
+                        int inputVersion = (int)data.get("@version");
+                        int storedVersion = page.getProperty("@version");
+                        if(inputVersion != storedVersion) {
+                            inputMap.put("responseCode", 400);
+                            error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
+                        } else {
+                            Map eventMap = getEventMap(inputMap);
+                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                            inputMap.put("eventMap", eventMap);
+                            eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                            eventData.put("updateDate", new java.util.Date());
+                            eventData.put("updateUserId", user.get("userId"));
+                        }
                     } else {
-                        Map eventMap = getEventMap(inputMap);
-                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                        inputMap.put("eventMap", eventMap);
-                        eventData.putAll((Map<String, Object>)inputMap.get("data"));
-                        eventData.put("updateDate", new java.util.Date());
-                        eventData.put("updateUserId", user.get("userId"));
+                        error = "Page with @rid " + rid + " cannot be found.";
+                        inputMap.put("responseCode", 404);
                     }
-                } else {
-                    error = "Page with @rid " + rid + " cannot be found.";
-                    inputMap.put("responseCode", 404);
+                } catch (Exception e) {
+                    logger.error("Exception:", e);
+                    throw e;
+                } finally {
+                    graph.shutdown();
                 }
             } else {
                 error = "@rid is required";
                 inputMap.put("responseCode", 400);
             }
         }
-
         if(error != null) {
             inputMap.put("error", error);
             return false;

@@ -27,8 +27,8 @@ public class DelFormEvRule extends AbstractFormRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        String id = (String)data.get("id");
-        delForm(id);
+        String formId = (String)data.get("formId");
+        delForm(formId);
         return true;
     }
 }

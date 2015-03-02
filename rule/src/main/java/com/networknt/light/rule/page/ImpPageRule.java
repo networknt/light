@@ -44,7 +44,7 @@ public class ImpPageRule extends AbstractPageRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.put("host", host);
-                eventData.put("id", data.get("id"));
+                eventData.put("pageId", data.get("pageId"));
                 eventData.put("content", data.get("content"));
                 eventData.put("createDate", new java.util.Date());
                 eventData.put("createUserId", user.get("userId"));
@@ -54,7 +54,7 @@ public class ImpPageRule extends AbstractPageRule implements Rule {
             Map eventMap = getEventMap(inputMap);
             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
             inputMap.put("eventMap", eventMap);
-            eventData.put("id", data.get("id"));
+            eventData.put("pageId", data.get("pageId"));
             eventData.put("content", data.get("content"));
             eventData.put("createDate", new java.util.Date());
             eventData.put("createUserId", user.get("userId"));

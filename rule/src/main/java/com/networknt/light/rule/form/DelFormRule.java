@@ -37,7 +37,7 @@ public class DelFormRule extends AbstractFormRule implements Rule {
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
-        String id = (String)data.get("id");
+        String formId = (String)data.get("formId");
         String error = null;
 
         String host = (String)user.get("host");
@@ -47,7 +47,7 @@ public class DelFormRule extends AbstractFormRule implements Rule {
                 error = "User can only delete form for host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
-                if(!id.contains(host)) {
+                if(!formId.contains(host)) {
                     // you are not allowed to delete form as it is not owned by the host.
                     error = "form id doesn't contain host: " + host;
                     inputMap.put("responseCode", 403);
@@ -55,7 +55,7 @@ public class DelFormRule extends AbstractFormRule implements Rule {
                     int inputVersion = (int)data.get("@version");
                     String json = getFormById(inputMap);
                     if(json == null) {
-                        error = "Form with id " + id + " cannot be found";
+                        error = "Form with id " + formId + " cannot be found";
                         inputMap.put("responseCode", 404);
                     } else {
                         Map<String, Object> form = mapper.readValue(json,
@@ -70,7 +70,7 @@ public class DelFormRule extends AbstractFormRule implements Rule {
                             Map eventMap = getEventMap(inputMap);
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                             inputMap.put("eventMap", eventMap);
-                            eventData.put("id", form.get("id"));
+                            eventData.put("formId", form.get("formId"));
                         }
                     }
                 }
@@ -80,7 +80,7 @@ public class DelFormRule extends AbstractFormRule implements Rule {
             int inputVersion = (int)data.get("@version");
             String json = getFormById(inputMap);
             if(json == null) {
-                error = "Form with id " + id + " cannot be found";
+                error = "Form with id " + formId + " cannot be found";
                 inputMap.put("responseCode", 404);
             } else {
                 Map<String, Object> form = mapper.readValue(json,
@@ -95,7 +95,7 @@ public class DelFormRule extends AbstractFormRule implements Rule {
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
-                    eventData.put("id", form.get("id"));
+                    eventData.put("formId", form.get("formId"));
                 }
             }
         }

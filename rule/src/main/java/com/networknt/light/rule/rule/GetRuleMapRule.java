@@ -17,6 +17,11 @@
 package com.networknt.light.rule.rule;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
+import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +41,16 @@ public class GetRuleMapRule extends AbstractRuleRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>) payload.get("user");
         String host = (String) user.get("host");
-        String hostRuleMap = getRuleMap(host);
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        String hostRuleMap = null;
+        try {
+            hostRuleMap = getRuleMap(graph, host);
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
         if(hostRuleMap != null) {
             inputMap.put("result", hostRuleMap);
             return true;

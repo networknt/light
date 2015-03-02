@@ -27,6 +27,8 @@ import com.orientechnologies.orient.core.index.OCompositeKey;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,7 @@ public abstract class AbstractRule implements Rule {
     protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
     public abstract boolean execute (Object ...objects) throws Exception;
 
+    /*
     protected ODocument getCategoryByRid(String categoryRid) {
         Map<String, Object> categoryMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("categoryMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)categoryMap.get("cache");
@@ -56,7 +59,7 @@ public abstract class AbstractRule implements Rule {
         ODocument category = (ODocument)cache.get("categoryRid");
         if(category == null) {
             // TODO warning to increase cache if this happens.
-            category = DbService.getODocumentByRid(categoryRid);
+            category = DbService.getVertexByRid(categoryRid);
             // put it into the category cache.
             if(category != null) {
                 cache.put(categoryRid, category);
@@ -84,7 +87,7 @@ public abstract class AbstractRule implements Rule {
         }
         return product;
     }
-
+    */
     protected Map<String, Object> getEventMap(Map<String, Object> inputMap) {
         Map<String, Object> eventMap = new HashMap<String, Object>();
         Map<String, Object> payload = (Map<String, Object>)inputMap.get("payload");
@@ -109,6 +112,7 @@ public abstract class AbstractRule implements Rule {
         return eventMap;
     }
 
+    /*
     protected ODocument getODocumentByHostId(String index, String host, String id) {
         ODocument doc = null;
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
@@ -127,6 +131,7 @@ public abstract class AbstractRule implements Rule {
         }
         return doc;
     }
+    */
 
     public Map<String, Object> getAccessByRuleClass(String ruleClass) throws Exception {
         Map<String, Object> access = null;
@@ -142,14 +147,11 @@ public abstract class AbstractRule implements Rule {
             access = (Map<String, Object>)cache.get(ruleClass);
         }
         if(access == null) {
-            //logger.error("access is null, cache =" + cache);
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
-                OIndex<?> ruleClassIdx = db.getMetadata().getIndexManager().getIndex("Access.ruleClass");
-                // this is a unique index, so it retrieves a OIdentifiable
-                OIdentifiable oid = (OIdentifiable) ruleClassIdx.get(ruleClass);
-                if (oid != null && oid.getRecord() != null) {
-                    String json = oid.getRecord().toJSON();
+                OrientVertex accessVertex = (OrientVertex)graph.getVertexByKey("Access.ruleClass", ruleClass);
+                if(accessVertex != null) {
+                    String json = accessVertex.getRecord().toJSON();
                     access = mapper.readValue(json,
                             new TypeReference<HashMap<String, Object>>() {
                             });
@@ -159,7 +161,7 @@ public abstract class AbstractRule implements Rule {
                 logger.error("Exception:", e);
                 throw e;
             } finally {
-                db.close();
+                graph.shutdown();
             }
         }
         return access;

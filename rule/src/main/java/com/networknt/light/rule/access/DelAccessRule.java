@@ -47,6 +47,7 @@ public class DelAccessRule extends AbstractAccessRule implements Rule {
         int inputVersion = (int)data.get("@version");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;
+        /*
         if(payload == null) {
             error = "Login is required";
             inputMap.put("responseCode", 401);
@@ -113,6 +114,7 @@ public class DelAccessRule extends AbstractAccessRule implements Rule {
                 }
             }
         }
+        */
         if(error != null) {
             inputMap.put("error", error);
             return false;

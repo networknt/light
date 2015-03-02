@@ -29,6 +29,9 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,32 +50,27 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
     public abstract boolean execute (Object ...objects) throws Exception;
 
     protected void addTransformRequest(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            ODocument transform = new ODocument(schema.getClass("TransformRequest"));
-            transform.field("ruleClass", data.get("ruleClass"));
-            transform.field("sequence", data.get("sequence"));
-            transform.field("transformRule", data.get("transformRule"));
+            graph.begin();
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
             // transformData is a json string, convert it to map.
             Object transformData = data.get("transformData");
             if(transformData != null) {
                 Map<String, Object> map = mapper.readValue((String)transformData,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                transform.field("transformData", map);
+                data.put("transformData", map);
             }
-            transform.field("createDate", data.get("createDate"));
-            transform.field("createUserId", data.get("createUserId"));
-            transform.save();
-            db.commit();
+            OrientVertex transform = graph.addVertex("class:TransformRequest", data);
+            createUser.addEdge("Create", transform);
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -83,32 +81,26 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
     }
 
     protected void addTransformResponse(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            ODocument transform = new ODocument(schema.getClass("TransformResponse"));
-            transform.field("ruleClass", data.get("ruleClass"));
-            transform.field("sequence", data.get("sequence"));
-            transform.field("transformRule", data.get("transformRule"));
-            // transformData is a json string, convert it to map.
+            graph.begin();
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
             Object transformData = data.get("transformData");
             if(transformData != null) {
                 Map<String, Object> map = mapper.readValue((String)transformData,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                transform.field("transformData", map);
+                data.put("transformData", map);
             }
-            transform.field("createDate", data.get("createDate"));
-            transform.field("createUserId", data.get("createUserId"));
-            transform.save();
-            db.commit();
+            OrientVertex transform = graph.addVertex("class:TransformResponse", data);
+            createUser.addEdge("Create", transform);
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
+            logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -119,10 +111,10 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
     }
 
     protected void updTransformRequest(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> reqRuleSequenceIdx = db.getMetadata().getIndexManager().getIndex("ReqRuleSequenceIdx");
+            graph.begin();
+            OIndex<?> reqRuleSequenceIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("ReqRuleSequenceIdx");
             OCompositeKey key = new OCompositeKey(data.get("ruleClass"), data.get("sequence"));
             OIdentifiable oid = (OIdentifiable) reqRuleSequenceIdx.get(key);
             if (oid != null) {
@@ -139,14 +131,14 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
                 transform.field("updateDate", data.get("updateDate"));
                 transform.field("updateUserId", data.get("updateUserId"));
                 transform.save();
-                db.commit();
+                graph.commit();
             }
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -157,10 +149,10 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
     }
 
     protected void updTransformResponse(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> resRuleSequenceIdx = db.getMetadata().getIndexManager().getIndex("ResRuleSequenceIdx");
+            graph.begin();
+            OIndex<?> resRuleSequenceIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("ResRuleSequenceIdx");
             OCompositeKey key = new OCompositeKey(data.get("ruleClass"), data.get("sequence"));
             OIdentifiable oid = (OIdentifiable) resRuleSequenceIdx.get(key);
             if (oid != null) {
@@ -177,14 +169,14 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
                 transform.field("updateDate", data.get("updateDate"));
                 transform.field("updateUserId", data.get("updateUserId"));
                 transform.save();
-                db.commit();
+                graph.commit();
             }
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -195,24 +187,24 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
     }
 
     protected void delTransformRequest(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> reqRuleSequenceIdx = db.getMetadata().getIndexManager().getIndex("ReqRuleSequenceIdx");
+            graph.begin();
+            OIndex<?> reqRuleSequenceIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("ReqRuleSequenceIdx");
             OCompositeKey key = new OCompositeKey(data.get("ruleClass"), data.get("sequence"));
             OIdentifiable oid = (OIdentifiable) reqRuleSequenceIdx.get(key);
             if (oid != null) {
                 ODocument transform = (ODocument) oid.getRecord();
                 transform.delete();
                 transform.save();
-                db.commit();
+                graph.commit();
             }
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -223,24 +215,24 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
     }
 
     protected void delTransformResponse(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> resRuleSequenceIdx = db.getMetadata().getIndexManager().getIndex("ResRuleSequenceIdx");
+            graph.begin();
+            OIndex<?> resRuleSequenceIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("ResRuleSequenceIdx");
             OCompositeKey key = new OCompositeKey(data.get("ruleClass"), data.get("sequence"));
             OIdentifiable oid = (OIdentifiable) resRuleSequenceIdx.get(key);
             if (oid != null) {
                 ODocument transform = (ODocument) oid.getRecord();
                 transform.delete();
                 transform.save();
-                db.commit();
+                graph.commit();
             }
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         // remove the cached list if in order to reload it
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
@@ -268,10 +260,10 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
             }
         }
         if(transforms == null) {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-                List<ODocument> docs = db.command(query).execute();
+                List<ODocument> docs = graph.getRawGraph().command(query).execute();
                 transforms = new ArrayList<Map<String, Object>> ();
                 if(docs != null) {
                     for(ODocument doc: docs) {
@@ -296,7 +288,7 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
                 logger.error("Exception:", e);
                 throw e;
             } finally {
-                db.close();
+                graph.shutdown();
             }
         }
         return transforms;
@@ -320,10 +312,10 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
             }
         }
         if(transforms == null) {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-                List<ODocument> docs = db.command(query).execute();
+                List<ODocument> docs = graph.command(query).execute();
                 transforms = new ArrayList<Map<String, Object>> ();
                 if(docs != null) {
                     for(ODocument doc: docs) {
@@ -348,7 +340,7 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
                 logger.error("Exception:", e);
                 throw e;
             } finally {
-                db.close();
+                graph.shutdown();
             }
         }
         return transforms;
@@ -356,9 +348,9 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
 
     protected String getTransformRequestBySeq(String ruleClass, Integer sequence) {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OIndex<?> reqRuleSequenceIdx = db.getMetadata().getIndexManager().getIndex("ReqRuleSequenceIdx");
+            OIndex<?> reqRuleSequenceIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("ReqRuleSequenceIdx");
             OCompositeKey key = new OCompositeKey(ruleClass, sequence);
             OIdentifiable oid = (OIdentifiable) reqRuleSequenceIdx.get(key);
             if (oid != null) {
@@ -369,16 +361,16 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
     protected String getTransformResponseBySeq(String ruleClass, Integer sequence) {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OIndex<?> resRuleSequenceIdx = db.getMetadata().getIndexManager().getIndex("ResRuleSequenceIdx");
+            OIndex<?> resRuleSequenceIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("ResRuleSequenceIdx");
             OCompositeKey key = new OCompositeKey(ruleClass, sequence);
             OIdentifiable oid = (OIdentifiable) resRuleSequenceIdx.get(key);
             if (oid != null) {
@@ -389,9 +381,8 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
-
 }

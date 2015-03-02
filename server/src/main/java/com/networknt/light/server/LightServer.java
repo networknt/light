@@ -24,6 +24,11 @@ import com.networknt.light.server.handler.WebSocketHandler;
 import com.networknt.light.util.ServiceLocator;
 import com.networknt.light.util.Util;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
+import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.UndertowOptions;
@@ -65,18 +70,23 @@ public class LightServer {
         // hosts and server configuration
         Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
 
+        OrientGraphFactory factory = ServiceLocator.getInstance().getFactory();
         // check if database exists, if not create it and init it.
-        ODatabaseDocumentTx db = new ODatabaseDocumentTx(ServiceLocator.getInstance().getDbUrl());
-        if(!db.exists()) {
-            db.create();
-            db.getStorage().getConfiguration().dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS";
-            db.getStorage().getConfiguration().setTimeZone(TimeZone.getTimeZone("UTC"));
-            db.getStorage().getConfiguration().update();
-            db.close();
+        if(!factory.exists()) {
+            try {
+                OrientBaseGraph g = new OrientGraph(ServiceLocator.getInstance().getDbUrl());
+                // database is auto created
+                g.command(new OCommandSQL("alter database custom useLightweightEdges=true")).execute();
+                g.command(new OCommandSQL("alter database DATETIMEFORMAT yyyy-MM-dd'T'HH:mm:ss.SSS")).execute();
+                g.command(new OCommandSQL("alter database TIMEZONE UTC")).execute();
+            } finally {
+                // this also closes the OrientGraph instances created by the factory
+                // Note that OrientGraphFactory does not implement Closeable
+                factory.close();
+            }
             InitDatabase.initDb();
             // replay all the event to create database image.
             // TODO need to rethink replay as orientdb is used instead of Memory Image.
-            // TODO load menu and form other common things from db to cache. or just by replay.
             replayEvent();
         }
 

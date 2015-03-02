@@ -17,7 +17,12 @@
 package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,26 +37,43 @@ public class AddMenuItemRule extends AbstractMenuRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String error = null;
-
         String host = (String)user.get("host");
         if(host != null && !host.equals(data.get("host"))) {
-            error = "User can only add menuItem for host: " + host;
-            inputMap.put("responseCode", 401);
+            error = "You can only add menuItem for host: " + host;
+            inputMap.put("responseCode", 403);
         } else {
-            String json = getMenuItem((String)data.get("label"));
-            if(json != null) {
-                error = "MenuItem for the label exists";
-                inputMap.put("responseCode", 400);
-            } else {
-                Map eventMap = getEventMap(inputMap);
-                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                inputMap.put("eventMap", eventMap);
-                eventData.putAll((Map<String, Object>)inputMap.get("data"));
-                eventData.put("createDate", new java.util.Date());
-                eventData.put("createUserId", user.get("userId"));
-                if(host == null) {
-                    eventData.remove("host");
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+                String json = getMenuItem(graph, (String) data.get("menuItemId"));
+                if(json != null) {
+                    error = "MenuItem for the label exists";
+                    inputMap.put("responseCode", 400);
+                } else {
+                    Map eventMap = getEventMap(inputMap);
+                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                    inputMap.put("eventMap", eventMap);
+                    List<String> menuItems = (List)data.remove("menuItems");
+                    // convert to menuItemIds from rids
+                    if(menuItems != null && menuItems.size() > 0) {
+                        List<String> addMenuItems = new ArrayList();
+                        for(String rid: menuItems) {
+                            Vertex menuItem = DbService.getVertexByRid(graph, rid);
+                            addMenuItems.add(menuItem.getProperty("menuItemId"));
+                        }
+                        data.put("addMenuItems", addMenuItems);
+                    }
+                    eventData.putAll((Map<String, Object>) inputMap.get("data"));
+                    eventData.put("createDate", new java.util.Date());
+                    eventData.put("createUserId", user.get("userId"));
+                    if(host == null) {
+                        eventData.remove("host");
+                    }
                 }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
         if(error != null) {

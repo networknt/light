@@ -17,7 +17,10 @@
 package com.networknt.light.rule.user;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,23 +47,31 @@ public class RefreshTokenRule extends AbstractUserRule implements Rule {
             inputMap.put("responseCode", 401);
             error = "Refresh token or userId or clientId is missing";
         } else {
-            ODocument user = getUserByUserId(userId);
-            if(user != null) {
-                ODocument credential = (ODocument) user.field("credential");
-                if (checkRefreshToken(credential, host, refreshToken)) {
-                    String jwt = generateToken(user, clientId);
-                    if (jwt != null) {
-                        Map<String, String> tokens = new HashMap<String, String>();
-                        tokens.put("accessToken", jwt);
-                        inputMap.put("result", mapper.writeValueAsString(tokens));
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+                Vertex user = getUserByUserId(graph, userId);
+                if(user != null) {
+                    Vertex credential = user.getProperty("credential");
+                    if (checkRefreshToken(credential, host, refreshToken)) {
+                        String jwt = generateToken(user, clientId);
+                        if (jwt != null) {
+                            Map<String, String> tokens = new HashMap<String, String>();
+                            tokens.put("accessToken", jwt);
+                            inputMap.put("result", mapper.writeValueAsString(tokens));
+                        }
+                    } else {
+                        error = "Invalid refresh token";
+                        inputMap.put("responseCode", 400);
                     }
                 } else {
-                    error = "Invalid refresh token";
+                    error = "The userId " + userId + " has not been registered";
                     inputMap.put("responseCode", 400);
                 }
-            } else {
-                error = "The userId " + userId + " has not been registered";
-                inputMap.put("responseCode", 400);
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
         if(error != null) {

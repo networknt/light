@@ -26,11 +26,17 @@ import com.orientechnologies.orient.core.command.script.OCommandScript;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.tool.ODatabaseExport;
 import com.orientechnologies.orient.core.db.tool.ODatabaseImport;
+import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,7 +50,7 @@ public abstract class AbstractDbRule extends AbstractRule implements Rule {
 
     protected void impDb(Map<String, Object> data) {
         String content = (String) data.get("content");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             OCommandOutputListener listener = new OCommandOutputListener() {
                 @Override
@@ -53,19 +59,19 @@ public abstract class AbstractDbRule extends AbstractRule implements Rule {
                 }
             };
             InputStream is = new ByteArrayInputStream(content.getBytes());
-            ODatabaseImport imp = new ODatabaseImport(db, is, listener);
+            ODatabaseImport imp = new ODatabaseImport(graph.getRawGraph(), is, listener);
             imp.importDatabase();
             imp.close();
         } catch (IOException ioe) {
             logger.error("Exception:", ioe);
         } finally {
-            db.close();
+            graph.shutdown();
         }
     }
 
     protected String exportEvent(String path) {
         final String[] result = new String[1];
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             OCommandOutputListener listener = new OCommandOutputListener() {
                 @Override
@@ -73,36 +79,57 @@ public abstract class AbstractDbRule extends AbstractRule implements Rule {
                     result[0] = result[0] + iText;
                 }
             };
-            ODatabaseExport export = new ODatabaseExport(db, path, listener);
+            ODatabaseExport export = new ODatabaseExport(graph.getRawGraph(), path, listener);
             export.exportDatabase();
             export.close();
         } catch(IOException ioe) {
             ioe.printStackTrace();
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return result[0];
     }
 
-    protected String execCommand(Map<String, Object> data, boolean commit) {
+    protected String execUpdateCmd(Map<String, Object> data, boolean commit) {
         String result = "";
         String script = (String) data.get("script");
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
-            db.command(new OCommandScript("sql", script)).execute();
+            graph.command(new OCommandScript("sql", script)).execute();
             if(commit) {
-                db.commit();
+                graph.commit();
             } else {
-                db.rollback();
+                graph.rollback();
             }
         } catch (Exception e) {
-            db.rollback();
+            logger.error("Exception:", e);
+            graph.rollback();
+            result = Util.stacktraceToString(e);
+        } finally {
+            graph.shutdown();
+        }
+        return result;
+    }
+
+    protected String execSchemaCmd(Map<String, Object> data) {
+        String result = "";
+        String script = (String) data.get("script");
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        try{
+            graph.command(new OCommandScript("sql", script)).execute();
+        } catch (Exception e) {
             logger.error("Exception:", e);
             result = Util.stacktraceToString(e);
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return result;
+    }
+
+    protected String execQueryCmd(OrientGraph graph, Map<String, Object> data) {
+        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>((String)data.get("script"));
+        List<ODocument> accesses = graph.getRawGraph().command(query).execute();
+        return OJSONWriter.listToJSON(accesses, null);
     }
 
 }

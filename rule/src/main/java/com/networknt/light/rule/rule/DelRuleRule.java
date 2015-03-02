@@ -19,7 +19,10 @@ package com.networknt.light.rule.rule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -47,36 +50,43 @@ public class DelRuleRule extends AbstractRuleRule implements Rule {
             error = "User can only delete rule for host: " + host;
             inputMap.put("responseCode", 403);
         } else {
-            ODocument rule = DbService.getODocumentByRid(rid);
-            if(rule == null) {
-                error = "Rule with @rid " + rid + " cannot be found";
-                inputMap.put("responseCode", 404);
-            } else {
-                // check if the ruleClass contains the host.
-                if(host != null && !ruleClass.contains(host)) {
-                    // you are not allowed to delete access control to the rule as it is not belong to the host.
-                    error = "ruleClass is not owned by the host: " + host;
-                    inputMap.put("responseCode", 403);
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+                Vertex rule = DbService.getVertexByRid(graph, rid);
+                if(rule == null) {
+                    error = "Rule with @rid " + rid + " cannot be found";
+                    inputMap.put("responseCode", 404);
                 } else {
-                    int storedVersion = rule.field("@version");
-                    if(inputVersion != storedVersion) {
-                        error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
-                        inputMap.put("responseCode", 400);
+                    // check if the ruleClass contains the host.
+                    if(host != null && !ruleClass.contains(host)) {
+                        // you are not allowed to delete access control to the rule as it is not belong to the host.
+                        error = "ruleClass is not owned by the host: " + host;
+                        inputMap.put("responseCode", 403);
                     } else {
-                        // remove the rule instance from Rule Engine Cache
-                        RuleEngine.getInstance().removeRule(ruleClass);
+                        int storedVersion = rule.getProperty("@version");
+                        if(inputVersion != storedVersion) {
+                            error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
+                            inputMap.put("responseCode", 400);
+                        } else {
+                            // remove the rule instance from Rule Engine Cache
+                            RuleEngine.getInstance().removeRule(ruleClass);
 
-                        Map eventMap = getEventMap(inputMap);
-                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                        inputMap.put("eventMap", eventMap);
-                        eventData.put("ruleClass", ruleClass);
-                        eventData.put("updateDate", new java.util.Date());
-                        eventData.put("updateUserId", user.get("userId"));
+                            Map eventMap = getEventMap(inputMap);
+                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                            inputMap.put("eventMap", eventMap);
+                            eventData.put("ruleClass", ruleClass);
+                            eventData.put("updateDate", new java.util.Date());
+                            eventData.put("updateUserId", user.get("userId"));
+                        }
                     }
                 }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
-
         if(error != null) {
             inputMap.put("error", error);
             return false;

@@ -18,7 +18,10 @@ package com.networknt.light.rule.user;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -44,32 +47,39 @@ public class LockUserRule extends AbstractUserRule implements Rule {
             error = "User can only lock user from host: " + host;
             inputMap.put("responseCode", 401);
         } else {
-            ODocument lockUser = null;
-            if(rid != null) {
-                lockUser = DbService.getODocumentByRid(rid);
-                if(lockUser != null) {
-                    if(lockUser.field("locked") != null && (Boolean)lockUser.field("locked")) {
-                        error = "User with @rid " + rid + " has been locked already";
-                        inputMap.put("responseCode", 400);
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+                Vertex lockUser = null;
+                if(rid != null) {
+                    lockUser = DbService.getVertexByRid(graph, rid);
+                    if(lockUser != null) {
+                        if(lockUser.getProperty("locked") != null && (Boolean)lockUser.getProperty("locked")) {
+                            error = "User with @rid " + rid + " has been locked already";
+                            inputMap.put("responseCode", 400);
+                        } else {
+                            Map eventMap = getEventMap(inputMap);
+                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                            inputMap.put("eventMap", eventMap);
+                            eventData.put("userId", lockUser.getProperty("userId"));
+                            eventData.put("locked", true);
+                            eventData.put("updateDate", new java.util.Date());
+                            eventData.put("updateUserId", user.get("userId"));
+                        }
                     } else {
-                        Map eventMap = getEventMap(inputMap);
-                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                        inputMap.put("eventMap", eventMap);
-                        eventData.put("userId", lockUser.field("userId"));
-                        eventData.put("locked", true);
-                        eventData.put("updateDate", new java.util.Date());
-                        eventData.put("updateUserId", user.get("userId"));
+                        error = "User with @rid " + rid + " cannot be found.";
+                        inputMap.put("responseCode", 404);
                     }
                 } else {
-                    error = "User with @rid " + rid + " cannot be found.";
-                    inputMap.put("responseCode", 404);
+                    error = "@rid is required";
+                    inputMap.put("responseCode", 400);
                 }
-            } else {
-                error = "@rid is required";
-                inputMap.put("responseCode", 400);
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
-
         if(error != null) {
             inputMap.put("error", error);
             return false;

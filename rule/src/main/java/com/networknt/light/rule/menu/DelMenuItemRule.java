@@ -18,7 +18,11 @@ package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import java.util.List;
 import java.util.Map;
@@ -41,22 +45,29 @@ public class DelMenuItemRule extends AbstractMenuRule implements Rule {
             error = "User can only delete menuItem for host: " + host;
             inputMap.put("responseCode", 401);
         } else {
-            ODocument menuItem = DbService.getODocumentByRid(rid);
-            if(menuItem == null) {
-                error = "MenuItem with @rid " + rid + " cannot be found";
-                inputMap.put("responseCode", 404);
-            } else {
-                // find out if there are reference to the menuItem in Menu or MenuItem class
-                // note there is no space between classes.
-                if(DbService.hasReference(rid, "Menu,MenuItem")) {
-                    error = "MenuItem is referenced by other entities";
-                    inputMap.put("responseCode", 400);
+            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            try {
+                Vertex menuItem = DbService.getVertexByRid(graph, rid);
+                if(menuItem == null) {
+                    error = "MenuItem with @rid " + rid + " cannot be found";
+                    inputMap.put("responseCode", 404);
                 } else {
-                    Map eventMap = getEventMap(inputMap);
-                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                    inputMap.put("eventMap", eventMap);
-                    eventData.put("id", menuItem.field("id"));  // unique key
+                    // find out if other menu or menuItem owns this menuItem
+                    if(DbService.hasEdgeToClass(graph, (OrientVertex)menuItem, "Own") || DbService.hasEdgeToClass(graph, (OrientVertex)menuItem, "Own")) {
+                        error = "MenuItem is referenced by other entities";
+                        inputMap.put("responseCode", 400);
+                    } else {
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
+                        eventData.put("menuItemId", menuItem.getProperty("menuItemId"));  // unique key
+                    }
                 }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
         if(error != null) {

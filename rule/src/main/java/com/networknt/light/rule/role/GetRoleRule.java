@@ -18,7 +18,11 @@ package com.networknt.light.rule.role;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
+import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,22 +40,22 @@ public class GetRoleRule extends AbstractRoleRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>) payload.get("user");
         String host = (String) user.get("host");
-        String hostRoles = getRoles(host);
-        if(hostRoles != null) {
-            List<Map<String, Object>> roleList
-                    = mapper.readValue(hostRoles, new TypeReference<List<HashMap<String, Object>>>() {});
-            // get all the hosts
-            Set hosts = ServiceLocator.getInstance().getHostMap().keySet();
-
-            Map<String, Object> result = new HashMap<String, Object>();
-            result.put("roles", roleList);
-            result.put("hosts", hosts);
-            inputMap.put("result", mapper.writeValueAsString(result));
-            return true;
-        } else {
-            inputMap.put("result", "No role can be found.");
-            inputMap.put("responseCode", 404);
-            return false;
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        try {
+            String hostRoles = getRoles(graph, host);
+            if(hostRoles != null) {
+                inputMap.put("result", hostRoles);
+                return true;
+            } else {
+                inputMap.put("result", "No role can be found.");
+                inputMap.put("responseCode", 404);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
         }
     }
 }

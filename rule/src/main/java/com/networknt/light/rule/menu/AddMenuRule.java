@@ -18,7 +18,10 @@ package com.networknt.light.rule.menu;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,8 @@ import java.util.Map;
 
 /**
  * Created by husteve on 10/29/2014.
+ *
+ * This is the REST API endpoint to add a menu for a host.
  *
  * AccessLevel R [owner]
  */
@@ -36,12 +41,10 @@ public class AddMenuRule extends AbstractMenuRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String error = null;
-        if(user.get("host") != null) {
-            error = "Role owner should not have host in his/her profile";
-            inputMap.put("responseCode", 400);
-        } else {
-            String host = (String)data.get("host");
-            String json = getMenu((String)data.get("host"));
+        String host = (String)data.get("host");
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        try {
+            String json = getMenu(graph, (String)data.get("host"));
             if(json != null) {
                 error = "Menu for the host exists";
                 inputMap.put("responseCode", 400);
@@ -54,38 +57,27 @@ public class AddMenuRule extends AbstractMenuRule implements Rule {
                 eventData.put("createUserId", user.get("userId"));
 
                 // make sure all menuItems exist if there are any.
-                List<String> menuItemRids = (List<String>)data.get("menuItems");
-                if(menuItemRids != null && menuItemRids.size() > 0) {
-                    List<String> menuItemIds = new ArrayList<String>();
-                    for(String menuItemRid: menuItemRids) {
-                        if(menuItemRid != null) {
-                            ODocument menuItem = DbService.getODocumentByRid(menuItemRid);
-                            if(menuItem == null) {
-                                error = "MenuItem with @rid " + menuItemRid + " cannot be found.";
-                                inputMap.put("responseCode", 404);
-                                break;
-                            } else {
-                                menuItemIds.add((String)menuItem.field("id"));
-                            }
+                List<String> menuItems = (List<String>)data.get("menuItems");
+                if(menuItems != null && menuItems.size() > 0) {
+                    List<String> addMenuItems = new ArrayList<String>();
+                    for(String menuItemRid: menuItems) {
+                        Vertex menuItem = DbService.getVertexByRid(graph, menuItemRid);
+                        if(menuItem == null) {
+                            error = "MenuItem with @rid " + menuItemRid + " cannot be found.";
+                            inputMap.put("responseCode", 404);
+                            break;
+                        } else {
+                            addMenuItems.add((String)menuItem.getProperty("menuItemId"));
                         }
                     }
-                    eventData.put("menuItems", menuItemIds);
+                    eventData.put("addMenuItems", addMenuItems);
                 }
-
             }
-        }
-
-        if(payload == null) {
-            error = "Login is required";
-            inputMap.put("responseCode", 401);
-        } else {
-            List roles = (List)user.get("roles");
-            // this is the owner that adding menu for another site. let it go.
-            if(!roles.contains("owner")) {
-                error = "Role owner is required to add menu";
-                inputMap.put("responseCode", 401);
-            } else {
-            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
         }
         if(error != null) {
             inputMap.put("error", error);

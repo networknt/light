@@ -16,11 +16,15 @@
 
 package com.networknt.light.rule.page;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import com.hazelcast.core.ITopic;
+import com.hazelcast.core.Message;
+import com.hazelcast.core.MessageListener;
+import com.hazelcast.util.executor.StripedRunnable;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
+import com.networknt.light.util.Util;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.index.OIndex;
@@ -28,12 +32,18 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Created by husteve on 10/24/2014.
@@ -41,11 +51,33 @@ import java.util.concurrent.ConcurrentMap;
 public abstract class AbstractPageRule extends AbstractRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractPageRule.class);
 
-    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
-
     public abstract boolean execute (Object ...objects) throws Exception;
 
-    protected String getPageById(String id) {
+    /*
+    static {
+        System.out.println("AbstractPageRule is called");
+        ITopic<Map<String, Object>> page = ServiceLocator.getInstance().getHzInstance().getTopic( "page" );
+        page.addMessageListener(new PageMessageListenerImpl());
+    }
+
+    // As all the operations are in memory, use the same thread from the publisher.
+    private static class PageMessageListenerImpl implements MessageListener<Map<String, Object>> {
+        @Override
+        public void onMessage(final Message<Map<String, Object>> message) {
+            Map<String, Object> eventMap = message.getMessageObject();
+            Map<String, Object> data = (Map<String, Object>)eventMap.get("data");
+            System.out.println("Received: " + eventMap);
+            // simply remove the page from cache in order to reload in the next getPage rule.
+            Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
+            if(cache != null) {
+                cache.remove(data.get("pageId"));
+            }
+        }
+    }
+    */
+
+    protected String getPageById(String pageId) {
         String json = null;
         Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
@@ -55,22 +87,22 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
                     .build();
             pageMap.put("cache", cache);
         } else {
-            json = (String)cache.get(id);
+            json = (String)cache.get(pageId);
         }
         if(json == null) {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
-                OIndex<?> pageIdIdx = db.getMetadata().getIndexManager().getIndex("Page.id");
+                OIndex<?> pageIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Page.pageId");
                 // this is a unique index, so it retrieves a OIdentifiable
-                OIdentifiable oid = (OIdentifiable) pageIdIdx.get(id);
+                OIdentifiable oid = (OIdentifiable) pageIdIdx.get(pageId);
                 if (oid != null && oid.getRecord() != null) {
                     json = ((ODocument) oid.getRecord()).toJSON();
-                    cache.put(id, json);
+                    cache.put(pageId, json);
                 }
             } catch (Exception e) {
                 logger.error("Exception:", e);
             } finally {
-                db.close();
+                graph.shutdown();
             }
         }
         return json;
@@ -78,25 +110,19 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
 
     protected String addPage(Map<String, Object> data) throws Exception {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            ODocument page = new ODocument(schema.getClass("Page"));
-            page.field("host", data.get("host"));
-            page.field("id", data.get("id"));
-            page.field("content", data.get("content"));
-            page.field("createDate", data.get("updateDate"));
-            page.field("createUserId", data.get("updateUserId"));
-            page.save();
-            db.commit();
-            json = page.toJSON();
+            graph.begin();
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            OrientVertex page = graph.addVertex("class:Page", data);
+            createUser.addEdge("Create", page);
+            json = page.getRecord().toJSON();
         } catch (Exception e) {
-            db.rollback();
             logger.error("Exception:", e);
+            graph.rollback();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
@@ -106,56 +132,51 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
                     .build();
             pageMap.put("cache", cache);
         }
-        cache.put(data.get("id"), json);
+        cache.put(data.get("pageId"), json);
         return json;
     }
 
-    protected void delPage(String id) {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void delPage(String pageId) {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> pageIdIdx = db.getMetadata().getIndexManager().getIndex("Page.id");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) pageIdIdx.get(id);
-            if (oid != null && oid.getRecord() != null) {
-                oid.getRecord().delete();
+            graph.begin();
+            Vertex page = graph.getVertexByKey("Page.pageId", pageId);
+            if(page != null) {
+                graph.removeVertex(page);
             }
-            db.commit();
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
             logger.error("Exception:", e);
+            graph.rollback();
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
         if(cache != null) {
-            cache.remove(id);
+            cache.remove(pageId);
         }
     }
 
     protected String updPage(Map<String, Object> data) {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> pageIdIdx = db.getMetadata().getIndexManager().getIndex("Page.id");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) pageIdIdx.get(data.get("id"));
-            if (oid != null) {
-                ODocument doc = oid.getRecord();
-                doc.field("content", data.get("content"));
-                doc.field("updateDate", data.get("updateDate"));
-                doc.field("updateUserId", data.get("updateUserId"));
-                doc.save();
-                json = doc.toJSON();
+            graph.begin();
+            OrientVertex page = (OrientVertex)graph.getVertexByKey("Page.pageId", data.get("pageId"));
+            if(page != null) {
+                page.setProperty("content", data.get("content"));
+                page.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                updateUser.addEdge("Update", page);
+                json = page.getRecord().toJSON();
             }
-            db.commit();
+            graph.commit();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
@@ -165,37 +186,30 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
                     .build();
             pageMap.put("cache", cache);
         }
-        cache.put(data.get("id"), json);
+        cache.put(data.get("pageId"), json);
         return json;
     }
 
     protected String impPage(Map<String, Object> data) throws Exception {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            OIndex<?> pageIdIdx = db.getMetadata().getIndexManager().getIndex("Page.id");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) pageIdIdx.get(data.get("id"));
-            if (oid != null && oid.getRecord() != null) {
-                oid.getRecord().delete();
+            graph.begin();
+            OrientVertex page = (OrientVertex)graph.getVertexByKey("Page.pageId", data.get("pageId"));
+            if(page != null) {
+                graph.removeVertex(page);
             }
-            ODocument page = new ODocument(schema.getClass("Page"));
-            if(data.get("host") != null) page.field("host", data.get("host"));
-            page.field("id", data.get("id"));
-            page.field("content", data.get("content"));
-            page.field("createDate", data.get("updateDate"));
-            page.field("createUserId", data.get("updateUserId"));
-            page.save();
-            db.commit();
-            json = page.toJSON();
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            page = graph.addVertex("class:Page", data);
+            createUser.addEdge("Create", page);
+            graph.commit();
+            json = page.getRecord().toJSON();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             logger.error("Exception:", e);
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
@@ -205,7 +219,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
                     .build();
             pageMap.put("cache", cache);
         }
-        cache.put(data.get("id"), json);
+        cache.put(data.get("pageId"), json);
         return json;
     }
 
@@ -215,15 +229,15 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         if(host != null) {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
         }
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> pages = db.command(query).execute();
+            List<ODocument> pages = graph.command(query).execute();
             json = OJSONWriter.listToJSON(pages, null);
         } catch (Exception e) {
             logger.error("Exception:", e);
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
@@ -234,22 +248,22 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         if(host != null) {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
         }
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> pages = db.command(query).execute();
+            List<ODocument> pages = graph.command(query).execute();
             if(pages != null && pages.size() > 0) {
                 // covert list to map
                 Map<String, String> pageMap = new HashMap<String, String>();
                 for(ODocument page: pages) {
-                    pageMap.put((String)page.field("id"), (String)page.field("content"));
+                    pageMap.put((String)page.field("pageId"), (String)page.field("content"));
                 }
                 json = mapper.writeValueAsString(pageMap);
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }

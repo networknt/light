@@ -17,8 +17,12 @@
 package com.networknt.light.rule.role;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -35,18 +39,50 @@ public class UpdRoleRule extends AbstractRoleRule implements Rule {
         String rid = (String)data.get("@rid");
         String error = null;
         String host = (String)user.get("host");
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
         if(host != null) {
             if(!host.equals(data.get("host"))) {
                 error = "User can only update role for host: " + host;
                 inputMap.put("responseCode", 401);
             } else {
-                ODocument role = DbService.getODocumentByRid(rid);
+                try {
+                    Vertex role = DbService.getVertexByRid(graph, rid);
+                    if(role == null) {
+                        error = "Role with @rid " + rid + " cannot be found";
+                        inputMap.put("responseCode", 404);
+                    } else {
+                        int inputVersion = (int)data.get("@version");
+                        int storedVersion = role.getProperty("@version");
+                        if(inputVersion != storedVersion) {
+                            inputMap.put("responseCode", 400);
+                            error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
+                        } else {
+                            Map eventMap = getEventMap(inputMap);
+                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                            inputMap.put("eventMap", eventMap);
+                            eventData.put("roleId", data.get("roleId"));
+                            eventData.put("desc", data.get("desc"));
+                            eventData.put("host", data.get("host"));
+                            eventData.put("updateDate", new java.util.Date());
+                            eventData.put("updateUserId", user.get("userId"));
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Exception:", e);
+                    throw e;
+                } finally {
+                    graph.shutdown();
+                }
+            }
+        } else {
+            try {
+                Vertex role = DbService.getVertexByRid(graph, rid);
                 if(role == null) {
                     error = "Role with @rid " + rid + " cannot be found";
                     inputMap.put("responseCode", 404);
                 } else {
                     int inputVersion = (int)data.get("@version");
-                    int storedVersion = role.field("@version");
+                    int storedVersion = role.getProperty("@version");
                     if(inputVersion != storedVersion) {
                         inputMap.put("responseCode", 400);
                         error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
@@ -54,36 +90,20 @@ public class UpdRoleRule extends AbstractRoleRule implements Rule {
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
-                        eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                        eventData.put("roleId", data.get("roleId"));
+                        eventData.put("desc", data.get("desc"));
                         eventData.put("updateDate", new java.util.Date());
                         eventData.put("updateUserId", user.get("userId"));
+                        // this is the owner update the role. no host.
                     }
                 }
-            }
-        } else {
-            ODocument role = DbService.getODocumentByRid(rid);
-            if(role == null) {
-                error = "Role with @rid " + rid + " cannot be found";
-                inputMap.put("responseCode", 404);
-            } else {
-                int inputVersion = (int)data.get("@version");
-                int storedVersion = role.field("@version");
-                if(inputVersion != storedVersion) {
-                    inputMap.put("responseCode", 400);
-                    error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
-                } else {
-                    Map eventMap = getEventMap(inputMap);
-                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                    inputMap.put("eventMap", eventMap);
-                    eventData.putAll((Map<String, Object>)inputMap.get("data"));
-                    eventData.put("updateDate", new java.util.Date());
-                    eventData.put("updateUserId", user.get("userId"));
-                    // this is the owner update the role. remove host.
-                    eventData.remove("host");
-                }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
             }
         }
-
         if(error != null) {
             inputMap.put("error", error);
             return false;

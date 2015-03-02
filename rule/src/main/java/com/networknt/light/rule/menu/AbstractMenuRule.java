@@ -22,18 +22,24 @@ import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
+import com.networknt.light.util.Util;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -41,6 +47,8 @@ import java.util.concurrent.ConcurrentMap;
  * The menuMap.cache has three type of keys. host, label and @rid
  */
 public abstract class AbstractMenuRule extends AbstractRule implements Rule {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractMenuRule.class);
+
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
     public abstract boolean execute (Object ...objects) throws Exception;
@@ -68,33 +76,17 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected void delMenu(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void delMenu(OrientGraph graph, Map<String, Object> data) throws Exception {
         String host = (String)data.get("host");
-        try {
-            db.begin();
-            OIndex<?> menuHostIdx = db.getMetadata().getIndexManager().getIndex("Menu.host");
-            OIdentifiable oidMenu = (OIdentifiable) menuHostIdx.get(host);
-            if (oidMenu != null) {
-                ODocument menu = (ODocument)oidMenu.getRecord();
-                //  cascade deleting all menuItems belong to the host only.
-                List<ODocument> menuItems = menu.field("menuItems");
-                if(menuItems != null) {
-                    for(ODocument menuItem: menuItems) {
-                        if(menuItem != null && menuItem.field("host") != null) {
-                            menuItem.delete();
-                        }
-                    }
+        Vertex menu = graph.getVertexByKey("Menu.host", host);
+        if(menu != null) {
+            // cascade deleting all menuItems belong to the host only.
+            for (Vertex menuItem : graph.getVerticesOfClass("MenuItem")) {
+                if(host.equals(menuItem.getProperty("host"))) {
+                    graph.removeVertex(menuItem);
                 }
-                menu.delete();
-                db.commit();
             }
-        } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
+            graph.removeVertex(menu);
         }
         Map<String, Object> menuMap = ServiceLocator.getInstance().getMemoryImage("menuMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
@@ -103,104 +95,69 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         }
     }
 
-    protected void delMenuItem(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OIndex<?> menuItemIdIdx = db.getMetadata().getIndexManager().getIndex("MenuItem.id");
-            OIdentifiable oidMenuItem = (OIdentifiable) menuItemIdIdx.get(data.get("id"));
-            if (oidMenuItem != null) {
-                db.begin();
-                ODocument menuItem = (ODocument)oidMenuItem.getRecord();
-                menuItem.delete();
-                db.commit();
-            }
-        } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
+    protected void delMenuItem(OrientGraph graph, Map<String, Object> data) throws Exception {
+        Vertex menuItem = graph.getVertexByKey("MenuItem.menuItemId",data.get("menuItemId"));
+        if(menuItem != null) {
+            graph.removeVertex(menuItem);
         }
         // no need to refresh cache as there is no reference to this menuItem anywhere.
     }
 
-    protected String addMenu(Map<String, Object> data) throws Exception {
+    protected String addMenu(OrientGraph graph, Map<String, Object> data) throws Exception {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
-        try {
-            db.begin();
-            ODocument menu = new ODocument(schema.getClass("Menu"));
-            menu.field("host", data.get("host"));
-            menu.field("createDate", data.get("createDate"));
-            menu.field("createUserId", data.get("createUserId"));
-            List<String> menuItemIds = (List<String>)data.get("menuItems");
-            if(menuItemIds != null && menuItemIds.size() > 0) {
-                List menuItems = new ArrayList<ODocument>();
-                OIndex<?> menuItemIdIdx = db.getMetadata().getIndexManager().getIndex("MenuItem.id");
-                for(String menuItemId: menuItemIds) {
-                    // this is a unique index, so it retrieves a OIdentifiable
-                    OIdentifiable oid = (OIdentifiable) menuItemIdIdx.get(menuItemId);
-                    if (oid != null) {
-                        ODocument menuItem = (ODocument)oid.getRecord();
-                        menuItems.add(menuItem);
-                    }
-                }
-                menu.field("menuItems", menuItems);
+        OrientVertex menu = graph.addVertex("class:Menu", "host", data.get("host"), "createDate", data.get("createDate"));
+        List<String> addMenuItems = (List<String>)data.get("addMenuItems");
+        if(addMenuItems != null && addMenuItems.size() > 0) {
+            // find vertex for each menuItem id and create edge to it.
+            for(String menuItemId: addMenuItems) {
+                Vertex menuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+                menu.addEdge("Own", menuItem);
             }
-            menu.save();
-            db.commit();
-            Map<String, Object> menuMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("menuMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
-            if(cache == null) {
-                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                        .maximumWeightedCapacity(100)
-                        .build();
-                menuMap.put("cache", cache);
-            }
-            json = menu.toJSON("fetchPlan:*:2");
-            cache.put(data.get("host"), json);
-        } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
         }
+        Vertex user = graph.getVertexByKey("User.userId", data.get("createUserId"));
+        user.addEdge("Create", menu);
+        Map<String, Object> menuMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("menuMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
+        if(cache == null) {
+            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(100)
+                    .build();
+            menuMap.put("cache", cache);
+        }
+        json = menu.getRecord().toJSON("fetchPlan:menuItems:2");
+        cache.put(data.get("host"), json);
         return json;
     }
 
     protected String addMenuItem(Map<String, Object> data) throws Exception {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        OSchema schema = db.getMetadata().getSchema();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            db.begin();
-            ODocument menuItem = new ODocument(schema.getClass("MenuItem"));
-            menuItem.field("id", data.get("id"));
-            menuItem.field("label", data.get("label"));
-            menuItem.field("host", data.get("host"));
-            menuItem.field("path", data.get("path"));
-            menuItem.field("tpl", data.get("tpl"));
-            menuItem.field("ctrl", data.get("ctrl"));
-            menuItem.field("left", data.get("left"));
-            menuItem.field("roles", data.get("roles"));
-            menuItem.field("createDate", data.get("createUser"));
-            menuItem.field("createUserId", data.get("createUserId"));
-            menuItem.save();
-            db.commit();
-            json = menuItem.toJSON();
+            graph.begin();
+            Vertex user = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            List<String> menuItemIds = (List<String>)data.remove("menuItems");
+            OrientVertex menuItem = graph.addVertex("class:MenuItem", data);
+            if(menuItemIds != null && menuItemIds.size() > 0) {
+                // find vertex for each menuItem id and create edge to it.
+                for(String menuItemId: menuItemIds) {
+                    Vertex childMenuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+                    menuItem.addEdge("Own", childMenuItem);
+                }
+            }
+            user.addEdge("Create", menuItem);
+            graph.commit();
+            json = menuItem.getRecord().toJSON();
         } catch (Exception e) {
-            db.rollback();
+            graph.rollback();
             e.printStackTrace();
             throw e;
         } finally {
-            db.close();
+            graph.shutdown();
         }
         return json;
     }
 
-    protected String getMenu(String host) {
+    protected String getMenu(OrientGraphNoTx graph, String host) {
         String json = null;
         Map<String, Object> menuMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("menuMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
@@ -208,20 +165,9 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
             json = (String)cache.get(host);
         }
         if(json == null) {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-            try {
-                OIndex<?> menuHostIdx = db.getMetadata().getIndexManager().getIndex("Menu.host");
-                // this is a unique index, so it retrieves a OIdentifiable
-                OIdentifiable oid = (OIdentifiable) menuHostIdx.get(host);
-                if (oid != null) {
-                    ODocument doc = (ODocument)oid.getRecord();
-                    json = doc.toJSON("fetchPlan:*:2");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw e;
-            } finally {
-                db.close();
+            Vertex menu = graph.getVertexByKey("Menu.host", host);
+            if(menu != null) {
+                json = ((OrientVertex)menu).getRecord().toJSON("rid,fetchPlan:out_Own:1");
             }
             if(json != null) {
                 if(cache == null) {
@@ -236,29 +182,17 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected String getMenuItem(String id) {
+    protected String getMenuItem(OrientGraphNoTx graph, String menuItemId) throws Exception {
         String json = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OIndex<?> menuItemIdIdx = db.getMetadata().getIndexManager().getIndex("MenuItem.id");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) menuItemIdIdx.get(id);
-            if (oid != null) {
-                ODocument doc = (ODocument)oid.getRecord();
-                json = doc.toJSON();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
+        Vertex menuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+        if(menuItem != null) {
+            json = ((OrientVertex)menuItem).getRecord().toJSON();
         }
         return json;
     }
 
-    protected String getAllMenu(String host) {
+    protected String getAllMenu(OrientGraphNoTx graph, String host) {
         String json = null;
-
         String jsonMenu = null;
         String jsonMenuItem = null;
         String sqlMenu = "select from Menu";
@@ -266,183 +200,119 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
             sqlMenu += " where host = ?";
         }
         String sqlMenuItem = "select from MenuItem";
+        // assumption here is menuItems are not empty.
+        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sqlMenuItem);
+        List<ODocument> menuItems = graph.getRawGraph().command(query).execute(host);
+        if(menuItems.size() > 0) {
+            jsonMenuItem = OJSONWriter.listToJSON(menuItems, null);
+            json = "{\"menuItems\":" + jsonMenuItem;
+        }
 
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            // assumption here is menuItems are not empty.
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sqlMenuItem);
-            List<ODocument> menuItems = db.command(query).execute(host);
-            if(menuItems.size() > 0) {
-                jsonMenuItem = OJSONWriter.listToJSON(menuItems, null);
-                json = "{\"menuItems\":" + jsonMenuItem;
-            }
-
-            query = new OSQLSynchQuery<>(sqlMenu);
-            List<ODocument> menus = db.command(query).execute(host);
-            if(menus.size() > 0) {
-                jsonMenu = OJSONWriter.listToJSON(menus, null);
-                json += ", \"menus\":" + jsonMenu + "}";
-            } else {
-                json += "}";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
+        query = new OSQLSynchQuery<>(sqlMenu);
+        List<ODocument> menus = graph.getRawGraph().command(query).execute(host);
+        if(menus.size() > 0) {
+            jsonMenu = OJSONWriter.listToJSON(menus, null);
+            json += ", \"menus\":" + jsonMenu + "}";
+        } else {
+            json += "}";
         }
         return json;
     }
 
-    protected void updMenu(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
+    protected void updMenu(OrientGraph graph, Map<String, Object> data) throws Exception {
         String host = (String)data.get("host");
-        try {
-            db.begin();
-            OIndex<?> menuHostIdx = db.getMetadata().getIndexManager().getIndex("Menu.host");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oidMenu = (OIdentifiable) menuHostIdx.get(host);
-            if (oidMenu != null) {
-                ODocument menu = (ODocument) oidMenu.getRecord();
-                // update menuItems.
-                List inputItemIds = (List)data.get("menuItemIds");
-                if(inputItemIds != null && inputItemIds.size() > 0) {
-                    OIndex<?> menuItemIdIdx = db.getMetadata().getIndexManager().getIndex("MenuItem.id");
-                    List menuItems = new ArrayList();
-                    for(Object obj : inputItemIds) {
-                        if(obj != null) {
-                            String id = (String)obj;
-                            OIdentifiable oidMenuItem = (OIdentifiable) menuItemIdIdx.get(id);
-                            if(oidMenuItem != null) {
-                                ODocument menuItem = (ODocument)oidMenuItem.getRecord();
-                                menuItems.add(menuItem);
-                            }
-                        }
-                    }
-                    menu.field("menuItems", menuItems);
-                } else {
-                    // this is to remove the existing menuItem if there are any.
-                    menu.removeField("menuItems");
+        Vertex menu = graph.getVertexByKey("Menu.host", host);
+        if(menu != null) {
+            Set<String> addMenuItems = (Set)data.get("addMenuItems");
+            if(addMenuItems != null) {
+                for(String menuItemId: addMenuItems) {
+                    Vertex menuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+                    menu.addEdge("Own", menuItem);
                 }
-                menu.field("updateDate", data.get("updateDate"));
-                menu.field("updateUserId", data.get("updateUserId"));
-                menu.save();
-                db.commit();
             }
-            // remove the cache item in order to reload the menu.
-            Map<String, Object> menuMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("menuMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
-            if(cache != null) {
-                cache.remove(data.get("host"));
+            Set<String> delMenuItems = (Set)data.get("delMenuItems");
+            if(delMenuItems != null) {
+                for(String menuItemId: delMenuItems) {
+                    Vertex menuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+                    for (Edge edge : (Iterable<Edge>) menu.getEdges(Direction.OUT, "Own")) {
+                        graph.removeEdge(edge);
+                    }
+                }
             }
-        } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
+            menu.setProperty("updateDate", data.get("updateDate"));
+        }
+        Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+        updateUser.addEdge("Update", menu);
+
+        // remove the cache item in order to reload the menu.
+        Map<String, Object> menuMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("menuMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
+        if(cache != null) {
+            cache.remove(data.get("host"));
         }
     }
 
-    protected String getAllMenuItem(String host) {
-        String json = null;
+    protected String getMenuItemMap(OrientGraphNoTx graph, String host) throws Exception {
         String sql = "SELECT FROM MenuItem";
         if(host != null) {
             sql += " WHERE host = ? OR host IS NULL";
         }
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> menuItems = db.command(query).execute(host);
-            if(menuItems.size() > 0) {
-                List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-                for(ODocument doc: menuItems) {
-                    Map<String, String> map = new HashMap<String, String>();
-                    map.put("label", (String)doc.field("id"));
-                    map.put("value", doc.field("@rid").toString());
-                    list.add(map);
-                }
-                json = mapper.writeValueAsString(list);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        for (Vertex menuItem : (Iterable<Vertex>) graph.command(new OCommandSQL(sql)).execute()) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("label", (String)menuItem.getProperty("menuItemId"));
+            map.put("value", menuItem.getId().toString());
+            list.add(map);
         }
-        return json;
+        return mapper.writeValueAsString(list);
     }
 
-    protected void updMenuItem(Map<String, Object> data) throws Exception {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        String id = (String)data.get("id");
-        try {
-            db.begin();
-            OIndex<?> menuItemIdIdx = db.getMetadata().getIndexManager().getIndex("MenuItem.id");
-            OIdentifiable oidMenuItem = (OIdentifiable) menuItemIdIdx.get(id);
-            if(oidMenuItem != null) {
-                ODocument menuItem = oidMenuItem.getRecord();
-                List inputItemIds = (List)data.get("menuItemIds");
-                if(inputItemIds != null && inputItemIds.size() > 0) {
-                    List menuItems = new ArrayList();
-                    for(Object obj : inputItemIds) {
-                        if(obj != null) {
-                            String menuItemId = (String)obj;
-                            OIdentifiable oid = (OIdentifiable) menuItemIdIdx.get(menuItemId);
-                            if(oid != null) {
-                                ODocument item = (ODocument)oid.getRecord();
-                                menuItems.add(item);
-                            }
-                        }
+    protected void updMenuItem(OrientGraph graph, Map<String, Object> data) throws Exception {
+        Vertex menuItem = graph.getVertexByKey("MenuItem.menuItemId", (String)data.get("menuItemId"));
+        if(menuItem != null) {
+            // handle addMenuItems and delMenuItems
+            Set<String> addMenuItems = (Set)data.get("addMenuItems");
+            if(addMenuItems != null) {
+                for(String menuItemId: addMenuItems) {
+                    Vertex vertex = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+                    menuItem.addEdge("Own", vertex);
+                }
+            }
+            Set<String> delMenuItems = (Set)data.get("delMenuItems");
+            if(delMenuItems != null) {
+                for(String menuItemId: delMenuItems) {
+                    Vertex vertex = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+                    for (Edge edge : (Iterable<Edge>) menuItem.getEdges(Direction.OUT, "Own")) {
+                        graph.removeEdge(edge);
                     }
-                    menuItem.field("menuItems", menuItems);
-                } else {
-                    // this is to remove the existing menuItem if there are any.
-                    menuItem.removeField("menuItems");
-                }
-                String path = (String)data.get("path");
-                if(path != null && !path.equals(menuItem.field("path"))) {
-                    menuItem.field("path", path);
-                }
-                String tpl = (String)data.get("tpl");
-                if(tpl != null && !tpl.equals(menuItem.field("tpl"))) {
-                    menuItem.field("tpl", tpl);
-                }
-                String ctrl = (String)data.get("ctrl");
-                if(ctrl != null && !ctrl.equals(menuItem.field("ctrl"))) {
-                    menuItem.field("ctrl", ctrl);
-                }
-                Boolean left = (Boolean)data.get("left");
-                if(left != null && !left.equals(menuItem.field("left"))) {
-                    menuItem.field("left", left);
-                }
-                List roles = (List)data.get("roles");
-                if(roles != null) {
-                    menuItem.field("roles", roles);
-                } else {
-                    menuItem.field("roles", new ArrayList());
-                }
-                menuItem.field("updateDate", data.get("updateDate"));
-                menuItem.field("updateUserId", data.get("updateUserId"));
-                menuItem.save();
-                db.commit();
-            }
-            // remove the cache item in order to reload the menu.
-            Map<String, Object> menuMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("menuMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
-            if(cache != null) {
-                if(data.get("host") != null) {
-                    cache.remove(data.get("host"));
-                } else {
-                    // A common menuItem has been updated, remove all hosts in cache
-                    cache.clear();
                 }
             }
-        } catch (Exception e) {
-            db.rollback();
-            e.printStackTrace();
-            throw e;
-        } finally {
-            db.close();
+            String path = (String)data.get("path");
+            if(path != null && !path.equals(menuItem.getProperty("path"))) {
+                menuItem.setProperty("path", path);
+            }
+            String tpl = (String)data.get("tpl");
+            if(tpl != null && !tpl.equals(menuItem.getProperty("tpl"))) {
+                menuItem.setProperty("tpl", tpl);
+            }
+            String ctrl = (String)data.get("ctrl");
+            if(ctrl != null && !ctrl.equals(menuItem.getProperty("ctrl"))) {
+                menuItem.setProperty("ctrl", ctrl);
+            }
+            Boolean left = (Boolean)data.get("left");
+            if(left != null && !left.equals(menuItem.getProperty("left"))) {
+                menuItem.setProperty("left", left);
+            }
+            List roles = (List)data.get("roles");
+            if(roles != null) {
+                menuItem.setProperty("roles", roles);
+            } else {
+                menuItem.setProperty("roles", new ArrayList());
+            }
+            menuItem.setProperty("updateDate", data.get("updateDate"));
         }
+        Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+        updateUser.addEdge("Update", menuItem);
     }
 
 }

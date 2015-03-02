@@ -21,6 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.rule.user.SignInUserEvRule;
 import com.networknt.light.rule.user.SignInUserRule;
 import com.networknt.light.util.JwtUtil;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -36,15 +39,15 @@ public class MenuRuleTest extends TestCase {
     String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
     String signInUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"test\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
-    String getMenuInjector = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenu\", \"data\": {\"host\":\"injector\"}}";
     String getMenuEdibleForestGarden = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenu\", \"data\": {\"host\":\"www.edibleforestgarden.ca\"}}";
     String getAllMenu = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getAllMenu\"}";
+    String getMenuItemMap = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenuItemMap\"}";
 
     String addMenu = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenu\",\"data\":{\"host\":\"www.example.com\"}}";
-    String addMenuItem1 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"id\":\"MenuItem1\",\"label\":\"MenuItem1\",\"host\":\"www.example.com\",\"path\":\"/menuItem1\",\"ctrl\":\"MenuItem1Ctrl\",\"left\":true,\"roles\":\"user\"}}";
-    String addMenuItem2 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"id\":\"MenuItem2\",\"label\":\"MenuItem2\",\"host\":\"www.example.com\",\"path\":\"/menuItem2\",\"ctrl\":\"MenuItem2Ctrl\",\"left\":false,\"roles\":\"user\"}}";
-    String addMenuItem3 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"id\":\"MenuItem3\",\"label\":\"MenuItem3\",\"host\":\"www.example.com\",\"path\":\"/menuItem3\",\"ctrl\":\"MenuItem3Ctrl\",\"left\":false,\"roles\":\"user\"}}";
-    String addMenuItemCommon = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"id\":\"MenuItemCommon\",\"label\":\"MenuItemCommon\",\"path\":\"/menuItemCommon\",\"ctrl\":\"MenuItemCommonCtrl\",\"left\":false,\"roles\":\"user\"}}";
+    String addMenuItem1 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem1\",\"label\":\"MenuItem1\",\"host\":\"www.example.com\",\"path\":\"/menuItem1\",\"ctrl\":\"MenuItem1Ctrl\",\"left\":true,\"roles\":\"user\"}}";
+    String addMenuItem2 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem2\",\"label\":\"MenuItem2\",\"host\":\"www.example.com\",\"path\":\"/menuItem2\",\"ctrl\":\"MenuItem2Ctrl\",\"left\":false,\"roles\":\"user\"}}";
+    String addMenuItem3 = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItem3\",\"label\":\"MenuItem3\",\"host\":\"www.example.com\",\"path\":\"/menuItem3\",\"ctrl\":\"MenuItem3Ctrl\",\"left\":false,\"roles\":\"user\"}}";
+    String addMenuItemCommon = "{\"readOnly\":false,\"category\":\"menu\",\"name\":\"addMenuItem\",\"data\":{\"menuItemId\":\"MenuItemCommon\",\"label\":\"MenuItemCommon\",\"path\":\"/menuItemCommon\",\"ctrl\":\"MenuItemCommonCtrl\",\"left\":false,\"roles\":\"user\"}}";
 
     String updMenu = "{\"readOnly\": false, \"category\": \"menu\", \"name\": \"updMenu\"}";
     String updMenuItem = "{\"readOnly\": false, \"category\": \"menu\", \"name\": \"updMenuItem\"}";
@@ -70,10 +73,10 @@ public class MenuRuleTest extends TestCase {
     public void testExecute() throws Exception {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         boolean ruleResult = false;
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
         try {
             JsonToken ownerToken = null;
             JsonToken userToken = null;
-            Map<String, Object> menuAdminPayload = null;
             // signIn owner by userId
             {
                 jsonMap = mapper.readValue(signInOwner,
@@ -115,19 +118,6 @@ public class MenuRuleTest extends TestCase {
                 assertTrue(ruleResult);
             }
 
-            // get menu for injector
-            {
-                jsonMap = mapper.readValue(getMenuInjector,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-
-                GetMenuRule rule = new GetMenuRule();
-                ruleResult = rule.execute(jsonMap);
-                assertTrue(ruleResult);
-                String result = (String) jsonMap.get("result");
-                //System.out.println("result = " + result);
-            }
-
             // get menu for www.edibleforestgarden.ca
             {
                 jsonMap = mapper.readValue(getMenuEdibleForestGarden,
@@ -138,10 +128,10 @@ public class MenuRuleTest extends TestCase {
                 ruleResult = rule.execute(jsonMap);
                 assertTrue(ruleResult);
                 String result = (String) jsonMap.get("result");
-                //System.out.println("result = " + result);
+                System.out.println("result = " + result);
             }
 
-            // get menus by owner
+            // get all menus by owner
             {
                 jsonMap = mapper.readValue(getAllMenu,
                         new TypeReference<HashMap<String, Object>>() {
@@ -155,46 +145,26 @@ public class MenuRuleTest extends TestCase {
                 System.out.println("result = " + result);
             }
 
-            // get menus by test.
-            // for unit test, the rule is called without access control.
+            // get all menuItemMap by owner
             {
-                jsonMap = mapper.readValue(getAllMenu,
+                jsonMap = mapper.readValue(getMenuItemMap,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", userToken.getPayload());
+                jsonMap.put("payload", ownerToken.getPayload());
 
-                GetAllMenuRule rule = new GetAllMenuRule();
-                ruleResult = rule.execute(jsonMap);
-                assertTrue(ruleResult);
-            }
-
-            // get menus by menuAdmin
-            {
-                jsonMap = mapper.readValue(getAllMenu,
-                        new TypeReference<HashMap<String, Object>>() {
-                        });
-
-                menuAdminPayload = new HashMap<String, Object>();
-                Map<String, Object> menuAdminUser = new LinkedHashMap<String, Object>((Map)userToken.getPayload().get("user"));
-                List roles = new ArrayList();;
-                roles.add("menuAdmin");
-                menuAdminUser.put("roles", roles);
-                menuAdminPayload.put("user", menuAdminUser);
-                jsonMap.put("payload", menuAdminPayload);
-
-                GetAllMenuRule rule = new GetAllMenuRule();
+                GetMenuItemMapRule rule = new GetMenuItemMapRule();
                 ruleResult = rule.execute(jsonMap);
                 assertTrue(ruleResult);
                 String result = (String) jsonMap.get("result");
-                //System.out.println("result = " + result);
-
+                System.out.println("result = " + result);
             }
+
             // del menu www.example.com if it is there, this is to prepare test re-run if failed.
             {
                 jsonMap = mapper.readValue(getAllMenu,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 GetAllMenuRule rule = new GetAllMenuRule();
                 ruleResult = rule.execute(jsonMap);
                 if(ruleResult) {
@@ -203,25 +173,29 @@ public class MenuRuleTest extends TestCase {
                     Map<String, Object> data = mapper.readValue(result,
                             new TypeReference<HashMap<String, Object>>() {
                             });
-                    List menus = (List)data.get("menus");
+                    List<Map> menus = (List<Map>)data.get("menus");
                     if(menus != null) {
-                        assertEquals(1, menus.size());
-                        Map<String, Object> menu = (Map<String, Object>)menus.get(0);
-                        jsonMap = mapper.readValue(delMenu,
-                                new TypeReference<HashMap<String, Object>>() {
-                                });
-                        jsonMap.put("payload", ownerToken.getPayload());
-                        jsonMap.put("data", menu);
-                        DelMenuRule valRule = new DelMenuRule();
-                        ruleResult = valRule.execute(jsonMap);
-                        assertTrue(ruleResult);
-                        Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
-                        DelMenuEvRule delRule = new DelMenuEvRule();
-                        ruleResult = delRule.execute(eventMap);
-                        assertTrue(ruleResult);
+                        // find www.example.com menu and delete it.
+                        for(Map menu: menus) {
+                            String host = (String)menu.get("host");
+                            if("www.example.com".equals(host)) {
+                                jsonMap = mapper.readValue(delMenu,
+                                        new TypeReference<HashMap<String, Object>>() {
+                                        });
+                                jsonMap.put("payload", ownerToken.getPayload());
+                                jsonMap.put("data", menu);
+                                DelMenuRule valRule = new DelMenuRule();
+                                ruleResult = valRule.execute(jsonMap);
+                                assertTrue(ruleResult);
+                                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                                DelMenuEvRule delRule = new DelMenuEvRule();
+                                ruleResult = delRule.execute(eventMap);
+                                assertTrue(ruleResult);
+                            }
+                        }
                     }
                     // delete menuItems here. 1,2,3 won't be deleted along with menu if they are not linked together.
-                    String json = rule.getMenuItem("MenuItem1");
+                    String json = rule.getMenuItem(graph, "MenuItem1");
                     if(json != null) {
                         Map<String, Object> menuItem = mapper.readValue(json,
                                 new TypeReference<HashMap<String, Object>>() {
@@ -240,7 +214,7 @@ public class MenuRuleTest extends TestCase {
                             assertTrue(ruleResult);
                         }
                     }
-                    json = rule.getMenuItem("MenuItem2");
+                    json = rule.getMenuItem(graph, "MenuItem2");
                     if(json != null) {
                         Map<String, Object> menuItem = mapper.readValue(json,
                                 new TypeReference<HashMap<String, Object>>() {
@@ -259,7 +233,7 @@ public class MenuRuleTest extends TestCase {
                             assertTrue(ruleResult);
                         }
                     }
-                    json = rule.getMenuItem("MenuItem3");
+                    json = rule.getMenuItem(graph, "MenuItem3");
                     if(json != null) {
                         Map<String, Object> menuItem = mapper.readValue(json,
                                 new TypeReference<HashMap<String, Object>>() {
@@ -279,7 +253,7 @@ public class MenuRuleTest extends TestCase {
                         }
                     }
 
-                    json = rule.getMenuItem("MenuItemCommon");
+                    json = rule.getMenuItem(graph, "MenuItemCommon");
                     if(json != null) {
                         Map<String, Object> menuItem = mapper.readValue(json,
                                 new TypeReference<HashMap<String, Object>>() {
@@ -301,24 +275,14 @@ public class MenuRuleTest extends TestCase {
                 }
             }
 
-            // add menu with www.example.com as host by test and it failed
-            // and then add the menu with menuAdmin.
-            //
-            // add menuItem1, 2, 3 and common with menuAdmin and common failed
-            // then add common with owner.
-
+            // add menu and menuItems
             {
+                // add menu www.example.com as host by owner
                 jsonMap = mapper.readValue(addMenu,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                Map<String, Object> payload = userToken.getPayload();
-                jsonMap.put("payload", payload);
-                AddMenuRule addMenuRule = new AddMenuRule();
-                ruleResult = addMenuRule.execute(jsonMap);
-                assertFalse(ruleResult);
-
                 jsonMap.put("payload", ownerToken.getPayload());
-                addMenuRule = new AddMenuRule();
+                AddMenuRule addMenuRule = new AddMenuRule();
                 ruleResult = addMenuRule.execute(jsonMap);
                 assertTrue(ruleResult);
                 Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
@@ -330,22 +294,31 @@ public class MenuRuleTest extends TestCase {
                 jsonMap = mapper.readValue(getAllMenu,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 GetAllMenuRule rule = new GetAllMenuRule();
                 ruleResult = rule.execute(jsonMap);
                 String result = (String) jsonMap.get("result");
-                // there should be only one menu in the list.
                 Map<String, Object> data = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                List menus = (List)data.get("menus");
-                assertEquals(1, menus.size());
-                Map<String, Object> menu = (Map<String, Object>)menus.get(0);
+                List<Map> menus = (List<Map>)data.get("menus");
+                // menu map for www.example.com
+                Map menu = null;
+                if(menus != null) {
+                    // find www.example.com menu and delete it.
+                    for(Map map: menus) {
+                        String host = (String)map.get("host");
+                        if("www.example.com".equals(host)) {
+                            menu = map;
+                        }
+                    }
+                }
 
+                // add menuItem1
                 jsonMap = mapper.readValue(addMenuItem1,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 AddMenuItemRule addMenuItemRule = new AddMenuItemRule();
                 ruleResult = addMenuItemRule.execute(jsonMap);
                 assertTrue(ruleResult);
@@ -354,15 +327,16 @@ public class MenuRuleTest extends TestCase {
                 ruleResult = addMenuItemEvRule.execute(eventMap);
                 assertTrue(ruleResult);
                 // get menuItem for future update
-                result = addMenuItemEvRule.getMenuItem("MenuItem1");
+                result = addMenuItemEvRule.getMenuItem(graph, "MenuItem1");
                 Map<String, Object> menuItem1 = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 
+                // add menuItem2
                 jsonMap = mapper.readValue(addMenuItem2,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 addMenuItemRule = new AddMenuItemRule();
                 ruleResult = addMenuItemRule.execute(jsonMap);
                 assertTrue(ruleResult);
@@ -370,15 +344,16 @@ public class MenuRuleTest extends TestCase {
                 addMenuItemEvRule = new AddMenuItemEvRule();
                 ruleResult = addMenuItemEvRule.execute(eventMap);
                 assertTrue(ruleResult);
-                result = addMenuItemEvRule.getMenuItem("MenuItem2");
+                result = addMenuItemEvRule.getMenuItem(graph, "MenuItem2");
                 Map<String, Object> menuItem2 = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 
+                //  add menuItem3
                 jsonMap = mapper.readValue(addMenuItem3,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 addMenuItemRule = new AddMenuItemRule();
                 ruleResult = addMenuItemRule.execute(jsonMap);
                 assertTrue(ruleResult);
@@ -386,11 +361,12 @@ public class MenuRuleTest extends TestCase {
                 addMenuItemEvRule = new AddMenuItemEvRule();
                 ruleResult = addMenuItemEvRule.execute(eventMap);
                 assertTrue(ruleResult);
-                result = addMenuItemEvRule.getMenuItem("MenuItem3");
+                result = addMenuItemEvRule.getMenuItem(graph, "MenuItem3");
                 Map<String, Object> menuItem3 = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
 
+                // add menuItemCommon
                 jsonMap = mapper.readValue(addMenuItemCommon,
                         new TypeReference<HashMap<String, Object>>() {
                         });
@@ -402,7 +378,7 @@ public class MenuRuleTest extends TestCase {
                 addMenuItemEvRule = new AddMenuItemEvRule();
                 ruleResult = addMenuItemEvRule.execute(eventMap);
                 assertTrue(ruleResult);
-                result = addMenuItemEvRule.getMenuItem("MenuItemCommon");
+                result = addMenuItemEvRule.getMenuItem(graph, "MenuItemCommon");
                 Map<String, Object> menuItemCommon = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
@@ -417,7 +393,7 @@ public class MenuRuleTest extends TestCase {
                         new TypeReference<HashMap<String, Object>>() {
                         });
                 jsonMap.put("data", menu);
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 UpdMenuRule updMenuRule = new UpdMenuRule();
                 ruleResult = updMenuRule.execute(jsonMap);
                 assertTrue(ruleResult);
@@ -425,11 +401,11 @@ public class MenuRuleTest extends TestCase {
                 UpdMenuEvRule updMenuEvRule = new UpdMenuEvRule();
                 ruleResult = updMenuEvRule.execute(eventMap);
                 assertTrue(ruleResult);
-                result = updMenuEvRule.getMenu("www.example.com");
+                result = updMenuEvRule.getMenu(graph, "www.example.com");
                 jsonMap = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                List list = (List)jsonMap.get("menuItems");
+                List list = (List)jsonMap.get("out_Own");
                 // there should be two menuItems
                 assertEquals(2, list.size());
 
@@ -437,7 +413,7 @@ public class MenuRuleTest extends TestCase {
                 jsonMap = mapper.readValue(getAllMenu,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 rule = new GetAllMenuRule();
                 ruleResult = rule.execute(jsonMap);
                 result = (String) jsonMap.get("result");
@@ -446,9 +422,15 @@ public class MenuRuleTest extends TestCase {
                         new TypeReference<HashMap<String, Object>>() {
                         });
                 menus = (List)data.get("menus");
-                assertEquals(1, menus.size());
-                menu = (Map<String, Object>)menus.get(0);
-
+                if(menus != null) {
+                    // find www.example.com menu and delete it.
+                    for(Map map: menus) {
+                        String host = (String)map.get("host");
+                        if("www.example.com".equals(host)) {
+                            menu = map;
+                        }
+                    }
+                }
 
                 menuItems.add(menuItem3.get("@rid"));
                 menuItems.add(menuItemCommon.get("@rid"));
@@ -459,7 +441,7 @@ public class MenuRuleTest extends TestCase {
                         new TypeReference<HashMap<String, Object>>() {
                         });
                 jsonMap.put("data", menu);
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 updMenuRule = new UpdMenuRule();
                 ruleResult = updMenuRule.execute(jsonMap);
                 assertTrue(ruleResult);
@@ -467,12 +449,12 @@ public class MenuRuleTest extends TestCase {
                 updMenuEvRule = new UpdMenuEvRule();
                 ruleResult = updMenuEvRule.execute(eventMap);
                 assertTrue(ruleResult);
-                result = updMenuEvRule.getMenu("www.example.com");
+                result = updMenuEvRule.getMenu(graph, "www.example.com");
 
                 jsonMap = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                list = (List)jsonMap.get("menuItems");
+                list = (List)jsonMap.get("out_Own");
                 // there should be four menuItems
                 assertEquals(4, list.size());
 
@@ -482,7 +464,7 @@ public class MenuRuleTest extends TestCase {
                 jsonMap = mapper.readValue(getAllMenu,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 rule = new GetAllMenuRule();
                 ruleResult = rule.execute(jsonMap);
                 result = (String) jsonMap.get("result");
@@ -491,15 +473,22 @@ public class MenuRuleTest extends TestCase {
                         new TypeReference<HashMap<String, Object>>() {
                         });
                 menus = (List)data.get("menus");
-                assertEquals(1, menus.size());
-                menu = (Map<String, Object>)menus.get(0);
+                if(menus != null) {
+                    // find www.example.com menu and delete it.
+                    for(Map map: menus) {
+                        String host = (String)map.get("host");
+                        if("www.example.com".equals(host)) {
+                            menu = map;
+                        }
+                    }
+                }
 
-
+                // Update menu to remove all the out_Own edge.
                 jsonMap = mapper.readValue(updMenu,
                         new TypeReference<HashMap<String, Object>>() {
                         });
                 jsonMap.put("data", menu);
-                jsonMap.put("payload", menuAdminPayload);
+                jsonMap.put("payload", ownerToken.getPayload());
                 updMenuRule = new UpdMenuRule();
                 ruleResult = updMenuRule.execute(jsonMap);
                 assertTrue(ruleResult);
@@ -507,18 +496,23 @@ public class MenuRuleTest extends TestCase {
                 updMenuEvRule = new UpdMenuEvRule();
                 ruleResult = updMenuEvRule.execute(eventMap);
                 assertTrue(ruleResult);
-                result = updMenuEvRule.getMenu("www.example.com");
+                result = updMenuEvRule.getMenu(graph, "www.example.com");
 
                 jsonMap = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                list = (List)jsonMap.get("menuItems");
+                list = (List)jsonMap.get("out_Own");
                 // there should be four menuItems
-                assertEquals(4, list.size());
+                assertEquals(0, list.size());
 
 
-                // update menuItem1 by menuAdmin
+                // update menuItem1
                 {
+                    result = addMenuItemEvRule.getMenuItem(graph, "MenuItem1");
+                    menuItem1 = mapper.readValue(result,
+                            new TypeReference<HashMap<String, Object>>() {
+                            });
+
                     menuItem1.put("path", "/newPath");
                     List l = new ArrayList();
                     l.add(menuItem2.get("@rid"));
@@ -528,7 +522,7 @@ public class MenuRuleTest extends TestCase {
                             new TypeReference<HashMap<String, Object>>() {
                             });
                     jsonMap.put("data", menuItem1);
-                    jsonMap.put("payload", menuAdminPayload);
+                    jsonMap.put("payload", ownerToken.getPayload());
                     UpdMenuItemRule updMenuItemRule = new UpdMenuItemRule();
                     ruleResult = updMenuItemRule.execute(jsonMap);
                     assertTrue(ruleResult);
@@ -546,7 +540,7 @@ public class MenuRuleTest extends TestCase {
                             new TypeReference<HashMap<String, Object>>() {
                             });
                     jsonMap.put("data", menuItemCommon);
-                    jsonMap.put("payload", menuAdminPayload);
+                    jsonMap.put("payload", ownerToken.getPayload());
                     UpdMenuItemRule updMenuItemRule = new UpdMenuItemRule();
                     ruleResult = updMenuItemRule.execute(jsonMap);
                     assertFalse(ruleResult);
@@ -569,7 +563,7 @@ public class MenuRuleTest extends TestCase {
                     jsonMap = mapper.readValue(getAllMenu,
                             new TypeReference<HashMap<String, Object>>() {
                             });
-                    jsonMap.put("payload", menuAdminPayload);
+                    jsonMap.put("payload", ownerToken.getPayload());
                     rule = new GetAllMenuRule();
                     ruleResult = rule.execute(jsonMap);
                     result = (String) jsonMap.get("result");
@@ -590,7 +584,7 @@ public class MenuRuleTest extends TestCase {
                             new TypeReference<HashMap<String, Object>>() {
                             });
                     jsonMap.put("data", menu);
-                    jsonMap.put("payload", menuAdminPayload);
+                    jsonMap.put("payload", ownerToken.getPayload());
                     updMenuRule = new UpdMenuRule();
                     ruleResult = updMenuRule.execute(jsonMap);
                     assertTrue(ruleResult);
@@ -598,7 +592,7 @@ public class MenuRuleTest extends TestCase {
                     updMenuEvRule = new UpdMenuEvRule();
                     ruleResult = updMenuEvRule.execute(eventMap);
                     assertTrue(ruleResult);
-                    result = updMenuEvRule.getMenu("www.example.com");
+                    result = updMenuEvRule.getMenu(graph, "www.example.com");
                     System.out.println("result = " + result);
                     jsonMap = mapper.readValue(result,
                             new TypeReference<HashMap<String, Object>>() {
@@ -613,7 +607,7 @@ public class MenuRuleTest extends TestCase {
                 // delete menuItemCommon and menuItem2
                 // first try failed as there are reference to them.
                 {
-                    String json = rule.getMenuItem("MenuItemCommon");
+                    String json = rule.getMenuItem(graph, "MenuItemCommon");
                     if(json != null) {
                         Map<String, Object> menuItem = mapper.readValue(json,
                                 new TypeReference<HashMap<String, Object>>() {
@@ -628,7 +622,7 @@ public class MenuRuleTest extends TestCase {
                         assertFalse(ruleResult);
                     }
 
-                    json = rule.getMenuItem("MenuItem2");
+                    json = rule.getMenuItem(graph, "MenuItem2");
                     if(json != null) {
                         Map<String, Object> menuItem = mapper.readValue(json,
                                 new TypeReference<HashMap<String, Object>>() {
@@ -636,7 +630,7 @@ public class MenuRuleTest extends TestCase {
                         jsonMap = mapper.readValue(delMenuItem,
                                 new TypeReference<HashMap<String, Object>>() {
                                 });
-                        jsonMap.put("payload", menuAdminPayload);
+                        jsonMap.put("payload", ownerToken.getPayload());
                         jsonMap.put("data", menuItem);
                         DelMenuItemRule delMenuItemRule = new DelMenuItemRule();
                         ruleResult = delMenuItemRule.execute(jsonMap);
@@ -651,7 +645,7 @@ public class MenuRuleTest extends TestCase {
                     jsonMap = mapper.readValue(getAllMenu,
                             new TypeReference<HashMap<String, Object>>() {
                             });
-                    jsonMap.put("payload", menuAdminPayload);
+                    jsonMap.put("payload", ownerToken.getPayload());
                     rule = new GetAllMenuRule();
                     ruleResult = rule.execute(jsonMap);
                     result = (String) jsonMap.get("result");
@@ -670,7 +664,7 @@ public class MenuRuleTest extends TestCase {
                             new TypeReference<HashMap<String, Object>>() {
                             });
                     jsonMap.put("data", menu);
-                    jsonMap.put("payload", menuAdminPayload);
+                    jsonMap.put("payload", ownerToken.getPayload());
                     updMenuRule = new UpdMenuRule();
                     ruleResult = updMenuRule.execute(jsonMap);
                     assertTrue(ruleResult);
@@ -678,7 +672,7 @@ public class MenuRuleTest extends TestCase {
                     updMenuEvRule = new UpdMenuEvRule();
                     ruleResult = updMenuEvRule.execute(eventMap);
                     assertTrue(ruleResult);
-                    result = updMenuEvRule.getMenu("www.example.com");
+                    result = updMenuEvRule.getMenu(graph, "www.example.com");
                     jsonMap = mapper.readValue(result,
                             new TypeReference<HashMap<String, Object>>() {
                             });
@@ -686,7 +680,7 @@ public class MenuRuleTest extends TestCase {
                     // there should be four menuItems
                     assertEquals(1, list.size());
 
-                    json = rule.getMenuItem("MenuItem1");
+                    json = rule.getMenuItem(graph, "MenuItem1");
                     if(json != null) {
                         Map<String, Object> menuItem = mapper.readValue(json,
                                 new TypeReference<HashMap<String, Object>>() {
@@ -694,7 +688,7 @@ public class MenuRuleTest extends TestCase {
                         jsonMap = mapper.readValue(delMenuItem,
                                 new TypeReference<HashMap<String, Object>>() {
                                 });
-                        jsonMap.put("payload", menuAdminPayload);
+                        jsonMap.put("payload", ownerToken.getPayload());
                         jsonMap.put("data", menuItem);
                         DelMenuItemRule delMenuItemRule = new DelMenuItemRule();
                         ruleResult = delMenuItemRule.execute(jsonMap);
