@@ -10,10 +10,10 @@
     "schema": {
         "type": "object",
         "title": "Page",
-        "required": ["id", "content"],
+        "required": ["pageId", "content"],
         "properties": {
-            "id": {
-                "title": "Id",
+            "pageId": {
+                "title": "Page Id",
                 "type": "string"
             },
             "content": {
@@ -23,7 +23,7 @@
         }
     },
     "form": [
-        "id",
+        "pageId",
         {
             "key": "content",
             "type": "ace",

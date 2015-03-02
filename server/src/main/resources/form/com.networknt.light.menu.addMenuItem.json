@@ -11,10 +11,10 @@
     "schema": {
         "type": "object",
         "title": "Menu Item",
-        "required": ["id", "label"],
+        "required": ["menuItemId", "label"],
         "properties": {
-            "id" : {
-                "title": "Id",
+            "menuItemId" : {
+                "title": "Menu Item Id",
                 "type": "string"
             },
             "label" : {
@@ -54,7 +54,7 @@
         }
     },
     "form": [
-        "id",
+        "menuItemId",
         "label",
         "host",
         "path",
