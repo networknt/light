@@ -221,7 +221,7 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
                 for(String menuItemId: delMenuItems) {
                     Vertex menuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
                     for (Edge edge : (Iterable<Edge>) menu.getEdges(Direction.OUT, "Own")) {
-                        graph.removeEdge(edge);
+                        if(edge.getVertex(Direction.IN).equals(menuItem)) graph.removeEdge(edge);
                     }
                 }
             }
@@ -269,7 +269,7 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
                 for(String menuItemId: delMenuItems) {
                     Vertex vertex = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
                     for (Edge edge : (Iterable<Edge>) menuItem.getEdges(Direction.OUT, "Own")) {
-                        graph.removeEdge(edge);
+                        if(edge.getVertex(Direction.IN).equals(vertex)) graph.removeEdge(edge);
                     }
                 }
             }
