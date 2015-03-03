@@ -198,7 +198,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             List<Map<String, Object>> actions = form.getProperty("action");
             for(Map<String, Object> action: actions) {
                 String ruleClass = Util.getCommandRuleId(action);
-                Vertex validation = graph.addVertex("class:Validation", "ruleClass", ruleClass, "schema", data.get("schema"));
+                graph.addVertex("class:Validation", "ruleClass", ruleClass, "schema", data.get("schema"));
             }
             graph.commit();
             json = form.getRecord().toJSON();
@@ -253,34 +253,29 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             graph.begin();
-            OIndex<?> formIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Form.formId");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oId = (OIdentifiable) formIdIdx.get(formId);
-            if (oId != null) {
-                ODocument doc = oId.getRecord();
-                doc.field("action", data.get("action"));
-                doc.field("schema", data.get("schema"));
-                doc.field("form", data.get("form"));
-                doc.field("modelData", data.get("modelData"));
-                doc.field("updateDate", data.get("updateDate"));
-                doc.field("updateUserId", data.get("updateUserId"));
-                doc.save();
+            OrientVertex form = (OrientVertex)graph.getVertexByKey("Form.formId", formId);
+            if(form != null) {
+                form.setProperty("action", data.get("action"));
+                form.setProperty("schema", data.get("schema"));
+                form.setProperty("form", data.get("form"));
+                form.setProperty("modelData", data.get("modelData"));
+                form.setProperty("updateDate", data.get("updateDate"));
+
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                updateUser.addEdge("Update", form);
 
                 // According to action in the list, populate validation schema.
-                List<Map<String, Object>> actions = doc.field("action");
+                List<Map<String, Object>> actions = form.getProperty("action");
                 for(Map<String, Object> action: actions) {
                     String ruleClass = Util.getCommandRuleId(action);
-                    OIndex<?> validationRuleClassIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Validation.ruleClass");
-                    OIdentifiable vid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
-                    if (vid != null) {
-                        ODocument validation = vid.getRecord();
-                        validation.field("schema", data.get("schema"));
-                        validation.save();
+                    Vertex validation = graph.getVertexByKey("Validation.ruleClass", ruleClass);
+                    if(validation != null) {
+                        validation.setProperty("schema", data.get("schema"));
                     }
                 }
-                graph.commit();
-                json = doc.toJSON();
             }
+            graph.commit();
+            json = form.getRecord().toJSON();
         } catch (Exception e) {
             graph.rollback();
             logger.error("Exception:", e);
@@ -301,30 +296,27 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             graph.begin();
-            OIndex<?> formIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Form.formId");
-            // this is a unique index, so it retrieves a OIdentifiable
-            OIdentifiable oid = (OIdentifiable) formIdIdx.get(formId);
-            if (oid != null && oid.getRecord() != null) {
-                ODocument doc = oid.getRecord();
-                List<Map<String, Object>> actions = doc.field("action");
+            OrientVertex form = (OrientVertex)graph.getVertexByKey("Form.formId", formId);
+            if(form != null) {
+                List<Map<String, Object>> actions = form.getProperty("action");
                 for(Map<String, Object> action: actions) {
                     String ruleClass = Util.getCommandRuleId(action);
-                    OIndex<?> validationRuleClassIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("Validation.ruleClass");
-                    OIdentifiable vid = (OIdentifiable) validationRuleClassIdx.get(ruleClass);
-                    if (vid != null) {
-                        ODocument validation = vid.getRecord();
-                        validation.delete();
+                    Vertex validation = graph.getVertexByKey("Validation.ruleClass", ruleClass);
+                    if(validation != null) {
+                        graph.removeVertex(validation);
                     }
                 }
-                doc.delete();
+                graph.removeVertex(form);
             }
 
-            OrientVertex form = graph.addVertex("class:Event", data);
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            form = graph.addVertex("class:Form", data);
+            createUser.addEdge("Create", form);
             // According to action in the list, populate validation schema.
             List<Map<String, Object>> actions = form.getProperty("action");
             for(Map<String, Object> action: actions) {
                 String ruleClass = Util.getCommandRuleId(action);
-                Vertex validation = graph.addVertex("class:Validation", "ruleClass", ruleClass, "schema", data.get("schema"));
+                graph.addVertex("class:Validation", "ruleClass", ruleClass, "schema", data.get("schema"));
             }
             graph.commit();
             json = form.getRecord().toJSON();

@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.common.command",
+    "formId": "com.networknt.light.common.command",
     "version": 1,
     "schema": {
         "type": "object",

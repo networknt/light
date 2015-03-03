@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.page.update",
+    "formId": "com.networknt.light.page.update",
     "version": 1,
     "action" : [{
         "category" : "page",

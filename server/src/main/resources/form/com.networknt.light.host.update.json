@@ -1,5 +1,5 @@
 {
-  "id": "com.networknt.light.host.update",
+  "formId": "com.networknt.light.host.update",
   "version": 1,
   "action" : [{
     "category" : "host",

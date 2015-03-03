@@ -130,9 +130,9 @@ public class PageLoader extends Loader {
             scan = new Scanner(file, Loader.encoding);
             // the content is only the data portion. convert to map
             String content = scan.useDelimiter("\\Z").next();
-            String id = file.getName();
-            id = id.substring(0, id.lastIndexOf('.'));
-            if(content != null && !content.equals(pageMap.get(id))) {
+            String pageId = file.getName();
+            pageId = pageId.substring(0, pageId.lastIndexOf('.'));
+            if(content != null && !content.equals(pageMap.get(pageId))) {
                 //System.out.println(content);
                 //System.out.println(pageMap.get(id));
                 Map<String, Object> inputMap = new HashMap<String, Object>();
@@ -140,7 +140,7 @@ public class PageLoader extends Loader {
                 inputMap.put("name", "impPage");
                 inputMap.put("readOnly", false);
                 Map<String, Object> data = new HashMap<String, Object>();
-                data.put("id", id);
+                data.put("pageId", pageId);
                 data.put("content", content);
                 inputMap.put("data", data);
                 HttpPost httpPost = new HttpPost(host + "/api/rs");
@@ -165,7 +165,7 @@ public class PageLoader extends Loader {
                     response.close();
                 }
             } else {
-                System.out.println("Skip file " + id);
+                System.out.println("Skip file " + pageId);
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();

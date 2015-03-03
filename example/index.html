@@ -46,10 +46,10 @@
                 <nav class="hidden-xs">
                     <ul class="nav navbar-nav">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: {left: true}"  dropdown>
-                            <a ng-if="node.hasOwnProperty('menuItems')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
-                            <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
+                            <a ng-if="node.hasOwnProperty('out_Own')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
+                            <a ng-if="!node.hasOwnProperty('out_Own')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="item in node.menuItems"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
+                                <li ng-repeat="item in node.out_Own"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -63,10 +63,10 @@
                 <nav class="visible-xs" collapse="!menuSettings.isCollapsed">
                     <ul class="nav navbar-nav">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: { left: true}"  dropdown>
-                            <a ng-if="node.hasOwnProperty('menuItems')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
-                            <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
+                            <a ng-if="node.hasOwnProperty('out_Own')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
+                            <a ng-if="!node.hasOwnProperty('out_Own')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="item in node.menuItems"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
+                                <li ng-repeat="item in node.out_Own"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
                             </ul>
                         </li>
                     </ul>

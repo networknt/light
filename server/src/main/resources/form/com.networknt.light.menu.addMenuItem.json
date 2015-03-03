@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.menu.addMenuItem",
+    "formId": "com.networknt.light.menu.addMenuItem",
     "version": 1,
     "action" : [{
         "category" : "menu",

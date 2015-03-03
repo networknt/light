@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.user.signin",
+    "formId": "com.networknt.light.user.signin",
     "version": 1,
     "action" : [{
         "category" : "user",

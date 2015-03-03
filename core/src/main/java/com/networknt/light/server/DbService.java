@@ -167,7 +167,7 @@ public class DbService {
         logger.debug("sql={}", sql);
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            List<ODocument> list =  graph.command(new OCommandSQL(sql.toString())).execute();
+            List<ODocument> list =  graph.getRawGraph().command(new OCommandSQL(sql.toString())).execute();
             if(list.size() > 0) {
                 json = OJSONWriter.listToJSON(list, null);
             }
@@ -184,7 +184,7 @@ public class DbService {
         int recordsUpdated = 0;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            recordsUpdated = graph.command(new OCommandSQL(sql)).execute();
+            recordsUpdated = graph.getRawGraph().command(new OCommandSQL(sql)).execute();
             graph.commit();
         } catch (Exception e) {
             graph.rollback();

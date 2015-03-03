@@ -142,7 +142,6 @@ public abstract class AbstractRule implements Rule {
                     .maximumWeightedCapacity(1000)
                     .build();
             accessMap.put("cache", cache);
-            logger.error("accessMap cache created =" + cache);
         } else {
             access = (Map<String, Object>)cache.get(ruleClass);
         }

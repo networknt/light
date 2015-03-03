@@ -53,10 +53,10 @@ public abstract class AbstractAccessRule extends AbstractRule implements Rule {
 
     protected void updAccess(Map<String, Object> data) throws Exception {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        OrientVertex access = null;
+        String json = null;
         try {
             graph.begin();
-            access = (OrientVertex)graph.getVertexByKey("Access.ruleClass", data.get("ruleClass"));
+            OrientVertex access = (OrientVertex)graph.getVertexByKey("Access.ruleClass", data.get("ruleClass"));
             if(access != null) {
                 access.setProperty("accessLevel", data.get("accessLevel"));
                 List<String> clients = (List)data.get("clients");
@@ -82,6 +82,7 @@ public abstract class AbstractAccessRule extends AbstractRule implements Rule {
                 updateUser.addEdge("Update", access);
             }
             graph.commit();
+            json = access.getRecord().toJSON();
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -97,7 +98,6 @@ public abstract class AbstractAccessRule extends AbstractRule implements Rule {
                     .build();
             accessMap.put("cache", cache);
         }
-        String json = access.getRecord().toJSON();
         cache.put(data.get("ruleClass"), mapper.readValue(json,
                 new TypeReference<HashMap<String, Object>>() {
                 }));
@@ -135,7 +135,7 @@ public abstract class AbstractAccessRule extends AbstractRule implements Rule {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> accesses = graph.command(query).execute();
+            List<ODocument> accesses = graph.getRawGraph().command(query).execute();
             json = OJSONWriter.listToJSON(accesses, null);
         } catch (Exception e) {
             logger.error("Exception:", e);
