@@ -1,6 +1,12 @@
 {
     "formId": "com.networknt.light.common.command",
     "version": 1,
+    "action" : [{
+        "category" : "common",
+        "name" : "command",
+        "readOnly": false,
+        "title": "Submit"
+    }],
     "schema": {
         "type": "object",
         "title": "Command",
