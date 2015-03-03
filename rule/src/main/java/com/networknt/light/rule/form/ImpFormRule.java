@@ -91,5 +91,4 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
             return true;
         }
     }
-
 }
