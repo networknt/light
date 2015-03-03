@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.db.downloadEvent",
+    "formId": "com.networknt.light.db.downloadEvent",
     "version": 1,
     "action" : [{
         "category" : "db",

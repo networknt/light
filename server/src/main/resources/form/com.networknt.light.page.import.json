@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.page.import",
+    "formId": "com.networknt.light.page.import",
     "version": 1,
     "action" : [{
         "category" : "page",

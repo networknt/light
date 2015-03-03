@@ -62,7 +62,7 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
                     eventData.put("action", dataMap.get("action"));
                     eventData.put("schema", dataMap.get("schema"));
                     eventData.put("form", dataMap.get("form"));
-                    eventData.put("modelData", dataMap.get("modelData"));
+                    if(dataMap.get("modelData") != null) eventData.put("modelData", dataMap.get("modelData"));
 
                     eventData.put("createDate", new java.util.Date());
                     eventData.put("createUserId", user.get("userId"));
@@ -78,7 +78,7 @@ public class ImpFormRule extends AbstractFormRule implements Rule {
             eventData.put("action", dataMap.get("action"));
             eventData.put("schema", dataMap.get("schema"));
             eventData.put("form", dataMap.get("form"));
-            eventData.put("modelData", dataMap.get("modelData"));
+            if(dataMap.get("modelData") != null) eventData.put("modelData", dataMap.get("modelData"));
 
             eventData.put("createDate", new java.util.Date());
             eventData.put("createUserId", user.get("userId"));

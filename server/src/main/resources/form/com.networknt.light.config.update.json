@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.config.update",
+    "formId": "com.networknt.light.config.update",
     "version": 1,
     "action" : [{
         "category" : "config",

@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.rule.update",
+    "formId": "com.networknt.light.rule.update",
     "version": 1,
     "action" : [{
         "category" : "rule",

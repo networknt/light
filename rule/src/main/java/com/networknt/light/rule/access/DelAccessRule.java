@@ -20,7 +20,10 @@ import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.rule.rule.AbstractRuleRule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +50,7 @@ public class DelAccessRule extends AbstractAccessRule implements Rule {
         int inputVersion = (int)data.get("@version");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;
-        /*
+
         if(payload == null) {
             error = "Login is required";
             inputMap.put("responseCode", 401);
@@ -59,62 +62,41 @@ public class DelAccessRule extends AbstractAccessRule implements Rule {
                 inputMap.put("responseCode", 403);
             } else {
                 String host = (String)user.get("host");
-                if(host != null) {
-                    if(!host.equals(data.get("host"))) {
-                        error = "User can only delete access control from host: " + host;
-                        inputMap.put("responseCode", 403);
-                    } else {
-                        // check if the ruleClass contains the host.
-                        if(host != null && !ruleClass.contains(host)) {
-                            // you are not allowed to delete access control to the rule as it is not belong to the host.
-                            error = "ruleClass is not owned by the host: " + host;
-                            inputMap.put("responseCode", 403);
-                        } else {
-                            // check if the access control exist or not.
-                            ODocument access = DbService.getODocumentByRid(rid);
-                            if(access == null) {
-                                error = "Access control with @rid " + rid + " cannot be found";
-                                inputMap.put("responseCode", 404);
-                            } else {
-                                int storedVersion = access.field("@version");
-                                if(inputVersion != storedVersion) {
-                                    error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
-                                    inputMap.put("responseCode", 400);
-                                } else {
-                                    Map eventMap = getEventMap(inputMap);
-                                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                                    inputMap.put("eventMap", eventMap);
-                                    eventData.put("ruleClass", ruleClass);
-                                    eventData.put("updateDate", new java.util.Date());
-                                    eventData.put("updateUserId", user.get("userId"));
-                                }
-                            }
-                        }
-                    }
+                if(host != null && !host.equals(data.get("host"))) {
+                    error = "User can only delete access control from host: " + host;
+                    inputMap.put("responseCode", 403);
                 } else {
                     // check if the access control exist or not.
-                    ODocument access = DbService.getODocumentByRid(rid);
-                    if(access == null) {
-                        error = "Access control with @rid " + rid + " cannot be found";
-                        inputMap.put("responseCode", 404);
-                    } else {
-                        int storedVersion = access.field("@version");
-                        if(inputVersion != storedVersion) {
-                            error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
-                            inputMap.put("responseCode", 400);
+                    OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+                    try {
+                        Vertex access = DbService.getVertexByRid(graph, rid);
+                        if(access == null) {
+                            error = "Access control with @rid " + rid + " cannot be found";
+                            inputMap.put("responseCode", 404);
                         } else {
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
-                            eventData.put("ruleClass", ruleClass);
-                            eventData.put("updateDate", new java.util.Date());
-                            eventData.put("updateUserId", user.get("userId"));
+                            int storedVersion = access.getProperty("@version");
+                            if(inputVersion != storedVersion) {
+                                error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
+                                inputMap.put("responseCode", 400);
+                            } else {
+                                Map eventMap = getEventMap(inputMap);
+                                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                                inputMap.put("eventMap", eventMap);
+                                eventData.put("ruleClass", ruleClass);
+                                eventData.put("updateDate", new java.util.Date());
+                                eventData.put("updateUserId", user.get("userId"));
+                            }
                         }
+                    } catch (Exception e) {
+                        logger.error("Exception:", e);
+                        throw e;
+                    } finally {
+                        graph.shutdown();
                     }
                 }
             }
         }
-        */
+
         if(error != null) {
             inputMap.put("error", error);
             return false;

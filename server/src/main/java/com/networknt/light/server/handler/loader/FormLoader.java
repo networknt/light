@@ -137,8 +137,8 @@ public class FormLoader extends Loader {
             Map<String, Object> newMap = ServiceLocator.getInstance().getMapper().readValue(content,
                     new TypeReference<HashMap<String, Object>>() {
                     });
-            String id = (String)newMap.get("id");
-            Map<String, Object> oldMap = (Map<String, Object>)formMap.get(id);
+            String formId = (String)newMap.get("formId");
+            Map<String, Object> oldMap = (Map<String, Object>)formMap.get(formId);
             boolean changed = false;
             if(oldMap == null) {
                 // never loaded before.

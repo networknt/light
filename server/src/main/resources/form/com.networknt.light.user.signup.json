@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.user.signup",
+    "formId": "com.networknt.light.user.signup",
     "action" : [{
         "category" : "user",
         "name" : "signUpUser",

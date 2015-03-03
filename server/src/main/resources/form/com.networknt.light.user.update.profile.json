@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.user.update.profile",
+    "formId": "com.networknt.light.user.update.profile",
     "version": 1,
     "action" : [
         {

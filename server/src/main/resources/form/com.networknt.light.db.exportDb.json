@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.db.exportDb",
+    "formId": "com.networknt.light.db.exportDb",
     "version": 1,
     "action" : [{
         "category" : "db",

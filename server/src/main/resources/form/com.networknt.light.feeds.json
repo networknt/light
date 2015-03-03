@@ -1,5 +1,5 @@
 {
-    "id": "com.networknt.light.feeds",
+    "formId": "com.networknt.light.feeds",
     "version": 1,
     "action" : [{
         "host" : "injector",
