@@ -53,8 +53,8 @@
                 value: 'delete'
             },
             {
-                title: 'Id',
-                value: 'id'
+                title: 'MenuItem Id',
+                value: 'menuItemId'
             },
             {
                 title: 'Label',
@@ -222,7 +222,7 @@
                         <tbody>
                         <tr>
                             <td></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.id" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.menuItemId" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.label" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.host" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="menuItemFilter.path" type="text" /></td>
@@ -238,7 +238,7 @@
                         </tr>
                         <tr ng-repeat="menuItem in menuItems | filter: menuItemFilter | orderBy: sort.sortedBy">
                             <td><a href ng-click="deleteMenuItem(menuItem)">Delete</a></td>
-                            <td><a href ng-click="updateMenuItem(menuItem)">{{menuItem.id}}</a></td>
+                            <td><a href ng-click="updateMenuItem(menuItem)">{{menuItem.menuItemId}}</a></td>
                             <td>{{menuItem.label}}</td>
                             <td>{{menuItem.host}}</td>
                             <td>{{menuItem.path}}</td>

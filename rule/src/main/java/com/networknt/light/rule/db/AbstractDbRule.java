@@ -114,7 +114,7 @@ public abstract class AbstractDbRule extends AbstractRule implements Rule {
     protected String execSchemaCmd(Map<String, Object> data) {
         String result = "";
         String script = (String) data.get("script");
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getGraphNoTx();
         try{
             graph.command(new OCommandScript("sql", script)).execute();
         } catch (Exception e) {

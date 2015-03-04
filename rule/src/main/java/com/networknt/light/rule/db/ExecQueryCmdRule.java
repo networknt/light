@@ -47,7 +47,7 @@ public class ExecQueryCmdRule extends AbstractDbRule implements Rule {
             json = execQueryCmd(graph, data);
         } catch (Exception e) {
             logger.error("Exception:", e);
-            inputMap.put("result", Util.stacktraceToString(e));
+            inputMap.put("error", Util.stacktraceToString(e));
             inputMap.put("responseCode", 500);
             return false;
         } finally {

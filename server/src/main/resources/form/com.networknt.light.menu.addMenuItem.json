@@ -46,7 +46,7 @@
                 "type": "array",
                 "format": "strapselectdynamic"
             },
-            "menuItems": {
+            "out_Own": {
                 "type": "array",
                 "title": "Menu Items",
                 "format": "strapselectdynamic"
@@ -69,10 +69,10 @@
             }
         },
         {
-            "key": "menuItems",
+            "key": "out_Own",
             "options": {
                 "category": "menu",
-                "name": "getAllMenuItem"
+                "name": "getMenuItemMap"
             }
         }
     ]

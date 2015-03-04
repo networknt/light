@@ -306,7 +306,7 @@
         "admin",
         "owner"
       ],
-      "ruleClass": "com.networknt.light.rule.menu.GetAllMenuItemRule"
+      "ruleClass": "com.networknt.light.rule.menu.GetMenuItemMapRule"
     },
     "createUserId": "stevehu",
     "createDate": "2015-02-15T21:25:36.978",

@@ -1,0 +1,34 @@
+{
+  "formId": "com.networknt.light.db.execQueryCommand",
+  "version": 1,
+  "action" : [{
+    "category" : "db",
+    "name" : "execQueryCmd",
+    "readOnly": true,
+    "title": "Execute",
+    "success" : "/page/com.networknt.light.db.admin.home"
+  }],
+  "schema": {
+    "type": "object",
+    "title": "Execute Command",
+    "required": ["script"],
+    "properties": {
+      "script": {
+        "title": "Script",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    {
+      "key": "script",
+      "type": "ace",
+      "style": {"height" : "500px"},
+      "aceOptions": {
+        "theme": "eclipse",
+        "mode" : "sql"
+      },
+      "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+    }
+  ]
+}
