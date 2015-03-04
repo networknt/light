@@ -19,6 +19,7 @@ package com.networknt.light.rule.user;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public class GetAllUserRule extends AbstractUserRule implements Rule {
             // retrieve everything as this is the owner
             data.remove("host"); // removed the host added by RestHandler.
         }
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             long total = getTotalNumberUserFromDb(graph, data);
             if(total > 0) {

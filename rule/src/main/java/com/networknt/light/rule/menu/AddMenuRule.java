@@ -21,6 +21,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class AddMenuRule extends AbstractMenuRule implements Rule {
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String error = null;
         String host = (String)data.get("host");
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             String json = getMenu(graph, (String)data.get("host"));
             if(json != null) {

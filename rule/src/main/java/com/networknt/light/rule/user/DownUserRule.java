@@ -23,6 +23,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
@@ -43,7 +44,7 @@ public class DownUserRule extends AbstractUserRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         String error = null;
 
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             Map<String,Object> userMap = (Map<String, Object>)payload.get("user");
             String voteUserId = (String)userMap.get("userId");

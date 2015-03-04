@@ -73,7 +73,7 @@ public class MenuRuleTest extends TestCase {
     public void testExecute() throws Exception {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         boolean ruleResult = false;
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             JsonToken ownerToken = null;
             JsonToken userToken = null;

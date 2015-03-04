@@ -315,7 +315,7 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
             OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-                List<ODocument> docs = graph.command(query).execute();
+                List<ODocument> docs = graph.getRawGraph().command(query).execute();
                 transforms = new ArrayList<Map<String, Object>> ();
                 if(docs != null) {
                     for(ODocument doc: docs) {

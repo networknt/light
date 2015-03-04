@@ -23,6 +23,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
@@ -67,7 +68,7 @@ public class DelAccessRule extends AbstractAccessRule implements Rule {
                     inputMap.put("responseCode", 403);
                 } else {
                     // check if the access control exist or not.
-                    OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+                    OrientGraph graph = ServiceLocator.getInstance().getGraph();
                     try {
                         Vertex access = DbService.getVertexByRid(graph, rid);
                         if(access == null) {

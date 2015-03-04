@@ -22,6 +22,7 @@ import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.*;
@@ -46,7 +47,7 @@ public class UpdMenuItemRule extends AbstractMenuRule implements Rule {
             error = "User can only update menuItem for host: " + host;
             inputMap.put("responseCode", 401);
         } else {
-            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 Vertex menuItem = DbService.getVertexByRid(graph, rid);
                 if(menuItem == null) {

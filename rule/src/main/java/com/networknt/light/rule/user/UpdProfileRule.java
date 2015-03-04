@@ -21,6 +21,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.Map;
@@ -41,7 +42,7 @@ public class UpdProfileRule extends AbstractUserRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String rid = (String)user.get("@rid");
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             Vertex updateUser = DbService.getVertexByRid(graph, rid);
             if(updateUser != null) {

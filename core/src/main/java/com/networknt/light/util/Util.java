@@ -16,6 +16,9 @@
 
 package com.networknt.light.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Map;
@@ -24,8 +27,11 @@ import java.util.Map;
  * Created by husteve on 8/28/2014.
  */
 public class Util {
+    static final Logger logger = LoggerFactory.getLogger(Util.class);
+
     public static String getCommandRuleId(Map<String, Object> jsonMap) throws Exception {
         Class c = Class.forName("com.networknt.light.rule.Rule");
+        logger.debug("jsonMap = "  + jsonMap);
         String commandName = (String) jsonMap.get("name");
         // Ev rules should only be called internally not from browser.
         if(commandName.endsWith("Ev")) {

@@ -19,6 +19,7 @@ package com.networknt.light.rule.user;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.HashUtil;
 import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
             error = "The email address " + email + " has been signed up. Please login or recover your password.";
             inputMap.put("responseCode", 400);
         } else {
-            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
 
             } catch (Exception e) {

@@ -19,7 +19,11 @@ package com.networknt.light.rule.rule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.server.DbService;
+import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
 import java.util.Map;
@@ -41,11 +45,11 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
         String rid = (String)data.get("@rid");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;
-        /*
+
         String host = (String)user.get("host");
         if(host != null) {
             if(!host.equals(data.get("host"))) {
-                error = "User can only update rule for host: " + host;
+                error = "You can only update rule for host: " + host;
                 inputMap.put("responseCode", 403);
             } else {
                 // make sure the ruleClass contains the host.
@@ -53,55 +57,38 @@ public class UpdRuleRule extends AbstractRuleRule implements Rule {
                     // you are not allowed to update rule as it is not owned by the host.
                     error = "ruleClass is not owned by the host: " + host;
                     inputMap.put("responseCode", 403);
-                } else {
-                    ODocument rule = DbService.getODocumentByRid(rid);
-                    if(rule == null) {
-                        error = "Rule with @rid " + rid + " cannot be found";
-                        inputMap.put("responseCode", 404);
-                    } else {
-                        int storedVersion = rule.field("@version");
-                        if(inputVersion != storedVersion) {
-                            error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
-                            inputMap.put("responseCode", 400);
-                        } else {
-                            // remove the rule instance from Rule Engine Cache
-                            RuleEngine.getInstance().removeRule(ruleClass);
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
-                            eventData.put("ruleClass", ruleClass);
-                            eventData.put("sourceCode", data.get("sourceCode"));
-                            eventData.put("updateDate", new java.util.Date());
-                            eventData.put("updateUserId", user.get("userId"));
-                        }
-                    }
-                }
-            }
-        } else {
-            ODocument rule = DbService.getODocumentByRid(rid);
-            if(rule == null) {
-                error = "Rule with @rid " + rid + " cannot be found";
-                inputMap.put("responseCode", 404);
-            } else {
-                int storedVersion = rule.field("@version");
-                if(inputVersion != storedVersion) {
-                    error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
-                    inputMap.put("responseCode", 400);
-                } else {
-                    // remove the rule instance from Rule Engine Cache
-                    RuleEngine.getInstance().removeRule(ruleClass);
-
-                    Map eventMap = getEventMap(inputMap);
-                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                    inputMap.put("eventMap", eventMap);
-                    eventData.put("ruleClass", ruleClass);
-                    eventData.put("sourceCode", data.get("sourceCode"));
-                    eventData.put("updateDate", new java.util.Date());
-                    eventData.put("updateUserId", user.get("userId"));
                 }
             }
         }
-        */
+        if(error == null) {
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
+            try {
+                Vertex rule = DbService.getVertexByRid(graph, rid);
+                if(rule == null) {
+                    error = "Rule with @rid " + rid + " cannot be found";
+                    inputMap.put("responseCode", 404);
+                } else {
+                    int storedVersion = rule.getProperty("@version");
+                    if(inputVersion != storedVersion) {
+                        error = "Updating version " + inputVersion + " doesn't match stored version " + storedVersion;
+                        inputMap.put("responseCode", 400);
+                    } else {
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
+                        eventData.put("ruleClass", ruleClass);
+                        eventData.put("sourceCode", data.get("sourceCode"));
+                        eventData.put("updateDate", new java.util.Date());
+                        eventData.put("updateUserId", user.get("userId"));
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
+            }
+        }
         if(error != null) {
             inputMap.put("error", error);
             return false;

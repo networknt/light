@@ -47,7 +47,7 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
             error = "ClientId is required";
             inputMap.put("responseCode", 400);
         } else {
-            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 Vertex user = null;
                 if(isEmail(userIdEmail)) {

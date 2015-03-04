@@ -80,7 +80,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
     }
     */
 
-    protected String getPageById(OrientGraphNoTx graph, String pageId) {
+    protected String getPageById(OrientGraph graph, String pageId) {
         String json = null;
         Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
@@ -219,7 +219,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected String getAllPage(OrientGraphNoTx graph, String host) {
+    protected String getAllPage(OrientGraph graph, String host) {
         String json = null;
         String sql = "SELECT FROM Page";
         if(host != null) {
@@ -231,7 +231,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected String getPageMap(OrientGraphNoTx graph, String host) throws Exception {
+    protected String getPageMap(OrientGraph graph, String host) throws Exception {
         String sql = "SELECT FROM Page";
         if(host != null) {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";

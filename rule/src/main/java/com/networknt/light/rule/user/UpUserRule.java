@@ -23,6 +23,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
@@ -45,7 +46,7 @@ public class UpUserRule extends AbstractUserRule implements Rule {
         Map<String,Object> userMap = (Map<String, Object>)payload.get("user");
         String voteUserId = (String)userMap.get("userId");
         String userRid = (String)data.get("@rid");
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OrientVertex user = (OrientVertex)DbService.getVertexByRid(graph, userRid);
             OrientVertex voteUser = (OrientVertex)graph.getVertexByKey("User.userId", voteUserId);

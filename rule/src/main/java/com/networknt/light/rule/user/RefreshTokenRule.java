@@ -20,6 +20,7 @@ import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.HashMap;
@@ -42,17 +43,16 @@ public class RefreshTokenRule extends AbstractUserRule implements Rule {
         String refreshToken = (String)data.get("refreshToken");
         String userId = (String)data.get("userId");
         String clientId = (String)data.get("clientId");
-        String host = (String)data.get("host");
         if(refreshToken == null || userId == null || clientId == null) {
             inputMap.put("responseCode", 401);
             error = "Refresh token or userId or clientId is missing";
         } else {
-            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 Vertex user = getUserByUserId(graph, userId);
                 if(user != null) {
                     Vertex credential = user.getProperty("credential");
-                    if (checkRefreshToken(credential, host, refreshToken)) {
+                    if (checkRefreshToken(credential, clientId, refreshToken)) {
                         String jwt = generateToken(user, clientId);
                         if (jwt != null) {
                             Map<String, String> tokens = new HashMap<String, String>();

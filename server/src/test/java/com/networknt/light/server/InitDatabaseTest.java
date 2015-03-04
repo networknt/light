@@ -80,7 +80,7 @@ public class InitDatabaseTest  extends TestCase {
         try {
             OrientGraph graph = ServiceLocator.getInstance().getGraph();
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select from Menu where host = ?");
-            List<ODocument> result = graph.command(query).execute("injector");
+            List<ODocument> result = graph.getRawGraph().command(query).execute("injector");
             if(result.size() > 0) {
                 ODocument doc = result.get(0);
                 System.out.println("doc=" + doc.toJSON());

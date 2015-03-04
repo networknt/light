@@ -189,7 +189,7 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         }
     }
 
-    protected String getMenu(OrientGraphNoTx graph, String host) {
+    protected String getMenu(OrientGraph graph, String host) {
         String json = null;
         Map<String, Object> menuMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("menuMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)menuMap.get("cache");
@@ -214,7 +214,7 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected String getMenuItem(OrientGraphNoTx graph, String menuItemId) throws Exception {
+    protected String getMenuItem(OrientGraph graph, String menuItemId) throws Exception {
         String json = null;
         Vertex menuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
         if(menuItem != null) {
@@ -223,7 +223,7 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected String getAllMenu(OrientGraphNoTx graph, String host) {
+    protected String getAllMenu(OrientGraph graph, String host) {
         String json = null;
         String jsonMenu = null;
         String jsonMenuItem = null;
@@ -294,7 +294,7 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         }
     }
 
-    protected String getMenuItemMap(OrientGraphNoTx graph, String host) throws Exception {
+    protected String getMenuItemMap(OrientGraph graph, String host) throws Exception {
         String sql = "SELECT FROM MenuItem";
         if(host != null) {
             sql += " WHERE host = ? OR host IS NULL";
