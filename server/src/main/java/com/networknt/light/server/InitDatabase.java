@@ -24,6 +24,7 @@ import com.tinkerpop.blueprints.Parameter;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientEdgeType;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,7 @@ public class InitDatabase {
     }
 
     public static void initVertex() {
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        OrientGraphNoTx graph = ServiceLocator.getInstance().getGraphNoTx();
         try {
 
             OrientVertexType status = graph.createVertexType("Status");
@@ -222,8 +223,6 @@ public class InitDatabase {
             OrientEdgeType downVote = graph.createEdgeType("DownVote");
             OrientEdgeType own = graph.createEdgeType("Own");
             OrientEdgeType depend = graph.createEdgeType("Depend");
-
-
         } catch (Exception e) {
             logger.error("Exception:", e);
         } finally {

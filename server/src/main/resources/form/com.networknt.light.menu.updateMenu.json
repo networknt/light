@@ -17,7 +17,7 @@
                 "title": "Host that the menu is added to",
                 "type": "string"
             },
-            "menuItems": {
+            "out_Own": {
                 "type": "array",
                 "title": "Menu Items",
                 "format": "strapselectdynamic"
@@ -27,10 +27,10 @@
     "form": [
         "host",
         {
-            "key": "menuItems",
+            "key": "out_Own",
             "options": {
                 "category": "menu",
-                "name": "getAllMenuItem"
+                "name": "getMenuItemMap"
             }
         }
     ]

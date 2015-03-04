@@ -153,6 +153,10 @@ public class ServiceLocator {
         return getFactory().getTx();
     }
 
+    public OrientGraphNoTx getGraphNoTx() {
+        return getFactory().getNoTx();
+    }
+
     public Map<String, Object> getHostMap() {
         loadHostConfig();
         return hostMap;

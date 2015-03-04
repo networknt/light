@@ -33,8 +33,16 @@
             $location.path('/form/com.networknt.light.db.exportDb');
         };
 
-        $scope.execCommand = function() {
-            $location.path('/form/com.networknt.light.db.execCommand');
+        $scope.execSchemaCommand = function() {
+            $location.path('/form/com.networknt.light.db.execSchemaCommand');
+        };
+
+        $scope.execUpdateCommand = function() {
+            $location.path('/form/com.networknt.light.db.execUpdateCommand');
+        };
+
+        $scope.execQueryCommand = function() {
+            $location.path('/page/com-networknt-light-v-db-query-command');
         };
 
         $scope.replayEvent = function() {
@@ -54,7 +62,9 @@
                 <tab heading="Event">
                     <h1>Event</h1>
                     <p><a ng-click="exportDb()" href="">Export Database</a></p>
-                    <p><a ng-click="execCommand()" href="">Exec Commands</a></p>
+                    <p><a ng-click="execSchemaCommand()" href="">Exec Schema Commands</a></p>
+                    <p><a ng-click="execUpdateCommand()" href="">Exec Update Commands</a></p>
+                    <p><a ng-click="execQueryCommand()" href="">Exec Query Commands</a></p>
                     <p><a ng-click="downloadEvent()" href="">Download Events</a></p>
                     <p><a ng-click="replayEvent()" href="">Replay Events</a></p>
                 </tab>
