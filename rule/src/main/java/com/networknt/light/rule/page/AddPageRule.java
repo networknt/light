@@ -20,6 +20,7 @@ import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class AddPageRule extends AbstractPageRule implements Rule {
             // remove host as this is the owner
             data.remove("host");
         }
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             String json = getPageById(graph, pageId);
             if(json != null) {

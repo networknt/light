@@ -21,6 +21,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class UpdPageRule extends AbstractPageRule implements Rule {
             inputMap.put("responseCode", 401);
         } else {
             if(rid != null) {
-                OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+                OrientGraph graph = ServiceLocator.getInstance().getGraph();
                 Vertex page = null;
                 try {
                     page = DbService.getVertexByRid(graph, rid);

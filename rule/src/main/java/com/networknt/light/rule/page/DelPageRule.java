@@ -21,6 +21,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class DelPageRule extends AbstractPageRule implements Rule {
             error = "You can only delete page from host: " + host;
             inputMap.put("responseCode", 403);
         } else {
-            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 Vertex page = DbService.getVertexByRid(graph, rid);
                 if(page != null) {

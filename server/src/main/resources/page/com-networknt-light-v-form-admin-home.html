@@ -18,8 +18,8 @@
                 value: 'delete'
             },
             {
-                title: 'Id',
-                value: 'id'
+                title: 'Form Id',
+                value: 'formId'
             },
             {
                 title: 'Host',
@@ -108,7 +108,7 @@
                         <tbody>
                         <tr>
                             <td></td>
-                            <td><input ng-model="filter.id" type="text" /></td>
+                            <td><input ng-model="filter.formId" type="text" /></td>
                             <td><input ng-model="filter.host" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
                             <td><input ng-model="filter.createDate" type="text" /></td>
@@ -117,7 +117,7 @@
                         </tr>
                         <tr ng-repeat="form in forms | filter: filter | orderBy: sort.sortedBy">
                             <td><a href ng-click="delete(form)">Delete</a></td>
-                            <td><a href ng-click="update(form)">{{form.id}}</a></td>
+                            <td><a href ng-click="update(form)">{{form.formId}}</a></td>
                             <td>{{form.host}}</td>
                             <td>{{form.createUserId}}</td>
                             <td>{{form.createDate}}</td>

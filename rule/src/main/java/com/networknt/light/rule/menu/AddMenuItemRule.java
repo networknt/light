@@ -20,6 +20,7 @@ import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class AddMenuItemRule extends AbstractMenuRule implements Rule {
             error = "You can only add menuItem for host: " + host;
             inputMap.put("responseCode", 403);
         } else {
-            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 String json = getMenuItem(graph, (String) data.get("menuItemId"));
                 if(json != null) {

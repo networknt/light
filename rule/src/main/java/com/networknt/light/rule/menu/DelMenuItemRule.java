@@ -21,6 +21,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
@@ -45,7 +46,7 @@ public class DelMenuItemRule extends AbstractMenuRule implements Rule {
             error = "User can only delete menuItem for host: " + host;
             inputMap.put("responseCode", 401);
         } else {
-            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 Vertex menuItem = DbService.getVertexByRid(graph, rid);
                 if(menuItem == null) {

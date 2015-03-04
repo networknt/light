@@ -129,7 +129,7 @@ public abstract class AbstractRoleRule extends AbstractRule implements Rule {
         }
     }
 
-    protected String getRoles(OrientGraphNoTx graph, String host) {
+    protected String getRoles(OrientGraph graph, String host) {
         String sql = "SELECT FROM Role";
         if(host != null) {
             sql = sql + " WHERE host = '" + host + "' OR host IS NULL";
@@ -157,7 +157,7 @@ public abstract class AbstractRoleRule extends AbstractRule implements Rule {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
-            List<ODocument> roles = graph.command(query).execute();
+            List<ODocument> roles = graph.getRawGraph().command(query).execute();
             if(roles.size() > 0) {
                 List<Map<String, String>> list = new ArrayList<Map<String, String>>();
                 for(ODocument doc: roles) {

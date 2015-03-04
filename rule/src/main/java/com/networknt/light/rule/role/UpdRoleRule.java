@@ -22,6 +22,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class UpdRoleRule extends AbstractRoleRule implements Rule {
         String rid = (String)data.get("@rid");
         String error = null;
         String host = (String)user.get("host");
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         if(host != null) {
             if(!host.equals(data.get("host"))) {
                 error = "User can only update role for host: " + host;

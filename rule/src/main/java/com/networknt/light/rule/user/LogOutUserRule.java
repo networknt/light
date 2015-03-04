@@ -21,6 +21,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 
 import java.util.Map;
@@ -43,7 +44,7 @@ public class LogOutUserRule extends AbstractUserRule implements Rule {
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String rid = (String)user.get("@rid");
         // check if the rid exists or not. if exists, then create event.
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             Vertex vertex = DbService.getVertexByRid(graph, rid);
             if(vertex != null) {

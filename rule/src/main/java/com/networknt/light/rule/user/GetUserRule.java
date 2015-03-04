@@ -21,6 +21,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
@@ -41,7 +42,7 @@ public class GetUserRule extends AbstractUserRule implements Rule {
         String rid = (String) data.get("@rid");
         String email = (String) data.get("email");
         String userId = (String) data.get("userId");
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             if(rid != null) {
                 OrientVertex user = (OrientVertex)DbService.getVertexByRid(graph, rid);

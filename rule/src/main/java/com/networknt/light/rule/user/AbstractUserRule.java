@@ -87,15 +87,15 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return userInDb;
     }
 
-    protected Vertex getUserByUserId(OrientGraphNoTx graph, String userId) throws Exception {
+    protected Vertex getUserByUserId(OrientGraph graph, String userId) throws Exception {
         return graph.getVertexByKey("User.userId", userId);
     }
 
-    protected Vertex getUserByEmail(OrientGraphNoTx graph, String email) throws Exception {
+    protected Vertex getUserByEmail(OrientGraph graph, String email) throws Exception {
         return graph.getVertexByKey("User.email", email);
     }
 
-    protected Vertex getCredential(OrientGraphNoTx graph, Vertex user) throws Exception {
+    protected Vertex getCredential(OrientGraph graph, Vertex user) throws Exception {
         return graph.getVertex(user.getProperty("credential"));
     }
 
@@ -275,7 +275,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
                                 refreshTokens.add(hashedRefreshToken);
                                 clientRefreshTokens.put(clientId, refreshTokens);
                             }
-
+                            credential.setProperty("clientRefreshTokens", clientRefreshTokens);
                         } else {
                             // never logged in, create the map.
                             clientRefreshTokens = new HashMap<String, List<String>>();
@@ -338,12 +338,12 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         }
     }
 
-    boolean checkRefreshToken(Vertex credential, String host, String refreshToken) throws Exception {
+    boolean checkRefreshToken(Vertex credential, String clientId, String refreshToken) throws Exception {
         boolean result = false;
         if(credential != null && refreshToken != null) {
             Map clientRefreshTokens = credential.getProperty("clientRefreshTokens");
             if(clientRefreshTokens != null) {
-                List<String> refreshTokens = (List)clientRefreshTokens.get(host);
+                List<String> refreshTokens = (List)clientRefreshTokens.get(clientId);
                 if(refreshTokens != null) {
                     String hashedRefreshToken = HashUtil.md5(refreshToken);
                     for(String token: refreshTokens) {
@@ -405,7 +405,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
     }
 
     // TODO refactor it to be generic. table name as part of the criteria? or a parameter?
-    protected long getTotalNumberUserFromDb(OrientGraphNoTx graph, Map<String, Object> criteria) throws Exception {
+    protected long getTotalNumberUserFromDb(OrientGraph graph, Map<String, Object> criteria) throws Exception {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) as count FROM User");
         String whereClause = DbService.getWhereClause(criteria);
         if(whereClause != null && whereClause.length() > 0) {
@@ -413,11 +413,11 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         }
         logger.debug("sql=" + sql);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());
-        List<ODocument> list = graph.command(query).execute();
+        List<ODocument> list = graph.getRawGraph().command(query).execute();
         return list.get(0).field("count");
     }
 
-    protected String getUserFromDb(OrientGraphNoTx graph, Map<String, Object> criteria) throws Exception {
+    protected String getUserFromDb(OrientGraph graph, Map<String, Object> criteria) throws Exception {
         String json = null;
         StringBuilder sql = new StringBuilder("SELECT FROM User ");
         String whereClause = DbService.getWhereClause(criteria);
@@ -441,7 +441,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         }
         logger.debug("sql=" + sql);
         OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());
-        List<ODocument> list = graph.command(query).execute();
+        List<ODocument> list = graph.getRawGraph().command(query).execute();
         if(list.size() > 0) {
             json = OJSONWriter.listToJSON(list, null);
         }
@@ -462,7 +462,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return JwtUtil.getJwt(jwtMap);
     }
 
-    boolean checkPassword(OrientGraphNoTx graph, Vertex user, String inputPassword) throws Exception {
+    boolean checkPassword(OrientGraph graph, Vertex user, String inputPassword) throws Exception {
         Vertex credential = user.getProperty("credential");
         //Vertex credential = getCredential(graph, user);
         String storedPassword = (String) credential.getProperty("password");

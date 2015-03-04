@@ -196,7 +196,7 @@ public class DbService {
         return recordsUpdated;
     }
 
-    public static Vertex getVertexByRid(OrientGraphNoTx graph, String rid) {
+    public static Vertex getVertexByRid(OrientGraph graph, String rid) {
         return graph.getVertex(rid);
     }
 
@@ -233,7 +233,7 @@ public class DbService {
         return v;
     }
 
-    public static boolean hasEdgeToClass(OrientGraphNoTx graph, OrientVertex vertex, String edgeName) throws Exception {
+    public static boolean hasEdgeToClass(OrientGraph graph, OrientVertex vertex, String edgeName) throws Exception {
         boolean result = false;
         if(vertex.countEdges(Direction.IN, edgeName) > 0) {
             result = true;

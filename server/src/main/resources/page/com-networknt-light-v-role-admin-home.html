@@ -19,8 +19,8 @@
                 value: 'delete'
             },
             {
-                title: 'Id',
-                value: 'id'
+                title: 'RoleId',
+                value: 'roleId'
             },
             {
                 title: 'Host',
@@ -107,7 +107,7 @@
                         <tbody>
                         <tr>
                             <td></td>
-                            <td><input ng-model="filter.id" type="text" /></td>
+                            <td><input ng-model="filter.roleId" type="text" /></td>
                             <td>
                                 <select ng-model="filter.host" ng-options="host for host in hosts" >
                                     <option value=""> </option>
@@ -121,7 +121,7 @@
                         </tr>
                         <tr ng-repeat="role in roles | filter: filter | orderBy: sort.sortedBy">
                             <td><a href ng-click="delete(role)">Delete</a></td>
-                            <td><a href ng-click="update(role)">{{role.id}}</a></td>
+                            <td><a href ng-click="update(role)">{{role.roleId}}</a></td>
                             <td>{{role.host}}</td>
                             <td>{{role.desc}}</td>
                             <td>{{role.createUserId}}</td>

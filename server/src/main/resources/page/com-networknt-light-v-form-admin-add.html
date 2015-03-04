@@ -71,7 +71,7 @@
 
         $scope.submitSchema = function() {
             console.log('submitSchema is called');
-            $scope.addFormPost.data.id = $scope.id;
+            $scope.addFormPost.data.formId = $scope.formId;
             $scope.addFormPost.data.schema = $scope.schema;
             $scope.addFormPost.data.form = $scope.form;
             $scope.addFormPost.data.action = $scope.action;
@@ -134,7 +134,7 @@
         </div>
         <div class="col-sm-8">
             <h3>Form Id</h3>
-            <div><input type="text" ng-model="id"></div>
+            <div><input type="text" ng-model="formId"></div>
             <h3>Form</h3>
             <div ui-ace="{ theme: 'eclipse',mode:'json'}" ng-class="{red: !itParsesForm}" ng-model="formJson" class="form-control form"></div>
             <h3>Action</h3>

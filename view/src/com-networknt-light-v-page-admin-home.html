@@ -18,8 +18,8 @@
                 value: 'delete'
             },
             {
-                title: 'Id',
-                value: 'id'
+                title: 'Page Id',
+                value: 'pageId'
             },
             {
                 title: 'Host',
@@ -111,7 +111,7 @@
                         <tbody>
                         <tr>
                             <td></td>
-                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.id" type="text" /></td>
+                            <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.pageId" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.host" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.createUserId" type="text" /></td>
                             <td><input on-enter-blur on-blur-change="filterResult()" ng-model="filter.createDate" type="text" /></td>
@@ -120,7 +120,7 @@
                         </tr>
                         <tr ng-repeat="page in pages | filter: filter | orderBy: sort.sortedBy">
                             <td><a href ng-click="delete(page)">Delete</a></td>
-                            <td><a href ng-click="update(page)">{{page.id}}</a></td>
+                            <td><a href ng-click="update(page)">{{page.pageId}}</a></td>
                             <td>{{page.host}}</td>
                             <td>{{page.createUserId}}</td>
                             <td>{{page.createDate}}</td>

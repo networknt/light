@@ -242,7 +242,7 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected String getRuleMap(OrientGraphNoTx graph, String host) throws Exception {
+    protected String getRuleMap(OrientGraph graph, String host) throws Exception {
         String sql = "SELECT FROM Rule";
         if(host != null) {
             sql = sql + " WHERE host = '" + host;

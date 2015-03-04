@@ -49,7 +49,7 @@ public class InitDatabase {
     }
 
     public static void initVertex() {
-        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
 
             OrientVertexType status = graph.createVertexType("Status");
@@ -1612,7 +1612,7 @@ public class InitDatabase {
                             "        }\n" +
                             "        logger.debug(\"sql=\" + sql);\n" +
                             "        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());\n" +
-                            "        List<ODocument> list = graph.command(query).execute();\n" +
+                            "        List<ODocument> list = graph.getRawGraph().command(query).execute();\n" +
                             "        return list.get(0).field(\"count\");\n" +
                             "    }\n" +
                             "\n" +
@@ -1640,7 +1640,7 @@ public class InitDatabase {
                             "        }\n" +
                             "        logger.debug(\"sql=\" + sql);\n" +
                             "        OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql.toString());\n" +
-                            "        List<ODocument> list = graph.command(query).execute();\n" +
+                            "        List<ODocument> list = graph.getRawGraph().command(query).execute();\n" +
                             "        if(list.size() > 0) {\n" +
                             "            json = OJSONWriter.listToJSON(list, null);\n" +
                             "        }\n" +
