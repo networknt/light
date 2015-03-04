@@ -24,7 +24,6 @@ import com.tinkerpop.blueprints.Parameter;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientEdgeType;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 import org.slf4j.LoggerFactory;
 
@@ -929,7 +928,6 @@ public class InitDatabase {
                             "import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
-                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientVertex;\n" +
                             "import org.slf4j.LoggerFactory;\n" +
                             "\n" +
@@ -1138,7 +1136,7 @@ public class InitDatabase {
                             "        return json;\n" +
                             "    }\n" +
                             "\n" +
-                            "    protected String getRuleMap(OrientGraphNoTx graph, String host) throws Exception {\n" +
+                            "    protected String getRuleMap(OrientGraph graph, String host) throws Exception {\n" +
                             "        String sql = \"SELECT FROM Rule\";\n" +
                             "        if(host != null) {\n" +
                             "            sql = sql + \" WHERE host = '\" + host;\n" +
@@ -1233,7 +1231,6 @@ public class InitDatabase {
                             "import com.tinkerpop.blueprints.Edge;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
-                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientVertex;\n" +
                             "import org.slf4j.LoggerFactory;\n" +
                             "\n" +
@@ -1286,15 +1283,15 @@ public class InitDatabase {
                             "        return userInDb;\n" +
                             "    }\n" +
                             "\n" +
-                            "    protected Vertex getUserByUserId(OrientGraphNoTx graph, String userId) throws Exception {\n" +
+                            "    protected Vertex getUserByUserId(OrientGraph graph, String userId) throws Exception {\n" +
                             "        return graph.getVertexByKey(\"User.userId\", userId);\n" +
                             "    }\n" +
                             "\n" +
-                            "    protected Vertex getUserByEmail(OrientGraphNoTx graph, String email) throws Exception {\n" +
+                            "    protected Vertex getUserByEmail(OrientGraph graph, String email) throws Exception {\n" +
                             "        return graph.getVertexByKey(\"User.email\", email);\n" +
                             "    }\n" +
                             "\n" +
-                            "    protected Vertex getCredential(OrientGraphNoTx graph, Vertex user) throws Exception {\n" +
+                            "    protected Vertex getCredential(OrientGraph graph, Vertex user) throws Exception {\n" +
                             "        return graph.getVertex(user.getProperty(\"credential\"));\n" +
                             "    }\n" +
                             "\n" +
@@ -1604,7 +1601,7 @@ public class InitDatabase {
                             "    }\n" +
                             "\n" +
                             "    // TODO refactor it to be generic. table name as part of the criteria? or a parameter?\n" +
-                            "    protected long getTotalNumberUserFromDb(OrientGraphNoTx graph, Map<String, Object> criteria) throws Exception {\n" +
+                            "    protected long getTotalNumberUserFromDb(OrientGraph graph, Map<String, Object> criteria) throws Exception {\n" +
                             "        StringBuilder sql = new StringBuilder(\"SELECT COUNT(*) as count FROM User\");\n" +
                             "        String whereClause = DbService.getWhereClause(criteria);\n" +
                             "        if(whereClause != null && whereClause.length() > 0) {\n" +
@@ -1616,7 +1613,7 @@ public class InitDatabase {
                             "        return list.get(0).field(\"count\");\n" +
                             "    }\n" +
                             "\n" +
-                            "    protected String getUserFromDb(OrientGraphNoTx graph, Map<String, Object> criteria) throws Exception {\n" +
+                            "    protected String getUserFromDb(OrientGraph graph, Map<String, Object> criteria) throws Exception {\n" +
                             "        String json = null;\n" +
                             "        StringBuilder sql = new StringBuilder(\"SELECT FROM User \");\n" +
                             "        String whereClause = DbService.getWhereClause(criteria);\n" +
@@ -1661,7 +1658,7 @@ public class InitDatabase {
                             "        return JwtUtil.getJwt(jwtMap);\n" +
                             "    }\n" +
                             "\n" +
-                            "    boolean checkPassword(OrientGraphNoTx graph, Vertex user, String inputPassword) throws Exception {\n" +
+                            "    boolean checkPassword(OrientGraph graph, Vertex user, String inputPassword) throws Exception {\n" +
                             "        Vertex credential = user.getProperty(\"credential\");\n" +
                             "        //Vertex credential = getCredential(graph, user);\n" +
                             "        String storedPassword = (String) credential.getProperty(\"password\");\n" +
@@ -1700,7 +1697,6 @@ public class InitDatabase {
                             "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
-                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "\n" +
                             "import java.util.HashMap;\n" +
                             "import java.util.Map;\n" +
@@ -1725,7 +1721,7 @@ public class InitDatabase {
                             "            error = \"ClientId is required\";\n" +
                             "            inputMap.put(\"responseCode\", 400);\n" +
                             "        } else {\n" +
-                            "            OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();\n" +
+                            "            OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
                             "            try {\n" +
                             "                Vertex user = null;\n" +
                             "                if(isEmail(userIdEmail)) {\n" +
@@ -1934,7 +1930,7 @@ public class InitDatabase {
                             "import com.networknt.light.server.DbService;\n" +
                             "import com.networknt.light.util.ServiceLocator;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
-                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
+                            "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
                             "\n" +
                             "import java.util.List;\n" +
                             "import java.util.Map;\n" +
@@ -1954,7 +1950,7 @@ public class InitDatabase {
                             "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
                             "        Map<String, Object> user = (Map<String, Object>) payload.get(\"user\");\n" +
                             "        String host = (String) user.get(\"host\");\n" +
-                            "        OrientGraphNoTx graph = ServiceLocator.getInstance().getNoTxGraph();\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
                             "        String hostRuleMap = null;\n" +
                             "        try {\n" +
                             "            hostRuleMap = getRuleMap(graph, host);\n" +
@@ -2115,7 +2111,6 @@ public class InitDatabase {
                             "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
-                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "import org.slf4j.LoggerFactory;\n" +
                             "\n" +
                             "import java.util.*;\n" +
