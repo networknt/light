@@ -23,6 +23,7 @@ import com.networknt.light.server.handler.RestHandler;
 import com.networknt.light.server.handler.WebSocketHandler;
 import com.networknt.light.util.ServiceLocator;
 import com.networknt.light.util.Util;
+import com.orientechnologies.orient.core.config.OGlobalConfiguration;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
