@@ -2214,17 +2214,6 @@ public class InitDatabase {
                     "name", "eventId",
                     "value", 10000);
 
-            // create a counter for post id
-            Vertex postId = graph.addVertex("class:Counter",
-                    "name", "postId",
-                    "value", 10000);
-
-
-            // create a counter for comment id
-            Vertex commentId = graph.addVertex("class:Counter",
-                    "name", "commentId",
-                    "value", 10000);
-
             graph.commit();
 
         } catch (Exception e) {

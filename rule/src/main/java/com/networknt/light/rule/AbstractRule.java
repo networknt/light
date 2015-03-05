@@ -112,26 +112,18 @@ public abstract class AbstractRule implements Rule {
         return eventMap;
     }
 
-    /*
-    protected ODocument getODocumentByHostId(String index, String host, String id) {
+
+    protected ODocument getODocumentByHostId(OrientGraph graph, String index, String host, String id) {
         ODocument doc = null;
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OIndex<?> hostIdIdx = db.getMetadata().getIndexManager().getIndex(index);
-            // this is a unique index, so it retrieves a OIdentifiable
-            OCompositeKey key = new OCompositeKey(host, id);
-            OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
-            if (oid != null) {
-                doc = (ODocument)oid.getRecord();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
+        OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(index);
+        // this is a unique index, so it retrieves a OIdentifiable
+        OCompositeKey key = new OCompositeKey(host, id);
+        OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
+        if (oid != null) {
+            doc = (ODocument)oid.getRecord();
         }
         return doc;
     }
-    */
 
     public Map<String, Object> getAccessByRuleClass(String ruleClass) throws Exception {
         Map<String, Object> access = null;
