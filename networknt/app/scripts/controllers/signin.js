@@ -12,7 +12,7 @@ angular.module('lightApp').controller('signinCtrl', ['$rootScope', '$scope', '$h
         name : 'getForm',
         readOnly: true,
         data : {
-            id : 'com.networknt.light.user.signin'
+            formId : 'com.networknt.light.user.signin'
         }
     };
 
