@@ -65,7 +65,11 @@ public class HashUtil {
 
     public static String generateUUID() {
         UUID id = UUID.randomUUID();
-        return "" + id;
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+        bb.putLong(id.getMostSignificantBits());
+        bb.putLong(id.getLeastSignificantBits());
+        Base64 base64 = new Base64();
+        return base64.encodeBase64URLSafeString(bb.array());
     }
 
     public static String md5(String input) {
