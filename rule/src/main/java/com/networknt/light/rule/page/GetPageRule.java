@@ -48,7 +48,7 @@ public class GetPageRule extends AbstractPageRule implements Rule {
             inputMap.put("result", json);
             return true;
         } else {
-            inputMap.put("result", "Page with id " + pageId + " cannot be found.");
+            inputMap.put("error", "Page with id " + pageId + " cannot be found.");
             inputMap.put("responseCode", 404);
             return false;
         }

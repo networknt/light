@@ -6,7 +6,7 @@
     "name" : "execSchemaCmd",
     "readOnly": false,
     "title": "Execute",
-    "success" : "/page/com.networknt.light.db.admin.home"
+    "success" : "/page/com-networknt-light-v-db-admin-home"
   }],
   "schema": {
     "type": "object",
