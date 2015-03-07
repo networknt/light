@@ -25,7 +25,7 @@
 
     <packaging>pom</packaging>
     <name>Light Parent POM</name>
-    <description>Light CMS</description>
+    <description>Light Framework</description>
 
     <licenses>
         <license>
@@ -56,7 +56,6 @@
         <undertow.version>1.1.0.Beta6</undertow.version>
         <hazelcast.version>3.3</hazelcast.version>
         <orientdb.version>2.0.3</orientdb.version>
-        <!--<orient.version>2.0-M1</orient.version>-->
         <concurrentlinkedhashmap.version>1.4.1</concurrentlinkedhashmap.version>
         <jna.version>4.0.0</jna.version>
         <snappy.version>1.1.0.1</snappy.version>
@@ -84,8 +83,8 @@
 
     <modules>
         <module>core</module>
+        <module>rule-engine</module>
         <module>rule</module>
-        <!--<module>workflow</module>-->
         <module>server</module>
     </modules>
 
@@ -262,15 +261,14 @@
             </dependency>
             <dependency>
                 <groupId>com.networknt.light</groupId>
-                <artifactId>rule</artifactId>
+                <artifactId>rule-engine</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.networknt.light</groupId>
-                <artifactId>workflow</artifactId>
+                <artifactId>rule</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.networknt.light</groupId>
                 <artifactId>server</artifactId>
@@ -278,13 +276,6 @@
             </dependency>
 
             <!-- External Dependencies -->
-
-            <dependency>
-                <groupId>com.networknt.light</groupId>
-                <artifactId>rule-engine</artifactId>
-                <version>${rule-engine.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
