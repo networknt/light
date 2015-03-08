@@ -10,6 +10,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.lang.String;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
  * Created by steve on 24/02/15.
  */
 public class GraphTest {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(GraphTest.class);
 
     public static void main(String[] args) {
 
@@ -33,11 +35,14 @@ public class GraphTest {
         OrientGraph graph = factory.getTx();
         try {
             //System.out.println(graph.getVertex("#11:0").getRecord().toJSON("rid, fetchPlan:*:-1"));
+            String result = graph.getVertex("#37:0").getRecord().toJSON("rid,fetchPlan:out_Own:-1");
+            System.out.println(result);
 
             //List<ODocument> result = graph.getRawGraph().query(
             //        new OSQLSynchQuery(sql));
             //System.out.println(OJSONWriter.listToJSON(result, "fetchPlan:children:-1"));
-            System.out.println(getMenu(graph, "example"));
+            //System.out.println(getMenu(graph, "example"));
+            //System.out.println(getBfnTree("forum", "example"));
         } finally {
             graph.shutdown();
         }
@@ -64,6 +69,24 @@ public class GraphTest {
                 }
                 cache.put(host, json);
             }
+        }
+        return json;
+    }
+
+    protected static String getBfnTree(String bfnType, String host) {
+        String json = null;
+        String sql = "SELECT FROM " + bfnType + " WHERE host = ? and in_Own IS NULL ORDER BY id";
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> docs = graph.getRawGraph().command(query).execute(host);
+            if(docs.size() > 0) {
+                json = OJSONWriter.listToJSON(docs, "rid,fetchPlan:out_Own.in_Create:-2 out_Own.out_Create:-2 out_Own:-1");
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
         }
         return json;
     }
