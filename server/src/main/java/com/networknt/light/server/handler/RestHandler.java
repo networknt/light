@@ -81,7 +81,7 @@ public class RestHandler implements HttpHandler {
             exchange.getResponseSender().send((ByteBuffer.wrap("Invalid Request Method".getBytes("utf-8"))));
             return;
         }
-        logger.debug("json = {}", json);
+        //logger.debug("json = {}", json);
 
         // convert json string to map here. It it cannot be converted, then it is invalid command.
         try {
