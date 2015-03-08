@@ -630,29 +630,6 @@
   },
   {
     "@type": "d",
-    "@rid": "#15:39",
-    "@version": 1,
-    "@class": "Event",
-    "ipAddress": "127.0.0.1",
-    "category": "access",
-    "name": "updAccess",
-    "data": {
-      "updateDate": "2015-02-15T23:15:02.573",
-      "accessLevel": "R",
-      "updateUserId": "stevehu",
-      "roles": [
-        "admin",
-        "owner",
-        "userAdmin"
-      ],
-      "ruleClass": "com.networknt.light.rule.user.DelRoleRule"
-    },
-    "createUserId": "stevehu",
-    "createDate": "2015-02-15T23:15:02.573",
-    "@fieldTypes": "createDate=t"
-  },
-  {
-    "@type": "d",
     "@rid": "#15:40",
     "@version": 1,
     "@class": "Event",
