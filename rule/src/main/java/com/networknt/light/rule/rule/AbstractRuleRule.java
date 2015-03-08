@@ -74,6 +74,18 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
             OrientVertex rule = graph.addVertex("class:Rule", data);
             createUser.addEdge("Create", rule);
+            if(rule != null) {
+                // add the rule into compile map
+                Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage("compileMap");
+                ConcurrentMap<String, String> cache = (ConcurrentMap<String, String>)compileMap.get("cache");
+                if(cache == null) {
+                    cache = new ConcurrentLinkedHashMap.Builder<String, String>()
+                            .maximumWeightedCapacity(10000)
+                            .build();
+                    compileMap.put("cache", cache);
+                }
+                cache.put(ruleClass, (String)data.get("sourceCode"));
+            }
 
             // For all the newly added rules, the default security access is role based and only
             // owner can access. For some of the rules, like getForm, getMenu, they are granted
@@ -96,6 +108,8 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                 access.setProperty("createDate", data.get("createDate"));
                 createUser.addEdge("Create", access);
             }
+            graph.commit();
+
             if(access != null) {
                 Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
                 ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
@@ -109,7 +123,6 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                         new TypeReference<HashMap<String, Object>>() {
                         }));
             }
-            graph.commit();
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -125,14 +138,32 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
         try {
             graph.begin();
             Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            boolean toCompile = true;
             // remove the existing rule if there is.
             if(rule != null) {
                 graph.removeVertex(rule);
+                // This is to replace existing rule in memory but due to class loader issue, the
+                // new rule will replace the old one after restart the server. don't compile it.
+                toCompile = false;
             }
             // create a new rule
             Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
             rule = graph.addVertex("class:Rule", data);
             createUser.addEdge("Create", rule);
+
+            if(rule != null && toCompile) {
+                // add the rule into compile map
+                Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage("compileMap");
+                ConcurrentMap<String, String> cache = (ConcurrentMap<String, String>)compileMap.get("cache");
+                if(cache == null) {
+                    cache = new ConcurrentLinkedHashMap.Builder<String, String>()
+                            .maximumWeightedCapacity(10000)
+                            .build();
+                    compileMap.put("cache", cache);
+                }
+                cache.put(ruleClass, (String)data.get("sourceCode"));
+            }
+
             // For all the newly added rules, the default security access is role based and only
             // owner can access. For some of the rules, like getForm, getMenu, they are granted
             // to anyone in the db script. Don't overwrite if access exists for these rules.
@@ -155,6 +186,8 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                 }
                 access.setProperty("createDate", data.get("createDate"));
             }
+            graph.commit();
+
             if(access != null) {
                 Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
                 ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
@@ -168,7 +201,6 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                         new TypeReference<HashMap<String, Object>>() {
                         }));
             }
-            graph.commit();
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -193,6 +225,7 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                 if(updateUser != null) {
                     updateUser.addEdge("Update", rule);
                 }
+                // there is no need to put updated rule into compileMap.
             }
             graph.commit();
         } catch (Exception e) {
@@ -205,14 +238,21 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
     }
 
     protected void delRule(Map<String, Object> data) throws Exception {
+        String ruleClass = (String)data.get("ruleClass");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             graph.begin();
-            Vertex rule = graph.getVertexByKey("Rule.ruleClass", data.get("ruleClass"));
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
             if(rule != null) {
                 graph.removeVertex(rule);
             }
             graph.commit();
+            // check if the rule is in compile cache, remove it.
+            Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage("compileMap");
+            ConcurrentMap<String, String> cache = (ConcurrentMap<String, String>)compileMap.get("cache");
+            if(cache != null) {
+                cache.remove(ruleClass);
+            }
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -240,6 +280,29 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             graph.shutdown();
         }
         return json;
+    }
+
+    public static void loadCompileCache() {
+        String sql = "SELECT FROM Rule";
+        Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage("compileMap");
+        ConcurrentMap<String, String> cache = (ConcurrentMap<String, String>)compileMap.get("cache");
+        if(cache == null) {
+            cache = new ConcurrentLinkedHashMap.Builder<String, String>()
+                    .maximumWeightedCapacity(10000)
+                    .build();
+            compileMap.put("cache", cache);
+        }
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            for (Vertex rule : (Iterable<Vertex>) graph.command(new OCommandSQL(sql)).execute()) {
+                cache.put((String) rule.getProperty("ruleClass"), (String) rule.getProperty("sourceCode"));
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
     }
 
     protected String getRuleMap(OrientGraph graph, String host) throws Exception {
