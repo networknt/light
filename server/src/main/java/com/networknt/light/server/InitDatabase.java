@@ -1945,7 +1945,7 @@ public class InitDatabase {
                             "                ServiceLocator.getInstance().clearMemoryImage();\n" +
                             "                // replay event one by one.\n" +
                             "                for(Map<String, Object> event: events) {\n" +
-                            "                    RuleEngine.getInstance().executeRuleAsync(Util.getEventRuleId(event), event);\n" +
+                            "                    RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);\n" +
                             "                }\n" +
                             "            }\n" +
                             "        }\n" +

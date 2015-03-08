@@ -66,7 +66,7 @@ public class ReplayEventRule implements Rule {
                 ServiceLocator.getInstance().clearMemoryImage();
                 // replay event one by one.
                 for(Map<String, Object> event: events) {
-                    RuleEngine.getInstance().executeRuleAsync(Util.getEventRuleId(event), event);
+                    RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);
                 }
             }
         }
