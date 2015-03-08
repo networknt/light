@@ -19,6 +19,7 @@ package com.networknt.light.server;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.rule.RuleEngine;
+import com.networknt.light.rule.rule.AbstractRuleRule;
 import com.networknt.light.server.handler.RestHandler;
 import com.networknt.light.server.handler.WebSocketHandler;
 import com.networknt.light.util.ServiceLocator;
@@ -86,9 +87,14 @@ public class LightServer {
                 factory.close();
             }
             InitDatabase.initDb();
+            // load rule compileCache here
+            AbstractRuleRule.loadCompileCache();
             // replay all the event to create database image.
             // TODO need to rethink replay as orientdb is used instead of Memory Image.
             replayEvent();
+        } else {
+            // load rule compileCache here
+            AbstractRuleRule.loadCompileCache();
         }
 
         NameVirtualHostHandler virtualHostHandler = new NameVirtualHostHandler();

@@ -56,9 +56,6 @@ public class ImpRuleRule extends AbstractRule implements Rule {
                     error = "ruleClass is not owned by the host: " + host;
                     inputMap.put("responseCode", 403);
                 } else {
-                    // remove the rule instance from Rule Engine Cache
-                    RuleEngine.getInstance().removeRule(ruleClass);
-
                     // Won't check if rule exists or not here.
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
@@ -72,10 +69,6 @@ public class ImpRuleRule extends AbstractRule implements Rule {
                 }
             }
         } else {
-            // check if access exist for the rule exists or not. If exists, then there is
-            // remove the rule instance from Rule Engine Cache
-            RuleEngine.getInstance().removeRule(ruleClass);
-
             // This is owner to import rule, notice that no host is passed in.
             Map eventMap = getEventMap(inputMap);
             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");

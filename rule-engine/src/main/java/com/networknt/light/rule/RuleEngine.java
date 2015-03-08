@@ -31,6 +31,7 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -44,11 +45,10 @@ public class RuleEngine {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RuleEngine.class);
 
-    // build a ruleCache with 1000 rules as max. This cache is thread safe.
-    private ConcurrentLinkedHashMap<String, Rule> ruleCache = new ConcurrentLinkedHashMap.Builder<String, Rule>().maximumWeightedCapacity(1000).build();
-    // ruleCache expiration time and set it to next day's midnight if it passes its current time value
-    private static long cacheExpirationTime = 0L;
-
+    // build a ruleCache with 10000 rules as max. For large system, this might be even bigger. This cache is thread safe.
+    // TODO put this into configuration server.json.
+    private ConcurrentLinkedHashMap<String, Rule> ruleCache = new ConcurrentLinkedHashMap.Builder<String, Rule>().maximumWeightedCapacity(10000).build();
+    // executor services for execute rules async.
     private ExecutorService executorService = Executors.newFixedThreadPool(3);
 
 
@@ -67,49 +67,20 @@ public class RuleEngine {
     }
 
     /**
-     * Once impRule command is executed, this will be called to remove the rule instance from cache.
-     * The next time the same rule is called, it will be loaded from database which is a newer version.
      *
-     * Note: in normal case, impRule command only be called on dev environment as it has to go through
-     * the web interface. By simply replay impRule Event as deployment on production, this method won't
-     * be called and the rule will be refreshed the next day morning. (TODO this has been commented out
-     * and you have to restart the server as the class loader won't try to find the latest compile class
-     * but simply return the old version of the class. Also, you might have issue if new class replacing
-     * old class during runtime. It's better to create a new rule and use A/B testing feature)
-     *
-     * @param ruleClass Rule class name
-     * @return Rule
-     */
-    public Rule removeRule(String ruleClass) {
-        return ruleCache.remove(ruleClass);
-    }
-
-    /**
-     * It is not a good idea to reload rules everyday if they are not changed. Remove the logic here.
      * @param ruleClass
-     * @return
+     * @return Rule instance
      */
     Rule loadRule(String ruleClass) {
-        /*
-        if(System.currentTimeMillis() > cacheExpirationTime) {
-            // ruleCache will be cleared every midnight and the cache will be filled once each rule is called.
-            ruleCache.clear();
-            cacheExpirationTime = getNextMidNightTime();
-        }
-        */
         Rule rule = ruleCache.get(ruleClass);
         if (rule == null) {
-            try {
-                rule = loadRuleFromDb(ruleClass);
-            } catch (Exception e) {
-                logger.error("Exception loadRuleFromDb " + ruleClass, e);
+            // check if there are any rules in compileMap which are newly added or imported
+            Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage("compileMap");
+            ConcurrentMap<String, String> compileCache = (ConcurrentMap<String, String>)compileMap.get("cache");
+            if(compileCache != null && compileCache.size() > 0) {
+                compileRule(compileCache, ruleCache);
             }
-            if(rule != null) {
-                ruleCache.put(ruleClass, rule);
-            } else {
-                // could not find the rule in db
-                logger.error("Could not find rule in Db " + ruleClass);
-            }
+            rule = ruleCache.get(ruleClass);
         }
         return rule;
     }
@@ -130,36 +101,26 @@ public class RuleEngine {
 
     public boolean executeRule(String ruleClass, Object ...objects) throws Exception {
         if(ruleClass == null || ruleClass.length() == 0) {
-            throw new Exception("Invalid rule class name " + ruleClass);
+            throw new Exception("Invalid rule class name");
         }
         Rule rule = loadRule(ruleClass);
         return rule.execute(objects);
     }
 
     /**
-     * Compile rule Java source for a Rule Object
-     * @param ruleClass full package and class name
-     * @param sourceCode java source code of the rule.
-     * @return an rule object that can be called to execute rule
+     * Compile rule Java source map and put into ruleCache
+     * @param compileCache Map<String, String>
+     * @param ruleCache Map<String, Rule>
+     *
      */
-    Rule compileRule(String ruleClass, String sourceCode) {
-        logger.debug("Compile ruleClass = " + ruleClass);
-        Rule rule = null;
+    void compileRule(Map<String, String> compileCache, Map<String, Rule> ruleCache) {
         try {
             // compile the Java source
-            final DiagnosticCollector<JavaFileObject> errs = new DiagnosticCollector<JavaFileObject>();
-            Class<Rule> compiledRule = compiler.compile(ruleClass, sourceCode, errs, new Class<?>[] { Rule.class });
-            log(errs);
-            rule = compiledRule.newInstance();
+            compiler.compile(compileCache, ruleCache);
         } catch (CharSequenceCompilerException e) {
             logger.error("Exception:", e);
             log(e.getDiagnostics());
-        } catch (InstantiationException e) {
-            logger.error("Exception:", e);
-        } catch (IllegalAccessException e) {
-            logger.error("Exception:", e);
         }
-        return rule;
     }
 
     public void shutdown() {
@@ -171,27 +132,6 @@ public class RuleEngine {
             logger.error("Exception:", e);
         }
     }
-    /**
-     * Load rule from database
-     *
-     */
-    private Rule loadRuleFromDb(String ruleClass) {
-        Rule rule = null;
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        try {
-            Vertex v = graph.getVertexByKey("Rule.ruleClass", ruleClass);
-            if(v != null) {
-                String sourceCode = v.getProperty("sourceCode");
-                rule = compileRule(ruleClass, sourceCode);
-            }
-        } catch (Exception e) {
-            logger.error("Exception while loading from db " + ruleClass, e);
-        } finally {
-            graph.shutdown();
-        }
-        return rule;
-    }
-
 
     /**
      * Log diagnostics into the console
@@ -207,21 +147,4 @@ public class RuleEngine {
         }
         logger.info("Compiler: " + messages.toString());
     }
-
-    /**
-     * based on current system date to get next day's midnight time
-     * @return next mid night time
-     */
-    /*
-    private static long getNextMidNightTime() {
-        Calendar cal = new GregorianCalendar();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        // next day
-        cal.add(Calendar.DAY_OF_MONTH, 1);
-        return cal.getTimeInMillis();
-    }
-    */
 }

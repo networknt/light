@@ -55,7 +55,7 @@
         <xnio.version>3.3.0.Beta1</xnio.version>
         <undertow.version>1.1.0.Beta6</undertow.version>
         <hazelcast.version>3.3</hazelcast.version>
-        <orientdb.version>2.0.3</orientdb.version>
+        <orientdb.version>2.0.4</orientdb.version>
         <concurrentlinkedhashmap.version>1.4.1</concurrentlinkedhashmap.version>
         <jna.version>4.0.0</jna.version>
         <snappy.version>1.1.0.1</snappy.version>
@@ -85,6 +85,7 @@
         <module>core</module>
         <module>rule-engine</module>
         <module>rule</module>
+        <module>rule-app</module>
         <module>server</module>
     </modules>
 
@@ -267,6 +268,11 @@
             <dependency>
                 <groupId>com.networknt.light</groupId>
                 <artifactId>rule</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.networknt.light</groupId>
+                <artifactId>rule-app</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

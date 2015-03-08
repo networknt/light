@@ -69,9 +69,6 @@ public class DelRuleRule extends AbstractRuleRule implements Rule {
                             error = "Deleting version " + inputVersion + " doesn't match stored version " + storedVersion;
                             inputMap.put("responseCode", 400);
                         } else {
-                            // remove the rule instance from Rule Engine Cache
-                            RuleEngine.getInstance().removeRule(ruleClass);
-
                             Map eventMap = getEventMap(inputMap);
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                             inputMap.put("eventMap", eventMap);

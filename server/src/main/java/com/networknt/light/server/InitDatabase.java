@@ -830,26 +830,18 @@ public class InitDatabase {
                             "        return eventMap;\n" +
                             "    }\n" +
                             "\n" +
-                            "    /*\n" +
-                            "    protected ODocument getODocumentByHostId(String index, String host, String id) {\n" +
+                            "\n" +
+                            "    protected ODocument getODocumentByHostId(OrientGraph graph, String index, String host, String id) {\n" +
                             "        ODocument doc = null;\n" +
-                            "        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();\n" +
-                            "        try {\n" +
-                            "            OIndex<?> hostIdIdx = db.getMetadata().getIndexManager().getIndex(index);\n" +
-                            "            // this is a unique index, so it retrieves a OIdentifiable\n" +
-                            "            OCompositeKey key = new OCompositeKey(host, id);\n" +
-                            "            OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);\n" +
-                            "            if (oid != null) {\n" +
-                            "                doc = (ODocument)oid.getRecord();\n" +
-                            "            }\n" +
-                            "        } catch (Exception e) {\n" +
-                            "            e.printStackTrace();\n" +
-                            "        } finally {\n" +
-                            "            db.close();\n" +
+                            "        OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(index);\n" +
+                            "        // this is a unique index, so it retrieves a OIdentifiable\n" +
+                            "        OCompositeKey key = new OCompositeKey(host, id);\n" +
+                            "        OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);\n" +
+                            "        if (oid != null) {\n" +
+                            "            doc = (ODocument)oid.getRecord();\n" +
                             "        }\n" +
                             "        return doc;\n" +
                             "    }\n" +
-                            "    */\n" +
                             "\n" +
                             "    public Map<String, Object> getAccessByRuleClass(String ruleClass) throws Exception {\n" +
                             "        Map<String, Object> access = null;\n" +
@@ -860,7 +852,6 @@ public class InitDatabase {
                             "                    .maximumWeightedCapacity(1000)\n" +
                             "                    .build();\n" +
                             "            accessMap.put(\"cache\", cache);\n" +
-                            "            logger.error(\"accessMap cache created =\" + cache);\n" +
                             "        } else {\n" +
                             "            access = (Map<String, Object>)cache.get(ruleClass);\n" +
                             "        }\n" +
@@ -927,6 +918,7 @@ public class InitDatabase {
                             "import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
+                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientVertex;\n" +
                             "import org.slf4j.LoggerFactory;\n" +
                             "\n" +
@@ -967,6 +959,18 @@ public class InitDatabase {
                             "            Vertex createUser = graph.getVertexByKey(\"User.userId\", data.remove(\"createUserId\"));\n" +
                             "            OrientVertex rule = graph.addVertex(\"class:Rule\", data);\n" +
                             "            createUser.addEdge(\"Create\", rule);\n" +
+                            "            if(rule != null) {\n" +
+                            "                // add the rule into compile map\n" +
+                            "                Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage(\"compileMap\");\n" +
+                            "                ConcurrentMap<String, String> cache = (ConcurrentMap<String, String>)compileMap.get(\"cache\");\n" +
+                            "                if(cache == null) {\n" +
+                            "                    cache = new ConcurrentLinkedHashMap.Builder<String, String>()\n" +
+                            "                            .maximumWeightedCapacity(10000)\n" +
+                            "                            .build();\n" +
+                            "                    compileMap.put(\"cache\", cache);\n" +
+                            "                }\n" +
+                            "                cache.put(ruleClass, (String)data.get(\"sourceCode\"));\n" +
+                            "            }\n" +
                             "\n" +
                             "            // For all the newly added rules, the default security access is role based and only\n" +
                             "            // owner can access. For some of the rules, like getForm, getMenu, they are granted\n" +
@@ -989,6 +993,8 @@ public class InitDatabase {
                             "                access.setProperty(\"createDate\", data.get(\"createDate\"));\n" +
                             "                createUser.addEdge(\"Create\", access);\n" +
                             "            }\n" +
+                            "            graph.commit();\n" +
+                            "\n" +
                             "            if(access != null) {\n" +
                             "                Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage(\"accessMap\");\n" +
                             "                ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get(\"cache\");\n" +
@@ -1002,7 +1008,6 @@ public class InitDatabase {
                             "                        new TypeReference<HashMap<String, Object>>() {\n" +
                             "                        }));\n" +
                             "            }\n" +
-                            "            graph.commit();\n" +
                             "        } catch (Exception e) {\n" +
                             "            logger.error(\"Exception:\", e);\n" +
                             "            graph.rollback();\n" +
@@ -1018,14 +1023,32 @@ public class InitDatabase {
                             "        try {\n" +
                             "            graph.begin();\n" +
                             "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "            boolean toCompile = true;\n" +
                             "            // remove the existing rule if there is.\n" +
                             "            if(rule != null) {\n" +
                             "                graph.removeVertex(rule);\n" +
+                            "                // This is to replace existing rule in memory but due to class loader issue, the\n" +
+                            "                // new rule will replace the old one after restart the server. don't compile it.\n" +
+                            "                toCompile = false;\n" +
                             "            }\n" +
                             "            // create a new rule\n" +
                             "            Vertex createUser = graph.getVertexByKey(\"User.userId\", data.remove(\"createUserId\"));\n" +
                             "            rule = graph.addVertex(\"class:Rule\", data);\n" +
                             "            createUser.addEdge(\"Create\", rule);\n" +
+                            "\n" +
+                            "            if(rule != null && toCompile) {\n" +
+                            "                // add the rule into compile map\n" +
+                            "                Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage(\"compileMap\");\n" +
+                            "                ConcurrentMap<String, String> cache = (ConcurrentMap<String, String>)compileMap.get(\"cache\");\n" +
+                            "                if(cache == null) {\n" +
+                            "                    cache = new ConcurrentLinkedHashMap.Builder<String, String>()\n" +
+                            "                            .maximumWeightedCapacity(10000)\n" +
+                            "                            .build();\n" +
+                            "                    compileMap.put(\"cache\", cache);\n" +
+                            "                }\n" +
+                            "                cache.put(ruleClass, (String)data.get(\"sourceCode\"));\n" +
+                            "            }\n" +
+                            "\n" +
                             "            // For all the newly added rules, the default security access is role based and only\n" +
                             "            // owner can access. For some of the rules, like getForm, getMenu, they are granted\n" +
                             "            // to anyone in the db script. Don't overwrite if access exists for these rules.\n" +
@@ -1048,6 +1071,8 @@ public class InitDatabase {
                             "                }\n" +
                             "                access.setProperty(\"createDate\", data.get(\"createDate\"));\n" +
                             "            }\n" +
+                            "            graph.commit();\n" +
+                            "\n" +
                             "            if(access != null) {\n" +
                             "                Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage(\"accessMap\");\n" +
                             "                ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get(\"cache\");\n" +
@@ -1061,7 +1086,6 @@ public class InitDatabase {
                             "                        new TypeReference<HashMap<String, Object>>() {\n" +
                             "                        }));\n" +
                             "            }\n" +
-                            "            graph.commit();\n" +
                             "        } catch (Exception e) {\n" +
                             "            logger.error(\"Exception:\", e);\n" +
                             "            graph.rollback();\n" +
@@ -1086,6 +1110,7 @@ public class InitDatabase {
                             "                if(updateUser != null) {\n" +
                             "                    updateUser.addEdge(\"Update\", rule);\n" +
                             "                }\n" +
+                            "                // there is no need to put updated rule into compileMap.\n" +
                             "            }\n" +
                             "            graph.commit();\n" +
                             "        } catch (Exception e) {\n" +
@@ -1098,14 +1123,21 @@ public class InitDatabase {
                             "    }\n" +
                             "\n" +
                             "    protected void delRule(Map<String, Object> data) throws Exception {\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
                             "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
                             "        try {\n" +
                             "            graph.begin();\n" +
-                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", data.get(\"ruleClass\"));\n" +
+                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
                             "            if(rule != null) {\n" +
                             "                graph.removeVertex(rule);\n" +
                             "            }\n" +
                             "            graph.commit();\n" +
+                            "            // check if the rule is in compile cache, remove it.\n" +
+                            "            Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage(\"compileMap\");\n" +
+                            "            ConcurrentMap<String, String> cache = (ConcurrentMap<String, String>)compileMap.get(\"cache\");\n" +
+                            "            if(cache != null) {\n" +
+                            "                cache.remove(ruleClass);\n" +
+                            "            }\n" +
                             "        } catch (Exception e) {\n" +
                             "            logger.error(\"Exception:\", e);\n" +
                             "            graph.rollback();\n" +
@@ -1133,6 +1165,29 @@ public class InitDatabase {
                             "            graph.shutdown();\n" +
                             "        }\n" +
                             "        return json;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public static void loadCompileCache() {\n" +
+                            "        String sql = \"SELECT FROM Rule\";\n" +
+                            "        Map<String, Object> compileMap = ServiceLocator.getInstance().getMemoryImage(\"compileMap\");\n" +
+                            "        ConcurrentMap<String, String> cache = (ConcurrentMap<String, String>)compileMap.get(\"cache\");\n" +
+                            "        if(cache == null) {\n" +
+                            "            cache = new ConcurrentLinkedHashMap.Builder<String, String>()\n" +
+                            "                    .maximumWeightedCapacity(10000)\n" +
+                            "                    .build();\n" +
+                            "            compileMap.put(\"cache\", cache);\n" +
+                            "        }\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            for (Vertex rule : (Iterable<Vertex>) graph.command(new OCommandSQL(sql)).execute()) {\n" +
+                            "                cache.put((String) rule.getProperty(\"ruleClass\"), (String) rule.getProperty(\"sourceCode\"));\n" +
+                            "            }\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
                             "    }\n" +
                             "\n" +
                             "    protected String getRuleMap(OrientGraph graph, String host) throws Exception {\n" +
@@ -1230,6 +1285,7 @@ public class InitDatabase {
                             "import com.tinkerpop.blueprints.Edge;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
+                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientVertex;\n" +
                             "import org.slf4j.LoggerFactory;\n" +
                             "\n" +
@@ -1470,7 +1526,7 @@ public class InitDatabase {
                             "                                refreshTokens.add(hashedRefreshToken);\n" +
                             "                                clientRefreshTokens.put(clientId, refreshTokens);\n" +
                             "                            }\n" +
-                            "\n" +
+                            "                            credential.setProperty(\"clientRefreshTokens\", clientRefreshTokens);\n" +
                             "                        } else {\n" +
                             "                            // never logged in, create the map.\n" +
                             "                            clientRefreshTokens = new HashMap<String, List<String>>();\n" +
@@ -1533,12 +1589,12 @@ public class InitDatabase {
                             "        }\n" +
                             "    }\n" +
                             "\n" +
-                            "    boolean checkRefreshToken(Vertex credential, String host, String refreshToken) throws Exception {\n" +
+                            "    boolean checkRefreshToken(Vertex credential, String clientId, String refreshToken) throws Exception {\n" +
                             "        boolean result = false;\n" +
                             "        if(credential != null && refreshToken != null) {\n" +
                             "            Map clientRefreshTokens = credential.getProperty(\"clientRefreshTokens\");\n" +
                             "            if(clientRefreshTokens != null) {\n" +
-                            "                List<String> refreshTokens = (List)clientRefreshTokens.get(host);\n" +
+                            "                List<String> refreshTokens = (List)clientRefreshTokens.get(clientId);\n" +
                             "                if(refreshTokens != null) {\n" +
                             "                    String hashedRefreshToken = HashUtil.md5(refreshToken);\n" +
                             "                    for(String token: refreshTokens) {\n" +
@@ -1696,6 +1752,7 @@ public class InitDatabase {
                             "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
+                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "\n" +
                             "import java.util.HashMap;\n" +
                             "import java.util.Map;\n" +
@@ -1930,6 +1987,7 @@ public class InitDatabase {
                             "import com.networknt.light.util.ServiceLocator;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
+                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "\n" +
                             "import java.util.List;\n" +
                             "import java.util.Map;\n" +
@@ -2033,9 +2091,6 @@ public class InitDatabase {
                             "                    error = \"ruleClass is not owned by the host: \" + host;\n" +
                             "                    inputMap.put(\"responseCode\", 403);\n" +
                             "                } else {\n" +
-                            "                    // remove the rule instance from Rule Engine Cache\n" +
-                            "                    RuleEngine.getInstance().removeRule(ruleClass);\n" +
-                            "\n" +
                             "                    // Won't check if rule exists or not here.\n" +
                             "                    Map eventMap = getEventMap(inputMap);\n" +
                             "                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n" +
@@ -2049,10 +2104,6 @@ public class InitDatabase {
                             "                }\n" +
                             "            }\n" +
                             "        } else {\n" +
-                            "            // check if access exist for the rule exists or not. If exists, then there is\n" +
-                            "            // remove the rule instance from Rule Engine Cache\n" +
-                            "            RuleEngine.getInstance().removeRule(ruleClass);\n" +
-                            "\n" +
                             "            // This is owner to import rule, notice that no host is passed in.\n" +
                             "            Map eventMap = getEventMap(inputMap);\n" +
                             "            Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n" +
@@ -2110,6 +2161,7 @@ public class InitDatabase {
                             "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
+                            "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
                             "import org.slf4j.LoggerFactory;\n" +
                             "\n" +
                             "import java.util.*;\n" +
