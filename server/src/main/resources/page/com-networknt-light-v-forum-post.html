@@ -1,7 +1,7 @@
 <script type='text/javascript'>
     angular.module('lightApp').controller('com.networknt.light.ForumPostCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
         $scope.getForumPost = {
-            category : 'forum',
+            category: 'forum',
             name: 'getForumPost',
             readOnly: true,
             data: {}
@@ -11,7 +11,7 @@
         $scope.forums = [];
 
         $scope.fetchResult = function () {
-            $scope.getForumPost.data.id = modelDataService.getModelData();
+            $scope.getForumPost.data.forumId = modelDataService.getModelData();
             modelDataService.setModelData(null); // reset the modelDataService variable.
             $http.post('api/rs', $scope.getForumPost)
                     .success(function (result, status, headers, config) {
@@ -21,11 +21,11 @@
         };
         $scope.fetchResult();
 
-        $scope.post = function() {
-            $location.path("/form/com.networknt.light.forum.post.add/" + $scope.getForumPost.data.id);
+        $scope.post = function () {
+            $location.path("/form/com.networknt.light.forum.post.add/" + $scope.getForumPost.data.forumId);
         };
 
-        $scope.view = function(post) {
+        $scope.view = function (post) {
             modelDataService.setModelData(post);
             $location.path("/page/com-networknt-light-v-forum-post-view");
         };

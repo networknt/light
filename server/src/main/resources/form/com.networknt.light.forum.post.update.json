@@ -1,0 +1,171 @@
+{
+  "formId": "com.networknt.light.forum.post.update",
+  "version": 1,
+  "action": [
+    {
+      "category": "forum",
+      "name": "updPost",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-forum-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Post",
+    "required": [
+      "title",
+      "content"
+    ],
+    "properties": {
+      "id": {
+        "title": "ID",
+        "type": "string",
+        "readonly": "true"
+      },
+      "@rid": {
+        "title": "RID",
+        "type": "string",
+        "readonly": "true"
+      },
+      "title": {
+        "title": "Title [Mandatory, 12 to 90 characters]",
+        "type": "string"
+      },
+      "content": {
+        "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+        "type": "string"
+      },
+      "tags": {
+        "title": "Tags [Maximum 5 tags]",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    {
+      "type": "fieldset",
+      "title": "Post",
+      "items": [
+        {
+          "type": "tabs",
+          "tabs": [
+            {
+              "title": "Edit Content",
+              "items": [
+                {
+                  "title": "ID",
+                  "readonly": true,
+                  "schema": {
+                    "title": "ID",
+                    "type": "string",
+                    "readonly": "true"
+                  },
+                  "ngModelOptions": {
+                    "updateOnDefault": true
+                  },
+                  "key": [
+                    "id"
+                  ],
+                  "type": "text"
+                },
+                {
+                  "title": "RID",
+                  "readonly": true,
+                  "schema": {
+                    "title": "id",
+                    "type": "string"
+                  },
+                  "ngModelOptions": {
+                    "updateOnDefault": true
+                  },
+                  "key": [
+                    "@rid"
+                  ],
+                  "type": "text"
+                },
+                {
+                  "title": "Title [Mandatory, 12 to 90 characters]",
+                  "required": true,
+                  "schema": {
+                    "title": "Title [Mandatory, 12 to 90 characters]",
+                    "type": "string"
+                  },
+                  "ngModelOptions": {
+                    "updateOnDefault": true
+                  },
+                  "key": [
+                    "title"
+                  ],
+                  "type": "text",
+                  "onChange": "updSubjectLength(modelValue)",
+                  "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                },
+                {
+                  "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+                  "required": true,
+                  "schema": {
+                    "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+                    "type": "string"
+                  },
+                  "ngModelOptions": {},
+                  "key": [
+                    "content"
+                  ],
+                  "type": "ace",
+                  "style": {
+                    "height": "500px"
+                  },
+                  "aceOptions": {
+                    "theme": "eclipse",
+                    "mode": "markdown"
+                  },
+                  "onChange": "updContentLength(modelValue)",
+                  "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                },
+                {
+                  "title": "Tags [Maximum 5 tags]",
+                  "schema": {
+                    "title": "Tags [Maximum 5 tags]",
+                    "type": "string"
+                  },
+                  "ngModelOptions": {
+                    "updateOnDefault": true
+                  },
+                  "key": [
+                    "tags"
+                  ],
+                  "type": "textarea",
+                  "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                }
+              ]
+            },
+            {
+              "title": "Preview",
+              "items": [
+                {
+                  "type": "help",
+                  "helpvalue": "<br><h4>Content</h4><br>"
+                },
+                {
+                  "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+                  "required": true,
+                  "schema": {
+                    "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+                    "type": "string"
+                  },
+                  "ngModelOptions": {},
+                  "key": [
+                    "content"
+                  ],
+                  "type": "marked"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

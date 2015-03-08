@@ -1,0 +1,61 @@
+{
+  "formId": "com.networknt.light.forum.add",
+  "version": 1,
+  "action": [
+    {
+      "category": "forum",
+      "name": "addForum",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-forum-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Forum",
+    "required": [
+      "forumId",
+      "desc"
+    ],
+    "properties": {
+      "forumId": {
+        "title": "Forum Id",
+        "type": "string"
+      },
+      "desc": {
+        "title": "Description",
+        "type": "string"
+      },
+      "in_Own": {
+        "title": "Parent",
+        "type": "array",
+        "maxItems": 1,
+        "format": "strapselectdynamic"
+      },
+      "out_Own": {
+        "title": "Children",
+        "type": "array",
+        "format": "strapselectdynamic"
+      }
+    }
+  },
+  "form": [
+    "forumId",
+    "desc",
+    {
+      "key": "in_Own",
+      "options": {
+        "category": "forum",
+        "name": "getForumDropdown"
+      }
+    },
+    {
+      "key": "out_Own",
+      "options": {
+        "category": "forum",
+        "name": "getForumDropdown"
+      }
+    }
+  ]
+}
+
