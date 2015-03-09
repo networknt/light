@@ -28,6 +28,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientBaseGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import net.engio.mbassy.bus.MBassador;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,9 @@ public class ServiceLocator {
 
     Map<String, Map<String, Object>> memoryImage = new ConcurrentHashMap<String,Map<String, Object>>(10, 0.9f, 1);
 
+    Map<String, MBassador<Map<String, Object>>> eventBusMap = new ConcurrentHashMap<>(10, 0.9f, 1);
+
+
     //HazelcastInstance hzInstance = Hazelcast.newHazelcastInstance();
 
     OrientGraphFactory factory = null;
@@ -70,6 +74,15 @@ public class ServiceLocator {
         return hzInstance;
     }
     */
+
+    public MBassador<Map<String, Object>> getEventBus(String topic) {
+        MBassador<Map<String, Object>> eventBus = eventBusMap.get(topic);
+        if(eventBus == null) {
+            eventBus = new MBassador<Map<String, Object>>();
+            eventBusMap.put(topic, eventBus);
+        }
+        return eventBus;
+    }
 
     public String getIp() {
         loadServerConfig();

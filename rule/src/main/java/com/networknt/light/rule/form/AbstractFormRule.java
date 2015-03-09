@@ -39,6 +39,8 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import net.engio.mbassy.bus.MBassador;
+import net.engio.mbassy.listener.Handler;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
@@ -56,6 +58,36 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(AbstractFormRule.class);
 
     public abstract boolean execute (Object ...objects) throws Exception;
+
+    static {
+        System.out.println("AbstractFromRule is called");
+        MBassador<Map<String, Object>> ruleBus = ServiceLocator.getInstance().getEventBus("rule");
+        ruleBus.subscribe(new RuleMessageListenerImpl());
+    }
+
+    private static class RuleMessageListenerImpl {
+        @Handler
+        public void onMessage(Map<String, Object> eventMap) {
+            Map<String, Object> data = (Map<String, Object>)eventMap.get("data");
+            System.out.println("Received: " + eventMap);
+            // which form has a drop down of rules that depending on addRule, delRule and impRule?
+            // it is defined in depend edge from the form to AbstractRuleRule. remove the form from
+            // cache so that the dropdown list can be enriched again when the form is called next
+            // time. The reason I don't reload the form here is because there might be so many rules
+            // imported at the same time and you don't want to reload again and again. Lazy loading.
+
+            // find the vertex for rule com.networknt.light.rule.rule.AbstractRuleRule and find edge
+            // Depend from Form vertex.
+
+            /*
+            Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
+            if(cache != null) {
+                cache.remove(data.get("formId"));
+            }
+            */
+        }
+    }
 
     /*
     static {
