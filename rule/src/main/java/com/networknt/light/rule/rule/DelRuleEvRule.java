@@ -19,6 +19,7 @@ package com.networknt.light.rule.rule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import net.engio.mbassy.bus.MBassador;
 
 import java.util.Map;
 
@@ -30,6 +31,8 @@ public class DelRuleEvRule extends AbstractRuleRule implements Rule {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
         delRule(data);
+        MBassador<Map<String, Object>> ruleBus = ServiceLocator.getInstance().getEventBus("rule");
+        ruleBus.publish(eventMap);
         return true;
     }
 }
