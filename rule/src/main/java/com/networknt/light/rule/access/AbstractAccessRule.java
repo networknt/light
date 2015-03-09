@@ -45,6 +45,13 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by steve on 30/01/15.
+ *
+ * There is no addAccess endpoint as access is pre-populated when rule is added or imported.
+ * You can only update Access policy. Do I need to delete it? Or it will be deleted once rule
+ * is deleted.
+ *
+ * TODO Delete access when rule is deleted and retire delAccess
+ *
  */
 public abstract class AbstractAccessRule extends AbstractRule implements Rule {
     static final Logger logger = LoggerFactory.getLogger(AbstractAccessRule.class);
