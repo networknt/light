@@ -4,11 +4,11 @@
         "category" : "user",
         "name" : "signUpUser",
         "readOnly": false,
-        "title" : "Register"
+        "title": "Register"
     }],
     "schema": {
         "type": "object",
-        "required": ["userId", "email", "password", "password_confirm"],
+        "required": ["userId", "email", "password", "passwordConfirm"],
         "title": "Sign Up",
         "properties": {
             "userId": {

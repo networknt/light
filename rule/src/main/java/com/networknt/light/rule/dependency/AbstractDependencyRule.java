@@ -15,10 +15,19 @@
  */
 package com.networknt.light.rule.dependency;
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by steve on 3/9/2015.
@@ -27,5 +36,34 @@ public abstract class AbstractDependencyRule extends AbstractRule implements Rul
     static final Logger logger = LoggerFactory.getLogger(AbstractDependencyRule.class);
 
     public abstract boolean execute (Object ...objects) throws Exception;
+
+    protected void addDependency(Map<String, Object> data) throws Exception {
+        String json = null;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex sourceRule = graph.getVertexByKey("Rule.ruleClass", data.get("sourceRuleClass"));
+            Vertex destRule = graph.getVertexByKey("Rule.ruleClass", data.get("destRuleClass"));
+            Edge edge = sourceRule.addEdge("Depend", destRule);
+            edge.setProperty("content", data.get("content"));
+            graph.commit();
+            //json = edge.getRecord().toJSON();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+        Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
+        if(cache == null) {
+            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(1000)
+                    .build();
+            pageMap.put("cache", cache);
+        }
+        cache.put(data.get("pageId"), json);
+    }
 
 }

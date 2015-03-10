@@ -15,8 +15,19 @@
  */
 package com.networknt.light.rule.dependency;
 
+import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.page.AbstractPageRule;
+
+import java.util.Map;
+
 /**
  * Created by steve on 3/9/2015.
  */
-public class AddDependencyEvRule {
+public class AddDependencyEvRule extends AbstractDependencyRule implements Rule {
+    public boolean execute (Object ...objects) throws Exception {
+        Map<String, Object> eventMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
+        addDependency(data);
+        return true;
+    }
 }
