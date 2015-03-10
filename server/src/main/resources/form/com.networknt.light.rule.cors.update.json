@@ -1,0 +1,31 @@
+{
+  "formId": "com.networknt.light.rule.cors.update",
+  "version": 1,
+  "action" : [{
+    "category" : "rule",
+    "name" : "updCors",
+    "readOnly": false,
+    "title" : "Update",
+    "success" : "/page/com-networknt-light-v-rule-admin-home"
+  }],
+  "schema": {
+    "type": "object",
+    "title": "Cors Update",
+    "required": ["ruleClass", "enableCors"],
+    "properties": {
+      "ruleClass": {
+        "title": "Rule Class",
+        "type": "string",
+        "readonly": true
+      },
+      "enableCors": {
+        "title": "Enable CORS?",
+        "type": "boolean"
+      }
+    }
+  },
+  "form": [
+    "ruleClass",
+    "enableCors"
+  ]
+}
