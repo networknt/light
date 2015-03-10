@@ -124,6 +124,10 @@ public class InitDatabase {
             rule.createProperty("ruleClass", OType.STRING);
             rule.createProperty("host", OType.STRING);
             rule.createProperty("sourceCode", OType.STRING);
+            rule.createProperty("isPublisher", OType.BOOLEAN);
+            rule.createProperty("isSubscriber", OType.BOOLEAN);
+            rule.createProperty("enableCors", OType.BOOLEAN);
+            rule.createProperty("enableEtag", OType.BOOLEAN);
             rule.createProperty("createDate", OType.DATETIME);
             rule.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("ruleClass", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Rule"));
