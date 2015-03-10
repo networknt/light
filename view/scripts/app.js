@@ -50,11 +50,11 @@ var lightApp = angular.module('lightApp', [
         templateUrl: 'views/form.html',
         controller: 'signinCtrl'
       })
-      .when('/form/:id/:parentId?', {
+      .when('/form/:formId/:parentId?', {
         templateUrl: 'views/form.html',
         controller: 'formCtrl'
       })
-      .when('/page/:id', {
+      .when('/page/:pageId', {
         templateUrl: 'views/page.html',
         controller: 'pageCtrl'
       })
