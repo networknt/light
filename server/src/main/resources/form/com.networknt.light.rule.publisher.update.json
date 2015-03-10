@@ -1,0 +1,31 @@
+{
+  "formId": "com.networknt.light.rule.publisher.update",
+  "version": 1,
+  "action" : [{
+    "category" : "rule",
+    "name" : "updPublisher",
+    "readOnly": false,
+    "title" : "Update",
+    "success" : "/page/com-networknt-light-v-rule-admin-home"
+  }],
+  "schema": {
+    "type": "object",
+    "title": "Publisher Update",
+    "required": ["ruleClass", "isPublisher"],
+    "properties": {
+      "ruleClass": {
+        "title": "Rule Class",
+        "type": "string",
+        "readonly": true
+      },
+      "isPublisher": {
+        "title": "Publish Event?",
+        "type": "boolean"
+      }
+    }
+  },
+  "form": [
+    "ruleClass",
+    "isPublisher"
+  ]
+}

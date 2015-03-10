@@ -8,21 +8,21 @@
  */
 angular.module('lightApp').controller('pageCtrl', ['$scope', '$routeParams', '$http', 'toaster', 'modelDataService', function($scope, $routeParams, $http, toaster, modelDataService) {
 
-    console.log('id =', $routeParams.id);
-    console.log('file =', '/' + $routeParams.id + '.html');
+    console.log('pageId =', $routeParams.pageId);
+    console.log('file =', '/' + $routeParams.pageId + '.html');
 
     var getPage = {
         category : 'page',
         name : 'getPage',
         readOnly: true,
         data : {
-            id : $routeParams.id
+            pageId : $routeParams.pageId
         }
     };
 
 
     $scope.html = '';
-    $http.get('/src/' + $routeParams.id + '.html').success (function(data){
+    $http.get('/src/' + $routeParams.pageId + '.html').success (function(data){
         $scope.html = data;
     }).error(function() {
         console.log("Could not load file from src folder, try REST API...");

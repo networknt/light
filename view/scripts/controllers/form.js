@@ -10,7 +10,7 @@ angular.module('lightApp').controller('formCtrl', ['$scope', '$routeParams', '$h
         name : 'getForm',
         readOnly: true,
         data : {
-            id : $routeParams.id,
+            formId : $routeParams.formId,
             parentId: $routeParams.parentId
         }
     };
