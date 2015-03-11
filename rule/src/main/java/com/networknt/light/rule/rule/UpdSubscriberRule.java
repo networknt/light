@@ -13,35 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.networknt.light.rule.rule;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.server.DbService;
-import com.networknt.light.util.ServiceLocator;
-import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 
 import java.util.Map;
 
 /**
- * Created by steve on 3/10/2015.
- *
- * AccessLevel R [owner, admin, ruleAdmin]
- *
+ * Created by steve on 10/03/15.
  */
-public class UpdPublisherRule extends AbstractRuleRule implements Rule {
+public class UpdSubscriberRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map eventMap = getEventMap(inputMap);
         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
         inputMap.put("eventMap", eventMap);
-        String error = updateValidation(inputMap, eventData);
+        String error = updateValidation(inputMap, eventMap);
         if(error != null) {
             inputMap.put("error", error);
             return false;
         } else {
-            eventData.put("isPublisher", data.get("isPublisher"));
+            eventData.put("isSubscriber", data.get("isSubscriber"));
             eventData.put("updateDate", new java.util.Date());
             return true;
         }

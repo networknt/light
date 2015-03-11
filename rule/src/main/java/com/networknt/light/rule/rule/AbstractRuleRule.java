@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -48,22 +49,6 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
 
     public abstract boolean execute (Object ...objects) throws Exception;
 
-    protected String getRuleByRuleClass(String ruleClass) {
-        String json = null;
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        try {
-            OrientVertex rule = (OrientVertex)graph.getVertexByKey("Rule.ruleClass", ruleClass);
-            if(rule != null) {
-                json = rule.getRecord().toJSON();
-            }
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-            throw e;
-        } finally {
-            graph.shutdown();
-        }
-        return json;
-    }
 
     protected void addRule(Map<String, Object> data) throws Exception {
         OrientVertex access = null;
@@ -201,6 +186,106 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
                         new TypeReference<HashMap<String, Object>>() {
                         }));
             }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected String updateValidation(Map<String, Object> inputMap, Map<String, Object> eventData) {
+        Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        String rid = (String)data.get("@rid");
+        String ruleClass = (String)data.get("ruleClass");
+        String error = null;
+        String host = (String)user.get("host");
+        if(host != null) {
+            if(!host.equals(data.get("host"))) {
+                error = "You can only update rule for host: " + host;
+                inputMap.put("responseCode", 403);
+            } else {
+                // make sure the ruleClass contains the host.
+                if(host != null && !ruleClass.contains(host)) {
+                    // you are not allowed to update rule as it is not owned by the host.
+                    error = "ruleClass is not owned by the host: " + host;
+                    inputMap.put("responseCode", 403);
+                }
+            }
+        }
+        if(error == null) {
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
+            try {
+                Vertex rule = DbService.getVertexByRid(graph, rid);
+                if(rule == null) {
+                    error = "Rule with @rid " + rid + " cannot be found";
+                    inputMap.put("responseCode", 404);
+                } else {
+                    eventData.put("ruleClass", ruleClass);
+                    eventData.put("updateUserId", user.get("userId"));
+                }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
+            }
+        }
+        return error;
+    }
+
+    protected void updPublisher(Map<String, Object> data) throws Exception {
+        String ruleClass = (String)data.get("ruleClass");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            if(rule != null) {
+                rule.setProperty("isPublisher", data.get("isPublisher"));
+                rule.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                if(updateUser != null) {
+                    updateUser.addEdge("Update", rule);
+                }
+                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                if(cache != null) {
+                    cache.remove(ruleClass);
+                }
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void updSubscriber(Map<String, Object> data) throws Exception {
+        String ruleClass = (String)data.get("ruleClass");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            if(rule != null) {
+                rule.setProperty("isSubscriber", data.get("isSubscriber"));
+                rule.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                if(updateUser != null) {
+                    updateUser.addEdge("Update", rule);
+                }
+                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                if(cache != null) {
+                    cache.remove(ruleClass);
+                }
+            }
+            graph.commit();
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();

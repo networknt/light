@@ -17,21 +17,17 @@
 package com.networknt.light.rule.rule;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.util.ServiceLocator;
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
-import net.engio.mbassy.bus.MBassador;
 
 import java.util.Map;
 
 /**
- * Created by steve on 07/11/14.
+ * Created by steve on 10/03/15.
  */
-public class DelRuleEvRule extends AbstractRuleRule implements Rule {
+public class UpdSubscriberEvRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        delRule(data);
-        publishEvent(eventMap);
+        updSubscriber(data);
         return true;
     }
 }
