@@ -45,6 +45,10 @@ public class ImpRuleEvRule extends AbstractRuleRule implements Rule {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
         impRule(data);
+        // this is too notify readonly subsystem that the number of rules is changed.
+        // if will only send out event when isPublisher is true for the Rule. Change
+        // it from Rule Admin to enable it or disable it.
+        publishEvent(eventMap);
         return true;
     }
 
