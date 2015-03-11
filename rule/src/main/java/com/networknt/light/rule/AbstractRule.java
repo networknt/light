@@ -29,6 +29,7 @@ import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import net.engio.mbassy.bus.MBassador;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,51 @@ public abstract class AbstractRule implements Rule {
 
     protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
     public abstract boolean execute (Object ...objects) throws Exception;
+
+    protected void publishEvent(Map<String, Object> eventMap) {
+        // get class name
+        System.out.println(this.getClass().getPackage());
+        System.out.println(this.getClass().getName());
+        System.out.println("category = " + eventMap.get("category"));
+        // check if publisher is enabled.
+        Map map = getRuleByRuleClass(this.getClass().getName());
+        Object isPublisher = map.get("isPublisher");
+        if(isPublisher != null && (boolean)isPublisher) {
+            System.out.println("isPublisher");
+            MBassador<Map<String, Object>> eventBus = ServiceLocator.getInstance().getEventBus((String)eventMap.get("category"));
+            eventBus.publish(eventMap);
+        }
+    }
+
+    protected Map<String, Object> getRuleByRuleClass(String ruleClass) {
+        Map<String, Object> map = null;
+        Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+        ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+        if(cache == null) {
+            cache = new ConcurrentLinkedHashMap.Builder<String, Map<String, Object>>()
+                    .maximumWeightedCapacity(1000)
+                    .build();
+            ruleMap.put("cache", cache);
+        } else {
+            map = cache.get(ruleClass);
+        }
+        if(map == null) {
+            OrientGraph graph = ServiceLocator.getInstance().getGraph();
+            try {
+                OrientVertex rule = (OrientVertex)graph.getVertexByKey("Rule.ruleClass", ruleClass);
+                if(rule != null) {
+                    map = rule.getRecord().toMap();
+                    cache.put(ruleClass, map);
+                }
+            } catch (Exception e) {
+                logger.error("Exception:", e);
+                throw e;
+            } finally {
+                graph.shutdown();
+            }
+        }
+        return map;
+    }
 
     /*
     protected ODocument getCategoryByRid(String categoryRid) {

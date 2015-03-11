@@ -53,8 +53,8 @@ public class AddRuleRule extends AbstractRuleRule implements Rule {
                     inputMap.put("responseCode", 403);
                 } else {
                     // check if the rule exists or not
-                    String json = getRuleByRuleClass(ruleClass);
-                    if(json != null) {
+                    Map<String, Object> ruleMap = getRuleByRuleClass(ruleClass);
+                    if(ruleMap != null) {
                         error = "ruleClass for the rule exists";
                         inputMap.put("responseCode", 400);
                     } else {
@@ -71,8 +71,8 @@ public class AddRuleRule extends AbstractRuleRule implements Rule {
             }
         } else {
             // check if the rule exists or not.
-            String json = getRuleByRuleClass((String)data.get("ruleClass"));
-            if(json != null) {
+            Map<String, Object> ruleMap = getRuleByRuleClass((String)data.get("ruleClass"));
+            if(ruleMap != null) {
                 error = "ruleClass for the rule exists";
                 inputMap.put("responseCode", 400);
             } else {
