@@ -92,9 +92,13 @@
             <!-- Nested node template -->
             <script type="text/ng-template" id="nodes_renderer.html">
                 <div ui-tree-handle class="tree-node tree-node-content">
-                    <a class="btn btn-success btn-xs" ng-if="node.children && node.children.length > 0" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon glyphicon-plus': collapsed, 'glyphicon glyphicon-minus': !collapsed}"></span></a>
-                    <a href="http://www.reddit.com/user/JhnnyTsunami" class="author may-blank id-t2_95r8a"><span ng-bind-html="node.createUserId | highlight:pattern | trust"></span></a>&#32;<span>{{node.createDate}}</span>
-                    <div ng-bind-html="node.content | highlight:pattern | trust"></div>
+                    <a class="btn btn-success btn-xs" ng-if="node.out_Own && node.out_Own.length > 0" data-nodrag
+                       ng-click="toggle(this)"><span class="glyphicon"
+                                                     ng-class="{'glyphicon glyphicon-plus': collapsed, 'glyphicon glyphicon-minus': !collapsed}"></span></a>
+                    <a href="http://www.reddit.com/user/JhnnyTsunami" class="author may-blank id-t2_95r8a"><span
+                            ng-bind-html="node.createUserId | highlight:pattern | trust"></span></a>&#32;<span>{{node.createDate}}</span>
+
+                    <div ng-bind-html="node.comment | highlight:pattern | trust"></div>
                     <!--
                     <div class="panel-body">
                         <form name="form" ng-submit="action(node)" class="form-inline" ng-hide="toggledForm">
@@ -108,13 +112,15 @@
                     </div>
                     -->
                 </div>
-                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
-                    <li ng-repeat="node in node.children" ui-tree-node ng-include="'nodes_renderer.html'" ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
+                <ol ui-tree-nodes="" ng-model="node.out_Own" ng-class="{hidden: collapsed}">
+                    <li ng-repeat="node in node.out_Own" ui-tree-node ng-include="'nodes_renderer.html'"
+                        ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
                 </ol>
             </script>
             <div ui-tree id="tree-root">
-                <ol ui-tree-nodes ng-model="comments">
-                    <li ng-repeat="node in comments" ui-tree-node ng-include="'nodes_renderer.html'" ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
+                <ol ui-tree-nodes ng-model="out_Own">
+                    <li ng-repeat="node in out_Own" ui-tree-node ng-include="'nodes_renderer.html'"
+                        ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
                 </ol>
             </div>
         </div>

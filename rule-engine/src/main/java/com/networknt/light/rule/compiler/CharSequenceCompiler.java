@@ -294,6 +294,7 @@ public class CharSequenceCompiler<T> {
                 diagnostics, options, null, sources);
         final Boolean result = task.call();
         if (result == null || !result.booleanValue()) {
+            logger.error("Compile:" + diagnostics);
             throw new CharSequenceCompilerException("Compilation failed.",
                     classes.keySet(), diagnostics);
         }
