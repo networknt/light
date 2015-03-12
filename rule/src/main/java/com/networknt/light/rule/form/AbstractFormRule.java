@@ -71,10 +71,23 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             Map<String, Object> data = (Map<String, Object>)eventMap.get("data");
             System.out.println("Received: " + eventMap);
             // which form has a drop down of rules that depending on addRule, delRule and impRule?
-            // it is defined in depend edge from the form to AbstractRuleRule. remove the form from
+            // it is defined in subscribe data for this rule AbstractFormRule. remove the form from
             // cache so that the dropdown list can be enriched again when the form is called next
             // time. The reason I don't reload the form here is because there might be so many rules
             // imported at the same time and you don't want to reload again and again. Lazy loading.
+            Map map = getRuleByRuleClass(this.getClass().getName());
+            Object isSubscriber = map.get("isSubscriber");
+            if(isSubscriber != null && (boolean)isSubscriber) {
+                Map subMap = (Map)map.get("subMap");
+                List<String> formIds = (List)subMap.get("rule");
+                Map<String, Object> formMap = ServiceLocator.getInstance().getMemoryImage("formMap");
+                ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)formMap.get("cache");
+                if(cache != null) {
+                    for(String formId: formIds) {
+                        cache.remove(formId);
+                    }
+                }
+            }
 
             // find the vertex for rule com.networknt.light.rule.rule.AbstractRuleRule and find edge
             // Depend from Form vertex.
