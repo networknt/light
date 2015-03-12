@@ -62,7 +62,7 @@ public abstract class AbstractRule implements Rule {
         }
     }
 
-    protected Map<String, Object> getRuleByRuleClass(String ruleClass) {
+    protected static Map<String, Object> getRuleByRuleClass(String ruleClass) {
         Map<String, Object> map = null;
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
         ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
