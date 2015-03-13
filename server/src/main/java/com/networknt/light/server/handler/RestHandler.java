@@ -37,6 +37,7 @@ import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
+import io.undertow.util.HttpString;
 import io.undertow.util.Methods;
 import net.oauth.jsontoken.JsonToken;
 import org.slf4j.Logger;
@@ -74,6 +75,15 @@ public class RestHandler implements HttpHandler {
             json = URLDecoder.decode(cmd, "UTF8");
         } else if (Methods.POST.equals(exchange.getRequestMethod())) {
             json = new Scanner(exchange.getInputStream(),"UTF-8").useDelimiter("\\A").next();
+        } else if (Methods.OPTIONS.equals(exchange.getRequestMethod())) {
+            // This is CORS preflight request and it will be handled here instead of forward to
+            // the individual rule.
+            exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
+            exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Methods"), "GET, POST");
+            exchange.getResponseHeaders().put(new HttpString("Access-Control-Max-Age"), "3600");
+            exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Headers"), "accept, content-type");
+            exchange.getResponseHeaders().put(new HttpString("Content-Type"), "application/json; charset=utf-8");
+            return;
         } else {
             logger.error("Invalid Request Method");
             exchange.setResponseCode(400);
@@ -459,6 +469,12 @@ public class RestHandler implements HttpHandler {
             logger.debug("response success: {} ", result);
         }
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+        Map<String, Object> header = (Map<String, Object>)jsonMap.get("header");
+        if(header != null) {
+            for(String s: header.keySet()) {
+                exchange.getResponseHeaders().put(new HttpString(s), (String)header.get(s));
+            }
+        }
         if(result != null) {
             exchange.getResponseSender().send(ByteBuffer.wrap(result.getBytes("utf-8")));
         }
@@ -508,10 +524,10 @@ public class RestHandler implements HttpHandler {
         HeaderMap headerMap = exchange.getRequestHeaders();
         ipAddress = headerMap.getFirst(Headers.X_FORWARDED_FOR_STRING);
         if(ipAddress == null) {
-            logger.debug("could not get ip address from x forward for, try sourceAddress in exchange");
+            //logger.debug("could not get ip address from x forward for, try sourceAddress in exchange");
             ipAddress = exchange.getSourceAddress().getAddress().getHostAddress();
         }
-        logger.debug("ip = {}", ipAddress);
+        //logger.debug("ip = {}", ipAddress);
         return ipAddress;
     }
 
