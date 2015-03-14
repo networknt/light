@@ -83,6 +83,8 @@ public abstract class AbstractRule implements Rule {
                 OrientVertex rule = (OrientVertex)graph.getVertexByKey("Rule.ruleClass", ruleClass);
                 if(rule != null) {
                     map = rule.getRecord().toMap();
+                    // remove sourceCode as we don't need it and it is big
+                    map.remove("sourceCode");
                     OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sqlTransformReq);
                     List<ODocument> docs = graph.getRawGraph().command(query).execute();
                     List<Map<String, Object>> reqTransforms = new ArrayList<Map<String, Object>>();
