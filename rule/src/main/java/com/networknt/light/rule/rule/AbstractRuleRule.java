@@ -237,6 +237,56 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
         return error;
     }
 
+    protected void updEtag(Map<String, Object> data) throws Exception {
+        String ruleClass = (String)data.get("ruleClass");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            if(rule != null) {
+                rule.setProperty("enableEtag", data.get("enableEtag"));
+                rule.setProperty("updateDate", data.get("updateDate"));
+                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                if(cache != null) {
+                    cache.remove(ruleClass);
+                }
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void updCors(Map<String, Object> data) throws Exception {
+        String ruleClass = (String)data.get("ruleClass");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            if(rule != null) {
+                rule.setProperty("enableCors", data.get("enableCors"));
+                rule.setProperty("updateDate", data.get("updateDate"));
+                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                if(cache != null) {
+                    cache.remove(ruleClass);
+                }
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
+
     protected void updPublisher(Map<String, Object> data) throws Exception {
         String ruleClass = (String)data.get("ruleClass");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -246,10 +296,6 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             if(rule != null) {
                 rule.setProperty("isPublisher", data.get("isPublisher"));
                 rule.setProperty("updateDate", data.get("updateDate"));
-                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
-                if(updateUser != null) {
-                    updateUser.addEdge("Update", rule);
-                }
                 Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
                 ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
                 if(cache != null) {

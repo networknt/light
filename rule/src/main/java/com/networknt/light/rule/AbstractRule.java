@@ -27,15 +27,14 @@ import com.orientechnologies.orient.core.index.OCompositeKey;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import net.engio.mbassy.bus.MBassador;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -62,7 +61,11 @@ public abstract class AbstractRule implements Rule {
         }
     }
 
-    protected static Map<String, Object> getRuleByRuleClass(String ruleClass) {
+    public static Map<String, Object> getRuleByRuleClass(String ruleClass) {
+        logger.debug("getRuleByRuleClass is called");
+        String sqlTransformReq = "SELECT FROM TransformRequest WHERE ruleClass = '" + ruleClass + "' ORDER BY sequence";
+        String sqlTransformRes = "SELECT FROM TransformResponse WHERE ruleClass = '" + ruleClass + "' ORDER BY sequence";
+
         Map<String, Object> map = null;
         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
         ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
@@ -80,6 +83,37 @@ public abstract class AbstractRule implements Rule {
                 OrientVertex rule = (OrientVertex)graph.getVertexByKey("Rule.ruleClass", ruleClass);
                 if(rule != null) {
                     map = rule.getRecord().toMap();
+                    OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sqlTransformReq);
+                    List<ODocument> docs = graph.getRawGraph().command(query).execute();
+                    List<Map<String, Object>> reqTransforms = new ArrayList<Map<String, Object>>();
+                    if(docs != null) {
+                        for(ODocument doc: docs) {
+                            Map<String, Object> reqTransform = new HashMap<String, Object> ();
+                            reqTransform.put("sequence", doc.field("sequence"));
+                            reqTransform.put("transformRule", doc.field("transformRule"));
+                            reqTransform.put("transformData", doc.field("transformData"));
+                            reqTransform.put("createUserId", doc.field("createUserId"));
+                            reqTransforms.add(reqTransform);
+                        }
+                    }
+                    map.put("reqTransforms", reqTransforms);
+
+                    query = new OSQLSynchQuery<>(sqlTransformRes);
+                    docs = graph.getRawGraph().command(query).execute();
+                    List<Map<String, Object>> resTransforms = new ArrayList<Map<String, Object>> ();
+                    if(docs != null) {
+                        for(ODocument doc: docs) {
+                            Map<String, Object> resTransform = new HashMap<String, Object> ();
+                            resTransform.put("sequence", doc.field("sequence"));
+                            resTransform.put("transformRule", doc.field("transformRule"));
+                            resTransform.put("transformData", doc.field("transformData"));
+                            resTransform.put("createUserId", doc.field("createUserId"));
+                            resTransforms.add(resTransform);
+                        }
+                    }
+                    map.put("resTransforms", resTransforms);
+
+                    logger.debug("map = " + map);
                     cache.put(ruleClass, map);
                 }
             } catch (Exception e) {

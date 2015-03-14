@@ -104,6 +104,10 @@ public class RuleEngine {
             throw new Exception("Invalid rule class name");
         }
         Rule rule = loadRule(ruleClass);
+        if(rule == null) {
+            logger.error("Could not find rule:" + ruleClass);
+            throw new Exception("Could not find rule for " + ruleClass);
+        }
         return rule.execute(objects);
     }
 
