@@ -35,7 +35,7 @@ public class GraphTest {
         OrientGraph graph = factory.getTx();
         try {
             //System.out.println(graph.getVertex("#11:0").getRecord().toJSON("rid, fetchPlan:*:-1"));
-            String result = graph.getVertex("#37:0").getRecord().toJSON("rid,fetchPlan:out_Own:-1");
+            String result = graph.getVertex("#37:0").getRecord().toJSON("rid,fetchPlan:out_HasComment:-1");
             System.out.println(result);
 
             //List<ODocument> result = graph.getRawGraph().query(

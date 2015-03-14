@@ -415,9 +415,11 @@ public class RestHandler implements HttpHandler {
         Map ruleMap = AbstractRule.getRuleByRuleClass(cmdRuleClass);
         if(ruleMap != null) {
             List<Map<String, Object>> reqTransforms = (List)ruleMap.get("reqTransforms");
-            for(Map<String, Object> transform: reqTransforms) {
-                jsonMap.put("transformData", transform.get("transformData"));
-                RuleEngine.getInstance().executeRule((String)transform.get("transformRule"), jsonMap);
+            if(reqTransforms != null && reqTransforms.size() > 0) {
+                for(Map<String, Object> transform: reqTransforms) {
+                    jsonMap.put("transformData", transform.get("transformData"));
+                    RuleEngine.getInstance().executeRule((String)transform.get("transformRule"), jsonMap);
+                }
             }
         }
 
