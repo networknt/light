@@ -1,0 +1,21 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:1",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10002,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-03-14T15:05:28.542",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.demo.GetDropdownRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-03-14T15:05:28.541",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

@@ -16,6 +16,7 @@
 
 package com.networknt.light.rule.transform;
 
+import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +35,19 @@ public class GetTransformResponseRule extends AbstractTransformRule implements R
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String ruleClass = (String)data.get("ruleClass");
-        List<Map<String, Object>> transforms = getTransformResponse(ruleClass);
-        if(transforms != null) {
-            inputMap.put("result", mapper.writeValueAsString(transforms));
-            return true;
+        Map ruleMap = AbstractRule.getRuleByRuleClass(ruleClass);
+        if(ruleMap != null) {
+            List<Map<String, Object>> resTransforms = (List) ruleMap.get("resTransforms");
+            if(resTransforms != null && resTransforms.size() > 0) {
+                inputMap.put("result", mapper.writeValueAsString(resTransforms));
+                return true;
+            } else {
+                inputMap.put("result", "No transform can be found for ruleClass" + ruleClass);
+                inputMap.put("responseCode", 404);
+                return false;
+            }
         } else {
-            inputMap.put("result", "No transform can be found for ruleClass" + ruleClass);
+            inputMap.put("result", "No rule can be found for ruleClass" + ruleClass);
             inputMap.put("responseCode", 404);
             return false;
         }

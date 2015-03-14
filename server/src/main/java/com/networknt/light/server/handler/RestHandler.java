@@ -23,6 +23,7 @@ import com.github.fge.jsonschema.core.report.ListProcessingReport;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.rule.access.GetAccessRule;
 import com.networknt.light.rule.transform.GetTransformRequestRule;
@@ -81,7 +82,8 @@ public class RestHandler implements HttpHandler {
             exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
             exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Methods"), "GET, POST");
             exchange.getResponseHeaders().put(new HttpString("Access-Control-Max-Age"), "3600");
-            exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Headers"), "accept, content-type");
+            exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Headers"),
+                "Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,Keep-Alive,X-Requested-With,If-Modified-Since");
             exchange.getResponseHeaders().put(new HttpString("Content-Type"), "application/json; charset=utf-8");
             return;
         } else {
@@ -410,13 +412,13 @@ public class RestHandler implements HttpHandler {
         // users that are not logged in.
         jsonMap.put("ipAddress", getIpAddress(exchange));
 
-        // TODO Apply request transform rules. For example routing here for A/B testing.
-
-        GetTransformRequestRule transformRule = new GetTransformRequestRule();
-        List<Map<String, Object>> transforms = transformRule.getTransformRequest(cmdRuleClass);
-        for(Map<String, Object> transform: transforms) {
-            jsonMap.put("transformData", transform.get("transformData"));
-            RuleEngine.getInstance().executeRule((String)transform.get("transformRule"), jsonMap);
+        Map ruleMap = AbstractRule.getRuleByRuleClass(cmdRuleClass);
+        if(ruleMap != null) {
+            List<Map<String, Object>> reqTransforms = (List)ruleMap.get("reqTransforms");
+            for(Map<String, Object> transform: reqTransforms) {
+                jsonMap.put("transformData", transform.get("transformData"));
+                RuleEngine.getInstance().executeRule((String)transform.get("transformRule"), jsonMap);
+            }
         }
 
         // two types of rules (Command Rule and Event Rule)
@@ -469,10 +471,11 @@ public class RestHandler implements HttpHandler {
             logger.debug("response success: {} ", result);
         }
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-        Map<String, Object> header = (Map<String, Object>)jsonMap.get("header");
-        if(header != null) {
-            for(String s: header.keySet()) {
-                exchange.getResponseHeaders().put(new HttpString(s), (String)header.get(s));
+        // handle cors header if it is enabled for this ruleClass.
+        if(ruleMap != null) {
+            Object enableCors = ruleMap.get("enableCors");
+            if(enableCors != null && (boolean)enableCors) {
+                exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
             }
         }
         if(result != null) {

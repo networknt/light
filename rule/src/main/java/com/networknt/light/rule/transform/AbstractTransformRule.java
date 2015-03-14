@@ -241,7 +241,7 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
             cache.remove(data.get("ruleClass"));
         }
     }
-
+    /*
     public List<Map<String, Object>> getTransformRequest(String ruleClass) {
         String sql = "SELECT FROM TransformRequest WHERE ruleClass = '" + ruleClass + "' ORDER BY sequence";
         List<Map<String, Object>> transforms = null;
@@ -345,7 +345,7 @@ public abstract class AbstractTransformRule extends AbstractRule implements Rule
         }
         return transforms;
     }
-
+    */
     protected String getTransformRequestBySeq(String ruleClass, Integer sequence) {
         String json = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();

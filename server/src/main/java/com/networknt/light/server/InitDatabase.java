@@ -751,6 +751,7 @@ public class InitDatabase {
                             "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientVertex;\n" +
+                            "import net.engio.mbassy.bus.MBassador;\n" +
                             "import org.slf4j.Logger;\n" +
                             "import org.slf4j.LoggerFactory;\n" +
                             "\n" +
@@ -767,6 +768,51 @@ public class InitDatabase {
                             "\n" +
                             "    protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n" +
                             "    public abstract boolean execute (Object ...objects) throws Exception;\n" +
+                            "\n" +
+                            "    protected void publishEvent(Map<String, Object> eventMap) {\n" +
+                            "        // get class name\n" +
+                            "        System.out.println(this.getClass().getPackage());\n" +
+                            "        System.out.println(this.getClass().getName());\n" +
+                            "        System.out.println(\"category = \" + eventMap.get(\"category\"));\n" +
+                            "        // check if publisher is enabled.\n" +
+                            "        Map map = getRuleByRuleClass(this.getClass().getName());\n" +
+                            "        Object isPublisher = map.get(\"isPublisher\");\n" +
+                            "        if(isPublisher != null && (boolean)isPublisher) {\n" +
+                            "            System.out.println(\"isPublisher\");\n" +
+                            "            MBassador<Map<String, Object>> eventBus = ServiceLocator.getInstance().getEventBus((String)eventMap.get(\"category\"));\n" +
+                            "            eventBus.publish(eventMap);\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public static Map<String, Object> getRuleByRuleClass(String ruleClass) {\n" +
+                            "        Map<String, Object> map = null;\n" +
+                            "        Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
+                            "        ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
+                            "        if(cache == null) {\n" +
+                            "            cache = new ConcurrentLinkedHashMap.Builder<String, Map<String, Object>>()\n" +
+                            "                    .maximumWeightedCapacity(1000)\n" +
+                            "                    .build();\n" +
+                            "            ruleMap.put(\"cache\", cache);\n" +
+                            "        } else {\n" +
+                            "            map = cache.get(ruleClass);\n" +
+                            "        }\n" +
+                            "        if(map == null) {\n" +
+                            "            OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "            try {\n" +
+                            "                OrientVertex rule = (OrientVertex)graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "                if(rule != null) {\n" +
+                            "                    map = rule.getRecord().toMap();\n" +
+                            "                    cache.put(ruleClass, map);\n" +
+                            "                }\n" +
+                            "            } catch (Exception e) {\n" +
+                            "                logger.error(\"Exception:\", e);\n" +
+                            "                throw e;\n" +
+                            "            } finally {\n" +
+                            "                graph.shutdown();\n" +
+                            "            }\n" +
+                            "        }\n" +
+                            "        return map;\n" +
+                            "    }\n" +
                             "\n" +
                             "    /*\n" +
                             "    protected ODocument getCategoryByRid(String categoryRid) {\n" +
@@ -910,6 +956,7 @@ public class InitDatabase {
                             "import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\n" +
                             "import com.networknt.light.rule.AbstractRule;\n" +
                             "import com.networknt.light.rule.Rule;\n" +
+                            "import com.networknt.light.server.DbService;\n" +
                             "import com.networknt.light.util.ServiceLocator;\n" +
                             "import com.orientechnologies.orient.core.Orient;\n" +
                             "import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\n" +
@@ -937,22 +984,6 @@ public class InitDatabase {
                             "\n" +
                             "    public abstract boolean execute (Object ...objects) throws Exception;\n" +
                             "\n" +
-                            "    protected String getRuleByRuleClass(String ruleClass) {\n" +
-                            "        String json = null;\n" +
-                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
-                            "        try {\n" +
-                            "            OrientVertex rule = (OrientVertex)graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
-                            "            if(rule != null) {\n" +
-                            "                json = rule.getRecord().toJSON();\n" +
-                            "            }\n" +
-                            "        } catch (Exception e) {\n" +
-                            "            logger.error(\"Exception:\", e);\n" +
-                            "            throw e;\n" +
-                            "        } finally {\n" +
-                            "            graph.shutdown();\n" +
-                            "        }\n" +
-                            "        return json;\n" +
-                            "    }\n" +
                             "\n" +
                             "    protected void addRule(Map<String, Object> data) throws Exception {\n" +
                             "        OrientVertex access = null;\n" +
@@ -1090,6 +1121,152 @@ public class InitDatabase {
                             "                        new TypeReference<HashMap<String, Object>>() {\n" +
                             "                        }));\n" +
                             "            }\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    protected String updateValidation(Map<String, Object> inputMap, Map<String, Object> eventData) {\n" +
+                            "        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n" +
+                            "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
+                            "        Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n" +
+                            "        String rid = (String)data.get(\"@rid\");\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                            "        String error = null;\n" +
+                            "        String host = (String)user.get(\"host\");\n" +
+                            "        if(host != null) {\n" +
+                            "            if(!host.equals(data.get(\"host\"))) {\n" +
+                            "                error = \"You can only update rule for host: \" + host;\n" +
+                            "                inputMap.put(\"responseCode\", 403);\n" +
+                            "            } else {\n" +
+                            "                // make sure the ruleClass contains the host.\n" +
+                            "                if(host != null && !ruleClass.contains(host)) {\n" +
+                            "                    // you are not allowed to update rule as it is not owned by the host.\n" +
+                            "                    error = \"ruleClass is not owned by the host: \" + host;\n" +
+                            "                    inputMap.put(\"responseCode\", 403);\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "        }\n" +
+                            "        if(error == null) {\n" +
+                            "            OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "            try {\n" +
+                            "                Vertex rule = DbService.getVertexByRid(graph, rid);\n" +
+                            "                if(rule == null) {\n" +
+                            "                    error = \"Rule with @rid \" + rid + \" cannot be found\";\n" +
+                            "                    inputMap.put(\"responseCode\", 404);\n" +
+                            "                } else {\n" +
+                            "                    eventData.put(\"ruleClass\", ruleClass);\n" +
+                            "                    eventData.put(\"updateUserId\", user.get(\"userId\"));\n" +
+                            "                }\n" +
+                            "            } catch (Exception e) {\n" +
+                            "                logger.error(\"Exception:\", e);\n" +
+                            "                throw e;\n" +
+                            "            } finally {\n" +
+                            "                graph.shutdown();\n" +
+                            "            }\n" +
+                            "        }\n" +
+                            "        return error;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    protected void updEtag(Map<String, Object> data) throws Exception {\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "            if(rule != null) {\n" +
+                            "                rule.setProperty(\"enableEtag\", data.get(\"enableEtag\"));\n" +
+                            "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
+                            "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
+                            "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
+                            "                if(cache != null) {\n" +
+                            "                    cache.remove(ruleClass);\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "            graph.commit();\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    protected void updCors(Map<String, Object> data) throws Exception {\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "            if(rule != null) {\n" +
+                            "                rule.setProperty(\"enableCors\", data.get(\"enableCors\"));\n" +
+                            "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
+                            "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
+                            "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
+                            "                if(cache != null) {\n" +
+                            "                    cache.remove(ruleClass);\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "            graph.commit();\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    protected void updPublisher(Map<String, Object> data) throws Exception {\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "            if(rule != null) {\n" +
+                            "                rule.setProperty(\"isPublisher\", data.get(\"isPublisher\"));\n" +
+                            "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
+                            "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
+                            "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
+                            "                if(cache != null) {\n" +
+                            "                    cache.remove(ruleClass);\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "            graph.commit();\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    protected void updSubscriber(Map<String, Object> data) throws Exception {\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "            if(rule != null) {\n" +
+                            "                rule.setProperty(\"isSubscriber\", data.get(\"isSubscriber\"));\n" +
+                            "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
+                            "                Vertex updateUser = graph.getVertexByKey(\"User.userId\", data.get(\"updateUserId\"));\n" +
+                            "                if(updateUser != null) {\n" +
+                            "                    updateUser.addEdge(\"Update\", rule);\n" +
+                            "                }\n" +
+                            "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
+                            "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
+                            "                if(cache != null) {\n" +
+                            "                    cache.remove(ruleClass);\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "            graph.commit();\n" +
                             "        } catch (Exception e) {\n" +
                             "            logger.error(\"Exception:\", e);\n" +
                             "            graph.rollback();\n" +
