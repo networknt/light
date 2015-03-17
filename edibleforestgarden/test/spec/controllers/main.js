@@ -1,17 +1,17 @@
 'use strict';
 
-describe('Controller: MainCtrl', function () {
+describe('Controller: mainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('lightwebApp'));
+  beforeEach(module('lightApp'));
 
-  var MainCtrl,
+  var mainCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    MainCtrl = $controller('MainCtrl', {
+      mainCtrl = $controller('mainCtrl', {
       $scope: scope
     });
   }));

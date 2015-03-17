@@ -13,7 +13,7 @@ angular.module('lightApp').controller('pageCtrl', ['$scope', '$routeParams', '$h
         name : 'getPage',
         readOnly: true,
         data : {
-            id : $routeParams.id
+            pageId : $routeParams.pageId
         }
     };
 
