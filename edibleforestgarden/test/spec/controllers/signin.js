@@ -3,7 +3,7 @@
 describe('Controller: signinCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('lightwebApp'));
+  beforeEach(module('lightApp'));
 
   var signinCtrl,
     scope;

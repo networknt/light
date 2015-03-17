@@ -92,9 +92,11 @@ angular.module('lightApp')
                     });
                 } else {
                     // 401 but not token expired the user is not logged in yet.
+                    // or invalid token due to signature verification failed.
                     toaster.pop('error', rejection.status, rejection.data, 5000);
                     httpBuffer.rejectAll();
                     httpBuffer.saveAttemptUrl();
+                    authService.logOut();
                     $location.path('/signin');
                     deferred.reject(rejection);
                 }
