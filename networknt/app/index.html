@@ -46,10 +46,10 @@
                 <nav class="hidden-xs">
                     <ul class="nav navbar-nav">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: {left: true}"  dropdown>
-                            <a ng-if="node.hasOwnProperty('menuItems')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
-                            <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
+                            <a ng-if="node.hasOwnProperty('out_Own')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
+                            <a ng-if="!node.hasOwnProperty('out_Own')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="item in node.menuItems"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
+                                <li ng-repeat="item in node.out_Own"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -63,10 +63,10 @@
                 <nav class="visible-xs" collapse="!menuSettings.isCollapsed">
                     <ul class="nav navbar-nav">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: { left: true}"  dropdown>
-                            <a ng-if="node.hasOwnProperty('menuItems')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
-                            <a ng-if="!node.hasOwnProperty('menuItems')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
+                            <a ng-if="node.hasOwnProperty('out_Own')" role="button" aria-haspopup="true" aria-expanded="true" class="dropdown-toggle" dropdown-toggle>{{node.label}} <b class="caret"></b></a>
+                            <a ng-if="!node.hasOwnProperty('out_Own')" href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
                             <ul class="dropdown-menu">
-                                <li ng-repeat="item in node.menuItems"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
+                                <li ng-repeat="item in node.out_Own"><a href="{{item.path}}" ng-click="toggleCollapsed()">{{item.label}}</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -87,6 +87,60 @@
             <a class="btn btn-primary" onclick="window.open('/chat.html', '_blank', 'location=no,menubar=no,toolbar=no,height=570,width=520,scrollbars=yes,status=yes');">Chat With Me</a>
         </div>
     </footer>
+    <!-- global error handler outside of AngularJS -->
+    <script>
+        window.onerror = function(message, source, line, column) {
+            try {
+                var escape = function(x) { return x.replace('\\', '\\\\').replace('\"', '\\"'); };
+                var XHR = window.XMLHttpRequest || function() {
+                            try { return new ActiveXObject("Msxml3.XMLHTTP"); } catch (e0) {}
+                            try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
+                            try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
+                            try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
+                            try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch (e4) {}
+                        };
+                var xhr = new XHR();
+                xhr.open('POST', '/api/rs', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+
+                var error = '{"category": "log", "name": "logEvent", "readOnly":false, "data": {' +
+                '"message": "' + escape(message || '') + '",' +
+                '"source": "' + escape(source || '') + '",' +
+                '"url": "' + escape(window.location.href) + '",' +
+                '"line": "' + (line || 0) + '",' +
+                '"column": "' + (column || 0) + '"' +
+                '}}';
+                console.log("error", error);
+                xhr.send(error);
+            }
+            finally {
+                window.onload = function() {
+                    if (document.getElementById('page-error')) return; // The error is already displayed
+                    var errorMessage = document.createElement('div');
+                    errorMessage.setAttribute('id', 'page-error');
+                    errorMessage.innerHTML = 'An error has occured and the details have been logged. ' +
+                    'Please contact customer support for assistance.';
+                    document.body.appendChild(errorMessage);
+                }
+            }
+        };
+    </script>
+
+    <!--
+    // test case that triggers global error handler above.
+    <script>
+        function a() {
+            b();
+        }
+
+        function b() {
+            c();
+        }
+
+        a(); // Throws an error since c is undefined
+    </script>
+    -->
+
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
     <!--
     <script>
@@ -125,6 +179,7 @@
     <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
     <script src="bower_components/angular-ui-tree-filter/dist/angular-ui-tree-filter.js"></script>
     <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
+    <script src="bower_components/marked/lib/marked.js"></script>
     <script src="bower_components/angular-marked/angular-marked.js"></script>
     <script src="bower_components/tv4/tv4.js"></script>
     <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
@@ -141,15 +196,14 @@
     <script src="bower_components/schema-form-datetimepicker/schema-form-datetimepicker.min.js"></script>
     <script src="bower_components/momentjs/moment.js"></script>
     <!-- endbower -->
+    <script src="bower_components/stacktrace-js/stacktrace.js"></script>
     <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
-    <script src="bower_components/marked/lib/marked.js"></script>
     <script src="bower_components/angular-schema-form-ui-select/angular-underscore.js"></script>
     <script src="bower_components/angular-schema-form-ui-select/ui-sortable.js"></script>
     <script src="bower_components/angular-schema-form-marked/bootstrap-marked.js"></script>
     <script src="bower_components/angular-schema-form-ui-ace/bootstrap-ui-ace.js"></script>
     <script src="bower_components/schema-form-datetimepicker/date.js"></script>
     <script src="bower_components/schema-form-datetimepicker/schema-form-date-time-picker.min.js"></script>
-
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->

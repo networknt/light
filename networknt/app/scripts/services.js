@@ -1,6 +1,9 @@
 'use strict';
 
 angular.module('lightApp')
+    .constant('CLIENT', {
+        'clientId': 'www.networknt.com@Browser'
+    })
     .factory('base64', function() {
         return {
             // This is used to parse the profile.
@@ -89,9 +92,11 @@ angular.module('lightApp')
                     });
                 } else {
                     // 401 but not token expired the user is not logged in yet.
+                    // or invalid token due to signature verification failed.
                     toaster.pop('error', rejection.status, rejection.data, 5000);
                     httpBuffer.rejectAll();
                     httpBuffer.saveAttemptUrl();
+                    authService.logOut();
                     $location.path('/signin');
                     deferred.reject(rejection);
                 }
@@ -103,6 +108,11 @@ angular.module('lightApp')
                 httpBuffer.saveAttemptUrl();
                 authService.logOut();
                 $location.path('/signin');
+                deferred.reject(rejection);
+            } else if (rejection.status === 404) {
+                // 404 not found. don't do anything here just let it go. as the controller might try
+                // some other ways to get the resource. eg. PageCtrl load from file system first and
+                // then try REST API second for development.
                 deferred.reject(rejection);
             } else {
                 // some other errors, reject immediately.
@@ -117,7 +127,7 @@ angular.module('lightApp')
 
         return authInterceptorServiceFactory;
     }])
-    .factory('authService', ['$q', '$injector', 'localStorageService', 'base64', function ($q, $injector, localStorageService, base64) {
+    .factory('authService', ['$q', '$injector', 'localStorageService', 'base64', 'CLIENT', function ($q, $injector, localStorageService, base64, CLIENT) {
 
         var $http;
         var authServiceFactory = {};
@@ -163,7 +173,7 @@ angular.module('lightApp')
             var authorizationData = localStorageService.get('authorizationData');
             console.log("authService:_refreshToken:authorizationData before refresh", authorizationData);
             if (authorizationData && authorizationData.useRefreshTokens) {
-                refreshTokenPost.data = {refreshToken : authorizationData.refreshToken, userId: authorizationData.currentUser.userId};
+                refreshTokenPost.data = {refreshToken : authorizationData.refreshToken, userId: authorizationData.currentUser.userId, clientId: CLIENT.clientId};
                 // The authorizationData must be removed before calling refreshToken api as the old expired token will be sent again
                 // and cause infinite loop. Once it is removed, not access token will be sent to the server along with the request.
                 // TODO but we have another issue that some other requests might be sent during this time slot. It is better to check
@@ -269,7 +279,131 @@ angular.module('lightApp')
             }
         };
     }])
+    /**
+    * Service that gives us a nice Angular-esque wrapper around the
+    * stackTrace.js pintStackTrace() method.
+    */
+    .factory(
+        "traceService",
+        function() {
+            return({
+                print: printStackTrace
+            });
+        }
+    )
+    /**
+     * Override Angular's built in exception handler, and tell it to
+     * use our new exceptionLoggingService which is defined below
+     */
+    .provider(
+        "$exceptionHandler",{
+            $get: function(exceptionLoggingService){
+                return(exceptionLoggingService);
+            }
+        }
+    )
+    /**
+     * Exception Logging Service, currently only used by the $exceptionHandler
+     * it preserves the default behaviour ( logging to the console) but
+     * also posts the error server side after generating a stacktrace.
+     */
+    .factory("exceptionLoggingService",["$log","$window", "traceService", function($log, $window, traceService) {
+        function error(exception, cause) {
 
+            // preserve the default behaviour which will log the error
+            // to the console, and allow the application to continue running.
+            $log.error.apply($log, arguments);
+
+            // now try to log the error to the server side.
+            try{
+                var errorMessage = exception.toString();
+
+                // use our traceService to generate a stack trace
+                var stackTrace = traceService.print({e: exception});
+
+                var escape = function(x) { return x.replace(/"/g, '\\"'); };
+                var XHR = window.XMLHttpRequest || function() {
+                        try { return new ActiveXObject("Msxml3.XMLHTTP"); } catch (e0) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
+                        try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch (e4) {}
+                };
+                var xhr = new XHR();
+                xhr.open('POST', '/api/rs', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+
+                var error = '{"category": "log", "name": "logEvent", "readOnly":false, "data": {' +
+                    '"message": "' + escape(errorMessage || '') + '",' +
+                    '"type": "exception", ' +
+                    '"url": "' + escape(window.location.href) + '",' +
+                    '"stackTrace": "' + (stackTrace) + '",' +
+                    '"cause": "' + escape(cause || '') + '"' +
+                    '}}';
+                console.log("error", error);
+                xhr.send(error);
+            } catch (loggingError){
+                 $log.warn("Error server-side logging failed");
+                 $log.log(loggingError);
+            }
+        }
+        return(error);
+    }])
+    /**
+     * Application Logging Service to give us a way of logging
+     * error / debug statements from the client to the server.
+     */
+    .factory("lightLoggingService", ["$log","$window",function($log, $window) {
+        return({
+            error: function(message){
+                // preserve default behaviour
+                $log.error.apply($log, arguments);
+                // send server side
+                //var escape = function(x) { return x.replace('\\', '\\\\').replace('\"', '\\"'); };
+                var escape = function(x) { return x.replace(/"/g, '\\"'); };
+                var XHR = window.XMLHttpRequest || function() {
+                        try { return new ActiveXObject("Msxml3.XMLHTTP"); } catch (e0) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
+                        try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch (e4) {}
+                    };
+                var xhr = new XHR();
+                xhr.open('POST', '/api/rs', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+
+                var error = '{"category": "log", "name": "logEvent", "readOnly":false, "data": {' +
+                    '"message": "' + escape(message || '') + '",' +
+                    '"type": "error", ' +
+                    '"url": "' + escape(window.location.href) + '"' +
+                    '}}';
+                console.log("error", error);
+                xhr.send(error);
+            },
+            debug: function(message){
+                $log.log.apply($log, arguments);
+                var escape = function(x) { return x.replace('\\', '\\\\').replace('\"', '\\"'); };
+                var XHR = window.XMLHttpRequest || function() {
+                        try { return new ActiveXObject("Msxml3.XMLHTTP"); } catch (e0) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
+                        try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch (e4) {}
+                    };
+                var xhr = new XHR();
+                xhr.open('POST', '/api/rs', true);
+                xhr.setRequestHeader('Content-type', 'application/json');
+
+                var error = '{"category": "log", "name": "logEvent", "readOnly":false, "data": {' +
+                    '"message": "' + escape(message || '') + '",' +
+                    '"type": "debug", ' +
+                    '"url": "' + escape(window.location.href) + '"' +
+                    '}}';
+                console.log("error", error);
+                xhr.send(error);
+            }
+        });
+    }])
 /*
 .factory('restAPI', ['$resource',
     function ($resource) {

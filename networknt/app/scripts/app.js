@@ -50,11 +50,11 @@ var lightApp = angular.module('lightApp', [
         templateUrl: 'views/form.html',
         controller: 'signinCtrl'
       })
-      .when('/form/:id/:parentId?', {
+      .when('/form/:formId/:parentId?', {
         templateUrl: 'views/form.html',
         controller: 'formCtrl'
       })
-      .when('/page/:id', {
+      .when('/page/:pageId', {
         templateUrl: 'views/page.html',
         controller: 'pageCtrl'
       })
@@ -83,8 +83,8 @@ var lightApp = angular.module('lightApp', [
       });
     $locationProvider.html5Mode(true);
 }])
-.run(['$rootScope', 'authService', function ($rootScope, authService) {
-        console.log("Angular is running...");
+.run(['$rootScope', 'authService', 'lightLoggingService', function ($rootScope, authService, lightLoggingService) {
+        lightLoggingService.debug('debug information from lightLoggingService: Angular is running...');
         authService.fillAuthData();
         //authService.logOut();
     }

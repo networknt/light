@@ -20,6 +20,7 @@ module.exports = function(config) {
     files: [
 'bower_components/jquery/dist/jquery.js',
 'bower_components/json3/lib/json3.js',
+'bower_components/stacktrace-js/stacktrace.js',
 'bower_components/underscore/underscore.js',
 'bower_components/angular/angular.js',
 'bower_components/angular-resource/angular-resource.js',
