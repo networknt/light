@@ -8,14 +8,17 @@
  * Controller of the lightApp
  */
 angular.module('lightApp')
-    .controller('mainCtrl', ['$scope', '$http', function ($scope, $http) {
-        console.log("Now we are in mainCtrl");
+    .controller('mainCtrl', ['$scope', function ($scope) {
+        console.log('Now we are in mainCtrl');
+        /*
         var getRecentPosts = {
             category : 'post',
             name : 'getRecentPosts',
             readOnly: true,
             data : {}
         };
+        */
+        $scope.awesomeThings = [1,2, 3];
 
         $scope.forumPosts = [];
         $scope.newsPosts = [];
