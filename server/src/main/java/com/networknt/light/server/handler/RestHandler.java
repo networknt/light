@@ -93,7 +93,7 @@ public class RestHandler implements HttpHandler {
             exchange.getResponseSender().send((ByteBuffer.wrap("Invalid Request Method".getBytes("utf-8"))));
             return;
         }
-        //logger.debug("json = {}", json);
+        logger.debug("json = {}", json);
 
         // convert json string to map here. It it cannot be converted, then it is invalid command.
         try {
@@ -110,6 +110,14 @@ public class RestHandler implements HttpHandler {
         // TODO validate with json schema to make sure the input json is valid. return an error message otherwise.
         // you need to get the schema from db again for the one sent from browser might be modified.
         String cmdRuleClass = Util.getCommandRuleId(jsonMap);
+        Map ruleMap = AbstractRule.getRuleByRuleClass(cmdRuleClass);
+        // handle cors header if it is enabled for this ruleClass.
+        if(ruleMap != null) {
+            Object enableCors = ruleMap.get("enableCors");
+            if(enableCors != null && (boolean)enableCors) {
+                exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
+            }
+        }
         boolean readOnly = (boolean)jsonMap.get("readOnly");
         if(!readOnly) {
             JsonSchema schema = AbstractValidationRule.getSchema(cmdRuleClass);
@@ -412,7 +420,6 @@ public class RestHandler implements HttpHandler {
         // users that are not logged in.
         jsonMap.put("ipAddress", getIpAddress(exchange));
 
-        Map ruleMap = AbstractRule.getRuleByRuleClass(cmdRuleClass);
         if(ruleMap != null) {
             List<Map<String, Object>> reqTransforms = (List)ruleMap.get("reqTransforms");
             if(reqTransforms != null && reqTransforms.size() > 0) {
@@ -473,13 +480,6 @@ public class RestHandler implements HttpHandler {
             logger.debug("response success: {} ", result);
         }
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-        // handle cors header if it is enabled for this ruleClass.
-        if(ruleMap != null) {
-            Object enableCors = ruleMap.get("enableCors");
-            if(enableCors != null && (boolean)enableCors) {
-                exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
-            }
-        }
         if(result != null) {
             exchange.getResponseSender().send(ByteBuffer.wrap(result.getBytes("utf-8")));
         }
