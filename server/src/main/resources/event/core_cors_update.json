@@ -17,5 +17,81 @@
     "createDate": "2015-03-14T15:05:28.541",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:110",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10111,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-03-17T01:54:04.139",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.db.ExpEventRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-03-17T01:54:04.139",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:123",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10124,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-03-20T01:17:23.407",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.menu.GetMenuRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-03-20T01:17:23.406",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:127",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10128,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-03-20T01:27:11.135",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.form.GetFormRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-03-20T01:27:11.134",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:128",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10129,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-03-20T01:27:25.345",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.page.GetPageRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-03-20T01:27:25.345",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]
