@@ -48,8 +48,11 @@
         "format": "strapselect",
         "items": [
           {
-            "category": "forum",
-            "name": "getForumDropdown"
+            "label": "dynamic",
+            "value": {
+              "category": "client",
+              "name": "getClientDropdown"
+            }
           }
         ]
       },
@@ -59,8 +62,11 @@
         "format": "strapselect",
         "items": [
           {
-            "category": "role",
-            "name": "getRoleDropdown"
+            "label": "dynamic",
+            "value": {
+              "category": "role",
+              "name": "getRoleDropdown"
+            }
           }
         ]
       }
@@ -76,17 +82,22 @@
     {
       "key": "strapSingleSelectDynamic",
       "options": {
-        "category": "forum",
-        "name": "getForumDropdown"
+        "category": "demo",
+        "name": "getDropdown"
       }
     },
     {
       "key": "strapMultipleSelectDynamic",
       "options": {
-        "category": "forum",
-        "name": "getForumDropdown"
+        "category": "demo",
+        "name": "getDropdown"
       }
+    },
+    {
+      "key": "strapSingleSelectPopulated"
+    },
+    {
+      "key": "strapMultipleSelectPopulated"
     }
-
   ]
 }
