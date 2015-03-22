@@ -21,11 +21,16 @@
       "enableCors": {
         "title": "Enable CORS?",
         "type": "boolean"
+      },
+      "corsHosts" : {
+        "title": "Allowed Hosts",
+        "type": "string"
       }
     }
   },
   "form": [
     "ruleClass",
-    "enableCors"
+    "enableCors",
+    "corsHosts"
   ]
 }

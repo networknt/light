@@ -127,7 +127,19 @@ public class InitDatabase {
             rule.createProperty("isPublisher", OType.BOOLEAN);
             rule.createProperty("isSubscriber", OType.BOOLEAN);
             rule.createProperty("enableCors", OType.BOOLEAN);
+            rule.createProperty("corsHosts", OType.STRING); // concat a list of hosts that can access this rule through cors.
             rule.createProperty("enableEtag", OType.BOOLEAN);
+            rule.createProperty("cacheControl", OType.STRING);   // Cache-Control header string. example max-age=3600
+            /*
+             * For each rule class you can define a form id or a json schema for request validation
+             * before the endpoint is called. If the end point is a form action then this schema is
+             * auto populated when form is add/import/update/delete. Otherwise, it needs to be populated
+             * manually with json schema.
+             *
+             * Note: the validation is for the data payload of the command only.
+             *
+             */
+            rule.createProperty("schema",OType.STRING); // validation schema
             rule.createProperty("createDate", OType.DATETIME);
             rule.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("ruleClass", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Rule"));
@@ -187,23 +199,6 @@ public class InitDatabase {
             transformResponse.createProperty("createDate", OType.DATETIME);
             transformResponse.createProperty("updateDate", OType.DATETIME);
             transformResponse.createIndex("ResRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
-
-
-            /**
-             * For each rule class you can define a form id or a json schema for request validation
-             * before the endpoint is called. If the end point is a form action then this schema is
-             * auto populated when form is add/import/update/delete. Otherwise, it needs to be populated
-             * manually with json schema.
-             *
-             * Note: the validation is for the data payload of the command only.
-             *
-             */
-            OrientVertexType validation = graph.createVertexType("Validation");
-            validation.createProperty("ruleClass", OType.STRING);
-            validation.createProperty("schema", OType.EMBEDDEDMAP);
-            validation.createProperty("createDate", OType.DATETIME);
-            validation.createProperty("updateDate", OType.DATETIME);
-            graph.createKeyIndex("ruleClass", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Validation"));
 
 
             OrientVertexType access = graph.createVertexType("Access");
@@ -739,7 +734,10 @@ public class InitDatabase {
                             "package com.networknt.light.rule;\n" +
                             "\n" +
                             "import com.fasterxml.jackson.core.type.TypeReference;\n" +
+                            "import com.fasterxml.jackson.databind.JsonNode;\n" +
                             "import com.fasterxml.jackson.databind.ObjectMapper;\n" +
+                            "import com.github.fge.jsonschema.main.JsonSchema;\n" +
+                            "import com.github.fge.jsonschema.main.JsonSchemaFactory;\n" +
                             "import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\n" +
                             "import com.networknt.light.model.CacheObject;\n" +
                             "import com.networknt.light.server.DbService;\n" +
@@ -767,14 +765,12 @@ public class InitDatabase {
                             " */\n" +
                             "public abstract class AbstractRule implements Rule {\n" +
                             "    static final Logger logger = LoggerFactory.getLogger(AbstractRule.class);\n" +
-                            "\n" +
-                            "    static final String HEADER_ETAG = \"ETag\";\n" +
-                            "    static final String HEADER_IF_NONE_MATCH = \"If-None-Match\";\n" +
+                            "    static final JsonSchemaFactory schemaFactory = JsonSchemaFactory.byDefault();\n" +
                             "\n" +
                             "    protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n" +
                             "    public abstract boolean execute (Object ...objects) throws Exception;\n" +
                             "\n" +
-                            "    protected void publishEvent(Map<String, Object> eventMap) {\n" +
+                            "    protected void publishEvent(Map<String, Object> eventMap) throws Exception {\n" +
                             "        // get class name\n" +
                             "        System.out.println(this.getClass().getPackage());\n" +
                             "        System.out.println(this.getClass().getName());\n" +
@@ -801,7 +797,7 @@ public class InitDatabase {
                             "        }\n" +
                             "    }\n" +
                             "\n" +
-                            "    public static Map<String, Object> getRuleByRuleClass(String ruleClass) {\n" +
+                            "    public static Map<String, Object> getRuleByRuleClass(String ruleClass) throws Exception {\n" +
                             "        String sqlTransformReq = \"SELECT FROM TransformRequest WHERE ruleClass = '\" + ruleClass + \"' ORDER BY sequence\";\n" +
                             "        String sqlTransformRes = \"SELECT FROM TransformResponse WHERE ruleClass = '\" + ruleClass + \"' ORDER BY sequence\";\n" +
                             "\n" +
@@ -824,6 +820,13 @@ public class InitDatabase {
                             "                    map = rule.getRecord().toMap();\n" +
                             "                    // remove sourceCode as we don't need it and it is big\n" +
                             "                    map.remove(\"sourceCode\");\n" +
+                            "\n" +
+                            "                    // convert schema to JsonSchema in order to speed up validation.\n" +
+                            "                    if(map.get(\"schema\") != null) {\n" +
+                            "                        JsonNode schemaNode = ServiceLocator.getInstance().getMapper().readTree((String)map.get(\"schema\"));\n" +
+                            "                        JsonSchema schema = schemaFactory.getJsonSchema(schemaNode);\n" +
+                            "                        map.put(\"schema\", schema);\n" +
+                            "                    }\n" +
                             "                    OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sqlTransformReq);\n" +
                             "                    List<ODocument> docs = graph.getRawGraph().command(query).execute();\n" +
                             "                    List<Map<String, Object>> reqTransforms = new ArrayList<Map<String, Object>>();\n" +
@@ -1233,6 +1236,42 @@ public class InitDatabase {
                             "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
                             "            if(rule != null) {\n" +
                             "                rule.setProperty(\"enableEtag\", data.get(\"enableEtag\"));\n" +
+                            "                String cacheControl = (String)data.get(\"cacheControl\");\n" +
+                            "                if(cacheControl != null) {\n" +
+                            "                    rule.setProperty(\"cacheControl\", cacheControl);\n" +
+                            "                } else {\n" +
+                            "                    rule.removeProperty(\"cacheControl\");\n" +
+                            "                }\n" +
+                            "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
+                            "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
+                            "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
+                            "                if(cache != null) {\n" +
+                            "                    cache.remove(ruleClass);\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "            graph.commit();\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    protected void updSchema(Map<String, Object> data) throws Exception {\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "            if(rule != null) {\n" +
+                            "                String schema = (String)data.get(\"schema\");\n" +
+                            "                if(schema != null) {\n" +
+                            "                    rule.setProperty(\"schema\", schema);\n" +
+                            "                } else {\n" +
+                            "                    rule.removeProperty(\"schema\");\n" +
+                            "                }\n" +
                             "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
                             "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
                             "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
@@ -1258,6 +1297,12 @@ public class InitDatabase {
                             "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
                             "            if(rule != null) {\n" +
                             "                rule.setProperty(\"enableCors\", data.get(\"enableCors\"));\n" +
+                            "                String corsHosts = (String)data.get(\"corsHosts\");\n" +
+                            "                if(corsHosts != null) {\n" +
+                            "                    rule.setProperty(\"corsHosts\", corsHosts);\n" +
+                            "                } else {\n" +
+                            "                    rule.removeProperty(\"corsHosts\");\n" +
+                            "                }\n" +
                             "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
                             "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
                             "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +

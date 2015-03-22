@@ -21,11 +21,16 @@
       "enableEtag": {
         "title": "Enable Etag?",
         "type": "boolean"
+      },
+      "cacheControl": {
+        "title": "Cache Control Header",
+        "type": "string"
       }
     }
   },
   "form": [
     "ruleClass",
-    "enableEtag"
+    "enableEtag",
+    "cacheControl"
   ]
 }

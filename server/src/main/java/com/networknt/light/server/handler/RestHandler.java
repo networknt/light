@@ -22,28 +22,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.report.ListProcessingReport;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.rule.access.GetAccessRule;
-import com.networknt.light.rule.transform.GetTransformRequestRule;
-import com.networknt.light.rule.validation.AbstractValidationRule;
-import com.networknt.light.rule.validation.GetValidationRule;
 import com.networknt.light.server.DbService;
+import com.networknt.light.server.Json;
 import com.networknt.light.server.ServerConstants;
 import com.networknt.light.util.JwtUtil;
 import com.networknt.light.util.ServiceLocator;
 import com.networknt.light.util.Util;
-import com.orientechnologies.orient.core.record.impl.ODocument;
-import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
-import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderMap;
 import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
 import io.undertow.util.Methods;
-import net.oauth.jsontoken.JsonToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,16 +107,34 @@ public class RestHandler implements HttpHandler {
         // you need to get the schema from db again for the one sent from browser might be modified.
         String cmdRuleClass = Util.getCommandRuleId(jsonMap);
         Map ruleMap = AbstractRule.getRuleByRuleClass(cmdRuleClass);
-        // handle cors header if it is enabled for this ruleClass.
-        if(ruleMap != null) {
+        if(ruleMap == null) {
+            exchange.setResponseCode(400);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+            exchange.getResponseSender().send((ByteBuffer.wrap("invalid_command".getBytes("utf-8"))));
+            return;
+        }
+
+        String origin = exchange.getRequestHeaders().getFirst(Headers.ORIGIN);
+        // handle cors header if origin is not null and it is enabled for this ruleClass.
+        if(origin != null && ruleMap != null) {
             Object enableCors = ruleMap.get("enableCors");
             if(enableCors != null && (boolean)enableCors) {
-                exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
+                // check if there are hosts defined
+                if(ruleMap.get("corsHosts") != null) {
+                    String corsHosts = (String)ruleMap.get("corsHosts");
+                    if(corsHosts.contains(origin)) {
+                        exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), origin);
+                    } else {
+                        // do not set header here.
+                    }
+                } else {
+                    exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
+                }
             }
         }
         boolean readOnly = (boolean)jsonMap.get("readOnly");
         if(!readOnly) {
-            JsonSchema schema = AbstractValidationRule.getSchema(cmdRuleClass);
+            JsonSchema schema = (JsonSchema)ruleMap.get("schema");
             if(schema != null) {
                 // validate only if schema is not null.
                 JsonNode jsonNode = mapper.valueToTree(jsonMap);
@@ -477,6 +488,10 @@ public class RestHandler implements HttpHandler {
             if(responseCode != null) exchange.setResponseCode(responseCode);
         }
         logger.debug("response success: {} ", result);
+        // set cache control header here.
+        if(ruleMap.get("cacheControl") != null) {
+            exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, (String)ruleMap.get("cacheControl"));
+        }
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
         if(result != null) {
             exchange.getResponseSender().send(ByteBuffer.wrap(result.getBytes("utf-8")));
