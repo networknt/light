@@ -13,33 +13,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<script type='text/javascript'>
-    angular.module('lightApp').controller('com.networknt.light.RuleHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
-        $scope.getValidation = {
-            category : 'validation',
-            name : 'getValidation',
-            readOnly: true,
-            data: {}
-        };
-
-        $scope.hasValidation = false;
-
-        $scope.fetchResult = function () {
-            $scope.getValidation.data.ruleClass = modelDataService.getModelData().ruleClass;
-            console.log("ruleClass", $scope.getValidation.data.ruleClass);
-            $http.get('api/rs', {params: {cmd: encodeURIComponent(JSON.stringify($scope.getValidation))}})
-                    .success(function (result, status, headers, config) {
-                        var rule = modelDataService.getModelData();
-                        rule.schema = JSON.stringify(result.schema, undefined, 2);
-                        console.log("rule.schema", rule.schema);
-                        modelDataService.setModelData(rule);
-                        $scope.hasValidation = true;
-                    })
-        };
-        $scope.fetchResult();
-    }]);
-</script>
-<div class="container" ng-controller="com.networknt.light.RuleHomeCtrl">
+<div class="container">
     <div class="row">
         <div class="col-md-12">
             <tabset>
@@ -54,12 +28,6 @@
                         <a href="/page/com-networknt-light-v-rule-transform-response">Transform Response Rules</a>
                     </p>
                     <p>
-                        <a ng-hide="hasValidation" href="/form/com.networknt.light.validation.add">Add Validation Schema</a>
-                    </p>
-                    <p>
-                        <a ng-show="hasValidation" href="/form/com.networknt.light.validation.update">Update Validation Schema</a>
-                    </p>
-                    <p>
                         <a href="/form/com.networknt.light.rule.publisher.update">Update Rule Publisher</a>
                     </p>
                     <p>
@@ -70,6 +38,9 @@
                     </p>
                     <p>
                         <a href="/form/com.networknt.light.rule.etag.update">Update Deep ETag Flag</a>
+                    </p>
+                    <p>
+                        <a href="/form/com.networknt.light.rule.schema.update">Update Validation Schema</a>
                     </p>
                 </tab>
             </tabset>

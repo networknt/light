@@ -1,0 +1,38 @@
+{
+  "formId": "com.networknt.light.rule.schema.update",
+  "version": 1,
+  "action" : [{
+    "category" : "rule",
+    "name" : "updSchema",
+    "readOnly": false,
+    "title" : "Update",
+    "success" : "/page/com-networknt-light-v-rule-admin-home"
+  }],
+  "schema": {
+    "type": "object",
+    "title": "Validation Schema Update",
+    "required": ["ruleClass"],
+    "properties": {
+      "ruleClass": {
+        "title": "Rule Class",
+        "type": "string",
+        "readonly": true
+      },
+      "schema": {
+        "title": "Validation Schema",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    "ruleClass",
+    {
+      "key": "schema",
+      "type": "ace",
+      "aceOptions": {
+        "theme": "eclipse",
+        "mode" : "json"
+      }
+    }
+  ]
+}
