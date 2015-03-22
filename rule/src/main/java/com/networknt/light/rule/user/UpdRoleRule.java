@@ -41,7 +41,7 @@ public class UpdRoleRule extends AbstractUserRule implements Rule {
         }
 
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

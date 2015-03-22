@@ -16,12 +16,14 @@
 
 package com.networknt.light.rule.page;
 
+import com.networknt.light.model.CacheObject;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import io.undertow.server.HttpServerExchange;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ import java.util.Map;
 public class AddPageRule extends AbstractPageRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
+        HttpServerExchange exchange = (HttpServerExchange)inputMap.get("exchange");
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String pageId = (String)data.get("pageId");
         String host = (String)data.get("host");
@@ -54,8 +57,8 @@ public class AddPageRule extends AbstractPageRule implements Rule {
         }
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            String json = getPageById(graph, pageId);
-            if(json != null) {
+            CacheObject co = getPageById(graph, pageId);
+            if(co != null) {
                 error = "Page with the same id exists";
                 inputMap.put("responseCode", 400);
             } else {
@@ -73,7 +76,7 @@ public class AddPageRule extends AbstractPageRule implements Rule {
             graph.shutdown();
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

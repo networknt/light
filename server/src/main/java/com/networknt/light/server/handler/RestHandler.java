@@ -34,6 +34,9 @@ import com.networknt.light.server.ServerConstants;
 import com.networknt.light.util.JwtUtil;
 import com.networknt.light.util.ServiceLocator;
 import com.networknt.light.util.Util;
+import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.HeaderMap;
@@ -430,24 +433,27 @@ public class RestHandler implements HttpHandler {
             }
         }
 
+        // inject exchange to the command here in order to handle more complicated logic like etag
+        jsonMap.put("exchange", exchange);
+
         // two types of rules (Command Rule and Event Rule)
         // Command Rule is responsible for validation and return result to client and enrich the command to event that
-        // can be replayed at anytime without side effect.Once this is done, return to client. Also, it there are any
-        // calls to the outside system, they should be performed here in order to avoid side effects.
+        // can be replayed at anytime without side effect. Also, it there are any calls to the outside system, they
+        // should be performed here in order to avoid side effects.
         //
         // Event rule is responsible to update domain model based on the event enriched by Command Rule.
-
+        boolean valid = false;
         if(readOnly) {
             // get data from memory and return it, it call a command rule to get the data and result will be in the jsonMap as "result" key
             // call the right rule to execute the command, return error code and message if validation fails.
-            RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
+            valid = RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
         } else {
             // this is a update command or impacting to external system.
             // TODO validate version number in itself and dependencies to make sure the event is valid. Reject it back if not.
             // TODO This is the command that need to be executed, and it should be done only once to eliminate side effect.
             // Once this is done, the jsonMap is enriched so that the event is created and can be replayed.
             // It is very possible that something needs to be returned, put it in "result" key in jsonMap.
-            boolean valid = RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
+            valid = RuleEngine.getInstance().executeRule(Util.getCommandRuleId(jsonMap), jsonMap);
             if(valid) {
                 // persist event into event store.
                 Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
@@ -460,48 +466,21 @@ public class RestHandler implements HttpHandler {
                 RuleEngine.getInstance().executeRuleAsync(Util.getEventRuleId(eventMap), eventMap);
             }
         }
-        // orientdb most likely return ODocument and ODocument collection, convert to json string by rules
-        String result  = null;
-        Integer responseCode = (Integer)jsonMap.get("responseCode");
-        if(responseCode != null) {
-            // there is an error
-            exchange.setResponseCode(responseCode);
-            result = (String)jsonMap.get("error");
-            logger.debug("response error: {}", result);
-            // TODO should I log the response error here or in the response interceptor?
-            // do I have all the info here?
-
-        } else {
-            //  no error
-            result = (String)jsonMap.get("result");
-
+        String result = (String)jsonMap.get("result");
+        if(valid) {
             // TODO apply response transform rule. Not supported currently yet.
 
-            logger.debug("response success: {} ", result);
+        } else {
+            // convert error string to json.
+            if(result != null) result=  "{\"error\":" + result + "}";
+            Integer responseCode = (Integer)jsonMap.get("responseCode");
+            if(responseCode != null) exchange.setResponseCode(responseCode);
         }
+        logger.debug("response success: {} ", result);
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
         if(result != null) {
             exchange.getResponseSender().send(ByteBuffer.wrap(result.getBytes("utf-8")));
         }
-    }
-
-    private JsonToken getToken(HeaderMap headerMap) throws Exception {
-
-        JsonToken token = null;
-        String authorization = headerMap.getFirst("authorization");
-        if (authorization != null) {
-            String[] parts = authorization.split(" ");
-            if (parts.length == 2) {
-                String scheme = parts[0];
-                String credentials = parts[1];
-
-                Pattern pattern = Pattern.compile("^Bearer$", Pattern.CASE_INSENSITIVE);
-                if (pattern.matcher(scheme).matches()) {
-                    token = JwtUtil.VerifyAndDeserialize(credentials);
-                }
-            }
-        }
-        return token;
     }
 
     private Map<String, Object> getTokenPayload(HeaderMap headerMap) throws Exception {

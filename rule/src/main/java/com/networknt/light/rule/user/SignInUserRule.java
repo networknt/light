@@ -93,7 +93,7 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
             }
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

@@ -51,7 +51,7 @@ public class ImpPageRule extends AbstractPageRule implements Rule {
             eventData.remove("host");
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

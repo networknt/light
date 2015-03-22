@@ -55,7 +55,7 @@ public class AddHostRule extends AbstractHostRule implements Rule {
             eventData.put("createUserId", user.get("userId"));
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;
