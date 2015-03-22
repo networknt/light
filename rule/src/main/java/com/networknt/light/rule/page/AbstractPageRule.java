@@ -21,6 +21,7 @@ import com.hazelcast.core.ITopic;
 import com.hazelcast.core.Message;
 import com.hazelcast.core.MessageListener;
 import com.hazelcast.util.executor.StripedRunnable;
+import com.networknt.light.model.CacheObject;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
@@ -80,8 +81,8 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
     }
     */
 
-    protected String getPageById(OrientGraph graph, String pageId) {
-        String json = null;
+    protected CacheObject getPageById(OrientGraph graph, String pageId) {
+        CacheObject co = null;
         Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
         if(cache == null) {
@@ -90,20 +91,20 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
                     .build();
             pageMap.put("cache", cache);
         } else {
-            json = (String)cache.get(pageId);
+            co = (CacheObject)cache.get(pageId);
         }
-        if(json == null) {
-            Vertex page = graph.getVertexByKey("Page.pageId", pageId);
+        if(co == null) {
+            OrientVertex page = (OrientVertex)graph.getVertexByKey("Page.pageId", pageId);
             if(page != null) {
-                json = ((OrientVertex)page).getRecord().toJSON();
-                cache.put(pageId, json);
+                String json = page.getRecord().toJSON();
+                co = new CacheObject(page.getProperty("@version").toString(), json);
+                cache.put(pageId, co);
             }
         }
-        return json;
+        return co;
     }
 
     protected void addPage(Map<String, Object> data) throws Exception {
-        String json = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             graph.begin();
@@ -111,7 +112,16 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
             OrientVertex page = graph.addVertex("class:Page", data);
             createUser.addEdge("Create", page);
             graph.commit();
-            json = page.getRecord().toJSON();
+            String json = page.getRecord().toJSON();
+            Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
+            if(cache == null) {
+                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                        .maximumWeightedCapacity(1000)
+                        .build();
+                pageMap.put("cache", cache);
+            }
+            cache.put(data.get("pageId"), new CacheObject(page.getProperty("@version").toString(), json));
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -119,15 +129,6 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         } finally {
             graph.shutdown();
         }
-        Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
-                    .build();
-            pageMap.put("cache", cache);
-        }
-        cache.put(data.get("pageId"), json);
     }
 
     protected void delPage(String pageId) {
@@ -153,12 +154,12 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         }
     }
 
-    protected String updPage(Map<String, Object> data) {
-        String json = null;
+    protected void updPage(Map<String, Object> data) {
+        String pageId = (String)data.get("pageId");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             graph.begin();
-            OrientVertex page = (OrientVertex)graph.getVertexByKey("Page.pageId", data.get("pageId"));
+            OrientVertex page = (OrientVertex)graph.getVertexByKey("Page.pageId", pageId);
             if(page != null) {
                 page.setProperty("content", data.get("content"));
                 page.setProperty("updateDate", data.get("updateDate"));
@@ -166,7 +167,22 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
                 updateUser.addEdge("Update", page);
             }
             graph.commit();
-            json = page.getRecord().toJSON();
+            String json = page.getRecord().toJSON();
+            Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
+            if(cache == null) {
+                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                        .maximumWeightedCapacity(1000)
+                        .build();
+                pageMap.put("cache", cache);
+            }
+            CacheObject co = (CacheObject)cache.get(pageId);
+            if(co != null) {
+                co.setEtag(page.getProperty("@version"));
+                co.setData(json);
+            } else {
+                cache.put(pageId, new CacheObject(page.getProperty("@version").toString(), json));
+            }
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -174,24 +190,14 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         } finally {
             graph.shutdown();
         }
-        Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
-                    .build();
-            pageMap.put("cache", cache);
-        }
-        cache.put(data.get("pageId"), json);
-        return json;
     }
 
-    protected String impPage(Map<String, Object> data) throws Exception {
+    protected void impPage(Map<String, Object> data) throws Exception {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        String json = null;
+        String pageId = (String)data.get("pageId");
         try {
             graph.begin();
-            OrientVertex page = (OrientVertex)graph.getVertexByKey("Page.pageId", data.get("pageId"));
+            OrientVertex page = (OrientVertex)graph.getVertexByKey("Page.pageId", pageId);
             if(page != null) {
                 graph.removeVertex(page);
             }
@@ -199,7 +205,22 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
             page = graph.addVertex("class:Page", data);
             createUser.addEdge("Create", page);
             graph.commit();
-            json = page.getRecord().toJSON();
+            String json = page.getRecord().toJSON();
+            Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
+            if(cache == null) {
+                cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                        .maximumWeightedCapacity(1000)
+                        .build();
+                pageMap.put("cache", cache);
+            }
+            CacheObject co = (CacheObject)cache.get(pageId);
+            if(co != null) {
+                co.setEtag(page.getProperty("@version"));
+                co.setData(json);
+            } else {
+                cache.put(pageId, new CacheObject(page.getProperty("@version").toString(), json));
+            }
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -207,16 +228,6 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
         } finally {
             graph.shutdown();
         }
-        Map<String, Object> pageMap = ServiceLocator.getInstance().getMemoryImage("pageMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)pageMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
-                    .build();
-            pageMap.put("cache", cache);
-        }
-        cache.put(data.get("pageId"), json);
-        return json;
     }
 
     protected String getAllPage(OrientGraph graph, String host) {

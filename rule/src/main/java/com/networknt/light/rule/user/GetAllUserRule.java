@@ -44,7 +44,7 @@ public class GetAllUserRule extends AbstractUserRule implements Rule {
         String host = (String)user.get("host");
         if(host != null) {
             if(!host.equals(data.get("host"))) {
-                inputMap.put("error", "You can only get all users from host: " + host);
+                inputMap.put("result", "You can only get all users from host: " + host);
                 inputMap.put("responseCode", 403);
                 return false;
             }
@@ -65,7 +65,7 @@ public class GetAllUserRule extends AbstractUserRule implements Rule {
                 inputMap.put("result", mapper.writeValueAsString(result));
                 return true;
             } else {
-                inputMap.put("error", "No user can be found.");
+                inputMap.put("result", "No user can be found.");
                 inputMap.put("responseCode", 404);
                 return false;
             }

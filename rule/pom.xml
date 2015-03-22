@@ -35,6 +35,10 @@
             <groupId>com.github.fge</groupId>
             <artifactId>json-schema-validator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-core</artifactId>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>

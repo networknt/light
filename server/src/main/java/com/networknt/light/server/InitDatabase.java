@@ -71,7 +71,7 @@ public class InitDatabase {
             OrientVertexType role = graph.createVertexType("Role");
             role.createProperty("roleId", OType.STRING);
             role.createProperty("host", OType.STRING);
-            role.createProperty("desc", OType.STRING);
+            role.createProperty("description", OType.STRING);
             role.createProperty("createDate", OType.DATETIME);
             role.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("roleId", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Role"));
@@ -104,7 +104,7 @@ public class InitDatabase {
             client.createProperty("clientId", OType.STRING);
             client.createProperty("type", OType.STRING); // 0 - CONFIDENTIAL, 1 - PUBLIC
             client.createProperty("secret", OType.STRING);
-            client.createProperty("desc", OType.STRING);
+            client.createProperty("description", OType.STRING);
             client.createProperty("createDate", OType.DATETIME);
             client.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("clientId", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Client"));
@@ -250,7 +250,7 @@ public class InitDatabase {
             OClass catalog = schema.createClass("Catalog");
             catalog.createProperty("host", OType.STRING);
             catalog.createProperty("id", OType.STRING);               // unique identifier
-            catalog.createProperty("desc", OType.STRING);             // description of catalog
+            catalog.createProperty("description", OType.STRING);             // description of catalog
             catalog.createProperty("parent", OType.LINK);             // parent catalog
             catalog.createProperty("children", OType.LINKLIST);       // sub catalog
             catalog.createProperty("attributes", OType.EMBEDDEDMAP);  // attributes that associates with the catalog
@@ -535,20 +535,20 @@ public class InitDatabase {
     static void refreshDoc() {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            graph.addVertex( "class:Role", "roleId", "anonymous", "desc", "Anonymous or guest that have readonly access to certain things");
-            graph.addVertex( "class:Role", "roleId", "user", "desc", "logged in user who can do certain things");
-            graph.addVertex( "class:Role", "roleId", "dbAdmin", "desc", "admin database objects for the host");
-            graph.addVertex( "class:Role", "roleId", "hostAdmin", "desc", "admin hosts for the platform");
-            graph.addVertex( "class:Role", "roleId", "userAdmin", "desc", "admin users for the host");
-            graph.addVertex( "class:Role", "roleId", "statusAdmin", "desc", "admin status display for the host");
-            graph.addVertex( "class:Role", "roleId", "configAdmin", "desc", "admin config for the host");
-            graph.addVertex( "class:Role", "roleId", "formAdmin", "desc", "admin forms for the host");
-            graph.addVertex( "class:Role", "roleId", "pageAdmin", "desc", "admin pages for the host");
-            graph.addVertex( "class:Role", "roleId", "ruleAdmin", "desc", "admin rules for the host");
-            graph.addVertex( "class:Role", "roleId", "menuAdmin", "desc", "admin menus for the host");
-            graph.addVertex( "class:Role", "roleId", "admin", "desc", "admin every thing for the host");
-            graph.addVertex( "class:Role", "roleId", "owner", "desc", "owner of the site who can do anything");
-            graph.addVertex( "class:Role", "roleId", "betaTester", "desc", "Beta Tester that can be routed to differnt version of API");
+            graph.addVertex( "class:Role", "roleId", "anonymous", "description", "Anonymous or guest that have readonly access to certain things");
+            graph.addVertex( "class:Role", "roleId", "user", "description", "logged in user who can do certain things");
+            graph.addVertex( "class:Role", "roleId", "dbAdmin", "description", "admin database objects for the host");
+            graph.addVertex( "class:Role", "roleId", "hostAdmin", "description", "admin hosts for the platform");
+            graph.addVertex( "class:Role", "roleId", "userAdmin", "description", "admin users for the host");
+            graph.addVertex( "class:Role", "roleId", "statusAdmin", "description", "admin status display for the host");
+            graph.addVertex( "class:Role", "roleId", "configAdmin", "description", "admin config for the host");
+            graph.addVertex( "class:Role", "roleId", "formAdmin", "description", "admin forms for the host");
+            graph.addVertex( "class:Role", "roleId", "pageAdmin", "description", "admin pages for the host");
+            graph.addVertex( "class:Role", "roleId", "ruleAdmin", "description", "admin rules for the host");
+            graph.addVertex( "class:Role", "roleId", "menuAdmin", "description", "admin menus for the host");
+            graph.addVertex( "class:Role", "roleId", "admin", "description", "admin every thing for the host");
+            graph.addVertex( "class:Role", "roleId", "owner", "description", "owner of the site who can do anything");
+            graph.addVertex( "class:Role", "roleId", "betaTester", "description", "Beta Tester that can be routed to differnt version of API");
 
             List roles = new ArrayList<String>();
             roles.add("owner");
@@ -741,6 +741,7 @@ public class InitDatabase {
                             "import com.fasterxml.jackson.core.type.TypeReference;\n" +
                             "import com.fasterxml.jackson.databind.ObjectMapper;\n" +
                             "import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\n" +
+                            "import com.networknt.light.model.CacheObject;\n" +
                             "import com.networknt.light.server.DbService;\n" +
                             "import com.networknt.light.util.ServiceLocator;\n" +
                             "import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;\n" +
@@ -749,15 +750,16 @@ public class InitDatabase {
                             "import com.orientechnologies.orient.core.index.OIndex;\n" +
                             "import com.orientechnologies.orient.core.metadata.schema.OSchema;\n" +
                             "import com.orientechnologies.orient.core.record.impl.ODocument;\n" +
+                            "import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientVertex;\n" +
+                            "import io.undertow.server.HttpServerExchange;\n" +
+                            "import io.undertow.util.Headers;\n" +
                             "import net.engio.mbassy.bus.MBassador;\n" +
                             "import org.slf4j.Logger;\n" +
                             "import org.slf4j.LoggerFactory;\n" +
                             "\n" +
-                            "import java.util.Date;\n" +
-                            "import java.util.HashMap;\n" +
-                            "import java.util.Map;\n" +
+                            "import java.util.*;\n" +
                             "import java.util.concurrent.ConcurrentMap;\n" +
                             "\n" +
                             "/**\n" +
@@ -765,6 +767,9 @@ public class InitDatabase {
                             " */\n" +
                             "public abstract class AbstractRule implements Rule {\n" +
                             "    static final Logger logger = LoggerFactory.getLogger(AbstractRule.class);\n" +
+                            "\n" +
+                            "    static final String HEADER_ETAG = \"ETag\";\n" +
+                            "    static final String HEADER_IF_NONE_MATCH = \"If-None-Match\";\n" +
                             "\n" +
                             "    protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();\n" +
                             "    public abstract boolean execute (Object ...objects) throws Exception;\n" +
@@ -784,7 +789,22 @@ public class InitDatabase {
                             "        }\n" +
                             "    }\n" +
                             "\n" +
+                            "    protected boolean matchEtag(Map<String, Object> inputMap, CacheObject co) {\n" +
+                            "        HttpServerExchange exchange = (HttpServerExchange)inputMap.get(\"exchange\");\n" +
+                            "        String requestETag = exchange.getRequestHeaders().getFirst(Headers.IF_NONE_MATCH);\n" +
+                            "        if (co.getEtag().equals(requestETag)) {\n" +
+                            "            exchange.setResponseCode(304); // no change\n" +
+                            "            return true;\n" +
+                            "        } else {\n" +
+                            "            exchange.getResponseHeaders().add(Headers.ETAG, co.getEtag());\n" +
+                            "            return false;\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
                             "    public static Map<String, Object> getRuleByRuleClass(String ruleClass) {\n" +
+                            "        String sqlTransformReq = \"SELECT FROM TransformRequest WHERE ruleClass = '\" + ruleClass + \"' ORDER BY sequence\";\n" +
+                            "        String sqlTransformRes = \"SELECT FROM TransformResponse WHERE ruleClass = '\" + ruleClass + \"' ORDER BY sequence\";\n" +
+                            "\n" +
                             "        Map<String, Object> map = null;\n" +
                             "        Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
                             "        ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
@@ -802,6 +822,39 @@ public class InitDatabase {
                             "                OrientVertex rule = (OrientVertex)graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
                             "                if(rule != null) {\n" +
                             "                    map = rule.getRecord().toMap();\n" +
+                            "                    // remove sourceCode as we don't need it and it is big\n" +
+                            "                    map.remove(\"sourceCode\");\n" +
+                            "                    OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sqlTransformReq);\n" +
+                            "                    List<ODocument> docs = graph.getRawGraph().command(query).execute();\n" +
+                            "                    List<Map<String, Object>> reqTransforms = new ArrayList<Map<String, Object>>();\n" +
+                            "                    if(docs != null) {\n" +
+                            "                        for(ODocument doc: docs) {\n" +
+                            "                            Map<String, Object> reqTransform = new HashMap<String, Object> ();\n" +
+                            "                            reqTransform.put(\"sequence\", doc.field(\"sequence\"));\n" +
+                            "                            reqTransform.put(\"transformRule\", doc.field(\"transformRule\"));\n" +
+                            "                            reqTransform.put(\"transformData\", doc.field(\"transformData\"));\n" +
+                            "                            reqTransform.put(\"createUserId\", doc.field(\"createUserId\"));\n" +
+                            "                            reqTransforms.add(reqTransform);\n" +
+                            "                        }\n" +
+                            "                    }\n" +
+                            "                    map.put(\"reqTransforms\", reqTransforms);\n" +
+                            "\n" +
+                            "                    query = new OSQLSynchQuery<>(sqlTransformRes);\n" +
+                            "                    docs = graph.getRawGraph().command(query).execute();\n" +
+                            "                    List<Map<String, Object>> resTransforms = new ArrayList<Map<String, Object>> ();\n" +
+                            "                    if(docs != null) {\n" +
+                            "                        for(ODocument doc: docs) {\n" +
+                            "                            Map<String, Object> resTransform = new HashMap<String, Object> ();\n" +
+                            "                            resTransform.put(\"sequence\", doc.field(\"sequence\"));\n" +
+                            "                            resTransform.put(\"transformRule\", doc.field(\"transformRule\"));\n" +
+                            "                            resTransform.put(\"transformData\", doc.field(\"transformData\"));\n" +
+                            "                            resTransform.put(\"createUserId\", doc.field(\"createUserId\"));\n" +
+                            "                            resTransforms.add(resTransform);\n" +
+                            "                        }\n" +
+                            "                    }\n" +
+                            "                    map.put(\"resTransforms\", resTransforms);\n" +
+                            "\n" +
+                            "                    logger.debug(\"map = \" + map);\n" +
                             "                    cache.put(ruleClass, map);\n" +
                             "                }\n" +
                             "            } catch (Exception e) {\n" +
@@ -2004,7 +2057,7 @@ public class InitDatabase {
                             "            }\n" +
                             "        }\n" +
                             "        if(error != null) {\n" +
-                            "            inputMap.put(\"error\", error);\n" +
+                            "            inputMap.put(\"result\", error);\n" +
                             "            return false;\n" +
                             "        } else {\n" +
                             "            return true;\n" +
@@ -2131,7 +2184,7 @@ public class InitDatabase {
                             "            }\n" +
                             "        }\n" +
                             "        if(error != null) {\n" +
-                            "            inputMap.put(\"error\", error);\n" +
+                            "            inputMap.put(\"result\", error);\n" +
                             "            return false;\n" +
                             "        } else {\n" +
                             "            return true;\n" +
@@ -2297,7 +2350,7 @@ public class InitDatabase {
                             "        }\n" +
                             "\n" +
                             "        if(error != null) {\n" +
-                            "            inputMap.put(\"error\", error);\n" +
+                            "            inputMap.put(\"result\", error);\n" +
                             "            return false;\n" +
                             "        } else {\n" +
                             "            return true;\n" +
@@ -2460,28 +2513,28 @@ public class InitDatabase {
 
             ODocument categoryAdmin = new ODocument(schema.getClass("Role"));
             categoryAdmin.field("id", "categoryAdmin");
-            categoryAdmin.field("desc", "admin category for the host");
+            categoryAdmin.field("description", "admin category for the host");
             categoryAdmin.save();
 
             ODocument prodAdmin = new ODocument(schema.getClass("Role"));
             prodAdmin.field("id", "productAdmin");
-            prodAdmin.field("desc", "admin user that can do anything with product");
+            prodAdmin.field("description", "admin user that can do anything with product");
             prodAdmin.save();
 
 
             ODocument blogAdmin = new ODocument(schema.getClass("Role"));
             blogAdmin.field("id", "blogAdmin");
-            blogAdmin.field("desc", "admin user that can do anything with blog");
+            blogAdmin.field("description", "admin user that can do anything with blog");
             blogAdmin.save();
 
             ODocument blogUser = new ODocument(schema.getClass("Role"));
             blogUser.field("id", "blogUser");
-            blogUser.field("desc", "user that can post blog and update his own blog");
+            blogUser.field("description", "user that can post blog and update his own blog");
             blogUser.save();
 
             ODocument forumAdmin = new ODocument(schema.getClass("Role"));
             forumAdmin.field("id", "forumAdmin");
-            forumAdmin.field("desc", "admin user that can do anything with forum");
+            forumAdmin.field("description", "admin user that can do anything with forum");
             forumAdmin.save();
             */
 

@@ -19,6 +19,7 @@ package com.networknt.light.rule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import com.networknt.light.model.CacheObject;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -30,6 +31,8 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
 import net.engio.mbassy.bus.MBassador;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,9 @@ import java.util.concurrent.ConcurrentMap;
  */
 public abstract class AbstractRule implements Rule {
     static final Logger logger = LoggerFactory.getLogger(AbstractRule.class);
+
+    static final String HEADER_ETAG = "ETag";
+    static final String HEADER_IF_NONE_MATCH = "If-None-Match";
 
     protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
     public abstract boolean execute (Object ...objects) throws Exception;
@@ -61,8 +67,19 @@ public abstract class AbstractRule implements Rule {
         }
     }
 
+    protected boolean matchEtag(Map<String, Object> inputMap, CacheObject co) {
+        HttpServerExchange exchange = (HttpServerExchange)inputMap.get("exchange");
+        String requestETag = exchange.getRequestHeaders().getFirst(Headers.IF_NONE_MATCH);
+        if (co.getEtag().equals(requestETag)) {
+            exchange.setResponseCode(304); // no change
+            return true;
+        } else {
+            exchange.getResponseHeaders().add(Headers.ETAG, co.getEtag());
+            return false;
+        }
+    }
+
     public static Map<String, Object> getRuleByRuleClass(String ruleClass) {
-        logger.debug("getRuleByRuleClass is called");
         String sqlTransformReq = "SELECT FROM TransformRequest WHERE ruleClass = '" + ruleClass + "' ORDER BY sequence";
         String sqlTransformRes = "SELECT FROM TransformResponse WHERE ruleClass = '" + ruleClass + "' ORDER BY sequence";
 

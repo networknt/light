@@ -44,7 +44,7 @@ public class ExecSchemaCmdRule extends AbstractDbRule implements Rule {
         eventData.put("createDate", new java.util.Date());
         eventData.put("createUserId", user.get("userId"));
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

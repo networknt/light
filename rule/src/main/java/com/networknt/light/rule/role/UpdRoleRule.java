@@ -62,7 +62,7 @@ public class UpdRoleRule extends AbstractRoleRule implements Rule {
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                             inputMap.put("eventMap", eventMap);
                             eventData.put("roleId", data.get("roleId"));
-                            eventData.put("desc", data.get("desc"));
+                            eventData.put("description", data.get("description"));
                             eventData.put("host", data.get("host"));
                             eventData.put("updateDate", new java.util.Date());
                             eventData.put("updateUserId", user.get("userId"));
@@ -92,7 +92,7 @@ public class UpdRoleRule extends AbstractRoleRule implements Rule {
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);
                         eventData.put("roleId", data.get("roleId"));
-                        eventData.put("desc", data.get("desc"));
+                        eventData.put("description", data.get("description"));
                         eventData.put("updateDate", new java.util.Date());
                         eventData.put("updateUserId", user.get("userId"));
                         // this is the owner update the role. no host.
@@ -106,7 +106,7 @@ public class UpdRoleRule extends AbstractRoleRule implements Rule {
             }
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

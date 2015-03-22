@@ -60,7 +60,6 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
     public abstract boolean execute (Object ...objects) throws Exception;
 
     static {
-        System.out.println("AbstractFromRule is called");
         MBassador<Map<String, Object>> ruleBus = ServiceLocator.getInstance().getEventBus("rule");
         ruleBus.subscribe(new RuleMessageListenerImpl());
     }

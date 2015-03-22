@@ -16,15 +16,19 @@
 
 package com.networknt.light.rule.page;
 
+import com.networknt.light.model.CacheObject;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
+import io.undertow.util.HttpString;
 
 import java.util.Map;
 
 /**
- * Created by husteve on 10/24/2014.
+ * Created by steve on 10/24/2014.
  *
  * AccessLevel A
  *
@@ -33,24 +37,28 @@ public class GetPageRule extends AbstractPageRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        HttpServerExchange exchange = (HttpServerExchange)inputMap.get("exchange");
         String pageId = (String)data.get("pageId");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        String json = null;
+        CacheObject co = null;
         try {
-            json = getPageById(graph, pageId);
+            co = getPageById(graph, pageId);
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
         } finally {
             graph.shutdown();
         }
-        if(json != null) {
-            inputMap.put("result", json);
+        if(co != null) {
+            if(!matchEtag(inputMap, co)) {
+                inputMap.put("result", co.getData());
+            }
             return true;
         } else {
-            inputMap.put("error", "Page with id " + pageId + " cannot be found.");
             inputMap.put("responseCode", 404);
+            inputMap.put("result", "Page with id " + pageId + " cannot be found.");
             return false;
         }
     }
+
 }

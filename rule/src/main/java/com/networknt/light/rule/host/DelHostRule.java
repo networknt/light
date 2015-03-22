@@ -48,7 +48,7 @@ public class DelHostRule extends AbstractHostRule implements Rule {
             inputMap.put("responseCode", 400);
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

@@ -37,7 +37,7 @@ public class GraphTest {
             //System.out.println(graph.getVertex("#11:0").getRecord().toJSON("rid, fetchPlan:*:-1"));
 
             //String result = graph.getVertex("#37:0").getRecord().toJSON("rid,fetchPlan:[*]in_Create:-2 out_HasComment:5");
-            String result = graph.getVertex("#37:0").getRecord().toJSON("rid,fetchPlan:out_HasComment:-1 out_HasComment.out_HasComment:-1 out_HasComment.in_Create:0");
+            String result = graph.getVertex("#37:0").getRecord().toJSON("rid,version,fetchPlan:out_HasComment:-1 out_HasComment.out_HasComment:-1 out_HasComment.in_Create:0");
             System.out.println(result);
 
             //List<ODocument> result = graph.getRawGraph().query(

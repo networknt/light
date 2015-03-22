@@ -94,9 +94,9 @@ public abstract class AbstractRoleRule extends AbstractRule implements Rule {
                 } else {
                     role.removeProperty("host");
                 }
-                String desc = (String)data.get("desc");
-                if(desc != null && !desc.equals(role.getProperty("desc"))) {
-                    role.setProperty("desc", desc);
+                String description = (String)data.get("description");
+                if(description != null && !description.equals(role.getProperty("description"))) {
+                    role.setProperty("description", description);
                 }
                 role.setProperty("updateDate", data.get("updateDate"));
                 updateUser.addEdge("Update", role);

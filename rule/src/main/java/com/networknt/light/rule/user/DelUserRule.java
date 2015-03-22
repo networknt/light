@@ -48,7 +48,7 @@ public class DelUserRule extends AbstractUserRule implements Rule {
             inputMap.put("responseCode", 403);
         } else {
             if(rid == null && userId == null) {
-                inputMap.put("error", "rid or userId is required");
+                error = "rid or userId is required";
                 inputMap.put("responseCode", 400);
             } else {
                 OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -82,7 +82,7 @@ public class DelUserRule extends AbstractUserRule implements Rule {
             }
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

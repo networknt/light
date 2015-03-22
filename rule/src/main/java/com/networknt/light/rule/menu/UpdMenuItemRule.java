@@ -24,6 +24,7 @@ import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import io.undertow.server.HttpServerExchange;
 
 import java.util.*;
 
@@ -36,6 +37,7 @@ import java.util.*;
 public class UpdMenuItemRule extends AbstractMenuRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
+        HttpServerExchange exchange = (HttpServerExchange)inputMap.get("exchange");
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -106,7 +108,7 @@ public class UpdMenuItemRule extends AbstractMenuRule implements Rule {
             }
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
             return true;

@@ -78,6 +78,7 @@ public class LightServer {
             try {
                 OrientBaseGraph g = new OrientGraph(ServiceLocator.getInstance().getDbUrl());
                 // database is auto created
+                OGlobalConfiguration.INDEX_EMBEDDED_TO_SBTREEBONSAI_THRESHOLD.setValue(-1);
                 g.command(new OCommandSQL("alter database custom useLightweightEdges=true")).execute();
                 g.command(new OCommandSQL("alter database DATETIMEFORMAT yyyy-MM-dd'T'HH:mm:ss.SSS")).execute();
                 g.command(new OCommandSQL("alter database TIMEZONE UTC")).execute();

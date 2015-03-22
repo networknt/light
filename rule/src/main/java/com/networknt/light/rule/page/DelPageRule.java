@@ -23,6 +23,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import io.undertow.server.HttpServerExchange;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import java.util.Map;
 public class DelPageRule extends AbstractPageRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
+        HttpServerExchange exchange = (HttpServerExchange)inputMap.get("exchange");
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -74,10 +76,9 @@ public class DelPageRule extends AbstractPageRule implements Rule {
             }
         }
         if(error != null) {
-            inputMap.put("error", error);
+            inputMap.put("result", error);
             return false;
         } else {
-            inputMap.put("result", "success");
             return true;
         }
     }
