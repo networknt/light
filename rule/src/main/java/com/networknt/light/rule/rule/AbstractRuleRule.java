@@ -245,6 +245,42 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
             if(rule != null) {
                 rule.setProperty("enableEtag", data.get("enableEtag"));
+                String cacheControl = (String)data.get("cacheControl");
+                if(cacheControl != null) {
+                    rule.setProperty("cacheControl", cacheControl);
+                } else {
+                    rule.removeProperty("cacheControl");
+                }
+                rule.setProperty("updateDate", data.get("updateDate"));
+                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                if(cache != null) {
+                    cache.remove(ruleClass);
+                }
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void updSchema(Map<String, Object> data) throws Exception {
+        String ruleClass = (String)data.get("ruleClass");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            if(rule != null) {
+                String schema = (String)data.get("schema");
+                if(schema != null) {
+                    rule.setProperty("schema", schema);
+                } else {
+                    rule.removeProperty("schema");
+                }
                 rule.setProperty("updateDate", data.get("updateDate"));
                 Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
                 ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
@@ -270,6 +306,12 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
             if(rule != null) {
                 rule.setProperty("enableCors", data.get("enableCors"));
+                String corsHosts = (String)data.get("corsHosts");
+                if(corsHosts != null) {
+                    rule.setProperty("corsHosts", corsHosts);
+                } else {
+                    rule.removeProperty("corsHosts");
+                }
                 rule.setProperty("updateDate", data.get("updateDate"));
                 Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
                 ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
