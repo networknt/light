@@ -14,34 +14,36 @@
  * limitations under the License.
  */
 
-package com.networknt.light.rule.validation;
+package com.networknt.light.rule.rule;
 
 import com.networknt.light.rule.Rule;
-import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by steve on 21/02/15.
+ * Created by steve on 22/03/15.
  *
  * AccessLevel R [owner, admin, ruleAdmin]
  *
  */
-public class GetValidationRule extends AbstractValidationRule implements Rule {
-    static final org.slf4j.Logger logger = LoggerFactory.getLogger(GetValidationRule.class);
+public class UpdSchemaRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        String ruleClass = (String)data.get("ruleClass");
-        String json = getValidation(ruleClass);
-        if(json != null) {
-            inputMap.put("result", json);
-            return true;
-        } else {
-            inputMap.put("result", "No validation schema can be found for ruleClass" + ruleClass);
-            inputMap.put("responseCode", 404);
+        Map eventMap = getEventMap(inputMap);
+        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+        inputMap.put("eventMap", eventMap);
+        String error = updateValidation(inputMap, eventData);
+        if(error != null) {
+            inputMap.put("result", error);
             return false;
+        } else {
+            String schema = (String)data.get("schema");
+            if(schema != null) {
+                eventData.put("schema", schema);
+            }
+            eventData.put("updateDate", new java.util.Date());
+            return true;
         }
     }
 }

@@ -17,7 +17,10 @@
 package com.networknt.light.rule;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.networknt.light.model.CacheObject;
 import com.networknt.light.server.DbService;
@@ -45,14 +48,12 @@ import java.util.concurrent.ConcurrentMap;
  */
 public abstract class AbstractRule implements Rule {
     static final Logger logger = LoggerFactory.getLogger(AbstractRule.class);
-
-    static final String HEADER_ETAG = "ETag";
-    static final String HEADER_IF_NONE_MATCH = "If-None-Match";
+    static final JsonSchemaFactory schemaFactory = JsonSchemaFactory.byDefault();
 
     protected ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
     public abstract boolean execute (Object ...objects) throws Exception;
 
-    protected void publishEvent(Map<String, Object> eventMap) {
+    protected void publishEvent(Map<String, Object> eventMap) throws Exception {
         // get class name
         System.out.println(this.getClass().getPackage());
         System.out.println(this.getClass().getName());
@@ -79,7 +80,7 @@ public abstract class AbstractRule implements Rule {
         }
     }
 
-    public static Map<String, Object> getRuleByRuleClass(String ruleClass) {
+    public static Map<String, Object> getRuleByRuleClass(String ruleClass) throws Exception {
         String sqlTransformReq = "SELECT FROM TransformRequest WHERE ruleClass = '" + ruleClass + "' ORDER BY sequence";
         String sqlTransformRes = "SELECT FROM TransformResponse WHERE ruleClass = '" + ruleClass + "' ORDER BY sequence";
 
@@ -102,6 +103,13 @@ public abstract class AbstractRule implements Rule {
                     map = rule.getRecord().toMap();
                     // remove sourceCode as we don't need it and it is big
                     map.remove("sourceCode");
+
+                    // convert schema to JsonSchema in order to speed up validation.
+                    if(map.get("schema") != null) {
+                        JsonNode schemaNode = ServiceLocator.getInstance().getMapper().readTree((String)map.get("schema"));
+                        JsonSchema schema = schemaFactory.getJsonSchema(schemaNode);
+                        map.put("schema", schema);
+                    }
                     OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sqlTransformReq);
                     List<ODocument> docs = graph.getRawGraph().command(query).execute();
                     List<Map<String, Object>> reqTransforms = new ArrayList<Map<String, Object>>();

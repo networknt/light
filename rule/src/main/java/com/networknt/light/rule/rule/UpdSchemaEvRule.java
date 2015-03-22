@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package com.networknt.light.rule.validation;
+package com.networknt.light.rule.rule;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.transform.AbstractTransformRule;
 
 import java.util.Map;
 
 /**
- * Created by steve on 21/02/15.
+ * Created by steve on 22/03/15.
  */
-public class UpdValidationEvRule extends AbstractValidationRule implements Rule {
+public class UpdSchemaEvRule extends AbstractRuleRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
-        updValidation(data);
+        updSchema(data);
         return true;
     }
 }

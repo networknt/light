@@ -39,6 +39,10 @@ public class UpdEtagRule extends AbstractRuleRule implements Rule {
             return false;
         } else {
             eventData.put("enableEtag", data.get("enableEtag"));
+            String cacheControl = (String)data.get("cacheControl");
+            if(cacheControl != null) {
+                eventData.put("cacheControl", cacheControl);
+            }
             eventData.put("updateDate", new java.util.Date());
             return true;
         }

@@ -66,7 +66,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
 
     private static class RuleMessageListenerImpl {
         @Handler
-        public void onMessage(Map<String, Object> eventMap) {
+        public void onMessage(Map<String, Object> eventMap) throws Exception {
             Map<String, Object> data = (Map<String, Object>)eventMap.get("data");
             System.out.println("Received: " + eventMap);
             // which form has a drop down of rules that depending on addRule, delRule and impRule?
