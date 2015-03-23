@@ -3,8 +3,9 @@
         <div class="col-md-12">
             <h1>Production Environment Setup</h1>
             <p>
-                I personally use CentOS 6.5 32bit Linux as my production environment and I would recommend it to you; however, other Linux distributions, Mac and Windows are perfectly OK.
-                The following steps are for CentOS 6.5 32bit Linux and the setup is single node that hosts three sites. For cluster and load balance setup, please read <a href="/page/production_cluster">here</a>
+                I personally use CentOS 6.5 Linux as my production environment and I would recommend it to you; however, other Linux distributions are OK for your production.
+                The following steps are for CentOS 6.5 Linux and the setup is single node that hosts two sites.
+                For cluster and load balance setup, please read <a href="/page/com-networknt-light-v-production-cluster">here</a>
             </p>
             <p>
                 On Linux, the production environment is very similar with development environment.
@@ -82,6 +83,25 @@
             OK. Let's create three users for each site and if you are building a new site, create one extra user for it.
 
             </p>
+            <p>
+                5. Set up other users and virtual host. Light Framework supports multiple web sites hosted on the same IP address. In the ~/networknt/light folder there are three sites included.
+            <ul>networknt folder contains source code for www.networknt.com which is the main site for Light Framework</ul>
+            <ul>edibleforestgarden folder contains source code for www.edibleforestgarden.ca which is a social eCommerce site to demo the features of the framework</ul>
+            <ul>example folder is a template site that can be copied to start your own web site.</ul>
+            Let's create three users for each site and if you are building a new site, create one extra user for it.
+                <pre>
+            sudo adduser networknt
+            sudo adduser edibleforestgarden
+            sudo adduser example
+                </pre>
+            Within each user's home directory, create web subdirectory and grant access to the development user. steve in my case. If you run grunt build from these projects in light folder, you website will be compiled and copied to these web folders and the server will serve the content from these folders for each site. This is like running in production mode.
+            copy server.json and virtualhost.json under networknt/light/server/src/main/resources folder to your home directory and update them accordingly.
+            Add the following line into /etc/hosts in order to test locally using domain names.
+                <pre>
+            127.0.0.1	www.edibleforestgarden.ca www.networknt.com example
+                </pre>
+            </p>
+
             <p>
                 If you’re thinking that matching the colors and content across devices is omnichannel, we would encourage you to reconsider. If you are ready to lead in the next phase of social business and get the most out of the promise that our new identity as customers is truly omniscient, then let’s connect. This way of thinking is the future promise on which we started Omnichannel Application Framework.
             </p>
