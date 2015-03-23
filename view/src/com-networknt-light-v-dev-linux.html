@@ -3,8 +3,10 @@
         <div class="col-md-12">
             <h1>Development Environment Linux</h1>
             <p>
-                I personally use Linux as my dev environment and I would recommend you do so; however, Mac and Windows are perfectly OK.
-                The following steps are for Ubuntu Linux and some of the commands might be different on other Linux distributions, Mac and Windows. My production is CentOS 6.5 32bit and the installation guide for single node is <a href="/page/com-networknt-light-v-production-single">here</a>. For cluster with load balancer, the installation guide is <a href="/page/com-networknt-light-v-production-cluster">here</a>.
+                I personally use Linux as my dev environment and I would recommend you to do so; however, Mac and Windows are perfectly OK.
+                The following steps are for Ubuntu Linux and some of the commands might be different on other Linux distributions, Mac and Windows.
+                My production is CentOS 6.5 and the installation guide for single node is <a href="/page/com-networknt-light-v-production-single">here</a>.
+                For cluster with load balancer, the installation guide is <a href="/page/com-networknt-light-v-production-cluster">here</a>.
 
                 I also recommend Google Chrome as your browser for Front End AngularJS testing and debugging.
             </p>
@@ -43,31 +45,29 @@
             <p>
                 2. Install JDK8, maven, node.js and npm with sudo and then using npm to install Grunt, Gulp, Bower and other modules.
 
-                
-
             </p>
             <p>
                 3. Create dev folder and check out the source code.
                 <pre>
-            log in to the user you just created.
+            log in to the user you just created and you should be in the home directory.
             $mkdir networknt
             $cd networknt
 
             Check out Json Token which is forked from Google and fixed some of the issues.
             $git clone https://github.com/networknt/jsontoken.git
-            Check out light rule engine which is a Java based rule engine used in the back end
-            $git clone https://github.com/networknt/rule-engine.git
+
+            Check out maven-plugin that contains rule loader to load API rules through REST API to dev server.
+            $git clone https://github.com/networknt/maven-plugin.git
+
             Check out the light framework and other projects
             $git clone https://github.com/networknt/light.git
 
             $cd jsontoken
             $mvn clean install
             $cd ..
-            $cd rule-engine
+            $cd maven-plugin
             $mvn clean install
-            $cd rule-loader
-            $mvn clean install
-            $cd ~
+            $cd ..
             $cd light
             $mvn clean install -DskipTests
 
@@ -76,48 +76,76 @@
                 </pre>
             </p>
             <p>
-                4. Open the source code with your IDE. I am using JetBrains Idea but other IDE like Eclipse will work. From Idea, you can just select File/Open... and then choose ~/networknt/light folder to open. It will import the pom.xml file under the light folder. You might need to select JDK for java projects if Idea couldn't find the JDK.
+                4. Open the source code with your IDE. I am using JetBrains Idea but other IDE like Eclipse will work.
+                From Idea, you can just select File/Open... and then choose ~/networknt/light folder to open. It will import the pom.xml file under the light folder.
+                You might need to select JDK for java projects if Idea couldn't find the JDK.
             </p>
             <p>
-                5. Set up other users and virtual host. Light Framework supports multiple web sites hosted on the same IP address. In the ~/networknt/light folder there are three sites included.
-                <ul>networknt folder contains source code for www.networknt.com which is the main site for Light Framework</ul>
-                <ul>edibleforestgarden folder contains source code for www.edibleforestgarden.ca which is a socail commerce site to demo the features of the framework</ul>
-                <ul>example folder is a template site that can be copied to start your own web site.</ul>
-                Let's create three users for each site and if you are building a new site, create one extra user for it.
-                <pre>
-            sudo adduser networknt
-            sudo adduser edibleforestgarden
-            sudo adduser example
-                </pre>
-            Within each user's home directory, create web subdirectory and grant access to the development user. steve in my case. If you run grunt build from these projects in light folder, you website will be compiled and copied to these web folders and the server will serve the content from these folders for each site. This is like running in production mode.
-            copy server.json and virtualhost.json under networknt/light/server/src/main/resources folder to your home directory and update them accordingly.
-            Add the following line into /etc/hosts in order to test locally using domain names.
-                <pre>
-            127.0.0.1	www.edibleforestgarden.ca www.networknt.com example
-                </pre>
+                5. Start server from IDE in debug mode. From your IDE, right click server/src/main/java/com/networknt/light/server/LightServer and select Debug.
+                The first time the server is started it will create the database and replay the event in resources/initdb.json.
+                It will take 10 seconds to several minutes until the debug info is stopped. At this time, you can start your angular applications/sites with grunt serve or gulp webserver and to monitor all your changes in the local directory.
             </p>
-
             <p>
-                6. Start server from IDE in debug mode. From your IDE, right click server/src/main/java/com/networknt/light/server/LightServer and select Debug. The first time the server is started it will create the database and replay the event in resources/initdb.json. It will take several minutes until the debug info is stopped. At this time, you can start Grunt webserver to monitor all your changes in the local directory.
+                6. Start www.networknt.com site locally in liveload mode.
                 <pre>
         cd ~/networknt/light/networknt
         npm install
         bower install
         grunt serve
                 </pre>
-                assuming that Chrome is your default browser, it will be started now and point to localhost:9000 with www.networknt.com site content. I am in a process to move everything from Grunt to Gulp but it is not been done yet.
 
+            assuming that Chrome is your default browser, it will be started now and point to localhost:9000 with www.networknt.com site content. I am in a process to move build process from Grunt to Gulp but it is not been done yet.
+            Now you can play with the site and observe the interaction between angular application and API server. In grunt script, static content will be served by grunt and all REST API calls will be routed to
+            the server started from your IDE. If you update static content within ~/networknt/light/networknt folder, you update will be automatically reloaded on the browser.
             </p>
             <p>
-                For individual component/view/application development, you can go the the folder and run the following commands to start another webserver using gulp
+                7. To checkout www.edibleforestgarden.ca site, run the following commands. Make sure you have stopped networknt site as it is listening to the same port 9001.
+                You will notice that the same API server provides the services to this site as well.
+                <pre>
+        cd ~/networknt/light/edibleforestgarden
+        npm install
+        bower install
+        grunt serve
+
+                </pre>
+            </p>
+            <p>
+                8. To start example site, run the following commands. We are using gulp to build this site which is a starting point for your front end angular application.
+                To build a new site, you can just create another folder and copy the content from example and customize it.
+                <pre>
+        cd ~/networknt/light/example
+        npm install
+        bower install
+        gulp webserver
+
+                </pre>
+            </p>
+            <p>
+                9. To create a page or a view for a site, go to view folder under light. And start an angular application to create views with live load support.
+                To start the angular app, follow the commands below.
         <pre>
-        cd ~/networknt/light/view/com-networknt-light-v-example
+        cd ~/networknt/light/view
         npm install
         bower install
         gulp webserver
         </pre>
-               Now another server is up listening localhost:8001 using gulp webserver. You can switch to other folders to do the same.
+               Now another server is up listening localhost:8001 using gulp webserver. You can update existing pages or create new pages and import them one by one to the server.
+               You don't need to import you page to the server under this folder as angular will load the page from local file and go to the REST API to load page if it doesn't exist.
+            </p>
+            <p>
+                10. To create a web component with angular directive, go to component folder. We have several components in this folder and you can learn from them.
+                To start component com-networknt-light-c-example, follow the commands below.
+        <pre>
+        cd ~/networknt/light/component/com-networknt-light-c-example
+        npm install
+        bower install
+        gulp webserver
 
+        </pre>
+            </p>
+            <p>
+                11. To create your first REST API
+                
             </p>
         </div>
     </div>
