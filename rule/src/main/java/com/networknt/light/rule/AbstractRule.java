@@ -106,7 +106,7 @@ public abstract class AbstractRule implements Rule {
 
                     // convert schema to JsonSchema in order to speed up validation.
                     if(map.get("schema") != null) {
-                        JsonNode schemaNode = ServiceLocator.getInstance().getMapper().readTree((String)map.get("schema"));
+                        JsonNode schemaNode = ServiceLocator.getInstance().getMapper().valueToTree(map.get("schema"));
                         JsonSchema schema = schemaFactory.getJsonSchema(schemaNode);
                         map.put("schema", schema);
                     }
