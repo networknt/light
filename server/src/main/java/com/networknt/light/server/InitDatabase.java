@@ -139,7 +139,7 @@ public class InitDatabase {
              * Note: the validation is for the data payload of the command only.
              *
              */
-            rule.createProperty("schema",OType.STRING); // validation schema
+            rule.createProperty("schema",OType.EMBEDDEDMAP); // validation schema
             rule.createProperty("createDate", OType.DATETIME);
             rule.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("ruleClass", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Rule"));

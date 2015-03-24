@@ -1094,5 +1094,46 @@
     "createUserId": "stevehu",
     "createDate": "2015-02-23T02:22:20.734",
     "@fieldTypes": "createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:32",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10033,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-03-24T01:59:23.304",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.role.GetRoleDropdownRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-03-24T01:59:23.304",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:23",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10024,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-03-24T01:51:38.458",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.client.GetClientDropdownRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-03-24T01:51:38.458",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

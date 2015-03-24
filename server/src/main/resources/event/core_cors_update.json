@@ -1,20 +1,20 @@
 [
   {
     "@type": "d",
-    "@rid": "#17:110",
+    "@rid": "#17:10",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10111,
+    "eventId": 10011,
     "createUserId": "stevehu",
     "data": {
       "enableCors": true,
-      "updateDate": "2015-03-17T01:54:04.139",
+      "updateDate": "2015-03-24T01:33:19.018",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.db.ExpEventRule"
+      "ruleClass": "com.networknt.light.rule.menu.GetMenuRule"
     },
     "name": "updCors",
     "category": "rule",
-    "createDate": "2015-03-17T01:54:04.139",
+    "createDate": "2015-03-24T01:33:19.016",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
@@ -73,6 +73,44 @@
     "category": "rule",
     "createDate": "2015-03-20T01:27:25.345",
     "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:50",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10051,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-03-24T01:00:01.879",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.client.GetClientDropdownRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-03-24T01:00:01.879",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:51",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10052,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-03-24T01:00:21.578",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.role.GetRoleDropdownRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-03-24T01:00:21.576",
+    "ipAddress": "198.16.252.9",
     "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

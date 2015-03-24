@@ -238,11 +238,19 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
             OrientVertex form = graph.addVertex("class:Form", data);
             createUser.addEdge("Create", form);
-            // According to action in the list, populate validation schema.
+            // According to action in the list, populate validation schema in rule class
             List<Map<String, Object>> actions = form.getProperty("action");
             for(Map<String, Object> action: actions) {
                 String ruleClass = Util.getCommandRuleId(action);
-                graph.addVertex("class:Validation", "ruleClass", ruleClass, "schema", data.get("schema"));
+                Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+                if(rule != null) {
+                    rule.setProperty("schema", data.get("schema"));
+                    Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                    ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                    if(cache == null) {
+                        cache.remove(ruleClass);
+                    }
+                }
             }
             graph.commit();
             json = form.getRecord().toJSON();
@@ -270,9 +278,14 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                 List<Map<String, Object>> actions = form.getProperty("action");
                 for(Map<String, Object> action: actions) {
                     String ruleClass = Util.getCommandRuleId(action);
-                    Vertex validation = graph.getVertexByKey("Validation.ruleClass", ruleClass);
-                    if(validation != null) {
-                        graph.removeVertex(validation);
+                    Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+                    if(rule != null) {
+                        rule.removeProperty("schema");
+                        Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                        ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                        if(cache == null) {
+                            cache.remove(ruleClass);
+                        }
                     }
                 }
                 graph.removeVertex(form);
@@ -312,9 +325,14 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                 List<Map<String, Object>> actions = form.getProperty("action");
                 for(Map<String, Object> action: actions) {
                     String ruleClass = Util.getCommandRuleId(action);
-                    Vertex validation = graph.getVertexByKey("Validation.ruleClass", ruleClass);
-                    if(validation != null) {
-                        validation.setProperty("schema", data.get("schema"));
+                    Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+                    if(rule != null) {
+                        rule.setProperty("schema", data.get("schema"));
+                        Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                        ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                        if(cache == null) {
+                            cache.remove(ruleClass);
+                        }
                     }
                 }
             }
@@ -342,14 +360,6 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             graph.begin();
             OrientVertex form = (OrientVertex)graph.getVertexByKey("Form.formId", formId);
             if(form != null) {
-                List<Map<String, Object>> actions = form.getProperty("action");
-                for(Map<String, Object> action: actions) {
-                    String ruleClass = Util.getCommandRuleId(action);
-                    Vertex validation = graph.getVertexByKey("Validation.ruleClass", ruleClass);
-                    if(validation != null) {
-                        graph.removeVertex(validation);
-                    }
-                }
                 graph.removeVertex(form);
             }
 
@@ -360,7 +370,15 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             List<Map<String, Object>> actions = form.getProperty("action");
             for(Map<String, Object> action: actions) {
                 String ruleClass = Util.getCommandRuleId(action);
-                graph.addVertex("class:Validation", "ruleClass", ruleClass, "schema", data.get("schema"));
+                Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+                if(rule != null) {
+                    rule.setProperty("schema", data.get("schema"));
+                    Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                    ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                    if(cache == null) {
+                        cache.remove(ruleClass);
+                    }
+                }
             }
             graph.commit();
             json = form.getRecord().toJSON();

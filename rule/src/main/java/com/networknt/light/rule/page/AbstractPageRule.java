@@ -178,7 +178,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
             }
             CacheObject co = (CacheObject)cache.get(pageId);
             if(co != null) {
-                co.setEtag(page.getProperty("@version"));
+                co.setEtag(page.getProperty("@version").toString());
                 co.setData(json);
             } else {
                 cache.put(pageId, new CacheObject(page.getProperty("@version").toString(), json));
@@ -216,7 +216,7 @@ public abstract class AbstractPageRule extends AbstractRule implements Rule {
             }
             CacheObject co = (CacheObject)cache.get(pageId);
             if(co != null) {
-                co.setEtag(page.getProperty("@version"));
+                co.setEtag(page.getProperty("@version").toString());
                 co.setData(json);
             } else {
                 cache.put(pageId, new CacheObject(page.getProperty("@version").toString(), json));
