@@ -159,7 +159,7 @@ public class ServiceLocator {
     public OrientGraphFactory getFactory() {
         if(factory == null) {
             factory = new OrientGraphFactory(getDbUrl()).setupPool(1,100);
-            OGlobalConfiguration.INDEX_EMBEDDED_TO_SBTREEBONSAI_THRESHOLD.setValue(-1);
+            OGlobalConfiguration.RID_BAG_EMBEDDED_TO_SBTREEBONSAI_THRESHOLD.setValue(-1);
         }
         return factory;
     }

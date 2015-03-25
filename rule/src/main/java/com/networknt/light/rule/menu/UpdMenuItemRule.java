@@ -65,7 +65,7 @@ public class UpdMenuItemRule extends AbstractMenuRule implements Rule {
                         // need to make sure that all the menuItems exist and convert to id for event replay.
                         // and build addMenuItems and delMenuItems sets to the map.
                         Set<String> inputMenuItems = new HashSet<String>();
-                        List<String> menuItems = (List<String>)data.get("menuItems");
+                        List<String> menuItems = (List<String>)data.get("out_Own");
                         if(menuItems != null) {
                             for(String menuItemRid: menuItems) {
                                 Vertex vertex = DbService.getVertexByRid(graph, menuItemRid);
