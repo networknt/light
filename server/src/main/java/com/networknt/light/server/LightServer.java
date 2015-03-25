@@ -81,7 +81,7 @@ public class LightServer {
                 g.command(new OCommandSQL("alter database custom useLightweightEdges=true")).execute();
                 g.command(new OCommandSQL("alter database DATETIMEFORMAT yyyy-MM-dd'T'HH:mm:ss.SSS")).execute();
                 g.command(new OCommandSQL("alter database TIMEZONE UTC")).execute();
-                OGlobalConfiguration.INDEX_EMBEDDED_TO_SBTREEBONSAI_THRESHOLD.setValue(-1);
+                OGlobalConfiguration.RID_BAG_EMBEDDED_TO_SBTREEBONSAI_THRESHOLD.setValue(-1);
             } finally {
                 // this also closes the OrientGraph instances created by the factory
                 // Note that OrientGraphFactory does not implement Closeable
