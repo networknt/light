@@ -1,0 +1,122 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Production Environment Setup</h1>
+            <p>
+                I personally use CentOS 6.5 Linux as my production environment and I would recommend it to you; however, other Linux distributions are OK for your production.
+                The following steps are for CentOS 6.5 Linux and the setup is single node that hosts two sites.
+                For cluster and load balance setup, please read <a href="/page/com-networknt-light-v-production-cluster">here</a>
+            </p>
+            <p>
+                On Linux, the production environment is very similar with development environment.
+            </p>
+            <p>
+                1. Create a working user for production other than root: (If you have a user already on the Linux box, please use it) The following assumes that you logged in as root.
+                <pre>
+            #adduser steve
+            #passwd steve
+
+            #visudo
+            This is to edit /etc/sudoers to add steve to the last line so that he can use sudo command
+            Never use vi to edit the above file!
+
+            Add steve right after
+            root ALL=(ALL)   ALL
+            with
+            steve ALL=(ALL)   ALL
+
+            vi /etc/ssh/sshd_config
+
+            change the following line
+            #PermitRootLogin  yes
+            to
+            PermitRootLogin no
+
+            change the following line
+            #UserDNS yes
+            to
+            UserDNS  no
+
+            Log out from root and log in with steve. From this moment on, please use sudo command instead of logging in as root.
+                </pre>
+            </p>
+            <p>
+                2. Install JDK8, maven, node.js and npm with sudo and then using npm to install Grunt, Gulp, Bower and other modules.
+            </p>
+            <p>
+                3. Create dev folder and check out the source code.
+                <pre>
+            log in to the user you just created.
+            $mkdir networknt
+            $cd networknt
+
+            Check out Json Token which is forked from Google and fixed some of the issues.
+            $git clone https://github.com/networknt/jsontoken.git
+            Check out light rule engine which is a Java based rule engine used in the back end
+            $git clone https://github.com/networknt/rule-engine.git
+            Check out the light framework and other projects
+            $git clone https://github.com/networknt/light.git
+
+            $cd jsontoken
+            $mvn clean install
+            $cd ..
+            $cd rule-engine
+            $mvn clean install
+            $cd rule-loader
+            $mvn clean install
+            $cd ~
+            $cd light
+            $mvn clean install -DskipTests
+
+            Now you have all the Java code built already.
+
+                </pre>
+            </p>
+            <p>
+                4. Open the source code with your IDE. I am using JetBrains Idea but other IDE like Eclipse will work. From Idea, you can just select File/Open... and then choose ~/networknt/light folder to open. It will import the pom.xml file under the light folder.
+            </p>
+            <p>
+                5. Set up other users and virtual host. Light Framework supports multiple web sites hosted on the same IP address. In the ~/networknt/light folder there are three sites included.
+            <ul>networknt folder contains source code for www.networknt.com which is the main site for Light Framework</ul>
+            <ul>edibleforestgarden folder contains source code for www.edibleforestgarden.ca which is a socail commerce site to demo the features of the framework</ul>
+            <ul>example folder is a template site that can be copied to start your own web site.</ul>
+            OK. Let's create three users for each site and if you are building a new site, create one extra user for it.
+
+            </p>
+            <p>
+                5. Set up other users and virtual host. Light Framework supports multiple web sites hosted on the same IP address. In the ~/networknt/light folder there are three sites included.
+            <ul>networknt folder contains source code for www.networknt.com which is the main site for Light Framework</ul>
+            <ul>edibleforestgarden folder contains source code for www.edibleforestgarden.ca which is a social eCommerce site to demo the features of the framework</ul>
+            <ul>example folder is a template site that can be copied to start your own web site.</ul>
+            Let's create three users for each site and if you are building a new site, create one extra user for it.
+                <pre>
+            sudo adduser networknt
+            sudo adduser edibleforestgarden
+            sudo adduser example
+                </pre>
+            Within each user's home directory, create web subdirectory and grant access to the development user. steve in my case. If you run grunt build from these projects in light folder, you website will be compiled and copied to these web folders and the server will serve the content from these folders for each site. This is like running in production mode.
+            copy server.json and virtualhost.json under networknt/light/server/src/main/resources folder to your home directory and update them accordingly.
+            Add the following line into /etc/hosts in order to test locally using domain names.
+                <pre>
+            127.0.0.1	www.edibleforestgarden.ca www.networknt.com example
+                </pre>
+            </p>
+
+            <p>
+                If you’re thinking that matching the colors and content across devices is omnichannel, we would encourage you to reconsider. If you are ready to lead in the next phase of social business and get the most out of the promise that our new identity as customers is truly omniscient, then let’s connect. This way of thinking is the future promise on which we started Omnichannel Application Framework.
+            </p>
+            <p>
+                There are a few key features in the framework that allowed this idea to be made reality:
+            <ul>
+                In exploring and discovering products in your brand domain that data should be transferable for me to collect and use universally.
+            </ul>
+            <ul>
+                In exchange for this data, the customer will give you access to other data they have collected that will far outweigh the value of the limited data in your brand universe.
+            </ul>
+            <ul>
+                All experiences offline and online should allow an individual to identify themselves and present a brand with the opportunity to access my preferences.
+            </ul>
+            </p>
+        </div>
+    </div>
+</div>
