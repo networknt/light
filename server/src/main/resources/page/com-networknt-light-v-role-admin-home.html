@@ -28,7 +28,7 @@
             },
             {
                 title: "Description",
-                value: "desc"
+                value: "description"
             },
             {
                 title: 'Create User Id',
@@ -113,7 +113,7 @@
                                     <option value=""> </option>
                                 </select>
                             </td>
-                            <td><input ng-model="filter.desc" type="text" /></td>
+                            <td><input ng-model="filter.description" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
                             <td><input ng-model="filter.createDate" type="text" /></td>
                             <td><input ng-model="filter.updateUserId" type="text" /></td>
@@ -123,7 +123,7 @@
                             <td><a href ng-click="delete(role)">Delete</a></td>
                             <td><a href ng-click="update(role)">{{role.roleId}}</a></td>
                             <td>{{role.host}}</td>
-                            <td>{{role.desc}}</td>
+                            <td>{{role.description}}</td>
                             <td>{{role.createUserId}}</td>
                             <td>{{role.createDate}}</td>
                             <td>{{role.updateUserId}}</td>

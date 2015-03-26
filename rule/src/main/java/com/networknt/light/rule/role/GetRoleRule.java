@@ -45,7 +45,15 @@ public class GetRoleRule extends AbstractRoleRule implements Rule {
         try {
             String hostRoles = getRoles(graph, host);
             if(hostRoles != null) {
-                inputMap.put("result", hostRoles);
+                List<Map<String, Object>> roleList
+                        = mapper.readValue(hostRoles, new TypeReference<List<HashMap<String, Object>>>() {});
+                // get all the hosts
+                Set hosts = ServiceLocator.getInstance().getHostMap().keySet();
+
+                Map<String, Object> result = new HashMap<String, Object>();
+                result.put("roles", roleList);
+                result.put("hosts", hosts);
+                inputMap.put("result", mapper.writeValueAsString(result));
                 return true;
             } else {
                 inputMap.put("result", "No role can be found.");
