@@ -9,11 +9,11 @@
   }],
   "schema": {
     "type": "object",
-    "title": "Demo Select",
+    "title": "Demo Strape Select",
     "required": ["strapSingleSelectStatic", "strapMultipleSelectStatic", "strapSingleSelectDynamic", "strapMultipleSelectDynamic", "strapSingleSelectPopulated", "strapMultipleSelectPopulated"],
     "properties": {
       "strapSingleSelectStatic": {
-        "title": "Strap Single Select Static",
+        "title": "Strap Single Select Static(Dropdown items from controller)",
         "type": "string",
         "format": "strapselect",
         "items": [
@@ -23,7 +23,7 @@
         ]
       },
       "strapMultipleSelectStatic": {
-        "title": "Strap Multiple Select Static",
+        "title": "Strap Multiple Select Static(Dropdown items from controller)",
         "type": "array",
         "format": "strapselect",
         "items": [
@@ -33,17 +33,17 @@
         ]
       },
       "strapSingleSelectDynamic": {
-        "title": "Strap Single Select Dynamic",
+        "title": "Strap Single Select Dynamic(Dropdown items loaded from remote)",
         "type": "string",
         "format": "strapselectdynamic"
       },
       "strapMultipleSelectDynamic": {
-        "title": "Strap Multiple Select Dynamic",
+        "title": "Strap Multiple Select Dynamic(Dropdown items loaded from remote)",
         "type": "array",
         "format": "strapselectdynamic"
       },
       "strapSingleSelectPopulated": {
-        "title": "Strap Single Select Populated",
+        "title": "Strap Single Select Populated(Dropdown populated on server)",
         "type": "string",
         "format": "strapselect",
         "items": [
@@ -57,7 +57,7 @@
         ]
       },
       "strapMultipleSelectPopulated": {
-        "title": "Strap Multiple Select Populated",
+        "title": "Strap Multiple Select Populated(Dropdown populated on server)",
         "type": "array",
         "format": "strapselect",
         "items": [
