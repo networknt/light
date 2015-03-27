@@ -1,20 +1,20 @@
 [
   {
     "@type": "d",
-    "@rid": "#17:10",
+    "@rid": "#17:107",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10011,
+    "eventId": 10108,
     "createUserId": "stevehu",
     "data": {
       "enableCors": true,
-      "updateDate": "2015-03-24T01:33:19.018",
+      "updateDate": "2015-03-27T02:24:59.056",
       "updateUserId": "stevehu",
-      "ruleClass": "com.networknt.light.rule.menu.GetMenuRule"
+      "ruleClass": "com.networknt.light.rule.user.RefreshTokenRule"
     },
     "name": "updCors",
     "category": "rule",
-    "createDate": "2015-03-24T01:33:19.016",
+    "createDate": "2015-03-27T02:24:59.056",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
