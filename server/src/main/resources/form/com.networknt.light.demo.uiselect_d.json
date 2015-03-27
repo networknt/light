@@ -10,10 +10,10 @@
   "schema": {
     "type": "object",
     "title": "Demo UiSelect",
-    "required": ["uiSingleSelectStatic", "uiMultipleSelectStatic", "uiSingleSelectDynamic", "uiMultipleSelectDynamic"],
+    "required": ["uiSingleSelectStatic", "uiMultipleSelectStatic", "uiSingleSelectDynamic", "uiMultipleSelectDynamic", "uiSingleSelectPopulated", "uiMultipleSelectPopulated"],
     "properties": {
       "uiSingleSelectStatic": {
-        "title": "Ui Single Select Static",
+        "title": "Ui Single Select Static(Dropdown items from controller)",
         "type": "string",
         "format": "uiselect",
         "description": "Only single item is allowd",
@@ -24,7 +24,7 @@
         ]
       },
       "uiMultipleSelectStatic": {
-        "title": "Ui Multiple Select Static",
+        "title": "Ui Multiple Select Static(Dropdown items from controller)",
         "type": "array",
         "format": "uiselect",
         "items": [
@@ -34,24 +34,40 @@
         ]
       },
       "uiSingleSelectDynamic": {
-        "title": "Ui Single Select Populated",
+        "title": "Ui Single Select Dynamic(Dropdown items loaded from remote)",
+        "type": "string",
+        "format": "uiselectdynamic"
+      },
+      "uiMultipleSelectDynamic": {
+        "title": "Ui Multiple Select Dynamic(Dropdown items loaded from remote)",
+        "type": "array",
+        "format": "uiselectdynamic"
+      },
+      "uiSingleSelectPopulated": {
+        "title": "Ui Single Select Populated(Dropdown populated on server)",
         "type": "string",
         "format": "uiselect",
-        "items": ["@",
+        "items": [
           {
-            "category": "forum",
-            "name": "getForumDropdown"
+            "label": "dynamic",
+            "value": {
+              "category": "client",
+              "name": "getClientDropdown"
+            }
           }
         ]
       },
-      "uiMultipleSelectDynamic": {
-        "title": "Ui Multiple Select Populated",
+      "uiMultipleSelectPopulated": {
+        "title": "UI Multiple Select Populated(Dropdown populated on server)",
         "type": "array",
         "format": "uiselect",
-        "items": ["@",
+        "items": [
           {
-            "category": "role",
-            "name": "getRoleDropdown"
+            "label": "dynamic",
+            "value": {
+              "category": "client",
+              "name": "getClientDropdown"
+            }
           }
         ]
       }
@@ -70,16 +86,22 @@
     {
       "key": "uiSingleSelectDynamic",
       "options": {
-        "category": "forum",
-        "name": "getForumDropdown"
+        "category": "demo",
+        "name": "getDropdown"
       }
     },
     {
       "key": "uiMultipleSelectDynamic",
       "options": {
-        "category": "forum",
-        "name": "getForumDropdown"
+        "category": "demo",
+        "name": "getDropdown"
       }
+    },
+    {
+      "key": "uiSingleSelectPopulated"
+    },
+    {
+      "key": "uiMultipleSelectPopulated"
     }
   ]
 }
