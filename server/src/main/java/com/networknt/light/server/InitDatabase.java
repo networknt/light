@@ -229,72 +229,6 @@ public class InitDatabase {
         }
     }
 
-    //create class E1 extends E
-    /*
-
-    public static void initCatalog() {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OSchema schema = db.getMetadata().getSchema();
-            if (schema.existsClass("Catalog")) {
-                for (ODocument doc : db.browseClass("Catalog")) {
-                    doc.delete();
-                }
-                schema.dropClass("Catalog");
-            }
-            OClass catalog = schema.createClass("Catalog");
-            catalog.createProperty("host", OType.STRING);
-            catalog.createProperty("id", OType.STRING);               // unique identifier
-            catalog.createProperty("description", OType.STRING);             // description of catalog
-            catalog.createProperty("parent", OType.LINK);             // parent catalog
-            catalog.createProperty("children", OType.LINKLIST);       // sub catalog
-            catalog.createProperty("attributes", OType.EMBEDDEDMAP);  // attributes that associates with the catalog
-            catalog.createProperty("products", OType.LINKLIST);       // products belong to this catalog
-            catalog.createProperty("createDate", OType.DATETIME);
-            catalog.createProperty("createUserRid", OType.STRING);
-            catalog.createProperty("updateDate", OType.DATETIME);
-            catalog.createProperty("updateUserRid", OType.STRING);
-            schema.save();
-            catalog.createIndex("catalogHostIdIdx", OClass.INDEX_TYPE.UNIQUE, "host", "id");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-    }
-
-    public static void initProduct() {
-        ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-        try {
-            OSchema schema = db.getMetadata().getSchema();
-            if (schema.existsClass("Product")) {
-                for (ODocument doc : db.browseClass("Product")) {
-                    doc.delete();
-                }
-                schema.dropClass("Product");
-            }
-            OClass product = schema.createClass("Product");
-            product.createProperty("host", OType.STRING);
-            product.createProperty("name", OType.STRING);
-            product.createProperty("attributes", OType.EMBEDDEDMAP);
-            product.createProperty("upUsers", OType.LINKLIST);
-            product.createProperty("downUsers", OType.LINKLIST);
-            product.createProperty("comments", OType.LINKLIST);
-            product.createProperty("createDate", OType.DATETIME);
-            product.createProperty("createUserId", OType.STRING);
-            product.createProperty("updateDate", OType.DATETIME);
-            schema.save();
-            product.createIndex("hostNameIdx", OClass.INDEX_TYPE.UNIQUE, "host", "name");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            db.close();
-        }
-    }
-    */
-
-
     /*
     public static void initProxy() {
         ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
@@ -709,6 +643,15 @@ public class InitDatabase {
             m_example.addEdge("Own", m_logIn);
             m_example.addEdge("Own", m_signUp);
             userOwner.addEdge("Create", m_example);
+
+            Vertex m_demo = graph.addVertex("class:Menu",
+                    "host", "demo.networknt.com",
+                    "createDate", new java.util.Date());
+            m_networknt.addEdge("Own", m_admin);
+            m_networknt.addEdge("Own", m_logOut);
+            m_networknt.addEdge("Own", m_logIn);
+            m_networknt.addEdge("Own", m_signUp);
+            userOwner.addEdge("Create", m_networknt);
 
             // create rules to bootstrap the installation through event replay.
             // need signIn, replayEvent and impRule to start up.
