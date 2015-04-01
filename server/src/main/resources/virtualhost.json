@@ -1,37 +1,45 @@
 {
-    "www.networknt.com": {
-        "base" : "/home/networknt/web",
-	    "transferMinSize" : "100",
-        "supportDevices" : [
-            "Browser",
-            "Android",
-            "iOS"
-        ]
-    },
-    "www.edibleforestgarden.ca" : {
-        "base" : "/home/edibleforestgarden/web",
-	    "transferMinSize" : "100",
-        "supportDevices" : [
-            "Browser",
-            "Android",
-            "iOS"
-        ]
-    },
-    "example" : {
-        "base" : "/home/example/web",
-    	"transferMinSize" : "100",
-        "supportDevices" : [
-            "Browser",
-            "Android",
-            "iOS"
-        ]
-    },
-    "injector" : {
-        "base" : "/home/injector/web",
-        "transferMinSize" : "100",
-        "supportDevices" : [
-            "Browser"
-        ]
-
-    }
+  "www.networknt.com": {
+    "base": "/home/networknt/web",
+    "transferMinSize": "100",
+    "supportDevices": [
+      "Browser",
+      "Android",
+      "iOS"
+    ]
+  },
+  "demo.networknt.com": {
+    "base": "/home/demo/web",
+    "transferMinSize": "100",
+    "supportDevices": [
+      "Browser",
+      "Android",
+      "iOS"
+    ]
+  },
+  "www.edibleforestgarden.ca": {
+    "base": "/home/edibleforestgarden/web",
+    "transferMinSize": "100",
+    "supportDevices": [
+      "Browser",
+      "Android",
+      "iOS"
+    ]
+  },
+  "example": {
+    "base": "/home/example/web",
+    "transferMinSize": "100",
+    "supportDevices": [
+      "Browser",
+      "Android",
+      "iOS"
+    ]
+  },
+  "injector": {
+    "base": "/home/injector/web",
+    "transferMinSize": "100",
+    "supportDevices": [
+      "Browser"
+    ]
+  }
 }
