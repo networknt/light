@@ -1,0 +1,78 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="post()"><i class="glyphicon glyphicon-edit"></i>Post</button>
+            </div>
+            <tabset>
+                <tab heading="Recent">
+                    <h1>Blog</h1>
+                    <!--
+                    <ul class="list-inline inner">
+                        <li ng-repeat="tag in global.tagsList">
+                            <a ng-href="{{'/'+tag._id}}" class="pure-button pure-button-xsmall info-bg">{{tag.tag}}</a>
+                        </li>
+                        <li>
+                            <a href="/tag" class="pure-button pure-button-xsmall"><i class="fa fa-search"></i>more</a>
+                        </li>
+                    </ul>
+                    -->
+                    <ul class="media-list">
+                        <li class="media" ng-repeat="blog in blogs">
+                            <div class="media-body">
+                                <div class="media-header">
+                                    <a ng-href="{{$index}}"><i class="primary"></i><h4>{{blog.title}}</h4></a>
+                                </div>
+                                <div class="media-content list-content" marked="blog.summary"></div>
+                                <div class="media-footer">
+                                    <a ng-href="{{blog.createUserRid}}"><i class="fa fa-pencil success"></i>{{blog.createUserId}}</a>
+                                    <i class="fa fa-clock-o">{{blog.createDate | formatDate}}</i>
+                                    <i class="fa fa-refresh">{{blog.updateDate | formatDate}}</i>
+                                    <i class="fa fa-comments-o" title="comments" ng-show="blog.comments"> {{blog.comments}}</i>
+                                    <a ng-repeat="tag in article.tagsList" ng-href="{{'/'+tag._id}}" class="pure-button pure-button-link">{{tag.tag}}</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <pagination total-items="page.totalItems" items-per-page="getBlog.data.pageSize" ng-model="getBlog.data.pageNo" max-size="page.maxSize" class="pagination-sm" boundary-links="true" rotate="false" num-pages="page.numPages" ng-change="pageChanged()"></pagination>
+                    <table>
+                        <tr>
+                            <td>Page: {{getBlog.data.pageNo}} / {{page.numPages}}</td>
+                            <td>&nbsp;</td>
+                            <td>Page Size:</td>
+                            <td><input type="number" min="1" max="100" ng-change="filterResult()" ng-model="getBlog.data.pageSize"></td>
+                        </tr>
+                    </table>
+
+                </tab>
+                <tab heading="Hot">
+                    <div>This is tab hot</div>
+                </tab>
+                <tab heading="Updated">
+                    <div>This is tab updated</div>
+                </tab>
+                <tab heading="My posts" ng-if="global.isLogin">
+                    <div>This is tab my posts</div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <ul class="inner list-inline">
+                        <li>Total visits：{{global.visitors}}</li>
+                        <li>Total articles: {{global.articles}}</li>
+                        <li>Total comments: {{global.comments}}</li>
+                        <li>Total members：{{global.users}}</li>
+                        <li>Online users：{{global.onlineNum}}</li>
+                        <li>Online members：{{global.onlineUsers}}</li>
+                        <li>Max online users：{{global.maxOnlineNum}}</li>
+                        <li>Online Since：{{global.maxOnlineTime  | date:'yy-MM-dd HH:mm'}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- /container -->
