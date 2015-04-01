@@ -22,7 +22,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: '/home/networknt/web'
+    dist: '/home/demo/web'
   };
 
   // Define the configuration for all the tasks
