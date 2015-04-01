@@ -647,11 +647,11 @@ public class InitDatabase {
             Vertex m_demo = graph.addVertex("class:Menu",
                     "host", "demo.networknt.com",
                     "createDate", new java.util.Date());
-            m_networknt.addEdge("Own", m_admin);
-            m_networknt.addEdge("Own", m_logOut);
-            m_networknt.addEdge("Own", m_logIn);
-            m_networknt.addEdge("Own", m_signUp);
-            userOwner.addEdge("Create", m_networknt);
+            m_demo.addEdge("Own", m_admin);
+            m_demo.addEdge("Own", m_logOut);
+            m_demo.addEdge("Own", m_logIn);
+            m_demo.addEdge("Own", m_signUp);
+            userOwner.addEdge("Create", m_demo);
 
             // create rules to bootstrap the installation through event replay.
             // need signIn, replayEvent and impRule to start up.
