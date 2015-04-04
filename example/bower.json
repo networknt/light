@@ -34,11 +34,17 @@
     "angular-schema-form-ui-select": "~0.1.0",
     "schema-form-datetimepicker": "chengz/schema-form-datetimepicker",
     "momentjs": "~2.8.4",
-    "stacktrace-js": "~0.6.4"
+    "stacktrace-js": "~0.6.4",
+    "themify-icons": "~0.1.0"
   },
   "devDependencies": {
     "angular-mocks": "1.3.8",
     "angular-scenario": "1.3.8"
   },
-  "appPath": "app"
+  "appPath": "app",
+  "resolutions": {
+    "es5-shim": "2.3.0",
+    "objectpath": "~1.1.0",
+    "angular-ui-ace": ">= 0.1.1"
+  }
 }
