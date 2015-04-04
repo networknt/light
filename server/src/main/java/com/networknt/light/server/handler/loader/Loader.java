@@ -41,7 +41,7 @@ public class Loader {
     static CloseableHttpClient httpclient = null;
     static String jwt = null;
 
-    protected static File getFileFromResourceFolder(String folder) {
+    public static File getFileFromResourceFolder(String folder) {
         URL url = Thread.currentThread().getContextClassLoader().getResource(folder);
         File file = null;
         try {
@@ -52,7 +52,7 @@ public class Loader {
             return file;
         }
     }
-    protected static void login(String host, String userId, String password) throws Exception {
+    public static void login(String host, String userId, String password) throws Exception {
         Map<String, Object> inputMap = new HashMap<String, Object>();
         inputMap.put("category", "user");
         inputMap.put("name", "signInUser");
