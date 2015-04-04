@@ -1,0 +1,17 @@
+<div class="container" dynamic="html">
+    <!-- user-public-profile -->
+    <div class="jumbotron">
+        <h2>{{userInfo.userId}}'s Profile</h2>
+    </div>
+    <p>Member Since: {{userInfo.createDate}}</p>
+    <p>Email: {{userInfo.email}}</p>
+    <p>
+        Roles:
+        <ul>
+            <li data-ng-repeat="role in userInfo.roles">
+                {{role}}
+            </li>
+        </ul>
+    </p>
+
+</div>

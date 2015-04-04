@@ -1,0 +1,15 @@
+<polymer-element name="networknt-user" attributes="userId">
+    <template>
+        <link rel="stylesheet" href="user.css"/>
+        <span class="networknt-user">
+            <a href="user/{{userId}}">@{{userId}}</a>
+        </span>
+    </template>
+    <script>
+        Polymer({
+            ready: function() {
+                userId: ""
+            }
+        });
+    </script>
+</polymer-element>
