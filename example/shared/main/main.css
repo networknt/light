@@ -48,6 +48,15 @@ section {
     background-color: #f5f5f5;
 }
 
+.footer > a {
+    color:rgb(90, 90, 90);
+    text-decoration: none;
+}
+
+.footer > a:hover {
+    color: #31708f;
+}
+
 .bs-social {
     margin-top: 20px;
     margin-bottom: 20px;
