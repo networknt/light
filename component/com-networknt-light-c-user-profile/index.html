@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <base href="/">
+    <title>User Profile Component</title>
+    <meta name="description" content="OCA - Menu">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <link rel="stylesheet" href="shared/main/main.css">
+    <link rel="stylesheet" href="shared/toaster/toaster.css">
+    <link rel="stylesheet" href="components/menu/menu.css">
+    <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css"/>
+    <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="bower_components/themify-icons/themify-icons.css"/>
+
+    <!-- Polymers -->
+    <link rel="import" href="components/user-profile/user.html"/>
+
+</head>
+<body ng-app="lightApp">
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+<toaster-container toaster-options="{'position-class': 'toast-bottom-full-width'}"></toaster-container>
+
+<!-- Add your site or application content here -->
+<menu host="example" header="User Profile Component"></menu>
+
+<div class="header-placeholder"></div>
+<div role="main" ng-view></div>
+<footer class="footer">
+    <div class="container"></div>
+</footer>
+
+<!--[if lt IE 9]>
+<script src="bower_components/es5-shim/es5-shim.js"></script>
+<![endif]-->
+
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/json3/lib/json3.js"></script>
+<script src="bower_components/stacktrace-js/stacktrace.js"></script>
+<script src="bower_components/underscore/underscore-min.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-translate/angular-translate.js"></script>
+<script src='bower_components/angular-ui-select/dist/select.js'></script>
+<script src="bower_components/angular-strap/dist/angular-strap.js"></script>
+<script src="bower_components/angular-strap/dist/angular-strap.tpl.js"></script>
+<script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+<script src="bower_components/angular-ui-tree-filter/dist/angular-ui-tree-filter.js"></script>
+<script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+<script src="bower_components/angular-ui-ace/ui-ace.js"></script>
+<script src="bower_components/marked/lib/marked.js"></script>
+<script src="bower_components/angular-marked/angular-marked.js"></script>
+<script src="bower_components/tv4/tv4.js"></script>
+<script src="bower_components/objectpath/lib/ObjectPath.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+<script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+<script src="bower_components/angular-ui-utils/highlight.js"></script>
+<script src="bower_components/angular-schema-form/dist/schema-form.min.js"></script>
+<script src="bower_components/angular-schema-form/dist/bootstrap-decorator.min.js"></script>
+<script src="bower_components/angular-schema-form-marked/bootstrap-marked.min.js"></script>
+<script src="bower_components/angular-schema-form-ui-ace/bootstrap-ui-ace.min.js"></script>
+<script src="bower_components/angular-schema-form-strapselect/bootstrap-strapselect.min.js"></script>
+<script src="bower_components/angular-schema-form-ui-select/angular-underscore.js"></script>
+<script src="bower_components/angular-schema-form-ui-select/ui-sortable.js"></script>
+<script src="bower_components/angular-schema-form-ui-select/bootstrap-ui-select.js"></script>
+<script src="bower_components/angular-schema-form-marked/bootstrap-marked.js"></script>
+<script src="bower_components/angular-schema-form-ui-ace/bootstrap-ui-ace.js"></script>
+<script src="bower_components/schema-form-datetimepicker/date.js"></script>
+<script src="bower_components/schema-form-datetimepicker/schema-form-date-time-picker.min.js"></script>
+<script src="bower_components/angular-schema-form-file-reader/bootstrap-file-reader.min.js"></script>
+<script src="bower_components/momentjs/moment.js"></script>
+
+<!-- Shared -->
+<script src="shared/main/ui-bootstrap-custom-tpls-0.12.0.js"></script>
+<script src="shared/toaster/toaster.js"></script>
+<script src="shared/app.js"></script>
+<script src="shared/locale/locale_en-us.js"></script>
+<script src="shared/main/services.js"></script>
+<script src="shared/authentication/authServices.js"></script>
+<script src="shared/logging/logServices.js"></script>
+<script src="shared/main/filters.js"></script>
+<script src="shared/main/directives.js"></script>
+<script src="shared/main/main.js"></script>
+<!-- Authentication -->
+<script src="shared/authentication/signin.js"></script>
+<!-- Form -->
+<script src="shared/form/form.js"></script>
+<!-- Page -->
+<script src="shared/page/page.js"></script>
+
+<!-- Components -->
+<!-- Menu -->
+<script src="components/menu/menu.js"></script>
+<script src="components/menu/menuDirectives.js"></script>
+
+<script src="components/user-profile/userPublicProfile.js"></script>
+</body>
+</html>

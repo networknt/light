@@ -1,0 +1,16 @@
+/* Work in progress, do not use */
+
+DELETE VERTEX MenuComponent WHERE menuComponentId = 'exampleMenuComponent'
+
+DROP CLASS MenuComponent
+
+CREATE CLASS MenuComponent extends V;
+CREATE PROPERTY MenuComponent.host STRING;
+CREATE PROPERTY MenuComponent.menuComponentId STRING;
+CREATE PROPERTY MenuComponent.source STRING;
+CREATE PROPERTY MenuComponent.createDate DATETIME;
+CREATE PROPERTY MenuComponent.updateDate DATETIME;
+CREATE INDEX menuComponentIdIdx ON MenuComponent(host, menuComponentId) UNIQUE;
+CREATE INDEX MenuComponent.updateDate ON MenuComponent(updateDate) NOTUNIQUE;
+
+create vertex MenuComponent set host = 'example', menuComponentId = 'exampleMenuComponent', source = ''

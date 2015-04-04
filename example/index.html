@@ -16,11 +16,10 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="shared/main/main.css">
-    <link rel="stylesheet" href="styles/toaster.css">
-    <link rel="stylesheet" href="styles/select.css">
+    <link rel="stylesheet" href="shared/toaster/toaster.css">
+    <link rel="stylesheet" href="shared/ui-select/select.css">
     <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css" />
     <link href="bower_components/angular-ui-select/dist/select.css" rel="stylesheet" />
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="bower_components/themify-icons/themify-icons.css" />
     <link href="shared/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
@@ -229,21 +228,23 @@
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <script src="scripts/ui-bootstrap-custom-tpls-0.12.0.js"></script>
-    <script src="scripts/toaster.js"></script>
-    <script src="scripts/app.js"></script>
-    <script src="scripts/locale_en-us.js"></script>
-    <script src="scripts/services.js"></script>
-    <script src="scripts/filters.js"></script>
-    <script src="scripts/directives.js"></script>
-    <script src="scripts/controllers/main.js"></script>
-    <script src="scripts/controllers/signin.js"></script>
-    <script src="scripts/controllers/classFeed.js"></script>
-    <script src="scripts/controllers/contact.js"></script>
-    <script src="scripts/controllers/form.js"></script>
-    <script src="scripts/controllers/blog.js"></script>
-    <script src="scripts/controllers/page.js"></script>
-    <script src="scripts/controllers/forum.js"></script>
+    <script src="shared/ui-bootstrap/ui-bootstrap-custom-tpls-0.12.0.js"></script>
+    <script src="shared/toaster/toaster.js"></script>
+    <script src="shared/app.js"></script>
+    <script src="shared/locale/locale_en-us.js"></script>
+    <script src="shared/main/services.js"></script>
+    <script src="shared/authentication/authServices.js"></script>
+    <script src="shared/logging/loggingServices.js"></script>
+    <script src="shared/main/filters.js"></script>
+    <script src="shared/main/directives.js"></script>
+    <script src="shared/main/main.js"></script>
+    <script src="shared/authentication/signin.js"></script>
+    <script src="components/class-feed/classFeed.js"></script>
+    <script src="components/contact/contact.js"></script>
+    <script src="shared/form/form.js"></script>
+    <script src="components/blog/blog.js"></script>
+    <script src="shared/page/page.js"></script>
+    <script src="components/forum/forum.js"></script>
 
     <script src="components/menu/menu.js"></script>
     <script src="components/menu/menuDirectives.js"></script>

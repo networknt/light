@@ -1,0 +1,70 @@
+<!--<div dynamic="htmlsource"></div>-->
+<header class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container main-menu" ng-controller="menuCtrl">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" ng-click="toggleCollapsed()">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand main-menu-title" href="/">{{header}}</a>
+            </div>
+            <!-- This is the nav menu for desktop -->
+            <nav class="hidden-xs">
+                <ul class="nav navbar-nav">
+                    <li ng-repeat="node in tree | filter:hasAccess | filter: {left: true}" class="dropdown">
+                        <a ng-if="node.hasOwnProperty('out_Own')" href="{{node.path}}"  aria-haspopup="true" class="dropdown-toggle" style="display:block; color:rgb(119,119,119); padding:15px;">
+                            {{node.label}} <b class="caret"></b>
+                        </a>
+                        <ul ng-if="node.hasOwnProperty('out_Own')" class="dropdown-menu">
+                            <li ng-repeat="item in node.out_Own"><a href="{{item.path}}" >{{item.label}}</a></li>
+                        </ul>
+                        <a ng-if="!node.hasOwnProperty('out_Own')" href="{{node.path}}">{{node.label}}</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown" ng-if="(tree | filter:hasAccess | filter: {left:false}).length > 0">
+                        <a href="#" class="dropdown-toggle bounce">
+                            <i class="ti ti-user fa-lg user-icon" ng-class="isUserLoggedIn ? 'text-success' : 'text-danger' "/>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="node in tree | filter:hasAccess | filter: { left: false}">
+                                <a href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <!-- This is the nav menu for phone the only difference is class and collapse -->
+            <nav class="visible-xs" collapse="!menuSettings.isCollapsed">
+                <ul class="nav navbar-nav">
+                    <li ng-repeat="node in tree | filter:hasAccess | filter: { left: true}" class="dropdown">
+                        <a ng-if="node.hasOwnProperty('out_Own')" href="{{node.path}}"  aria-haspopup="true" class="dropdown-toggle" style="display:block; color:rgb(119,119,119); padding:15px;">
+                            {{node.label}} <b class="caret"></b>
+                        </a>
+                        <ul ng-if="node.hasOwnProperty('out_Own')" class="dropdown-menu">
+                            <li ng-repeat="item in node.out_Own"><a href="{{item.path}}" >{{item.label}}</a></li>
+                        </ul>
+                        <a ng-if="!node.hasOwnProperty('out_Own')" href="{{node.path}}">{{node.label}}</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown" ng-if="(tree | filter:hasAccess | filter: {left:false}).length > 0">
+                        <a href="#" class="dropdown-toggle bounce">
+                            <i class="ti ti-user fa-lg user-icon" ng-class="isUserLoggedIn ? 'text-success' : 'text-danger' "/>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li ng-repeat="node in tree | filter:hasAccess | filter: { left: false}">
+                                <a href="{{node.path}}" ng-click="toggleCollapsed()">{{node.label}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>

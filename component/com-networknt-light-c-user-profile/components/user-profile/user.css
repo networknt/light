@@ -1,0 +1,12 @@
+/* Set link color to black.*/
+:host .networknt-user > a {
+  color: #404040;
+  text-decoration:none;
+}
+
+/* Set link hover color to boostrap text-primary*/
+:host .networknt-user > a:hover,
+:host .networknt-user > a:focus {
+  text-decoration: none;
+  color: #31708f;
+}
