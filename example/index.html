@@ -15,12 +15,17 @@
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="shared/main/main.css">
     <link rel="stylesheet" href="styles/toaster.css">
     <link rel="stylesheet" href="styles/select.css">
     <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css" />
     <link href="bower_components/angular-ui-select/dist/select.css" rel="stylesheet" />
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="bower_components/themify-icons/themify-icons.css" />
+    <link href="shared/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="components/menu/menu.css">
+
     <!-- endbuild -->
   </head>
   <body ng-app="lightApp">
@@ -30,6 +35,8 @@
     <toaster-container toaster-options="{'position-class': 'toast-bottom-full-width'}"></toaster-container>
 
     <!-- Add your site or application content here -->
+    <menu host="example" header="Example"></menu>
+    <!--
     <header class="navbar navbar-default navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container" data-ng-controller="menuCtrl">
@@ -42,7 +49,8 @@
                     </button>
                     <a class="navbar-brand" href="/">Example</a>
                 </div>
-                <!-- This is the nav menu for desktop -->
+    -->
+                <!-- This is the nav menu for desktop
                 <nav class="hidden-xs">
                     <ul class="nav navbar-nav">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: {left: true}"  dropdown>
@@ -59,7 +67,8 @@
                         </li>
                     </ul>
                 </nav>
-                <!-- This is the nav menu for phone the only difference is class and collapse -->
+    -->
+                <!-- This is the nav menu for phone the only difference is class and collapse
                 <nav class="visible-xs" collapse="!menuSettings.isCollapsed">
                     <ul class="nav navbar-nav">
                         <li ng-repeat="node in tree | filter:hasAccess | filter: { left: true}"  dropdown>
@@ -79,11 +88,30 @@
             </div>
         </div>
     </header>
-
+    -->
     <div class="header-placeholder"></div>
     <div role="main" ng-view></div><!-- /.main -->
     <footer class="footer">
-        <div class="container"></div>
+        <div class="container" style="text-align:center">
+            <a href="https://github.com/orgs/networknt" target="_blank" style="text-decoration:none; color:black;">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-github fa-stack-1x"></i>
+            </span>
+            </a>
+            <a href="https://www.youtube.com/channel/UCHCRMWJVXw8iB7zKxF55Byw" target="_blank" style="text-decoration:none; color:black;">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-networkNTYoutube fa-stack-1x"></i>
+            </span>
+            </a>
+            <a href="https://twitter.com/networknt" target="_blank" style="text-decoration:none; color:black;">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-networkNTTwitter fa-stack-1x"></i>
+            </span>
+            </a>
+        </div>
     </footer>
     <!-- global error handler outside of AngularJS -->
     <script>
@@ -212,11 +240,13 @@
     <script src="scripts/controllers/signin.js"></script>
     <script src="scripts/controllers/classFeed.js"></script>
     <script src="scripts/controllers/contact.js"></script>
-    <script src="scripts/controllers/menu.js"></script>
     <script src="scripts/controllers/form.js"></script>
     <script src="scripts/controllers/blog.js"></script>
     <script src="scripts/controllers/page.js"></script>
     <script src="scripts/controllers/forum.js"></script>
+
+    <script src="components/menu/menu.js"></script>
+    <script src="components/menu/menuDirectives.js"></script>
     <!-- endbuild -->
 </body>
 </html>

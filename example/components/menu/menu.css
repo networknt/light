@@ -1,0 +1,85 @@
+.main-menu {
+    padding-left: 0px;
+    padding-right: 40px;
+    margin-bottom: 0px;
+    margin-top:0px;
+    padding-top:8px;
+    padding-bottom:8px;
+}
+.main-menu-title {
+    margin-left: 15px;
+    padding-left: 0px;
+}
+
+li.dropdown:hover .dropdown-menu {
+    display: block;
+    z-index: 3;
+}
+
+li.dropdown-span:hover .dropdown-menu {
+    display: block;
+    z-index: 3;
+}
+
+/* Not enough room on mobile for markup tab, js tab, and plunk btn.
+  And no one cares about plunk button on a phone anyway */
+@media only screen and (max-device-width: 480px) {
+    #plunk-btn {
+        display: none;
+    }
+}
+
+.navbar-nav .dropdown .navbar-brand {
+    max-width: 100%;
+    margin-right: inherit;
+    margin-left: inherit;
+}
+
+.header-placeholder {
+    height: 50px;
+}
+
+@media screen and (min-width: 768px) {
+
+    .dropdown.open > .navbar-brand + .dropdown-menu {
+        left: 10px;
+    }
+
+    .header-placeholder {
+        height: 50px;
+    }
+
+    .navbar-nav .dropdown .navbar-brand {
+        max-width: 200px;
+        margin-right: 5px;
+        margin-left: 10px;
+    }
+
+}
+
+.bounce:hover > .user-icon {
+    -webkit-animation-name: bounce; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 0.5s; /* Chrome, Safari, Opera */
+    animation-name: bounce;
+    animation-duration: 0.5s;
+    position: relative;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes bounce {
+    0%   {bottom: 0px;}
+    25%  {bottom: 10px;}
+    50%  {bottom: 0px;}
+    75%  {bottom: 5px;}
+    100% {bottom: 0px;}
+}
+
+/* Standard syntax */
+@keyframes bounce {
+    0%   {bottom: 0px;}
+    25%  {bottom: 10px;}
+    50%  {bottom: 0px;}
+    75%  {bottom: 5px;}
+    100% {bottom: 0px;}
+}
+
