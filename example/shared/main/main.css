@@ -7,6 +7,24 @@ body {
     padding-bottom: 70px;
 }
 
+.component-header-left {
+    float:left;
+}
+.component-header-left > h1 {
+    display:inline;
+}
+.component-header-left > h1 > a  {
+    text-decoration: none;
+    color: #777;
+}
+
+.component-header-right {
+    float:right;
+}
+.component-header-right > span {
+    float:right;
+}
+
 .ng-cloak {
     opacity: 0;
 }
@@ -433,4 +451,21 @@ section {
     display: inline-block;
     width: 50px;
     min-height: 100%;
+}
+
+body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.sidebar-nav {
+    padding: 9px 0;
+}
+
+li.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+li.dropdown-span:hover .dropdown-menu {
+    display: block;
 }
