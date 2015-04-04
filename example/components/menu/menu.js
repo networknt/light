@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('lightApp').controller('menuCtrl', ['$scope', '$http', 'authService', function($scope, $http, authService) {
-    console.log("Now we are in menuCtrl");
     $scope.menuSettings = {isCollapsed : true};
     $scope.tree = [];
+    $scope.isUserLoggedIn = authService.authentication.currentUser.userId != '';
 
     var getMenuPost = {
         category : 'menu',
@@ -28,6 +28,7 @@ angular.module('lightApp').controller('menuCtrl', ['$scope', '$http', 'authServi
         //console.log('item = ', item);
         //console.log('currentUser.roles', authService.authentication.currentUser.roles);
         //console.log('item.roles', item.roles);
+        $scope.isUserLoggedIn = authService.authentication.currentUser.userId != '';
         for (var i = 0; i < authService.authentication.currentUser.roles.length; i++) {
             if (item.roles != null) {
                 for (var j = 0; j < item.roles.length; j++) {
