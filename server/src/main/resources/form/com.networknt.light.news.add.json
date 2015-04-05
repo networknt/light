@@ -1,0 +1,60 @@
+{
+  "formId": "com.networknt.light.news.add",
+  "version": 1,
+  "action": [
+    {
+      "category": "news",
+      "name": "addNews",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-news-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "News",
+    "required": [
+      "newsId",
+      "description"
+    ],
+    "properties": {
+      "newsId": {
+        "title": "News Id",
+        "type": "string"
+      },
+      "description": {
+        "title": "Description",
+        "type": "string"
+      },
+      "in_Own": {
+        "title": "Parent",
+        "type": "array",
+        "maxItems": 1,
+        "format": "strapselectdynamic"
+      },
+      "out_Own": {
+        "title": "Children",
+        "type": "array",
+        "format": "strapselectdynamic"
+      }
+    }
+  },
+  "form": [
+    "newsId",
+    "description",
+    {
+      "key": "in_Own",
+      "options": {
+        "category": "news",
+        "name": "getNewsDropdown"
+      }
+    },
+    {
+      "key": "out_Own",
+      "options": {
+        "category": "news",
+        "name": "getNewsDropdown"
+      }
+    }
+  ]
+}
