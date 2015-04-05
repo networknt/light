@@ -12,7 +12,7 @@
             readOnly: false
         };
 
-        $scope.news = [];
+        $scope.newsArray = [];
 
         $scope.headers = [
             {
@@ -20,12 +20,12 @@
                 value: 'delete'
             },
             {
-                title: 'Id',
-                value: 'id'
+                title: 'News Id',
+                value: 'newsId'
             },
             {
-                title: 'Desc',
-                value: 'desc'
+                title: 'Description',
+                value: 'description'
             },
             {
                 title: 'Create User Id',
@@ -62,7 +62,7 @@
             $scope.delNews.data = news;
             $http.post('api/rs', $scope.delNews)
                     .success(function (data, status, headers, config) {
-                        $scope.news.splice($scope.news.indexOf(news), 1);
+                        $scope.newsArray.splice($scope.newsArray.indexOf(news), 1);
                         toaster.pop('success', status, data, 3000);
                     })
         };
@@ -78,9 +78,9 @@
 
         //The function that is responsible of fetching the result from the server
         $scope.fetchResult = function () {
-            $http.get('api/rs', {params: {cmd: encodeURIComponent(JSON.stringify($scope.getNews))}})
+            $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify($scope.getNews))}})
                     .success(function (result, status, headers, config) {
-                        $scope.news = result;
+                        $scope.newsArray = result;
                     })
         };
 
@@ -109,21 +109,21 @@
                         <tbody>
                         <tr>
                             <td></td>
-                            <td><input ng-model="filter.id" type="text" /></td>
-                            <td><input ng-model="filter.desc" type="text" /></td>
+                            <td><input ng-model="filter.newsId" type="text" /></td>
+                            <td><input ng-model="filter.description" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
                             <td><input ng-model="filter.createDate" type="text" /></td>
                             <td><input ng-model="filter.updateUserId" type="text" /></td>
                             <td><input ng-model="filter.updateDate" type="text" /></td>
                         </tr>
-                        <tr ng-repeat="new in news | filter: filter | orderBy: sort.sortedBy">
-                            <td><a href ng-click="delete(new)">Delete</a></td>
-                            <td><a href ng-click="update(new)">{{new.id}}</a></td>
-                            <td>{{new.desc}}</td>
-                            <td>{{new.createUserId}}</td>
-                            <td>{{new.createDate}}</td>
-                            <td>{{new.updateUserId}}</td>
-                            <td>{{new.updateDate}}</td>
+                        <tr ng-repeat="news in newsArray | filter: filter | orderBy: sort.sortedBy">
+                            <td><a href ng-click="delete(news)">Delete</a></td>
+                            <td><a href ng-click="update(news)">{{news.newsId}}</a></td>
+                            <td>{{news.description}}</td>
+                            <td>{{news.createUserId}}</td>
+                            <td>{{news.createDate}}</td>
+                            <td>{{news.updateUserId}}</td>
+                            <td>{{news.updateDate}}</td>
                         </tr>
                         </tbody>
                     </table>
