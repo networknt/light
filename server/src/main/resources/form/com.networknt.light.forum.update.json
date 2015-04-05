@@ -15,14 +15,14 @@
     "title": "Forum",
     "required": [
       "forumId",
-      "desc"
+      "description"
     ],
     "properties": {
       "forumId": {
         "title": "Forum Id",
         "type": "string"
       },
-      "desc": {
+      "description": {
         "title": "Description",
         "type": "string"
       },
@@ -41,7 +41,7 @@
   },
   "form": [
     "forumId",
-    "desc",
+    "description",
     {
       "key": "in_Own",
       "options": {

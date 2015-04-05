@@ -22,8 +22,8 @@
                 value: 'forumId'
             },
             {
-                title: 'Desc',
-                value: 'desc'
+                title: 'Description',
+                value: 'description'
             },
             {
                 title: 'Create User Id',
@@ -102,7 +102,7 @@
                         <tr>
                             <td></td>
                             <td><input ng-model="filter.forumId" type="text" /></td>
-                            <td><input ng-model="filter.desc" type="text" /></td>
+                            <td><input ng-model="filter.description" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
                             <td><input ng-model="filter.createDate" type="text" /></td>
                             <td><input ng-model="filter.updateUserId" type="text" /></td>
@@ -111,7 +111,7 @@
                         <tr ng-repeat="forum in forums | filter: filter | orderBy: sort.sortedBy">
                             <td><a href ng-click="delete(forum)">Delete</a></td>
                             <td><a href ng-click="update(forum)">{{forum.forumId}}</a></td>
-                            <td>{{forum.desc}}</td>
+                            <td>{{forum.description}}</td>
                             <td>{{forum.createUserId}}</td>
                             <td>{{forum.createDate}}</td>
                             <td>{{forum.updateUserId}}</td>

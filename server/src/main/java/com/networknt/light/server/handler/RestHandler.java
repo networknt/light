@@ -483,7 +483,7 @@ public class RestHandler implements HttpHandler {
 
         } else {
             // convert error string to json.
-            if(result != null) result=  "{\"error\":" + result + "}";
+            if(result != null) result=  "{\"error\":\"" + result + "\"}";
             Integer responseCode = (Integer)jsonMap.get("responseCode");
             if(responseCode != null) exchange.setResponseCode(responseCode);
         }
