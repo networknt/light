@@ -1,31 +1,8 @@
 /**
  * Created by husteve on 10/1/2014.
  */
-angular.module('lightApp').directive('sortBy', function () {
-    return {
-        templateUrl: 'views/sort-by.html',
-        restrict: 'E',
-        transclude: true,
-        replace: true,
-        scope: {
-            sortdir: '=',
-            sortedby: '=',
-            sortvalue: '@',
-            onsort: '='
-        },
-        link: function (scope, element, attrs) {
-            scope.sort = function () {
-                if (scope.sortedby == scope.sortvalue)
-                    scope.sortdir = scope.sortdir == 'asc' ? 'desc' : 'asc';
-                else {
-                    scope.sortedby = scope.sortvalue;
-                    scope.sortdir = 'asc';
-                }
-                scope.onsort(scope.sortedby, scope.sortdir);
-            }
-        }
-    };
-}).directive('onBlurChange', function ($parse) {
+angular.module('lightApp')
+.directive('onBlurChange', function ($parse) {
     return function (scope, element, attr) {
         var fn = $parse(attr['onBlurChange']);
         var hasChanged = false;
@@ -42,7 +19,8 @@ angular.module('lightApp').directive('sortBy', function () {
             }
         });
     };
-}).directive('onEnterBlur', function() {
+})
+.directive('onEnterBlur', function() {
     return function(scope, element, attrs) {
         element.bind("keydown keypress", function(event) {
             if(event.which === 13) {
@@ -51,7 +29,8 @@ angular.module('lightApp').directive('sortBy', function () {
             }
         });
     };
-}).directive('dynamic', function ($compile) {
+})
+.directive('dynamic', function ($compile) {
     return {
         restrict: 'A',
         replace: true,
