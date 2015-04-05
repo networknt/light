@@ -38,7 +38,7 @@
 
         $scope.treeFilter = $filter('uiTreeFilter');
 
-        $scope.supportedFields = ['forumId', 'desc'];
+        $scope.supportedFields = ['forumId', 'description'];
 
         $scope.gotoForum = function (forumId) {
             modelDataService.setModelData(forumId);
@@ -64,7 +64,7 @@
                                                      ng-class="{'glyphicon glyphicon-plus': collapsed, 'glyphicon glyphicon-minus': !collapsed}"></span></a>
                     <!--{{node.id | highlight:pattern | trust}}-->
                     <a href ng-click="gotoForum(node.forumId)" ng-bind-html="node.forumId | highlight:pattern | trust"></a>
-                    <small ng-bind-html="node.desc | highlight:pattern | trust"></small>
+                    <small ng-bind-html="node.description | highlight:pattern | trust"></small>
                 </div>
                 <ol ui-tree-nodes="" ng-model="node.out_Own" ng-class="{hidden: collapsed}">
                     <li ng-repeat="node in node.out_Own" ui-tree-node ng-include="'nodes_renderer.html'"

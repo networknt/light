@@ -1,25 +1,25 @@
 {
-  "formId": "com.networknt.light.forum.add",
+  "formId": "com.networknt.light.blog.update",
   "version": 1,
   "action": [
     {
-      "category": "forum",
-      "name": "addForum",
+      "category": "blog",
+      "name": "updBlog",
       "readOnly": false,
       "title": "Submit",
-      "success": "/page/com-networknt-light-v-forum-admin-home"
+      "success": "/page/com-networknt-light-v-blog-admin-home"
     }
   ],
   "schema": {
     "type": "object",
-    "title": "Forum",
+    "title": "Blog",
     "required": [
-      "forumId",
+      "blogId",
       "description"
     ],
     "properties": {
-      "forumId": {
-        "title": "Forum Id",
+      "blogId": {
+        "title": "Blog Id",
         "type": "string"
       },
       "description": {
@@ -40,22 +40,21 @@
     }
   },
   "form": [
-    "forumId",
+    "blogId",
     "description",
     {
       "key": "in_Own",
       "options": {
-        "category": "forum",
-        "name": "getForumDropdown"
+        "category": "blog",
+        "name": "getBlogDropdown"
       }
     },
     {
       "key": "out_Own",
       "options": {
-        "category": "forum",
-        "name": "getForumDropdown"
+        "category": "blog",
+        "name": "getBlogDropdown"
       }
     }
   ]
 }
-
