@@ -20,6 +20,10 @@
                 value: 'delete'
             },
             {
+                title: 'Host',
+                value: 'host'
+            },
+            {
                 title: 'News Id',
                 value: 'newsId'
             },
@@ -109,6 +113,7 @@
                         <tbody>
                         <tr>
                             <td></td>
+                            <td><input ng-model="filter.host" type="text" /></td>
                             <td><input ng-model="filter.newsId" type="text" /></td>
                             <td><input ng-model="filter.description" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
@@ -118,6 +123,7 @@
                         </tr>
                         <tr ng-repeat="news in newsArray | filter: filter | orderBy: sort.sortedBy">
                             <td><a href ng-click="delete(news)">Delete</a></td>
+                            <td>{{news.host}}</td>
                             <td><a href ng-click="update(news)">{{news.newsId}}</a></td>
                             <td>{{news.description}}</td>
                             <td>{{news.createUserId}}</td>

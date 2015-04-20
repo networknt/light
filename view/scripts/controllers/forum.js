@@ -36,7 +36,7 @@ angular.module('lightApp').controller('forumCtrl', ['$scope', '$http', '$locatio
 
     $scope.treeFilter = $filter('uiTreeFilter');
 
-    $scope.supportedFields = ['id', 'desc'];
+    $scope.supportedFields = ['id', 'description'];
 
     $scope.gotoForum = function(id) {
         modelDataService.setModelData(id);

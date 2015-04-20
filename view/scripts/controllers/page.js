@@ -20,7 +20,6 @@ angular.module('lightApp').controller('pageCtrl', ['$scope', '$routeParams', '$h
         }
     };
 
-
     $scope.html = '';
     $http.get('/src/' + $routeParams.pageId + '.html').success (function(data){
         $scope.html = data;

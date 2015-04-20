@@ -1,0 +1,117 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('com.networknt.light.BlogPostViewCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, toaster, modelDataService) {
+        $scope.getComment = {
+            category : 'comment',
+            name: 'getCommentTree',
+            readOnly: true
+        }
+
+        $scope.addComment = {
+            category : 'comment',
+            name: 'addComment',
+            readOnly: false
+        }
+
+        $scope.getComment.data = modelDataService.getModelData();
+        $scope.addComment.data = modelDataService.getModelData();
+
+        $scope.comments = [];
+
+        $scope.fetchResult = function () {
+            $http.post('api/rs', $scope.getComment)
+                    .success(function (result, status, headers, config) {
+                        $scope.comments = result;
+                        console.log($scope.comments);
+                    })
+        };
+        $scope.fetchResult();
+
+        $scope.aceOption = {
+            useWrapMode : true,
+            showGutter: false,
+            theme:'eclipse',
+            mode: 'markdown'
+        };
+
+        $scope.submit = function () {
+            $http.post('api/rs', $scope.addComment)
+                    .success(function (data, status, headers, config) {
+                        toaster.pop('success', status, data);
+                        $scope.fetchResult();
+                    })
+        }
+
+        $scope.toggle = function(scope) {
+            scope.toggle();
+        };
+
+        var getRootNodesScope = function() {
+            return angular.element(document.getElementById("tree-root")).scope();
+        };
+
+        $scope.collapseAll = function() {
+            var scope = getRootNodesScope();
+            scope.collapseAll();
+        };
+
+        $scope.expandAll = function() {
+            var scope = getRootNodesScope();
+            scope.expandAll();
+        };
+
+        $scope.treeFilter = $filter('uiTreeFilter');
+
+        $scope.supportedFields = ['content'];
+
+        $scope.toggledForm = false;
+        $scope.btnText = 'add comment';
+
+        $scope.toggleForm = function() {
+            $scope.toggledForm = !$scope.toggledForm;
+            $scope.btnText = ($scope.toggledForm) ? 'add comment' : 'close';
+        };
+
+    }]);
+</script>
+<div class="container" ng-controller="com.networknt.light.BlogPostViewCtrl">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+                <h1>{{post.title}}</h1>
+                <h2 class="subheading">{{post.summary}}</h2>
+                <span class="meta">Posted by <user id="{{post.in_Create[0].userId}}"></user> {{post.createDate | calendar}}</span>
+            </div>
+        </div>
+    </div>
+    <br />
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                        <markdown bind-from="post.content"></markdown>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="pager" style="float:left;">
+                        <li class="next">
+                            <button class="btn btn-default" ng-click="goBack()"><i class="fa fa-arrow-left" style="padding-right:5px;"></i> Go Back</button>
+                        </li>
+                    </ul>
+                    <div class="vote" style="right:8px; bottom:0px; position:absolute;">
+                        <button class="btn btn-success" ng-click="upvote()" ng-disabled="!canUserUpvote" style="margin-left: 5px;">
+                            <i class="fa fa-thumbs-o-up fa-lg"></i>
+                        </button>
+                        <button class="btn btn-danger" ng-click="downvote()" ng-disabled="!canUserDownVote">
+                            <i class="fa fa-thumbs-o-down fa-lg"></i>
+                        </button>
+                        <button class="btn btn-info" ng-click="editPost()" ng-if="userCanEdit">
+                            <i class="fa fa-pencil fa-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+</div>

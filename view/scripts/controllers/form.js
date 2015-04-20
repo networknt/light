@@ -15,7 +15,6 @@ angular.module('lightApp').controller('formCtrl', ['$scope', '$routeParams', '$h
         }
     };
 
-    console.log("getFormPost.data", getFormPost.data);
 
     $http.post('api/rs', getFormPost)
         .success(function(result, status, headers, config) {
