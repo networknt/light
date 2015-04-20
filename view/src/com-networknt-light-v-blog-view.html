@@ -1,0 +1,139 @@
+<script type='text/javascript'>
+'use strict';
+angular.module('lightApp').controller('com.networknt.light.BlogViewCtrl', ['$scope', '$http', '$location', '$filter', 'toaster', 'modelDataService', '$routeParams', 'authService', function ($scope, $http, $location, $filter, toaster, modelDataService, $routeParams, authService) {
+
+    $scope.posts = [];
+    $scope.page = { maxSize: 10, totalItems: 0, numPages: 0 };
+    $scope.allowPost = false;
+    var getPost = {
+        category : 'blog',
+        name : 'getBlogPost',
+        readOnly: true,
+        data: modelDataService.getModelData()
+    };
+
+    getPost.data.pageSize = 10;
+    getPost.data.pageNo = 1;
+    getPost.data.sortDir = 'desc';
+    getPost.data.sortedBy  = 'createDate';
+
+    $scope.goToPost = function(post) {
+        modelDataService.setModelData({post: post});
+        $location.path("/page/com-networknt-light-v-blog-post-view/" + postId);
+    };
+
+
+    console.log('getPost', getPost);
+
+    var delPost = {
+        category: 'blog',
+        name: 'delPost',
+        readOnly: false
+    }
+
+    var UpdPost = {
+        category: 'blog',
+        name: 'updPost',
+        readOnly: false
+    }
+
+    $scope.fetchResult = function () {
+        console.log("getPost = ", getPost);
+        $http.post('api/rs', getPost)
+            .success(function (result, status, headers, config) {
+                console.log('result = ', result);
+                $scope.posts = result.posts;
+                $scope.page.totalItems = result.total;
+                $scope.allow = result.allowPost;
+
+            })
+    };
+    $scope.fetchResult();
+
+    $scope.post = function () {
+        modelDataService.setModelData(null); // reset the modelDataService variable.
+        //$location.path("/form/com.networknt.light.blog.post.add/" + $scope.blogId);
+        $location.path("/page/com-networknt-light-v-blog-post-editor/" + $scope.blogId);
+    };
+
+    $scope.goToBlogHome = function () {
+        var modelData = modelDataService.setModelData(null);
+        $location.path("/page/com-networknt-light-v-blog-home");
+    }
+}]);
+</script>
+<div class="container" data-ng-controller="com.networknt.light.BlogViewCtrl">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <h1>
+                    Network NT Official Blogs
+                </h1>
+                <p>
+                    Learn more about the Light Framework.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-xs-6 col-sm-6 col-md-6 column text-left">
+            <ol class="breadcrumb" style="background-color:white; padding-left:0px;">
+                <li><a href ng-click="goToBlogHome()" style="text-decoration:none;">Blogs</a></li>
+                <li class="active">{{blog.blogId}}</li>
+            </ol>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 column text-right">
+            <input ng-model="pattern" placeholder=" &#xE003; Search Posts" style="font-family: Helvetica, Glyphicons Halflings;"/>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="panel panel-default" style="box-shadow:0 0 0;">
+                <div class="panel-body" style="padding:0px;">
+                    <div class="row clearfix post-preview" ng-repeat="post in posts | filter:pattern">
+                        <div class="col-md-8">
+                            <a href ng-click="goToPost(post)">
+                                <h2 class="post-title">{{post.title}}</h2>
+                            </a>
+                            <p class="post-meta">Posted by <user id="{{post.in_Create[0].userId}}"></user> {{post.createDate | calendar}}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-right">
+                                <div class="btn-group">
+                                    <button class="btn btn-success" disabled="disabled" style="opacity:1; margin:0px;">
+                                        <span class="badge">{{post.in_UpVote.length || 0}}</span>
+                                    </button>
+                                    <button class="btn btn-danger" disabled="disabled" style="opacity:1; margin:0px;">
+                                        <span class="badge">{{post.in_DownVote.length || 0}}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+
+                    <div class="post-preview" ng-if="posts.length == 0">
+                        <div>
+                            <h2 class="post-title">Shoot! Looks like we don't have any posts in this blog...</h2>
+                            <h3 class="post-subtitle">Can someone help us make days longer?</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix" style="display:flex; align-items:center;">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <pagination ng-model="currentPage" total-items="(posts | filter:pattern).length" items-per-page="itemsPerPage"></pagination>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center" ng-if="allowPost" >
+                            <button class="btn btn-info pull-right" ng-click="post()"><span class="glyphicon glyphicon-plus" style="padding-right:5px"></span>Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

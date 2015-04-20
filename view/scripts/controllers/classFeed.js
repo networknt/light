@@ -6,7 +6,7 @@ angular.module('lightApp').controller('ClassFeedCtrl', ['$scope', '$http', funct
         name : 'getForm',
         readOnly: true,
         data : {
-            id : 'com.cibc.rop.class.feed'
+            formId : 'com.cibc.rop.class.feed'
         }
     };
 

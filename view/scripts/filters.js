@@ -54,3 +54,8 @@ angular.module('lightApp')
             return $sce.trustAsHtml(val);
         };
     }])
+    .filter('calendar', function() {
+        return function(date) {
+            return moment(date).calendar();
+        };
+    });

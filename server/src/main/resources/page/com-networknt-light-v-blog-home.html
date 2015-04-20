@@ -1,79 +1,82 @@
 <script type='text/javascript'>
-    (function(angular) {
-        'use strict';
-        angular.module('lightApp').controller('com.networknt.light.BlogHomeCtrl', ['$scope', '$http', '$location', '$filter', 'authService', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, authService, toaster, modelDataService) {
+    'use strict';
+    angular.module('lightApp').controller('com.networknt.light.BlogHomeCtrl', ['$scope', '$http', '$location', '$filter', 'authService', 'toaster', 'modelDataService', function ($scope, $http, $location, $filter, authService, toaster, modelDataService) {
 
-            $scope.getBlog = {
-                category : 'blog',
-                name : 'getBlogTree',
-                readOnly: true
-            };
+	$scope.blogs = [];
 
-            //The function that is responsible of fetching the result from the server
-            $scope.fetchResult = function () {
-                $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify($scope.getBlog))}})
-                    .success(function (result, status, headers, config) {
-                        $scope.blogs = result;
-                    })
-            };
+        var getBlogTree = {
+            category : 'blog',
+            name : 'getBlogTree',
+            readOnly: true
+        };
 
-            $scope.fetchResult();
+        $scope.fetchResult = function () {
+            $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify(getBlogTree))}})
+                .success(function (result, status, headers, config) {
+                    $scope.blogs = result;
+                })
+        };
 
-            $scope.toggle = function(scope) {
-                scope.toggle();
-            };
+        $scope.fetchResult();
 
-            var getRootNodesScope = function() {
-                return angular.element(document.getElementById("tree-root")).scope();
-            };
-
-            $scope.collapseAll = function() {
-                var scope = getRootNodesScope();
-                scope.collapseAll();
-            };
-
-            $scope.expandAll = function() {
-                var scope = getRootNodesScope();
-                scope.expandAll();
-            };
-
-            $scope.treeFilter = $filter('uiTreeFilter');
-
-            $scope.supportedFields = ['blogId', 'description'];
-
-            $scope.gotoBlog = function(id) {
-                modelDataService.setModelData(id);
-                $location.path("/page/com-networknt-light-v-blog-post");
-            }
-        }]);
-    })(window.angular);
+        $scope.gotoBlog = function(blog) {
+            modelDataService.setModelData({blog: blog});
+            $location.path("/page/com-networknt-light-v-blog-view");
+        }
+    }]);
 </script>
-<div class="container" data-ng-controller="com.networknt.light.BlogHomeCtrl">
-    <div class="row">
-        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-            <h4 class="page-header">Blog</h4>
-            <div>
-                <a href="" class="btn btn-default pull-right" ng-click="collapseAll()">Collapse all</a>
-                <a href="" class="btn btn-default pull-right" ng-click="expandAll()">Expand all</a>
-                <input ng-model="pattern" placeholder="Type a part of any blog"/>
-            </div>
-            <!-- Nested node template -->
-            <script type="text/ng-template" id="nodes_renderer.html">
-                <div ui-tree-handle class="tree-node tree-node-content">
-                    <a class="btn btn-success btn-xs" ng-if="node.children && node.children.length > 0" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon glyphicon-plus': collapsed, 'glyphicon glyphicon-minus': !collapsed}"></span></a>
-                    <!--{{node.id | highlight:pattern | trust}}-->
-                    <a href ng-click="gotoBlog(node.id)" ng-bind-html="node.id | highlight:pattern | trust"></a>
-                    <small ng-bind-html="node.description | highlight:pattern | trust"></small>
-                </div>
-                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
-                    <li ng-repeat="node in node.children" ui-tree-node ng-include="'nodes_renderer.html'" ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
-                </ol>
-            </script>
-            <div ui-tree data-drag-enabled=false id="tree-root">
-                <ol ui-tree-nodes ng-model="blogs">
-                    <li ng-repeat="node in blogs" ui-tree-node ng-include="'nodes_renderer.html'" ng-hide="!treeFilter(node, pattern, supportedFields)"></li>
-                </ol>
+<div class="container" data-ng-controller="BlogCtrl">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <h1>
+                    Network NT Official Blogs
+                </h1>
+                <p>
+                    Learn more about the Light Framework.
+                </p>
             </div>
         </div>
     </div>
-</div> <!-- /container -->
+    <div class="row clearfix">
+        <div class="col-xs-6 col-sm-6 col-md-6 column text-left">
+            <ol class="breadcrumb" style="background-color:white; padding-left:0px;">
+                <li class="active">Blogs</li>
+            </ol>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 column text-right">
+            <input ng-model="pattern" placeholder=" &#xE003; Search Blogs" style="font-family: Helvetica, Glyphicons Halflings;"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 column">
+            <div class="ui three cards">
+                <a class="green card" ng-repeat="blog in pagedBlogs | limitTo:itemsPerPage | filter:pattern" ng-click="goToBlog({{blog}})" style="text-decoration:none;">
+                    <div class="content">
+                        <div class="header text-center">
+                            {{blog.blogId}}
+                        </div>
+                        <div class="description text-center" style="word-wrap: break-word;">
+                            {{blog.description}}
+                        </div>
+
+                    </div>
+                    <div class="extra content">
+                        {{blog.out_HasPost.length || 0}} Posts
+                    </div>
+                    <div class="ui bottom attached button">
+                        <button type="button" class="btn btn-default" style="width:100%; text-align:center;" ng-click="goToBlog({{blog}})">Read More</button>
+                    </div>
+                </a>
+            </div>
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <center>
+                <pagination ng-model="currentPage" total-items="(blogs | filter:pattern).length" items-per-page="itemsPerPage" ng-change="pageChanged()"></pagination>
+            </center>
+        </div>
+    </div>
+</div>
