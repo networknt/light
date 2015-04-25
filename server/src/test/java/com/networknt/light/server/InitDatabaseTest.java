@@ -51,36 +51,11 @@ public class InitDatabaseTest  extends TestCase {
         super.tearDown();
     }
 
-    /*
-    public void testInitDb() {
-        InitDatabase.initDb();
-        System.out.println("Db schema is recreated and refreshed.");
-    }
-    */
-
-    /*
-    public void testUser() {
-        try {
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select email, displayName, roles.id from User where email = ?");
-            List<ODocument> result = db.command(query).execute("stevehu@gmail.com");
-            if(result.size() > 0) {
-                ODocument doc = result.get(0);
-                System.out.println("doc=" + doc.toJSON());
-                System.out.println("doc=" + doc.toJSON("fetchPlan:roles:1"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-    */
-
     public void testMenu() {
         try {
             OrientGraph graph = ServiceLocator.getInstance().getGraph();
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select from Menu where host = ?");
-            List<ODocument> result = graph.getRawGraph().command(query).execute("injector");
+            List<ODocument> result = graph.getRawGraph().command(query).execute("example");
             if(result.size() > 0) {
                 ODocument doc = result.get(0);
                 System.out.println("doc=" + doc.toJSON());

@@ -94,14 +94,13 @@ public class RestHandlerTest extends TestCase {
         super.tearDown();
     }
 
+    /*
     public void testRewrite() throws Exception {
-        System.out.println("testRewrite starts");
-
         HttpGet get = new HttpGet("http://example:8080/page/a");
         HttpResponse response = httpclient.execute(get);
         Assert.assertEquals(StatusCodes.OK, response.getStatusLine().getStatusCode());
-        System.out.println("testRewrite ends");
     }
+    */
 
     public void testUser() throws Exception {
 

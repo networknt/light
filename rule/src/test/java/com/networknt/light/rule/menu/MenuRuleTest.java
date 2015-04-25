@@ -384,10 +384,10 @@ public class MenuRuleTest extends TestCase {
                         });
 
                 // update menu with above for menuItems
-                List menuItems = new ArrayList();
-                menuItems.add(menuItem1.get("@rid"));
-                menuItems.add(menuItem2.get("@rid"));
-                menu.put("menuItems", menuItems);
+                List out_Own = new ArrayList();
+                out_Own.add(menuItem1.get("@rid"));
+                out_Own.add(menuItem2.get("@rid"));
+                menu.put("out_Own", out_Own);
 
                 jsonMap = mapper.readValue(updMenu,
                         new TypeReference<HashMap<String, Object>>() {
@@ -432,9 +432,9 @@ public class MenuRuleTest extends TestCase {
                     }
                 }
 
-                menuItems.add(menuItem3.get("@rid"));
-                menuItems.add(menuItemCommon.get("@rid"));
-                menu.put("menuItems", menuItems);
+                out_Own.add(menuItem3.get("@rid"));
+                out_Own.add(menuItemCommon.get("@rid"));
+                menu.put("out_Own", out_Own);
 
 
                 jsonMap = mapper.readValue(updMenu,
@@ -458,7 +458,7 @@ public class MenuRuleTest extends TestCase {
                 // there should be four menuItems
                 assertEquals(4, list.size());
 
-                menuItems.clear();
+                out_Own.clear();
 
                 // get the menu for future update with menuItems.
                 jsonMap = mapper.readValue(getAllMenu,
@@ -487,6 +487,7 @@ public class MenuRuleTest extends TestCase {
                 jsonMap = mapper.readValue(updMenu,
                         new TypeReference<HashMap<String, Object>>() {
                         });
+                menu.put("out_Own", out_Own);
                 jsonMap.put("data", menu);
                 jsonMap.put("payload", ownerToken.getPayload());
                 updMenuRule = new UpdMenuRule();
@@ -517,7 +518,7 @@ public class MenuRuleTest extends TestCase {
                     List l = new ArrayList();
                     l.add(menuItem2.get("@rid"));
                     l.add(menuItem3.get("@rid"));
-                    menuItem1.put("menuItems",l);
+                    menuItem1.put("out_Own",l);
                     jsonMap = mapper.readValue(updMenuItem,
                             new TypeReference<HashMap<String, Object>>() {
                             });
@@ -581,9 +582,9 @@ public class MenuRuleTest extends TestCase {
                         }
                     }
 
-                    menuItems.add(menuItem1.get("@rid"));
-                    menuItems.add(menuItemCommon.get("@rid"));
-                    menu.put("menuItems", menuItems);
+                    out_Own.add(menuItem1.get("@rid"));
+                    out_Own.add(menuItemCommon.get("@rid"));
+                    menu.put("out_Own", out_Own);
 
                     jsonMap = mapper.readValue(updMenu,
                             new TypeReference<HashMap<String, Object>>() {
@@ -669,8 +670,8 @@ public class MenuRuleTest extends TestCase {
                         }
                     }
 
-                    menuItems.remove(menuItem1.get("@rid"));
-                    menu.put("menuItems", menuItems);
+                    out_Own.remove(menuItem1.get("@rid"));
+                    menu.put("out_Own", out_Own);
 
                     jsonMap = mapper.readValue(updMenu,
                             new TypeReference<HashMap<String, Object>>() {
