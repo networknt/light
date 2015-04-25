@@ -84,6 +84,8 @@ public class BlogRuleTest extends TestCase {
     String getExamBlogPost2 = "{\"readOnly\":true,\"category\":\"blog\",\"name\":\"getBlogPost\",\"data\":{\"host\":\"www.example.com\",\"pageSize\":3,\"pageNo\":2}}";
     String getExamBlogPost3 = "{\"readOnly\":true,\"category\":\"blog\",\"name\":\"getBlogPost\",\"data\":{\"host\":\"www.example.com\",\"pageSize\":3,\"pageNo\":3}}";
 
+    String getDemoBlogPost1 = "{\"readOnly\":true,\"category\":\"blog\",\"name\":\"getBlogPost\",\"data\":{\"host\":\"demo.networknt.com\",\"pageSize\":3,\"pageNo\":1}}";
+
     public BlogRuleTest(String name) {
         super(name);
     }
@@ -430,6 +432,12 @@ public class BlogRuleTest extends TestCase {
             System.out.println("demo blog tree = " + result);
         }
 
+        // get blog post for DemoBlog1 before adding posts
+        {
+            String json = getBlogPost(getDemoBlogPost1, (String)demoBlog1.get("@rid"), ownerToken);
+            System.out.println("blogPost for DemoBlog1 before adding posts" + json);
+        }
+
         // add example posts
         {
             addPost(addExamPost1, ownerToken);
@@ -456,6 +464,11 @@ public class BlogRuleTest extends TestCase {
             System.out.println("blogPost for ExamBlog3" + json);
         }
 
+        // get blog post for DemoBlog1
+        {
+            String json = getBlogPost(getDemoBlogPost1, (String)demoBlog1.get("@rid"), ownerToken);
+            System.out.println("blogPost for DemoBlog1 after adding posts" + json);
+        }
 
     }
 
