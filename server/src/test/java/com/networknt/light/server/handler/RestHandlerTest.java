@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.light.server.LightServer;
 import com.networknt.light.util.ServiceLocator;
-import io.undertow.util.StatusCodes;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -46,32 +45,38 @@ import java.util.Map;
  * Created by husteve on 8/25/2014.
  */
 public class RestHandlerTest extends TestCase {
+    String signInOwner = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
-    String getUserByUserId = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"userId\":\"steve\"}}";
-    String logOutUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"logOutUser\",\"data\":{\"userId\":\"steve\"}}";
-    String delUser = "{\"readOnly\": false, \"category\": \"user\", \"name\": \"delUser\", \"data\": {\"userId\":\"steve\"}}";
+    // user @rid will be getting from jwt token
+    String logOutAdmin = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"logOutUser\",\"data\":{\"host\":\"example\"}}";
 
-    String signUpJson = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signUpUser\",\"data\":{\"userId\":\"steve\",\"email\":\"steve@gmail.com\",\"password\":\"abcdefg\",\"passwordConfirm\":\"abcdefg\",\"firstName\":\"steve\",\"lastName\":\"hu\"}}";
-    String getUserByEmail = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"email\":\"steve@gmail.com\"}}";
+    String getUserByUserId = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"host\":\"example\",\"userId\":\"steve\"}}";
+    String logOutUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"logOutUser\",\"data\":{\"host\":\"example\",\"userId\":\"steve\"}}";
+    String delUser = "{\"readOnly\": false, \"category\": \"user\", \"name\": \"delUser\", \"data\": {\"host\":\"example\",\"userId\":\"steve\"}}";
 
-    String signInJsonEmail = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"steve@gmail.com\",\"password\":\"abcdefg\",\"rememberMe\":false}}";
-    String signInByUserId = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"userIdEmail\":\"steve\",\"password\":\"abcdefg\",\"rememberMe\":true}}";
+    String signUpJson = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signUpUser\",\"data\":{\"host\":\"example\",\"userId\":\"steve\",\"email\":\"steve@gmail.com\",\"password\":\"abcdefg\",\"passwordConfirm\":\"abcdefg\",\"firstName\":\"steve\",\"lastName\":\"hu\"}}";
+    String getUserByEmail = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"host\":\"example\",\"email\":\"steve@gmail.com\"}}";
 
-    String updPasswordJson = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updPassword\",\"data\":{\"userId\":\"steve\",\"password\":\"abcdefg\",\"newPassword\":\"123456\",\"passwordConfirm\":\"123456\"}}";
-    String signInJsonNewPass = "{\"readOnly\": true, \"category\": \"user\", \"name\": \"signInUser\", \"data\": {\"userIdEmail\":\"steveu@gmail.com\", \"password\": \"123456\"}}";
+    String signInJsonEmail = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"userIdEmail\":\"steve@gmail.com\",\"password\":\"abcdefg\",\"rememberMe\":false}}";
+    String signInByUserId = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"example\",\"clientId\":\"example@Browser\",\"userIdEmail\":\"steve\",\"password\":\"abcdefg\",\"rememberMe\":true}}";
 
-    String updProfileJson = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updProfile\",\"data\":{\"userId\":\"steve\",\"firstName\":\"Steve\",\"lastName\":\"Hu\"}}";
+    String updPasswordJson = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updPassword\",\"data\":{\"host\":\"example\",\"userId\":\"steve\",\"password\":\"abcdefg\",\"newPassword\":\"123456\",\"passwordConfirm\":\"123456\"}}";
+    String signInJsonNewPass = "{\"readOnly\": true, \"category\": \"user\", \"name\": \"signInUser\", \"data\": {\"host\":\"example\",\"userIdEmail\":\"steveu@gmail.com\", \"password\": \"123456\"}}";
+
+    String updProfileJson = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updProfile\",\"data\":{\"host\":\"example\",\"userId\":\"steve\",\"firstName\":\"Steve\",\"lastName\":\"Hu\"}}";
 
 
-    String addJson = "{\"readOnly\": false, \"category\": \"form\", \"name\": \"addForm\", \"data\": {\"id\": \"com.networknt.light.common.test.json\", \"schema\": {\"type\": \"object\", \"title\": \"Comment\",\"properties\": { \"name\":  { \"title\": \"Name\",\"type\": \"string\"}, \"email\":  {\n        \"title\": \"Email\",\n        \"type\": \"string\",\n        \"pattern\": \"^\\\\S+@\\\\S+$\",\n        \"description\": \"Email will be used for evil.\"\n      },\n      \"comment\": {\n        \"title\": \"Comment\",\n        \"type\": \"string\",\n        \"maxLength\": 20,\n        \"validationMessage\": \"Don't be greedy!\"\n      }\n    },\n    \"required\": [\"name\",\"email\",\"comment\"]\n  },\n  \"form\": [\n    \"name\",\n    \"email\",\n    {\n      \"key\": \"comment\",\n      \"type\": \"textarea\"\n    },\n    {\n      \"type\": \"submit\",\n\t  \"style\": \"btn-info\",\n      \"title\": \"OK\"} ]}}";
-    String getJson = "{\"readOnly\": true, \"category\": \"form\", \"name\": \"getForm\", \"data\": {\"id\":\"com.networknt.light.common.test.json\"}}";
-    String updJson = "{\"readOnly\": false, \"category\": \"form\", \"name\": \"updForm\", \"data\": {\"id\": \"com.networknt.light.common.test.json\", \"version\": 0, \"schema\": {\"type\": \"object\", \"title\": \"Updated Comment\",\"properties\": { \"name\":  { \"title\": \"Name\",\"type\": \"string\"}, \"email\":  {\n        \"title\": \"Email\",\n        \"type\": \"string\",\n        \"pattern\": \"^\\\\S+@\\\\S+$\",\n        \"description\": \"Email will be used for evil.\"\n      },\n      \"comment\": {\n        \"title\": \"Comment\",\n        \"type\": \"string\",\n        \"maxLength\": 20,\n        \"validationMessage\": \"Don't be greedy!\"\n      }\n    },\n    \"required\": [\"name\",\"email\",\"comment\"]\n  },\n  \"form\": [\n    \"name\",\n    \"email\",\n    {\n      \"key\": \"comment\",\n      \"type\": \"textarea\"\n    },\n    {\n      \"type\": \"submit\",\n\t  \"style\": \"btn-info\",\n      \"title\": \"OK\"} ]}}";
+    String addJson = "{\"readOnly\": false, \"category\": \"form\", \"name\": \"addForm\", \"data\": {\"host\":\"example\",\"id\": \"com.networknt.light.common.test.json\", \"schema\": {\"type\": \"object\", \"title\": \"Comment\",\"properties\": { \"name\":  { \"title\": \"Name\",\"type\": \"string\"}, \"email\":  {\n        \"title\": \"Email\",\n        \"type\": \"string\",\n        \"pattern\": \"^\\\\S+@\\\\S+$\",\n        \"description\": \"Email will be used for evil.\"\n      },\n      \"comment\": {\n        \"title\": \"Comment\",\n        \"type\": \"string\",\n        \"maxLength\": 20,\n        \"validationMessage\": \"Don't be greedy!\"\n      }\n    },\n    \"required\": [\"name\",\"email\",\"comment\"]\n  },\n  \"form\": [\n    \"name\",\n    \"email\",\n    {\n      \"key\": \"comment\",\n      \"type\": \"textarea\"\n    },\n    {\n      \"type\": \"submit\",\n\t  \"style\": \"btn-info\",\n      \"title\": \"OK\"} ]}}";
+    String getJson = "{\"readOnly\": true, \"category\": \"form\", \"name\": \"getForm\", \"data\": {\"host\":\"example\",\"id\":\"com.networknt.light.common.test.json\"}}";
+    String updJson = "{\"readOnly\": false, \"category\": \"form\", \"name\": \"updForm\", \"data\": {\"host\":\"example\",\"id\": \"com.networknt.light.common.test.json\", \"version\": 0, \"schema\": {\"type\": \"object\", \"title\": \"Updated Comment\",\"properties\": { \"name\":  { \"title\": \"Name\",\"type\": \"string\"}, \"email\":  {\n        \"title\": \"Email\",\n        \"type\": \"string\",\n        \"pattern\": \"^\\\\S+@\\\\S+$\",\n        \"description\": \"Email will be used for evil.\"\n      },\n      \"comment\": {\n        \"title\": \"Comment\",\n        \"type\": \"string\",\n        \"maxLength\": 20,\n        \"validationMessage\": \"Don't be greedy!\"\n      }\n    },\n    \"required\": [\"name\",\"email\",\"comment\"]\n  },\n  \"form\": [\n    \"name\",\n    \"email\",\n    {\n      \"key\": \"comment\",\n      \"type\": \"textarea\"\n    },\n    {\n      \"type\": \"submit\",\n\t  \"style\": \"btn-info\",\n      \"title\": \"OK\"} ]}}";
     String getAllJson = "{\"readOnly\": true, \"category\": \"form\", \"name\": \"getAllForm\"}";
-    String delJson = "{\"readOnly\": false, \"category\": \"form\", \"name\": \"delForm\", \"data\": {\"id\":\"com.networknt.light.common.test.json\", \"version\": 1}}";
+    String delJson = "{\"readOnly\": false, \"category\": \"form\", \"name\": \"delForm\", \"data\": {\"host\":\"example\",\"id\":\"com.networknt.light.common.test.json\", \"version\": 1}}";
 
-    String getMenuJson = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenu\", \"data\": {\"host\":\"injector\"}}";
+    String getMenuJson = "{\"readOnly\": true, \"category\": \"menu\", \"name\": \"getMenu\", \"data\": {\"host\":\"example\"}}";
 
     CloseableHttpClient httpclient = null;
+    String ownerToken = null;
+
     public RestHandlerTest(String name) {
         super(name);
     }
@@ -85,10 +90,12 @@ public class RestHandlerTest extends TestCase {
     public void setUp() throws Exception {
         LightServer.start();
         httpclient = HttpClients.createDefault();
+        // get owner token here
+        signInOwner();
         super.setUp();
     }
 
-    public void tearDown() throws Exception {   
+    public void tearDown() throws Exception {
         LightServer.stop();
         httpclient.close();
         super.tearDown();
@@ -104,10 +111,13 @@ public class RestHandlerTest extends TestCase {
 
     public void testUser() throws Exception {
 
+        cleanUpUser();
+        signUpUser();
+        // sleep 100 ms in order to make sure that signUp user is available in this
+        // db connection. Orientdb sometimes needs to be synched between two calls
+        Thread.sleep(100);
+        signInUser();
         /*
-        postCleanUpUser();
-        postSignUpUser();
-        postSignInUser();
         postGetUserByUserId();
         postGetUserByEmail();
         postAddForm();
@@ -140,14 +150,51 @@ public class RestHandlerTest extends TestCase {
     }
     */
 
-    private void postCleanUpUser() throws Exception {
-        System.out.println("postCleanUpUser starts");
+    /**
+     * Set ownerToken in case any action uses it to do update. For example delUser
+     * @throws Exception
+     */
+    private void signInOwner() throws Exception {
+        HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
+        StringEntity input = new StringEntity(signInOwner);
+        input.setContentType("application/json");
+        httpPost.setEntity(input);
+        CloseableHttpResponse response = httpclient.execute(httpPost);
+
+        try {
+            assertEquals(200, response.getStatusLine().getStatusCode());
+            HttpEntity entity = response.getEntity();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
+            String json = "";
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                json = json + line;
+            }
+            System.out.println("json = " + json);
+            Map<String, Object> jsonMap = ServiceLocator.getInstance().getMapper().readValue(json,
+                    new TypeReference<HashMap<String, Object>>() {
+                    });
+            ownerToken = "Bearer " + (String)jsonMap.get("accessToken");
+            // and ensure it is fully consumed
+            EntityUtils.consume(entity);
+        } finally {
+            response.close();
+        }
+    }
+
+    /**
+     * Delete test user in order to run the same signUp again and again.
+     * @throws Exception
+     */
+    private void cleanUpUser() throws Exception {
         StatusLine statusLine = null;
         // getUser and check status
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(getUserByUserId);
         input.setContentType("application/json");
         httpPost.setEntity(input);
+        httpPost.setHeader("Authorization", ownerToken);
+
         CloseableHttpResponse response = httpclient.execute(httpPost);
 
         try {
@@ -166,19 +213,21 @@ public class RestHandlerTest extends TestCase {
 
         // delete user if it exists.
         if(statusLine.getStatusCode() == 200) {
-            postDelUser();
+            delUser();
         }
-
-        System.out.println("postCleanUpUser ends");
     }
 
-    private void postDelUser() throws Exception {
-        System.out.println("postDelUser starts");
+    /**
+     * Delete user in clean up above if the test user exists
+     * @throws Exception
+     */
+    private void delUser() throws Exception {
         // getUser and check status
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(delUser);
         input.setContentType("application/json");
         httpPost.setEntity(input);
+        httpPost.setHeader("Authorization", ownerToken);
         CloseableHttpResponse response = httpclient.execute(httpPost);
 
         try {
@@ -196,11 +245,13 @@ public class RestHandlerTest extends TestCase {
         } finally {
             response.close();
         }
-        System.out.println("postDelUser ends");
     }
 
-    private void postSignUpUser() throws Exception {
-        System.out.println("postSignUpUser starts");
+    /**
+     * SignUp a new test user
+     * @throws Exception
+     */
+    private void signUpUser() throws Exception {
         // getUser and check status
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(signUpJson);
@@ -223,12 +274,13 @@ public class RestHandlerTest extends TestCase {
         } finally {
             response.close();
         }
-        System.out.println("postSignUpUser ends");
     }
 
-    private void postSignInUser() throws Exception {
-        System.out.println("postSignInUser starts");
-        // getUser and check status
+    /**
+     * Login as the new test user
+     * @throws Exception
+     */
+    private void signInUser() throws Exception {
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(signInByUserId);
         input.setContentType("application/json");
@@ -245,13 +297,14 @@ public class RestHandlerTest extends TestCase {
                 json = json + line;
             }
             System.out.println("json = " + json);
+            // make sure there is an accessToken in the json.
+            assertTrue(json.contains("accessToken"));
             // do something useful with the response body
             // and ensure it is fully consumed
             EntityUtils.consume(entity);
         } finally {
             response.close();
         }
-        System.out.println("postSignInUser ends");
     }
 
     private void postGetUserByUserId() throws Exception {

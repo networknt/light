@@ -28,7 +28,10 @@ angular.module('lightApp').controller('formCtrl', ['$scope', '$routeParams', '$h
             $scope.schemaJson = JSON.stringify($scope.schema, undefined, 2);
             $scope.formJson = JSON.stringify($scope.form, undefined, 2);
             $scope.modelData = result.model || modelDataService.getModelData() || {};
-            modelDataService.setModelData(null); // reset the modelDataService variable.
+            // In normal case, we should clear modelData but in the case of rule admin,
+            // we cannot do that. what if we don't clean it up. and let who ever set a new
+            // model to make it work. Is there any opened without setting modelData?
+            //modelDataService.setModelData(null); // reset the modelDataService variable.
             $scope.decorator = 'bootstrap-decorator';
         }).error(function(data, status, headers, config) {
             toaster.pop('error', status, data, 5000);

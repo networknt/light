@@ -31,7 +31,7 @@ public class Util {
 
     public static String getCommandRuleId(Map<String, Object> jsonMap) throws Exception {
         Class c = Class.forName("com.networknt.light.rule.Rule");
-        //logger.debug("jsonMap = "  + jsonMap);
+        logger.debug("jsonMap = "  + jsonMap);
         String commandName = (String) jsonMap.get("name");
         // Ev rules should only be called internally not from browser.
         if(commandName.endsWith("Ev")) {
