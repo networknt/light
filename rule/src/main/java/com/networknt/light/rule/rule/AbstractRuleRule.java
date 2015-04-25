@@ -276,8 +276,11 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
             Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
             if(rule != null) {
                 String schema = (String)data.get("schema");
-                if(schema != null) {
-                    rule.setProperty("schema", schema);
+                if(schema != null && schema.length() > 0) {
+                    // convert it to map before setProperty.
+                    Map<String, Object> schemaMap = mapper.readValue(schema,
+                        new TypeReference<HashMap<String, Object>>() {});
+                    rule.setProperty("schema", schemaMap);
                 } else {
                     rule.removeProperty("schema");
                 }
