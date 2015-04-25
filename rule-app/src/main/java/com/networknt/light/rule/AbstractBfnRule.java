@@ -1063,18 +1063,20 @@ public abstract class AbstractBfnRule  extends AbstractRule implements Rule {
             // get the list for db
             list = new ArrayList<String>();
             String json = getBfnPostDb(rid, sortedBy);
-            // convert json to list of maps.
-            List<Map<String, Object>> posts = mapper.readValue(json,
-                    new TypeReference<ArrayList<HashMap<String, Object>>>() {
-                    });
-            for(Map<String, Object> post: posts) {
-                String postRid = (String)post.get("rid");
-                list.add(postRid);
-                post.remove("@rid");
-                post.remove("@type");
-                post.remove("@version");
-                post.remove("@fieldTypes");
-                postCache.put(postRid, post);
+            if(json != null) {
+                // convert json to list of maps.
+                List<Map<String, Object>> posts = mapper.readValue(json,
+                        new TypeReference<ArrayList<HashMap<String, Object>>>() {
+                        });
+                for(Map<String, Object> post: posts) {
+                    String postRid = (String)post.get("rid");
+                    list.add(postRid);
+                    post.remove("@rid");
+                    post.remove("@type");
+                    post.remove("@version");
+                    post.remove("@fieldTypes");
+                    postCache.put(postRid, post);
+                }
             }
             listCache.put(rid + sortedBy, list);
         }
