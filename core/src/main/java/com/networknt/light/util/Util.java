@@ -69,6 +69,12 @@ public class Util {
         return baos.toString();
     }
 
+    public static String wrapErrorToJson(String error) {
+        StringBuilder sb = new StringBuilder("{\"error\":\"");
+        sb.append(error).append("\"}");
+        return sb.toString();
+    }
+
     public static String getUserHome() {
         return System.getProperty("user.home");
     }

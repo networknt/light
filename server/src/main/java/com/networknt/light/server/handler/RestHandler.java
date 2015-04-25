@@ -103,14 +103,12 @@ public class RestHandler implements HttpHandler {
             return;
         }
 
-        // TODO validate with json schema to make sure the input json is valid. return an error message otherwise.
-        // you need to get the schema from db again for the one sent from browser might be modified.
         String cmdRuleClass = Util.getCommandRuleId(jsonMap);
         Map ruleMap = AbstractRule.getRuleByRuleClass(cmdRuleClass);
         if(ruleMap == null) {
             exchange.setResponseCode(400);
             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-            exchange.getResponseSender().send((ByteBuffer.wrap("invalid_command".getBytes("utf-8"))));
+            exchange.getResponseSender().send((ByteBuffer.wrap("No handler for the command".getBytes("utf-8"))));
             return;
         }
 
@@ -132,6 +130,7 @@ public class RestHandler implements HttpHandler {
                 }
             }
         }
+        // schema validation
         boolean readOnly = (boolean)jsonMap.get("readOnly");
         if(!readOnly) {
             JsonSchema schema = (JsonSchema)ruleMap.get("schema");
@@ -156,7 +155,7 @@ public class RestHandler implements HttpHandler {
         try {
             payload = getTokenPayload(headerMap);
         } catch (IllegalStateException e) {
-            //e.printStackTrace();
+            logger.error("Exception", e);
             String msg = e.getMessage();
             if(msg != null && msg.startsWith(JwtUtil.TOKEN_EXPIRED_MESSAGE)) {
                 // return 401 status and let client to refresh the token.
@@ -434,6 +433,7 @@ public class RestHandler implements HttpHandler {
         // users that are not logged in.
         jsonMap.put("ipAddress", getIpAddress(exchange));
 
+        // check if there are tranform rules defined for this end point.
         if(ruleMap != null) {
             List<Map<String, Object>> reqTransforms = (List)ruleMap.get("reqTransforms");
             if(reqTransforms != null && reqTransforms.size() > 0) {

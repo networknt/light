@@ -17,9 +17,12 @@
 package com.networknt.light.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.light.util.Util;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import java.lang.System;
 
 /**
  * Created by steve on 05/01/15.
@@ -48,5 +51,12 @@ public class UtilTest extends TestCase {
     public void testGetUserHome() throws Exception {
         String userHome = Util.getUserHome();
         System.out.println("uesrHome = " + userHome);
+    }
+
+    public void testWrapErrorToJson() {
+        String error = "invalid command";
+        String result = Util.wrapErrorToJson(error);
+        System.out.println(result);
+        assertEquals("{\"error\":\"invalid command\"}", result);
     }
 }
