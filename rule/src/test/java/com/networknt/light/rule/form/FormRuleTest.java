@@ -18,6 +18,8 @@ package com.networknt.light.rule.form;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.light.rule.rule.AbstractRuleRule;
+import com.networknt.light.rule.rule.GetRuleDropdownRule;
 import com.networknt.light.rule.user.SignInUserEvRule;
 import com.networknt.light.rule.user.SignInUserRule;
 import com.networknt.light.util.JwtUtil;
@@ -58,7 +60,11 @@ public class FormRuleTest extends TestCase {
         return suite;
     }
 
-    public void setUp() throws Exception { super.setUp(); }
+    public void setUp() throws Exception {
+        super.setUp();
+        // This is to load all the rules into Cache as some of the test case depends on dynamic rules.
+        AbstractRuleRule.loadCompileCache();
+    }
 
     public void tearDown() throws Exception {
         super.tearDown();

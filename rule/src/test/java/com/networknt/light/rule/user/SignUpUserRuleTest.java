@@ -18,9 +18,11 @@ package com.networknt.light.rule.user;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.light.util.JwtUtil;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.oauth.jsontoken.JsonToken;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,9 +32,10 @@ import java.util.Map;
  */
 public class SignUpUserRuleTest extends TestCase {
     ObjectMapper mapper = new ObjectMapper();
-    String signUp = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signUpUser\",\"data\":{\"userId\":\"testuser\",\"email\":\"testuser@gmail.com\",\"password\":\"abcdefg\",\"passwordConfirm\":\"abcdefg\",\"firstName\":\"test\",\"lastName\":\"user\"}}";
-
-    String signUpJsonPasswordDiff = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signUpUser\",\"data\":{\"userId\":\"tstuser\",\"email\":\"tstuser@gmail.com\",\"password\":\"abcdefg\",\"passwordConfirm\":\"12345\",\"firstName\":\"tst\",\"lastName\":\"user\"}}";
+    String signInAdmin = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
+    String signUp = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signUpUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"testuser\",\"email\":\"testuser@gmail.com\",\"password\":\"abcdefg\",\"passwordConfirm\":\"abcdefg\",\"firstName\":\"test\",\"lastName\":\"user\"}}";
+    String signUpJsonPasswordDiff = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signUpUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"tstuser\",\"email\":\"tstuser@gmail.com\",\"password\":\"abcdefg\",\"passwordConfirm\":\"12345\",\"firstName\":\"tst\",\"lastName\":\"user\"}}";
+    String delUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"delUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"testuser\"}}";
 
     public SignUpUserRuleTest(String name) {
         super(name);
@@ -53,7 +56,48 @@ public class SignUpUserRuleTest extends TestCase {
     public void testExecute() throws Exception {
         Map<String, Object> jsonMap = new HashMap<String, Object>();
         boolean ruleResult = false;
+        JsonToken adminToken = null;
+
         try {
+            // signIn admin by userId
+            {
+                jsonMap = mapper.readValue(signInAdmin,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+
+                SignInUserRule valRule = new SignInUserRule();
+                ruleResult = valRule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                String json = (String) jsonMap.get("result");
+                jsonMap = mapper.readValue(json,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                assertNotNull(jsonMap.get("refreshToken"));
+                adminToken = JwtUtil.Deserialize((String) jsonMap.get("accessToken"));
+                SignInUserEvRule rule = new SignInUserEvRule();
+                ruleResult = rule.execute(eventMap);
+                assertTrue(ruleResult);
+            }
+
+            // del user user if it exists in case previous test failed and the user is not removed.
+            {
+                jsonMap = mapper.readValue(delUser,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> payload = adminToken.getPayload();
+                jsonMap.put("payload", payload);
+
+                DelUserRule valRule = new DelUserRule();
+                ruleResult = valRule.execute(jsonMap);
+                if (ruleResult) {
+                    Map<String, Object> eventMap = (Map<String, Object>) jsonMap.get("eventMap");
+                    DelUserEvRule rule = new DelUserEvRule();
+                    ruleResult = rule.execute(eventMap);
+                    assertTrue(ruleResult);
+                }
+            }
+
             // signUp user no error
             {
                 jsonMap = mapper.readValue(signUp,
@@ -80,7 +124,7 @@ public class SignUpUserRuleTest extends TestCase {
                 SignUpUserRule rule = new SignUpUserRule();
                 ruleResult = rule.execute(jsonMap);
                 assertFalse(ruleResult);
-                String error = (String)jsonMap.get("error");
+                String error = (String)jsonMap.get("result");
                 assertEquals("password and password confirm are not the same", error);
                 int responseCode = (int)jsonMap.get("responseCode");
                 assertEquals(400, responseCode);

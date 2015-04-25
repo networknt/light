@@ -70,12 +70,17 @@ public abstract class AbstractRule implements Rule {
 
     protected boolean matchEtag(Map<String, Object> inputMap, CacheObject co) {
         HttpServerExchange exchange = (HttpServerExchange)inputMap.get("exchange");
-        String requestETag = exchange.getRequestHeaders().getFirst(Headers.IF_NONE_MATCH);
-        if (co.getEtag().equals(requestETag)) {
-            exchange.setResponseCode(304); // no change
-            return true;
+        if(exchange != null) {
+            String requestETag = exchange.getRequestHeaders().getFirst(Headers.IF_NONE_MATCH);
+            if (co.getEtag().equals(requestETag)) {
+                exchange.setResponseCode(304); // no change
+                return true;
+            } else {
+                exchange.getResponseHeaders().add(Headers.ETAG, co.getEtag());
+                return false;
+            }
         } else {
-            exchange.getResponseHeaders().add(Headers.ETAG, co.getEtag());
+            // Exchange is always available in runtime but not available in unit test cases.
             return false;
         }
     }
