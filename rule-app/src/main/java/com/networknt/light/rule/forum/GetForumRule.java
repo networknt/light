@@ -29,6 +29,6 @@ import com.networknt.light.rule.Rule;
  */
 public class GetForumRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return getBfn("forum", objects);
+        return getBranch("forum", objects);
     }
 }

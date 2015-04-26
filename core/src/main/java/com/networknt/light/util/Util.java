@@ -59,7 +59,7 @@ public class Util {
                 ruleId;
         return ruleId;
     }
-
+    /*
     public static String stacktraceToString(Exception e)
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -68,7 +68,7 @@ public class Util {
         ps.close();
         return baos.toString();
     }
-
+    */
     public static String wrapErrorToJson(String error) {
         StringBuilder sb = new StringBuilder("{\"error\":\"");
         sb.append(error).append("\"}");

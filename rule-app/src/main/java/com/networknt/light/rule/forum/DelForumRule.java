@@ -29,6 +29,6 @@ import com.networknt.light.rule.Rule;
  */
 public class DelForumRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return delBfn("forum", objects);
+        return delBranch("forum", objects);
     }
 }

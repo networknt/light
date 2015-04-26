@@ -28,6 +28,6 @@ import com.networknt.light.rule.Rule;
  */
 public class UpdBlogRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return updBfn("blog", objects);
+        return updBranch("blog", objects);
     }
 }
