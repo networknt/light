@@ -24,6 +24,6 @@ import com.networknt.light.rule.Rule;
  */
 public class UpdBlogEvRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return updBfnEv("blog", objects);
+        return updBranchEv("blog", objects);
     }
 }

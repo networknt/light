@@ -29,6 +29,6 @@ import com.networknt.light.rule.Rule;
  */
 public class GetNewsDropdownRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return getBfnDropdown("news", objects);
+        return getBranchDropdown("news", objects);
     }
 }

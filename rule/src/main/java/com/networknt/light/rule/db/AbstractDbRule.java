@@ -104,7 +104,7 @@ public abstract class AbstractDbRule extends AbstractRule implements Rule {
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
-            result = Util.stacktraceToString(e);
+            result = e.getMessage();
         } finally {
             graph.shutdown();
         }
@@ -119,7 +119,7 @@ public abstract class AbstractDbRule extends AbstractRule implements Rule {
             graph.command(new OCommandScript("sql", script)).execute();
         } catch (Exception e) {
             logger.error("Exception:", e);
-            result = Util.stacktraceToString(e);
+            result = e.getMessage();
         } finally {
             graph.shutdown();
         }

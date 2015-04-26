@@ -24,6 +24,6 @@ import com.networknt.light.rule.Rule;
  */
 public class AddNewsEvRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return addBfnEv("news", objects);
+        return addBranchEv("news", objects);
     }
 }

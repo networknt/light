@@ -13,6 +13,6 @@ import com.networknt.light.rule.Rule;
  */
 public class DownForumRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return downBfn("forum", objects);
+        return downBranch("forum", objects);
     }
 }
