@@ -730,12 +730,17 @@ public class InitDatabase {
                             "\n" +
                             "    protected boolean matchEtag(Map<String, Object> inputMap, CacheObject co) {\n" +
                             "        HttpServerExchange exchange = (HttpServerExchange)inputMap.get(\"exchange\");\n" +
-                            "        String requestETag = exchange.getRequestHeaders().getFirst(Headers.IF_NONE_MATCH);\n" +
-                            "        if (co.getEtag().equals(requestETag)) {\n" +
-                            "            exchange.setResponseCode(304); // no change\n" +
-                            "            return true;\n" +
+                            "        if(exchange != null) {\n" +
+                            "            String requestETag = exchange.getRequestHeaders().getFirst(Headers.IF_NONE_MATCH);\n" +
+                            "            if (co.getEtag().equals(requestETag)) {\n" +
+                            "                exchange.setResponseCode(304); // no change\n" +
+                            "                return true;\n" +
+                            "            } else {\n" +
+                            "                exchange.getResponseHeaders().add(Headers.ETAG, co.getEtag());\n" +
+                            "                return false;\n" +
+                            "            }\n" +
                             "        } else {\n" +
-                            "            exchange.getResponseHeaders().add(Headers.ETAG, co.getEtag());\n" +
+                            "            // Exchange is always available in runtime but not available in unit test cases.\n" +
                             "            return false;\n" +
                             "        }\n" +
                             "    }\n" +
@@ -766,7 +771,7 @@ public class InitDatabase {
                             "\n" +
                             "                    // convert schema to JsonSchema in order to speed up validation.\n" +
                             "                    if(map.get(\"schema\") != null) {\n" +
-                            "                        JsonNode schemaNode = ServiceLocator.getInstance().getMapper().readTree((String)map.get(\"schema\"));\n" +
+                            "                        JsonNode schemaNode = ServiceLocator.getInstance().getMapper().valueToTree(map.get(\"schema\"));\n" +
                             "                        JsonSchema schema = schemaFactory.getJsonSchema(schemaNode);\n" +
                             "                        map.put(\"schema\", schema);\n" +
                             "                    }\n" +
@@ -813,48 +818,6 @@ public class InitDatabase {
                             "        return map;\n" +
                             "    }\n" +
                             "\n" +
-                            "    /*\n" +
-                            "    protected ODocument getCategoryByRid(String categoryRid) {\n" +
-                            "        Map<String, Object> categoryMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage(\"categoryMap\");\n" +
-                            "        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)categoryMap.get(\"cache\");\n" +
-                            "        if(cache == null) {\n" +
-                            "            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n" +
-                            "                    .maximumWeightedCapacity(1000)\n" +
-                            "                    .build();\n" +
-                            "            categoryMap.put(\"cache\", cache);\n" +
-                            "        }\n" +
-                            "        ODocument category = (ODocument)cache.get(\"categoryRid\");\n" +
-                            "        if(category == null) {\n" +
-                            "            // TODO warning to increase cache if this happens.\n" +
-                            "            category = DbService.getVertexByRid(categoryRid);\n" +
-                            "            // put it into the category cache.\n" +
-                            "            if(category != null) {\n" +
-                            "                cache.put(categoryRid, category);\n" +
-                            "            }\n" +
-                            "        }\n" +
-                            "        return category;\n" +
-                            "    }\n" +
-                            "\n" +
-                            "    protected ODocument getProductByRid(String productRid) {\n" +
-                            "        Map<String, Object> productMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage(\"productMap\");\n" +
-                            "        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)productMap.get(\"cache\");\n" +
-                            "        if(cache == null) {\n" +
-                            "            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n" +
-                            "                    .maximumWeightedCapacity(1000)\n" +
-                            "                    .build();\n" +
-                            "            productMap.put(\"cache\", cache);\n" +
-                            "        }\n" +
-                            "        ODocument product = (ODocument)cache.get(\"productRid\");\n" +
-                            "        if(product == null) {\n" +
-                            "            // TODO warning to increase cache if this happens.\n" +
-                            "            product = DbService.getODocumentByRid(productRid);\n" +
-                            "            if(product != null) {\n" +
-                            "                cache.put(productRid, product);\n" +
-                            "            }\n" +
-                            "        }\n" +
-                            "        return product;\n" +
-                            "    }\n" +
-                            "    */\n" +
                             "    protected Map<String, Object> getEventMap(Map<String, Object> inputMap) {\n" +
                             "        Map<String, Object> eventMap = new HashMap<String, Object>();\n" +
                             "        Map<String, Object> payload = (Map<String, Object>)inputMap.get(\"payload\");\n" +
@@ -920,6 +883,31 @@ public class InitDatabase {
                             "                throw e;\n" +
                             "            } finally {\n" +
                             "                graph.shutdown();\n" +
+                            "            }\n" +
+                            "        }\n" +
+                            "        return access;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public Map<String, Object> getAccessByRuleClass(OrientGraph graph, String ruleClass) throws Exception {\n" +
+                            "        Map<String, Object> access = null;\n" +
+                            "        Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage(\"accessMap\");\n" +
+                            "        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get(\"cache\");\n" +
+                            "        if(cache == null) {\n" +
+                            "            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n" +
+                            "                    .maximumWeightedCapacity(1000)\n" +
+                            "                    .build();\n" +
+                            "            accessMap.put(\"cache\", cache);\n" +
+                            "        } else {\n" +
+                            "            access = (Map<String, Object>)cache.get(ruleClass);\n" +
+                            "        }\n" +
+                            "        if(access == null) {\n" +
+                            "            OrientVertex accessVertex = (OrientVertex)graph.getVertexByKey(\"Access.ruleClass\", ruleClass);\n" +
+                            "            if(accessVertex != null) {\n" +
+                            "                String json = accessVertex.getRecord().toJSON();\n" +
+                            "                access = mapper.readValue(json,\n" +
+                            "                        new TypeReference<HashMap<String, Object>>() {\n" +
+                            "                        });\n" +
+                            "                cache.put(ruleClass, access);\n" +
                             "            }\n" +
                             "        }\n" +
                             "        return access;\n" +
@@ -1090,7 +1078,7 @@ public class InitDatabase {
                             "\n" +
                             "            // check if access exists for the ruleClass and add access if not.\n" +
                             "            OrientVertex access = null;\n" +
-                            "            if(getAccessByRuleClass(ruleClass) == null) {\n" +
+                            "            if(getAccessByRuleClass(graph, ruleClass) == null) {\n" +
                             "                access = graph.addVertex(\"class:Access\");\n" +
                             "                access.setProperty(\"ruleClass\", ruleClass);\n" +
                             "                if(ruleClass.contains(\"Abstract\") || ruleClass.contains(\"_\")) {\n" +
@@ -1210,8 +1198,11 @@ public class InitDatabase {
                             "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
                             "            if(rule != null) {\n" +
                             "                String schema = (String)data.get(\"schema\");\n" +
-                            "                if(schema != null) {\n" +
-                            "                    rule.setProperty(\"schema\", schema);\n" +
+                            "                if(schema != null && schema.length() > 0) {\n" +
+                            "                    // convert it to map before setProperty.\n" +
+                            "                    Map<String, Object> schemaMap = mapper.readValue(schema,\n" +
+                            "                        new TypeReference<HashMap<String, Object>>() {});\n" +
+                            "                    rule.setProperty(\"schema\", schemaMap);\n" +
                             "                } else {\n" +
                             "                    rule.removeProperty(\"schema\");\n" +
                             "                }\n" +

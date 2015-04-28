@@ -158,48 +158,6 @@ public abstract class AbstractRule implements Rule {
         return map;
     }
 
-    /*
-    protected ODocument getCategoryByRid(String categoryRid) {
-        Map<String, Object> categoryMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("categoryMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)categoryMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
-                    .build();
-            categoryMap.put("cache", cache);
-        }
-        ODocument category = (ODocument)cache.get("categoryRid");
-        if(category == null) {
-            // TODO warning to increase cache if this happens.
-            category = DbService.getVertexByRid(categoryRid);
-            // put it into the category cache.
-            if(category != null) {
-                cache.put(categoryRid, category);
-            }
-        }
-        return category;
-    }
-
-    protected ODocument getProductByRid(String productRid) {
-        Map<String, Object> productMap = (Map<String, Object>)ServiceLocator.getInstance().getMemoryImage("productMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)productMap.get("cache");
-        if(cache == null) {
-            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
-                    .build();
-            productMap.put("cache", cache);
-        }
-        ODocument product = (ODocument)cache.get("productRid");
-        if(product == null) {
-            // TODO warning to increase cache if this happens.
-            product = DbService.getODocumentByRid(productRid);
-            if(product != null) {
-                cache.put(productRid, product);
-            }
-        }
-        return product;
-    }
-    */
     protected Map<String, Object> getEventMap(Map<String, Object> inputMap) {
         Map<String, Object> eventMap = new HashMap<String, Object>();
         Map<String, Object> payload = (Map<String, Object>)inputMap.get("payload");
@@ -265,6 +223,31 @@ public abstract class AbstractRule implements Rule {
                 throw e;
             } finally {
                 graph.shutdown();
+            }
+        }
+        return access;
+    }
+
+    public Map<String, Object> getAccessByRuleClass(OrientGraph graph, String ruleClass) throws Exception {
+        Map<String, Object> access = null;
+        Map<String, Object> accessMap = ServiceLocator.getInstance().getMemoryImage("accessMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)accessMap.get("cache");
+        if(cache == null) {
+            cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(1000)
+                    .build();
+            accessMap.put("cache", cache);
+        } else {
+            access = (Map<String, Object>)cache.get(ruleClass);
+        }
+        if(access == null) {
+            OrientVertex accessVertex = (OrientVertex)graph.getVertexByKey("Access.ruleClass", ruleClass);
+            if(accessVertex != null) {
+                String json = accessVertex.getRecord().toJSON();
+                access = mapper.readValue(json,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                cache.put(ruleClass, access);
             }
         }
         return access;

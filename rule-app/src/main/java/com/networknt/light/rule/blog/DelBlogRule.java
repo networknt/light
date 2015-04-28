@@ -20,7 +20,7 @@ import com.networknt.light.rule.AbstractBfnRule;
 import com.networknt.light.rule.Rule;
 
 /**
- * Created by husteve on 10/8/2014.
+ * Created by steve on 10/8/2014.
  *
  * AccessLevel R [owner, admin, blogAdmin]
  *

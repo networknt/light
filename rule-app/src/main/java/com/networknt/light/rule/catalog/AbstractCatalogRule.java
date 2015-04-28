@@ -399,6 +399,8 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                 }
             }
         }
+        // get ancestors
+        List<Map<String, Object>> ancestors = getAncestorDb(rid);
 
         // TODO support the following lists: recent, popular
         // Get the page from cache.
@@ -455,6 +457,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             result.put("total", total);
             result.put("products", products);
             result.put("allowAdd", allowAdd);
+            result.put("ancestors", ancestors);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         } else {
@@ -462,6 +465,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", 0);
             result.put("allowAdd", allowAdd);
+            result.put("ancestors", ancestors);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         }
@@ -487,4 +491,31 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         return json;
     }
 
+    protected List getAncestorDb(String rid) {
+        List<Map<String, Object>> ancestors = null;
+        String sql = "select @rid, catalogId, description from (traverse in('Own') from ?)";
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> docs = graph.getRawGraph().command(query).execute(rid);
+            if(docs.size() > 0) {
+                ancestors = new ArrayList<Map<String, Object>>();
+                for (int i=docs.size()-1; i >= 0; i--) {
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    OrientVertex doc = graph.getVertex(docs.get(i).getRecord());
+                    String id = doc.getProperty("rid").toString();
+                    id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));
+                    map.put("rid", id);
+                    map.put("catalogId", doc.getProperty("catalogId"));
+                    map.put("description", doc.getProperty("description"));
+                    ancestors.add(map);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return ancestors;
+    }
 }

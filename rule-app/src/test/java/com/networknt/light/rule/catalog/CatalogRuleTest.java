@@ -321,6 +321,10 @@ public class CatalogRuleTest extends TestCase {
 
             json = getCatalogProduct(getExamCatalogProduct3, (String)examCatalog1.get("@rid"), ownerToken);
             System.out.println("catalogProduct for ExamCatalog3" + json);
+
+            json = getCatalogProduct(getExamCatalogProduct1, (String)examCatalog111.get("@rid"), ownerToken);
+            System.out.println("catalogProduct for ExamCatalog111" + json);
+
         }
 
     }

@@ -156,7 +156,7 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
 
             // check if access exists for the ruleClass and add access if not.
             OrientVertex access = null;
-            if(getAccessByRuleClass(ruleClass) == null) {
+            if(getAccessByRuleClass(graph, ruleClass) == null) {
                 access = graph.addVertex("class:Access");
                 access.setProperty("ruleClass", ruleClass);
                 if(ruleClass.contains("Abstract") || ruleClass.contains("_")) {
