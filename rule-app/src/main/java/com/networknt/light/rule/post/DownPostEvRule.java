@@ -25,7 +25,6 @@ import java.util.Map;
  *
  * Down vote a post in blog, forum or news
  *
- * AccessLevel R [user]
  *
  */
 public class DownPostEvRule extends AbstractPostRule implements Rule {

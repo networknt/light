@@ -30,6 +30,8 @@ import java.util.Map;
 
 /**
  * Created by steve on 28/11/14.
+ *
+ * AccessLevel R [user]
  */
 public class DownPostRule extends AbstractPostRule implements Rule {
     static final Logger logger = LoggerFactory.getLogger(UpPostRule.class);
