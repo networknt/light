@@ -362,9 +362,30 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         String rid = (String)data.get("@rid");
         String host = (String)data.get("host");
         if(rid == null) {
-            inputMap.put("result", "@rid is required");
-            inputMap.put("responseCode", 400);
-            return false;
+            // check if catalogId exists and convert it to rid.
+            String catalogId = (String)data.get("catalogId");
+            if(catalogId == null) {
+                inputMap.put("result", "@rid or catalogId is required");
+                inputMap.put("responseCode", 400);
+                return false;
+            } else {
+                // find out rid from catalogId
+                OrientGraph graph = ServiceLocator.getInstance().getGraph();
+                try {
+                    OrientVertex catalog = getBranchByHostId(graph, "catalog", host, catalogId);
+                    if(catalog == null) {
+                        inputMap.put("result", "CatalogId "  + catalogId + " doesn't exist on host " + host);
+                        inputMap.put("responseCode", 400);
+                    } else {
+                        rid = catalog.getId().toString();
+                    }
+                } catch (Exception e) {
+                    logger.error("Exception:", e);
+                    throw e;
+                } finally {
+                    graph.shutdown();
+                }
+            }
         }
         Integer pageSize = (Integer)data.get("pageSize");
         Integer pageNo = (Integer)data.get("pageNo");

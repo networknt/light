@@ -1,0 +1,60 @@
+{
+  "formId": "com.networknt.light.catalog.update",
+  "version": 1,
+  "action": [
+    {
+      "category": "catalog",
+      "name": "updCatalog",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-catalog-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Catalog",
+    "required": [
+      "catalogId",
+      "description"
+    ],
+    "properties": {
+      "catalogId": {
+        "title": "Catalog Id",
+        "type": "string"
+      },
+      "description": {
+        "title": "Description",
+        "type": "string"
+      },
+      "in_Own": {
+        "title": "Parent",
+        "type": "array",
+        "maxItems": 1,
+        "format": "strapselectdynamic"
+      },
+      "out_Own": {
+        "title": "Children",
+        "type": "array",
+        "format": "strapselectdynamic"
+      }
+    }
+  },
+  "form": [
+    "catalogId",
+    "description",
+    {
+      "key": "in_Own",
+      "options": {
+        "category": "catalog",
+        "name": "getCatalogDropdown"
+      }
+    },
+    {
+      "key": "out_Own",
+      "options": {
+        "category": "catalog",
+        "name": "getCatalogDropdown"
+      }
+    }
+  ]
+}
