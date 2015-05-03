@@ -1,0 +1,141 @@
+<script type='text/javascript'>
+    angular.module('lightApp').controller('com.networknt.light.CatalogAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
+        $scope.getCatalog = {
+            category : 'catalog',
+            name : 'getCatalog',
+            readOnly: true
+        };
+
+        $scope.delCatalog = {
+            category : 'catalog',
+            name : 'delCatalog',
+            readOnly: false
+        };
+
+        $scope.catalogs = [];
+
+        $scope.headers = [
+            {
+                title: 'Delete',
+                value: 'delete'
+            },
+            {
+                title: 'Host',
+                value: 'host'
+            },
+            {
+                title: 'Catalog Id',
+                value: 'catalogId'
+            },
+            {
+                title: 'Description',
+                value: 'description'
+            },
+            {
+                title: 'Create User Id',
+                value: 'createUserId'
+            },
+            {
+                title: 'Create Date',
+                value: 'createDate'
+            },
+            {
+                title: 'Update User Id',
+                value: 'updateUserId'
+            },
+            {
+                title: 'Update Date',
+                value: 'updateDate'
+            }
+        ];
+
+        $scope.sort = {
+            sortDir : 'desc',
+            sortedBy : 'updateDate'
+        };
+
+        $scope.filter = {};
+
+        $scope.onSort = function (sortedBy, sortDir) {
+            $scope.sort.sortDir = sortDir;
+            $scope.sort.sortedBy = sortedBy;
+        };
+
+
+        $scope.delete = function(catalog) {
+            $scope.delCatalog.data = catalog;
+            $http.post('api/rs', $scope.delCatalog)
+                    .success(function (data, status, headers, config) {
+                        $scope.catalogs.splice($scope.catalogs.indexOf(catalog), 1);
+                        toaster.pop('success', status, data, 3000);
+                    })
+        };
+
+        $scope.add = function() {
+            $location.path("/form/com.networknt.light.catalog.add");
+        };
+
+        $scope.update = function(catalog) {
+            modelDataService.setModelData(catalog);
+            $location.path("/form/com.networknt.light.catalog.update");
+        };
+
+        //The function that is responsible of fetching the result from the server
+        $scope.fetchResult = function () {
+            $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify($scope.getCatalog))}})
+                    .success(function (result, status, headers, config) {
+                        $scope.catalogs = result;
+                        //console.log($scope.catalogs);
+                    })
+        };
+
+        $scope.fetchResult();
+
+    }]);
+</script>
+
+<div class="container" ng-controller="com.networknt.light.CatalogAdminHomeCtrl">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <button class="btn btn-info" ng-click="add()"><i class="glyphicon glyphicon-edit"></i>Add</button>
+            </div>
+            <tabset>
+                <tab heading="Recent">
+                    <h4>Catalog</h4>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th ng-repeat="header in headers">
+                                <sort-by onsort="onSort" sortdir="sort.sortDir" sortedby="sort.sortedBy" sortvalue="{{ header.value }}">{{ header.title }}</sort-by>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td><input ng-model="filter.host" type="text" /></td>
+                            <td><input ng-model="filter.catalogId" type="text" /></td>
+                            <td><input ng-model="filter.description" type="text" /></td>
+                            <td><input ng-model="filter.createUserId" type="text" /></td>
+                            <td><input ng-model="filter.createDate" type="text" /></td>
+                            <td><input ng-model="filter.updateUserId" type="text" /></td>
+                            <td><input ng-model="filter.updateDate" type="text" /></td>
+                        </tr>
+                        <tr ng-repeat="catalog in catalogs | filter: filter | orderBy: sort.sortedBy">
+                            <td><a href ng-click="delete(catalog)">Delete</a></td>
+                            <td>{{catalog.host}}</td>
+                            <td><a href ng-click="update(catalog)">{{catalog.catalogId}}</a></td>
+                            <td>{{catalog.description}}</td>
+                            <td>{{catalog.createUserId}}</td>
+                            <td>{{catalog.createDate}}</td>
+                            <td>{{catalog.updateUserId}}</td>
+                            <td>{{catalog.updateDate}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div> <!-- /container -->

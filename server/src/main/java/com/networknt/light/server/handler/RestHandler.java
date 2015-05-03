@@ -68,6 +68,7 @@ public class RestHandler implements HttpHandler {
         Map<String, Object> jsonMap = null;
         if(Methods.GET.equals(exchange.getRequestMethod())) {
             Map params = exchange.getQueryParameters();
+
             String cmd = ((Deque<String>)params.get("cmd")).getFirst();
             json = URLDecoder.decode(cmd, "UTF8");
         } else if (Methods.POST.equals(exchange.getRequestMethod())) {
