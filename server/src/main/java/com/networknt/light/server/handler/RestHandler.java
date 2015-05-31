@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
+import java.security.SignatureException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -166,15 +167,15 @@ public class RestHandler implements HttpHandler {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
                 exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"token_expired\"}".getBytes("utf-8")));
                 return;
-            } else {
-                // invalid token, return 401 status and let client to discard the token.
-                exchange.setResponseCode(401);
-                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"invalid_token\"}".getBytes("utf-8")));
-                return;
             }
+        } catch (SignatureException e) {
+            logger.error("Exception", e);
+            // invalid token, return 401 status and let client to discard the token.
+            exchange.setResponseCode(401);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"invalid_token\"}".getBytes("utf-8")));
+            return;
         }
-
 
         GetAccessRule rule = new GetAccessRule();
         Map<String, Object> access = rule.getAccessByRuleClass(cmdRuleClass);
