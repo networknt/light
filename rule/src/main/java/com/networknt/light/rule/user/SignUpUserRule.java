@@ -82,6 +82,9 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
                     roles.add("user"); // default role for sign up users, more roles can be added later by admin
                     eventData.put("roles", roles);
                     eventData.put("createDate", new java.util.Date());
+
+                    // populate activation schema and it will be removed once the user activate the account.
+                    addActivation(userId);
                 }
             }
         }
