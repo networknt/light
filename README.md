@@ -159,61 +159,62 @@ if your component is so complicated and has so many moving part as to make it co
 
 
 ## Production Configuration
-To make the application configurable on production, we need to separate the logic and data. The framework has three levels of configurations that can be performed on 
-production and they have different level of risk associated with them.
+To make the application configurable on production, we need to separate the logic and data. The framework has three levels of configuration that can be performed on 
+production and they each have a different level of risk associated with them.
 
-The first level is reference data configuration. Most applications have reference data like dropdowns, translations etc. These will be saved into a set of schemas or tables 
-and can be changed through table maintenance app. The reference data is cached but will be refreshed once changed. This is the lowest risk change on production as it will 
-only impact the UI look and feel most of the time and can be rolled back if negative impact occurred. Of cause, certain level of validation has to be done and approve process 
-must be in place.
+The first level is reference data configuration like dropdowns, translations, etc. These will be saved into a set of schemas or tables 
+and can be changed through the table maintenance application. The reference data is cached but will be refreshed once changed. This results in the lowest risk change on production as it will 
+only impact the UI and can be rolled back if negative impact occurres. Of course, certain levels of validation have to be done as well as a having a submit/approve process in place.
 
-The second level is rules data configuration. All requests are handled by Light Rule Engine rules and rules are designed to be two part, Data and logic. This level is address 
-the rule data change and it is at low risk as it won’t impact rule logic and the rule logic can be written to validate the data for the rules. For example, the system admin 
-has the right to give promotion to discount one product for 10 percent off. The 10 percent is the data. And the rule might have validation between 1 to 99 or 1 to 55. This 
-piece of data is more important then reference data as it is impact application logic but it is isolated from the rules. It can be changed easily without breaking the application.
+The second level is the rules data configuration. All requests are handled by Light Rule Engine rules designed in two parts: Data, and logic. This level addresses 
+the rule data changes and is low risk as it won’t impact rule logic, where the rule logic can be written to validate the data for the rules. For example, the system admin 
+has the right to give promotions and discount products for a certain percentage, say 10 percent off. In this case, the 10 percent is the data, the rule might have validation
+between 1 to 99 or 1 to 55 percent ranges. This piece of data (10%) is more important then the reference data as it impacts application logic but is isolated from the rules.
+It can be modified easily without impacting the application.
 
-The third level is rule logic configuration. The rules are just POJOs and can be updated and deployed though API service. This change is bigger and risk is still manageable 
-as you only need to regression to all the component/view/app that depends on the rule. Rules are working independently and it fails it only impact one area of the app and 
-it can be easily rolled back. To further reduce the risk on production, a new version of rule can be deployed and requests from betaTester role can route to the new version to test
-it for a while before switching public to the new version.
+The third level is rule logic configuration. The rules are just POJOs and can be updated and deployed through API services. This change is bigger but risk is still manageable 
+as you only need to regression the components/views/apps that depends on this rule. Rules work independently of each other and failures would only impact one area of the app for which 
+they can be easily be rolled back. To further reduce the risk on production, a new version of rule can be deployed and requests from users with a betaTester role can route to the new
+version to test before switching the public to the new version.
 
 ## Security
 
-API security or resource security is done by JWT token. When user is trying to access to protected resources, it will check if the access token is in the http request header. 
-If it does not exist, it will redirect the user to login page. The access token will be short lived up to 30 minutes and a 401 response along with token_expired will be sent 
-back to client for refresh token if the user checked remember me when logging in or login page will be shown up.
+API security or resource security is done by JWT token. When a user tries to access to protected resources, it will check if the access token is in the http request header. 
+If it does not exist, it will redirect the user to a login page. The access token will be short lived up to 30 minutes and a 401 response along with token_expired will be sent 
+back to client in order to refresh the now invalid token. If the user checks the remember me box when logging in, the life of the access token will be increased.
 
-Access token contains clientId, roles and userId so that the resource serve can grant access based on client-based, role-based or user-based authorization or combinations above.
+Access token contains clientId, roles, and userId so that the resource server can grant access based on either client-based, role-based, user-based authorization, or combinations of each.
 
-Visibility control will be put into place based on the role of the users. For example, certain menu won’t be shown up unless you login as an admin role or certain web component 
-shows only partial of data the user role is just anonymous.
+Visibility control will be put into place based on the role of the users. For example, certain menus won’t be shown up unless you login with an admin role or certain web components 
+could only show partial data based on the users role.
 
-Light Gateway server provides another layer of security for the back-end legacy system for Angular application is not talking to back-end API directly. Also, this layer will 
-do the validation before calling to back-end API so that a lot of invalid requests will be filtered out.
+Light Gateway server provides another layer of security for the back-end legacy system as the Angular application would not talk to the back-end API directly. Also, this layer would 
+do the validation before calling the back-end API so that a lot of invalid requests can premtively be filtered out.
 
 ## Performance
 
 ## Traceability
 
-Traceability is more important with Angular application as it is running on the end users’ browser. The server does not have the state of the user session and only Angular 
-application knows. In this case, event sourcing is utilized to log all the events happening on the browser side. Every user action will generate an event and it is sent to 
-the server along with JWT token that is identifier for the user. The server is logging events into event store.
+Traceability is more important with Angular applications as they are running on the end users’ browser. The server does not have the state of the user session since only the Angular 
+application would know. In this case, event sourcing is utilized to log all the events happening on the client/browser side. Every user action will generate an event and it is sent to 
+the server along with a JWT token that is the identifier for the user. The server is logging events into its event store.
 
-* Un-caught runtime exception in Angular will logged as an event and it will be easily reproduced given a serial events leading to it for the same user in event store.
-* Server error response will be logged on server side as it is known who sent the request. For example, 404 error response is sent to the client and support team need 
-to reproduce it.
-* Server side exception is logged with stack trace and it can be reproduced along with events leading to it.
-* Security violation will be logged when system identify that the request is not sent from our Angular app but some raw request with missing data or wrong parameters.
+* Un-caught runtime exceptions in Angular will be logged as an event and would be easily reproduced given a serial set of events leading to it for the same user in event store.
+* Server error responses can be logged on server side as it is known who sent the request. For example, if a 404 error response is sent to the client, the monitoring support team 
+would be preempted to the issue (be it a broken link, or otherwise) and would have the complete facility to reproduce it. Thus fixing the issue without the client needing to submit a ticket.
+* Server side exceptions are logged with a stack trace and it can be reproduced along with events leading to it.
+* Security violation will be logged when the system identifies that the request is not sent from our Angular applicatoin but some otherwise raw requests with missing data or wrong parameters.
 
-System statistic can be viewed from admin page with information like how many users are online, how many requests are served within a period of time etc.
+System statistics can be viewed from the admin pages with information like current and historical user statistics, number of requests served over a period of time, and other usefull
+metrics that would help you understand the trending health of your system.
 
-Health check is an application that will check certain area of the application based on the configuration data in order to make sure the over all system is healthy. 
-For example, it will check the connectivity with legacy system etc. It is normally called once new release is deployed and when system is behaved strangely.
+Health check is an application that will check certain areas of the application based on the configuration data in order to make sure the overall system is fully functional. 
+For example, it could check the connectivity with legacy systems etc. It is normally called upon once a new release is deployed and the system is behaving outside of expectations.
 
-User behaviour analysis is an app that analyzes user online behaviour and it can be very valuable to drive sales. If customer goes to a bank branch to save a check and 
-the sale person knows the customer was browsing life insurance product yesterday with his mobile phone.
+User behaviour analysis is an app that analyzes (a) users online behaviour and can be very valuable to drive sales/customer experience. If a customer goes to the bank branch to save a check and 
+the sales person knows the customer was browsing life insurance products recently, it could benefit both the customer and the bank to bring up the idea.
 
-Module update notification will monitor if there are any security updates from the framework and notify system admin to take action.
+Module update notifier will monitor if there are any security updates from the framework and notify system admins to take action.
 
 
 # Get Started
