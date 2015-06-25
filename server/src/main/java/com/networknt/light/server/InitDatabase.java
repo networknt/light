@@ -28,8 +28,12 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 import org.slf4j.LoggerFactory;
 
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by husteve on 9/4/2014.
@@ -97,6 +101,15 @@ public class InitDatabase {
             // when 11 refresh token is created, the first one is removed for the client.
             // there is no expire date for refresh token unless it is removed by log out action from user.
             credential.createProperty("clientRefreshTokens", OType.EMBEDDEDMAP);
+
+            // activation code is in another table and it should be populated in the Rule not evRule as this
+            // won't be populated during replay. Every time this table is populated, it will try to remove
+            // entries older than 48 hours to keep this table smaller.
+            OrientVertexType activation = graph.createVertexType("Activation");
+            activation.createProperty("userId", OType.STRING);
+            activation.createProperty("code", OType.STRING);
+            activation.createProperty("createDate", OType.DATETIME);
+            graph.createKeyIndex("userId", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Activation"));
 
 
             OrientVertexType client = graph.createVertexType("Client");
@@ -464,6 +477,28 @@ public class InitDatabase {
     static void refreshDoc() {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
+            // global config without host. email server config
+            Map mailServerMap = new HashMap<String, Object>();
+            mailServerMap.put("mail.smtp.starttls.enable", "true");
+            mailServerMap.put("mail.smtp.auth", "true");
+            mailServerMap.put("mail.smtp.host", "mail.networknt.com");
+            mailServerMap.put("mail.smtp.port", "587");
+            graph.addVertex("class:Config", "category", "email", "name", "server", "properties", mailServerMap);
+
+            // global config registration confirmation
+            Map regConfirmMap = new HashMap<String, Object>();
+            regConfirmMap.put("subject", "Registration Activation");
+            regConfirmMap.put("content", "Hi,<br>Thanks for registering with us.<br>Please use %s to activate your account when you login.");
+
+            graph.addVertex("class:Config", "category", "email", "name", "regConfirm", "properties", regConfirmMap);
+
+            // host specific config for email
+            Map networkntMap = new HashMap<String, Object>();
+            networkntMap.put("username", "noreply@networknt.com"); // update during initial setup
+            networkntMap.put("password", ""); // update during initial setup
+
+
+
             graph.addVertex( "class:Role", "roleId", "anonymous", "description", "Anonymous or guest that have readonly access to certain things");
             graph.addVertex( "class:Role", "roleId", "user", "description", "logged in user who can do certain things");
             graph.addVertex( "class:Role", "roleId", "dbAdmin", "description", "admin database objects for the host");

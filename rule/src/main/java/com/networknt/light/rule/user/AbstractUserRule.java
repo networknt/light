@@ -119,6 +119,44 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return user;
     }
 
+    protected Vertex addActivation(String userId) throws Exception {
+        Vertex activation = null;
+        String code = HashUtil.generateUUID();
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            activation = graph.addVertex("class:Activation", "userId", userId, "code", code, "createDate", new Date());
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+        return activation;
+    }
+
+    protected void delActivation(String userId, String code) throws Exception {
+        Vertex activation = null;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            activation = graph.getVertexByKey("Activation.userId", userId);
+            if(activation != null && code != null && code.equals(activation.getProperty("code"))) {
+                activation.remove();
+            }
+            
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
+
     protected void delUser(Map<String, Object> data) throws Exception {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {

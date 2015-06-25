@@ -65,7 +65,7 @@
         <rule-loader.version>1.0.0.0.1</rule-loader.version>
         <page-loader.version>1.0.0.0.1</page-loader.version>
         <form-loader.version>1.0.0.0.1</form-loader.version>
-        <mail.version>1.5.0-b01</mail.version>
+        <mail-api.version>1.5.3</mail-api.version>
         <json-schema-validator.version>2.2.6</json-schema-validator.version>
         <httpclient.version>4.3.5</httpclient.version>
         <httpcore.version>4.3.2</httpcore.version>
@@ -390,8 +390,8 @@
             </dependency>
             <dependency>
                 <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
-                <version>${mail.version}</version>
+                <artifactId>javax.mail-api</artifactId>
+                <version>${mail-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.fge</groupId>

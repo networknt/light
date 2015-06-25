@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
+import java.security.SignatureException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -87,10 +88,12 @@ public class RestHandler implements HttpHandler {
             logger.error("Invalid Request Method");
             exchange.setResponseCode(400);
             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-            exchange.getResponseSender().send((ByteBuffer.wrap("Invalid Request Method".getBytes("utf-8"))));
+            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Invalid Request Method\"}".getBytes("utf-8")));
             return;
         }
-        logger.debug("json = {}", json);
+        if(logger.isDebugEnabled()) {
+            logger.debug("request json = {}", json);
+        }
 
         // convert json string to map here. It it cannot be converted, then it is invalid command.
         try {
@@ -100,7 +103,7 @@ public class RestHandler implements HttpHandler {
         } catch (Exception e) {
             exchange.setResponseCode(400);
             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-            exchange.getResponseSender().send((ByteBuffer.wrap("invalid_command".getBytes("utf-8"))));
+            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Invalid Command\"}".getBytes("utf-8")));
             return;
         }
 
@@ -109,7 +112,7 @@ public class RestHandler implements HttpHandler {
         if(ruleMap == null) {
             exchange.setResponseCode(400);
             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-            exchange.getResponseSender().send((ByteBuffer.wrap("No handler for the command".getBytes("utf-8"))));
+            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"No handler for the command\"}".getBytes("utf-8")));
             return;
         }
 
@@ -162,17 +165,17 @@ public class RestHandler implements HttpHandler {
                 // return 401 status and let client to refresh the token.
                 exchange.setResponseCode(401);
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                exchange.getResponseSender().send((ByteBuffer.wrap("token_expired".getBytes("utf-8"))));
-                return;
-            } else {
-                // invalid token, return 401 status and let client to discard the token.
-                exchange.setResponseCode(401);
-                exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                exchange.getResponseSender().send((ByteBuffer.wrap("invalid_token".getBytes("utf-8"))));
+                exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"token_expired\"}".getBytes("utf-8")));
                 return;
             }
+        } catch (SignatureException e) {
+            logger.error("Exception", e);
+            // invalid token, return 401 status and let client to discard the token.
+            exchange.setResponseCode(401);
+            exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"invalid_token\"}".getBytes("utf-8")));
+            return;
         }
-
 
         GetAccessRule rule = new GetAccessRule();
         Map<String, Object> access = rule.getAccessByRuleClass(cmdRuleClass);
@@ -187,14 +190,14 @@ public class RestHandler implements HttpHandler {
                     // Not accessible
                     exchange.setResponseCode(400);
                     exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                    exchange.getResponseSender().send((ByteBuffer.wrap("Not accessible".getBytes("utf-8"))));
+                    exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Not accessible\"}".getBytes("utf-8")));
                     return;
                 case "C":
                     // client id is in the jwt token like userId and roles.
                     if(payload == null) {
                         exchange.setResponseCode(401);
                         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Login is required\"}".getBytes("utf-8")));
                         return;
                     } else {
                         Map<String, Object> user = (Map<String, Object>) payload.get("user");
@@ -203,7 +206,7 @@ public class RestHandler implements HttpHandler {
                         if(!clients.contains(clientId)) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("Client permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Client permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                     }
@@ -213,7 +216,7 @@ public class RestHandler implements HttpHandler {
                     if(payload == null) {
                         exchange.setResponseCode(401);
                         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Login is required\"}".getBytes("utf-8")));
                         return;
                     } else {
                         Map<String, Object> user = (Map<String, Object>) payload.get("user");
@@ -229,7 +232,7 @@ public class RestHandler implements HttpHandler {
                         if (!found) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("Role permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Role permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                     }
@@ -239,7 +242,7 @@ public class RestHandler implements HttpHandler {
                     if(payload == null) {
                         exchange.setResponseCode(401);
                         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Login is required\"}".getBytes("utf-8")));
                         return;
                     } else {
                         Map<String, Object> user = (Map<String, Object>) payload.get("user");
@@ -248,7 +251,7 @@ public class RestHandler implements HttpHandler {
                         if(!users.contains(userId)) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("User permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"User permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                     }
@@ -258,7 +261,7 @@ public class RestHandler implements HttpHandler {
                     if(payload == null) {
                         exchange.setResponseCode(401);
                         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Login is required\"}".getBytes("utf-8")));
                         return;
                     } else {
                         Map<String, Object> user = (Map<String, Object>) payload.get("user");
@@ -267,7 +270,7 @@ public class RestHandler implements HttpHandler {
                         if(!clients.contains(clientId)) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("Client permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Client permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                         // client is ok, check roles
@@ -283,7 +286,7 @@ public class RestHandler implements HttpHandler {
                         if (!found) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("Role permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Role permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                     }
@@ -293,7 +296,7 @@ public class RestHandler implements HttpHandler {
                     if(payload == null) {
                         exchange.setResponseCode(401);
                         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Login is required\"}".getBytes("utf-8")));
                         return;
                     } else {
                         Map<String, Object> user = (Map<String, Object>) payload.get("user");
@@ -302,7 +305,7 @@ public class RestHandler implements HttpHandler {
                         if(!clients.contains(clientId)) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("Client permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Client permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                         // client is ok, check user
@@ -311,7 +314,7 @@ public class RestHandler implements HttpHandler {
                         if(!users.contains(userId)) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("User permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"User permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                     }
@@ -321,7 +324,7 @@ public class RestHandler implements HttpHandler {
                     if(payload == null) {
                         exchange.setResponseCode(401);
                         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Login is required\"}".getBytes("utf-8")));
                         return;
                     } else {
                         Map<String, Object> user = (Map<String, Object>) payload.get("user");
@@ -337,7 +340,7 @@ public class RestHandler implements HttpHandler {
                         if (!found) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("Role permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Role permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                         // role is OK, now check userId
@@ -346,7 +349,7 @@ public class RestHandler implements HttpHandler {
                         if(!users.contains(userId)) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("User permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"User permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                    }
@@ -356,7 +359,7 @@ public class RestHandler implements HttpHandler {
                     if(payload == null) {
                         exchange.setResponseCode(401);
                         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                        exchange.getResponseSender().send((ByteBuffer.wrap("Login is required".getBytes("utf-8"))));
+                        exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Login is required\"}".getBytes("utf-8")));
                         return;
                     } else {
                         Map<String, Object> user = (Map<String, Object>) payload.get("user");
@@ -365,7 +368,7 @@ public class RestHandler implements HttpHandler {
                         if(!clients.contains(clientId)) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("Client permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Client permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                         // client is ok, check roles
@@ -381,7 +384,7 @@ public class RestHandler implements HttpHandler {
                         if (!found) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("Role permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"Role permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                         // role is OK, now check userId
@@ -390,7 +393,7 @@ public class RestHandler implements HttpHandler {
                         if(!users.contains(userId)) {
                             exchange.setResponseCode(403);
                             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
-                            exchange.getResponseSender().send((ByteBuffer.wrap("User permission denied".getBytes("utf-8"))));
+                            exchange.getResponseSender().send(ByteBuffer.wrap("{\"error\":\"User permission denied\"}".getBytes("utf-8")));
                             return;
                         }
                     }
@@ -488,7 +491,9 @@ public class RestHandler implements HttpHandler {
             Integer responseCode = (Integer)jsonMap.get("responseCode");
             if(responseCode != null) exchange.setResponseCode(responseCode);
         }
-        logger.debug("response success: {} ", result);
+        if(logger.isDebugEnabled()) {
+            logger.debug("response success: {} ", result);
+        }
         // set cache control header here.
         if(ruleMap.get("cacheControl") != null) {
             exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, (String)ruleMap.get("cacheControl"));
