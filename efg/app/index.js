@@ -14,59 +14,26 @@
  * limitations under the License.
  */
 
-var angular = require('angular');
-
-'use strict';
-var lightApp = angular.module('lightApp', [
-    require('angular-resource'),
-    require('angular-route'),
-])
-    .config(['$routeProvider', '$locationProvider', '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', function ($routeProvider, $locationProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
-
-        // Notice that the registration methods on the
-        // module are now being overridden by their provider equivalents
-        lightApp.controller = $controllerProvider.register;
-        lightApp.directive = $compileProvider.directive;
-        lightApp.filter = $filterProvider.register;
-        lightApp.factory = $provide.factory;
-        lightApp.service = $provide.service;
-
-        $routeProvider
-            .when('/', {
-                templateUrl: 'views/main.html',
-                controller: 'mainCtrl'
-            })
-            .when('/signin', {
-                templateUrl: 'views/form.html',
-                controller: 'signinCtrl'
-            })
-            .when('/form/:formId/:parentId?', {
-                templateUrl: 'views/form.html',
-                controller: 'formCtrl'
-            })
-            .when('/page/:pageId', {
-                templateUrl: 'views/page.html',
-                controller: 'pageCtrl'
-            })
-            .otherwise({
-                redirectTo: '/'
-            });
-        $locationProvider.html5Mode(true);
-    }])
-
 require('bootstrap/less/bootstrap.less');
 
 var React = require('react');
+
 var Router = require('react-router')
     , RouteHandler = Router.RouteHandler
     , Route = Router.Route;
 
 var ReactBootstrap = require('react-bootstrap')
     , Nav = ReactBootstrap.Nav
+    , Navbar = ReactBootstrap.Navbar
+    , CollapsibleNav = ReactBootstrap.CollapsibleNav
+    , NavItem = ReactBootstrap.NavItem
+    , DropdownButton = ReactBootstrap.DropdownButton
+    , MenuItem = ReactBootstrap.MenuItem
     , ListGroup = ReactBootstrap.ListGroup;
 
 var ReactRouterBootstrap = require('react-router-bootstrap')
     , NavItemLink = ReactRouterBootstrap.NavItemLink
+    , MenuItemLink = ReactRouterBootstrap.MenuItemLink
     , ButtonLink = ReactRouterBootstrap.ButtonLink
     , ListGroupItemLink = ReactRouterBootstrap.ListGroupItemLink;
 
@@ -74,33 +41,93 @@ var App = React.createClass({
     render: function() {
         return (
             <div>
-                NavItemLink
-                <br/>
-                <Nav>
-                    <NavItemLink to="destination" params={{ someparam: 'hello' }}>Linky!</NavItemLink>
-                </Nav>
-                <br/>
-                ButtonLink<br/>
-                <ButtonLink to="destination" params={{ someparam: 'hello' }}>Linky!</ButtonLink>
-                <br/>
-                <ListGroup>
-                    <ListGroupItemLink to="destination" params={{ someparam: 'hello' }}>Linky!</ListGroupItemLink>
-                </ListGroup>
+                <Navbar brand={<a href='/'>React-Bootstrap</a>} toggleNavKey={0}>
+                    <CollapsibleNav eventKey={0}> {/* This is the eventKey referenced */}
+                        <Nav navbar>
+                            <NavItemLink to="about">About</NavItemLink>
+                            <NavItemLink to="contact">Contact</NavItemLink>
+                            <DropdownButton eventKey={3} title='Admin'>
+                                <MenuItemLink to="roleAdmin">Role Admin</MenuItemLink>
+                                <MenuItemLink to="userAdmin">User Admin</MenuItemLink>
+                                <MenuItemLink to="blogAdmin">Blog Admin</MenuItemLink>
+                                <MenuItemLink to="accessAdmin">Access Admin</MenuItemLink>
+                            </DropdownButton>
+                        </Nav>
+                        <Nav navbar right>
+                            <NavItemLink to="signin">Sign In</NavItemLink>
+                            <NavItemLink to="signup">Sign Up</NavItemLink>
+                        </Nav>
+                    </CollapsibleNav>
+                </Navbar>
                 <RouteHandler/>
+                <div>This is just a footer</div>
             </div>
         );
     }
 });
 
-var Destination = React.createClass({
+var About = React.createClass({
     render: function() {
-        return <div>You made it!</div>;
+        return <div>About</div>;
     }
 });
 
+var Contact = React.createClass({
+    render: function() {
+        return <div>Contact</div>;
+    }
+});
+
+var Admin = React.createClass({
+    render: function() {
+        return <div>Admin</div>;
+    }
+});
+
+var RoleAdmin = React.createClass({
+    render: function() {
+        return <div>RoleAdmin</div>;
+    }
+});
+var UserAdmin = React.createClass({
+    render: function() {
+        return <div>UserAdmin</div>;
+    }
+});
+var BlogAdmin = React.createClass({
+    render: function() {
+        return <div>BlogAdmin</div>;
+    }
+});
+var AccessAdmin = React.createClass({
+    render: function() {
+        return <div>AccessAdmin</div>;
+    }
+});
+
+var Signin = React.createClass({
+    render: function() {
+        return <div>Signin</div>;
+    }
+});
+var Signup = React.createClass({
+    render: function() {
+        return <div>Signup</div>;
+    }
+});
+
+
 var routes = (
     <Route handler={App} path="/">
-    <Route name="destination" path="destination/:someparam" handler={Destination} />
+        <Route name="about" path="/about" handler={About} />
+        <Route name="contact" path="/contact" handler={Contact} />
+        <Route name="roleAdmin" path="/admin/roleAdmin" handler={RoleAdmin} />
+        <Route name="userAdmin" path="/admin/userAdmin" handler={UserAdmin} />
+        <Route name="blogAdmin" path="/admin/blogAdmin" handler={BlogAdmin} />
+        <Route name="accessAdmin" path="/admin/accessAdmin" handler={AccessAdmin} />
+        <Route name="signin" path="/signin" handler={Signin} />
+        <Route name="signup" path="/signup" handler={Signup} />
+
     </Route>
 );
 

@@ -20,7 +20,7 @@ var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 module.exports = {
     entry: {
         app: "./app/index.js",
-        vendor: ['angular', 'angular-route', 'angular-bootstrap', 'react', 'react-router', 'react-bootstrap', 'react-router-bootstrap']
+        vendor: ['react', 'react-router', 'react-bootstrap', 'react-router-bootstrap']
     },
     output: {
         filename: "bundle.js"
