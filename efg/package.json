@@ -32,6 +32,6 @@
   },
   "scripts": {
     "test": "grunt test",
-    "start": "node node_modules/.bin/webpack-dev-server --content-base app"
+    "start": "webpack-dev-server --content-base app"
   }
 }
