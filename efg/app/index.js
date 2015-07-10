@@ -22,6 +22,7 @@ var Router = require('react-router')
     , RouteHandler = Router.RouteHandler
     , Route = Router.Route;
 
+/*
 var ReactBootstrap = require('react-bootstrap')
     , Nav = ReactBootstrap.Nav
     , Navbar = ReactBootstrap.Navbar
@@ -42,20 +43,20 @@ var App = React.createClass({
         return (
             <div>
                 <Navbar brand={<a href='/'>React-Bootstrap</a>} toggleNavKey={0}>
-                    <CollapsibleNav eventKey={0}> {/* This is the eventKey referenced */}
+                    <CollapsibleNav eventKey={0}>
                         <Nav navbar>
-                            <NavItemLink to="about">About</NavItemLink>
-                            <NavItemLink to="contact">Contact</NavItemLink>
-                            <DropdownButton eventKey={3} title='Admin'>
-                                <MenuItemLink to="roleAdmin">Role Admin</MenuItemLink>
-                                <MenuItemLink to="userAdmin">User Admin</MenuItemLink>
-                                <MenuItemLink to="blogAdmin">Blog Admin</MenuItemLink>
-                                <MenuItemLink to="accessAdmin">Access Admin</MenuItemLink>
+                            <NavItemLink to="about" eventKey={1}>About</NavItemLink>
+                            <NavItemLink to="contact" eventKey={2}>Contact</NavItemLink>
+                            <DropdownButton eventKey={3} title='Admin' >
+                                <MenuItemLink to="roleAdmin" eventKey={4} onSelect={()=>{}}>Role Admin</MenuItemLink>
+                                <MenuItemLink to="userAdmin" eventKey={5} onSelect={()=>{}}>User Admin</MenuItemLink>
+                                <MenuItemLink to="blogAdmin" eventKey={6}>Blog Admin</MenuItemLink>
+                                <MenuItemLink to="accessAdmin" eventKey={7}>Access Admin</MenuItemLink>
                             </DropdownButton>
                         </Nav>
                         <Nav navbar right>
-                            <NavItemLink to="signin">Sign In</NavItemLink>
-                            <NavItemLink to="signup">Sign Up</NavItemLink>
+                            <NavItemLink to="login" eventKey={8}>Login</NavItemLink>
+                            <NavItemLink to="signup" eventKey={9}>Signup</NavItemLink>
                         </Nav>
                     </CollapsibleNav>
                 </Navbar>
@@ -105,7 +106,7 @@ var AccessAdmin = React.createClass({
     }
 });
 
-var Signin = React.createClass({
+var Login = React.createClass({
     render: function() {
         return <div>Signin</div>;
     }
@@ -125,12 +126,18 @@ var routes = (
         <Route name="userAdmin" path="/admin/userAdmin" handler={UserAdmin} />
         <Route name="blogAdmin" path="/admin/blogAdmin" handler={BlogAdmin} />
         <Route name="accessAdmin" path="/admin/accessAdmin" handler={AccessAdmin} />
-        <Route name="signin" path="/signin" handler={Signin} />
+        <Route name="login" path="/login" handler={Login} />
         <Route name="signup" path="/signup" handler={Signup} />
-
     </Route>
 );
 
-Router.run(routes, function (Handler) {
-    React.render(<Handler/>, document.body);
+let jwt = localStorage.getItem('jwt');
+if (jwt) {
+    LoginActions.loginUser(jwt);
+}
+*/
+var router = require('./stores/RouteStore.js').getRouter();
+
+router.run(function (Handler) {
+    React.render(<Handler/>, document.getElementById('content'));
 });
