@@ -1,0 +1,84 @@
+<!--
+  ~ Copyright 2015 Network New Technologies Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <base href="/">
+    <title>Edible Forest Garden</title>
+    <meta name="description" content="Edible Forest Garden Permaculture Food">
+</head>
+<body>
+<!-- global error handler outside of AngularJS -->
+<script>
+    window.onerror = function(message, source, line, column) {
+        try {
+            var escape = function(x) { return x.replace('\\', '\\\\').replace('\"', '\\"'); };
+            var XHR = window.XMLHttpRequest || function() {
+                        try { return new ActiveXObject("Msxml3.XMLHTTP"); } catch (e0) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); } catch (e1) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); } catch (e2) {}
+                        try { return new ActiveXObject("Msxml2.XMLHTTP"); } catch (e3) {}
+                        try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch (e4) {}
+                    };
+            var xhr = new XHR();
+            xhr.open('POST', '/api/rs', true);
+            xhr.setRequestHeader('Content-type', 'application/json');
+
+            var error = '{"category": "log", "name": "logEvent", "readOnly":false, "data": {' +
+                    '"message": "' + escape(message || '') + '",' +
+                    '"source": "' + escape(source || '') + '",' +
+                    '"url": "' + escape(window.location.href) + '",' +
+                    '"line": "' + (line || 0) + '",' +
+                    '"column": "' + (column || 0) + '"' +
+                    '}}';
+            console.log("error", error);
+            xhr.send(error);
+        }
+        finally {
+            window.onload = function() {
+                if (document.getElementById('page-error')) return; // The error is already displayed
+                var errorMessage = document.createElement('div');
+                errorMessage.setAttribute('id', 'page-error');
+                errorMessage.innerHTML = 'An error has occured and the details have been logged. ' +
+                        'Please contact customer support for assistance.';
+                document.body.appendChild(errorMessage);
+            }
+        }
+    };
+</script>
+<!--
+// test case that triggers global error handler above.
+<script>
+    function a() {
+        b();
+    }
+
+    function b() {
+        c();
+    }
+
+    a(); // Throws an error since c is undefined
+</script>
+-->
+
+<script src="../vendor.bundle.js"></script>
+<script src="../bundle.js"></script>
+
+</body>
+</html>
