@@ -4,6 +4,7 @@
 var React = require('react');
 var RouteHandler = require('react-router').RouteHandler;
 var Header = require('../components/Header.js');
+var Footer = require('../components/Footer.js');
 var AuthStore = require('../stores/AuthStore.js');
 var RouteStore = require('../stores/RouteStore.js');
 
@@ -39,6 +40,7 @@ var App = React.createClass({
                     isLoggedIn={this.state.isLoggedIn}
                     email={this.state.email} />
                 <RouteHandler/>
+                <Footer/>
             </div>
         );
     }
