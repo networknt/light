@@ -48,10 +48,10 @@ var AuthStore = assign({}, EventEmitter.prototype, {
 });
 
 AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
-    var action = payload.action;
-
-    switch(action.type) {
-
+    console.log('payload', payload);
+    var type = payload.type;
+    console.log('type', type);
+    switch(type) {
         case ActionTypes.LOGIN_RESPONSE:
             if (action.json && action.json.access_token) {
                 _accessToken = action.json.access_token;
