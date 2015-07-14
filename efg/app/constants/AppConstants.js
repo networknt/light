@@ -15,12 +15,19 @@
  */
 var keyMirror = require('keymirror');
 
-var APIRoot = "http://example:8080";
 
 module.exports = {
+    //var APIRoot = "http://example:8080/api/rs";
+    APIRoot:  '/api/rs',
+
+    ClientId: 'example@Browser',
 
     APIEndpoints: {
-        LOGIN:          APIRoot + "/v1/login",
+        SIGNIN:         {
+            category : 'user',
+            name : 'signInUser',
+            readOnly: false
+        },
         REGISTRATION:   APIRoot + "/v1/users",
         STORIES:        APIRoot + "/v1/stories"
     },

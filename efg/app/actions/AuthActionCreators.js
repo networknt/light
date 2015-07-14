@@ -20,13 +20,14 @@ module.exports = {
         WebAPIUtils.signup(email, username, password, passwordConfirmation);
     },
 
-    login: function(email, password) {
+    login: function(userIdEmail, password, rememberMe) {
         AppDispatcher.dispatch({
             type: ActionTypes.LOGIN_REQUEST,
-            email: email,
-            password: password
+            userIdEmail: userIdEmail,
+            password: password,
+            rememberMe: rememberMe
         });
-        WebAPIUtils.login(email, password);
+        WebAPIUtils.login(userIdEmail, password, rememberMe);
     },
 
     logout: function() {

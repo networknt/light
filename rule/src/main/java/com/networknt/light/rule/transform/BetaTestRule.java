@@ -40,6 +40,12 @@ import java.util.Map;
  * When set up this rule, you should have two entries in transformData beta and production to point to the right
  * class name of the rules.
  *
+ * For example, for HelloWorldRule and HelloWorld_1Rule, we have the following setup in the request transformer.
+ * {
+ *   "production": "helloWorld",
+ *   "beta": "helloWorld_1"
+ * }
+ *
  * AccessLevel N as it is internal.
  *
  */

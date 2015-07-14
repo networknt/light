@@ -32,6 +32,6 @@
   },
   "scripts": {
     "test": "grunt test",
-    "start": "webpack-dev-server --content-base app"
+    "start": "webpack-dev-server --content-base app --port 8001"
   }
 }

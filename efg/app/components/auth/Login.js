@@ -27,9 +27,13 @@ var Login = React.createClass({
     _onSubmit: function(e) {
         e.preventDefault();
         this.setState({ errors: [] });
-        var email = this.refs.email.getDOMNode().value;
+        var userIdEmail = this.refs.userIdEmail.getDOMNode().value;
         var password = this.refs.password.getDOMNode().value;
-        AuthActionCreators.login(email, password);
+        var rememberMe = this.refs.rememberMe.getDOMNode().value;
+        console.log('userIdEmail', userIdEmail);
+        console.log('password', password);
+        console.log('rememberMe', rememberMe);
+        AuthActionCreators.login(userIdEmail, password, rememberMe);
     },
 
     render: function() {
@@ -41,12 +45,16 @@ var Login = React.createClass({
                     <div className="card card--login small-10 medium-6 large-4 columns small-centered">
                         <form onSubmit={this._onSubmit}>
                             <div className="card--login__field">
-                                <label name="email">Email</label>
-                                <input type="text" name="email" ref="email" />
+                                <label name="userIdEmail">UserId or Email</label>
+                                <input type="text" name="userIdEmail" ref="userIdEmail" />
                             </div>
                             <div className="card--login__field">
                                 <label name="password">Password</label>
                                 <input type="password" name="password" ref="password" />
+                            </div>
+                            <div className="card--login__field">
+                                <label name="rememberMe">Remember me</label>
+                                <input type="checkbox" name="rememberMe" ref="rememberMe" />
                             </div>
                             <button type="submit" className="card--login__submit">Login</button>
                         </form>

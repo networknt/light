@@ -13,7 +13,7 @@ var routes = require('../routes.js');
 
 var router = Router.create({
     routes: routes,
-    location: null // Router.HistoryLocation
+    location: Router.HistoryLocation
 });
 
 var ActionTypes = AppConstants.ActionTypes;
@@ -47,10 +47,10 @@ RouteStore.dispatchToken = AppDispatcher.register(function(payload) {
         AuthStore.dispatchToken,
         BlogStore.dispatchToken
     ]);
+    console.log('payload', payload);
+    var type = payload.type;
 
-    var action = payload.action;
-
-    switch(action.type) {
+    switch(type) {
 
         case ActionTypes.REDIRECT:
             router.transitionTo(action.route);

@@ -18,6 +18,7 @@ function _getErrors(res) {
 }
 
 var APIEndpoints = AppConstants.APIEndpoints;
+var APIRoot = AppConstants.APIRoot;
 
 module.exports = {
 
@@ -43,8 +44,10 @@ module.exports = {
             });
     },
 
-    login: function(email, password) {
-        request.post(APIEndpoints.LOGIN)
+    login: function(userIdEmail, password, rememberMe) {
+        console.log('login in WebAPIUtils is been called');
+
+        request.post(APIRoot)
             .send({ username: email, password: password, grant_type: 'password' })
             .set('Accept', 'application/json')
             .end(function(error, res){
