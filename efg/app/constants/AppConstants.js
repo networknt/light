@@ -15,7 +15,7 @@
  */
 var keyMirror = require('keymirror');
 
-var APIRoot = "http://localhost:3000";
+var APIRoot = "http://example:8080";
 
 module.exports = {
 

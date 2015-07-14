@@ -201,7 +201,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
             graph.begin();
             Vertex user = graph.getVertexByKey("User.userId", data.get("userId"));
             if(user != null) {
-                user.setProperty("role", data.get("roles"));
+                user.setProperty("roles", data.get("roles"));
                 user.setProperty("updateDate", data.get("updateDate"));
                 Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
                 updateUser.addEdge("Update", user);
