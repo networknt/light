@@ -17,7 +17,6 @@ var keyMirror = require('keymirror');
 
 
 module.exports = {
-    //var APIRoot = "http://example:8080/api/rs";
     APIRoot:  '/api/rs',
 
     ClientId: 'example@Browser',
@@ -28,8 +27,12 @@ module.exports = {
             name : 'signInUser',
             readOnly: false
         },
-        REGISTRATION:   APIRoot + "/v1/users",
-        STORIES:        APIRoot + "/v1/stories"
+        REGISTRATION:   {
+
+        },
+        STORIES: {
+
+        }
     },
 
     ActionTypes: keyMirror({
