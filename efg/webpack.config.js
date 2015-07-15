@@ -42,5 +42,15 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js")
-    ]
+    ],
+
+    devServer: {
+        hot: true,
+        host: 'localhost',
+        port: 8001,
+        historyApiFallback: true,
+        proxy: {
+            'http://localhost:8001/api/rs': 'http://example:8080/api/rs'
+        }
+    }
 };

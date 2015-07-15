@@ -46,12 +46,19 @@ module.exports = {
 
     login: function(userIdEmail, password, rememberMe) {
         console.log('login in WebAPIUtils is been called');
+        APIEndpoints.SIGNIN.data = {
+            userIdEmail: userIdEmail,
+            password: password,
+            rememberMe: rememberMe
+        };
+        console.log('SIGNIN', APIEndpoints.SIGNIN);
 
         request.post(APIRoot)
-            .send({ username: email, password: password, grant_type: 'password' })
+            .send(APIEndpoints.SIGNIN)
             .set('Accept', 'application/json')
             .end(function(error, res){
                 if (res) {
+                    console.log('res =', res);
                     if (res.error) {
                         var errorMsgs = _getErrors(res);
                         ServerActionCreators.receiveLogin(null, errorMsgs);
