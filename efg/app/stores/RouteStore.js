@@ -59,8 +59,6 @@ RouteStore.dispatchToken = AppDispatcher.register(function(payload) {
         case ActionTypes.LOGIN_RESPONSE:
             if (AuthStore.isLoggedIn()) {
                 router.transitionTo('app');
-                // Dirty hack, need to figure this out
-                $(document).foundation();
             }
             break;
 

@@ -17,7 +17,7 @@ var keyMirror = require('keymirror');
 
 
 module.exports = {
-    APIRoot:  '/api/rs',
+    APIRoot:  'http://example:8080/api/rs',
 
     ClientId: 'example@Browser',
 

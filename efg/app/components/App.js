@@ -10,8 +10,7 @@ var RouteStore = require('../stores/RouteStore.js');
 
 function getStateFromStores() {
     return {
-        isLoggedIn: AuthStore.isLoggedIn(),
-        email: AuthStore.getEmail()
+        isLoggedIn: AuthStore.isLoggedIn()
     };
 }
 
@@ -36,9 +35,7 @@ var App = React.createClass({
     render: function() {
         return (
             <div className="app">
-                <Header
-                    isLoggedIn={this.state.isLoggedIn}
-                    email={this.state.email} />
+                <Header isLoggedIn={this.state.isLoggedIn} />
                 <RouteHandler/>
                 <Footer/>
             </div>

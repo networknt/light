@@ -45,12 +45,12 @@ module.exports = {
     ],
 
     devServer: {
-        hot: true,
-        host: 'localhost',
-        port: 8001,
-        historyApiFallback: true,
-        proxy: {
-            'http://localhost:8001/api/rs': 'http://example:8080/api/rs'
-        }
+        proxy:       [{
+            // proxy all requests not containing ".hot-update.js"
+            // regex is still crappy because JS doesn't have negative lookbehind
+            path:   /^(\/api)(\/?\?{0}|\/?\?{1}.*)$/,
+            // koa running on 3001 with koa-send and isomorphic react
+            target:  'http://example:8080/'
+        }]
     }
 };

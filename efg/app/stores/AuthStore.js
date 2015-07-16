@@ -5,14 +5,18 @@ var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
+var jwtDecode = require('jwt-decode');
 
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 // Load an access token from the auth storage, you might want to implement
 // a 'remember me' using localStorage
-var _accessToken = sessionStorage.getItem('accessToken');
-var _email = sessionStorage.getItem('email');
+var _isLoggedIn = false;
+var _currentUser = { userId: '', roles: ['anonymous']};
+var _rememberMe = false;
+var _accessToken = '';
+var _refreshToken = '';
 var _errors = [];
 
 var AuthStore = assign({}, EventEmitter.prototype, {
@@ -30,15 +34,19 @@ var AuthStore = assign({}, EventEmitter.prototype, {
     },
 
     isLoggedIn: function() {
-        return _accessToken ? true : false;
+        return _isLoggedIn;
     },
 
     getAccessToken: function() {
         return _accessToken;
     },
 
-    getEmail: function() {
-        return _email;
+    getRefreshToken: function() {
+        return _refreshToken;
+    },
+
+    getRememberMe: function() {
+        return _rememberMe
     },
 
     getErrors: function() {
@@ -52,25 +60,50 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     console.log('type', type);
     switch(type) {
+        case ActionTypes.LOGIN_REQUEST:
+            // This is an indicator if refresh token will be used to get another access token after access token is expired.
+            _rememberMe = payload.rememberMe;
+            break;
+
         case ActionTypes.LOGIN_RESPONSE:
-            if (action.json && action.json.access_token) {
-                _accessToken = action.json.access_token;
-                _email = action.json.email;
-                // Token will always live in the session, so that the API can grab it with no hassle
-                sessionStorage.setItem('accessToken', _accessToken);
-                sessionStorage.setItem('email', _email);
+            if (payload.json) {
+                // Successfully logged in and get access token back. If remember me is checked, then a refresh token is returned as well.
+                _isLoggedIn = true;
+                // Parse the Json Token and get uesr object which contains userId and roles.
+                //_currentUser = JSON.parse(base64.base64Decode(payload.json.accessToken.split('.')[1])).user;
+                // Save authorizationData object into local storage so it can last longer than the browser session. local storage will
+                // fall back to Cookie if HTML5 is not supported by the browser.
+                var jsonPayload = JSON.parse(payload.json);
+                _accessToken = jsonPayload.accessToken;
+                localStorage.setItem('accessToken', _accessToken);
+                console.log('_accessToken', _accessToken);
+                var jwt = jwtDecode(_accessToken);
+                console.log('jwt', jwt);
+                _currentUser = jwt.user;
+
+                if(_rememberMe) {
+                    _refreshToken = jsonPayload.refreshToken;
+                    localStorage.setItem('refreshToken', _refreshToken);
+                }
+                // Redirect to the attempted url if the login page was redirected upon 401 and 403 error.
+                // httpBuffer.redirectToAttemptedUrl();
             }
-            if (action.errors) {
-                _errors = action.errors;
+            if (payload.errors) {
+                _errors = payload.errors;
             }
             AuthStore.emitChange();
             break;
 
         case ActionTypes.LOGOUT:
+            console.log('logout  action type in AuthStore');
+            _isLoggedIn = false;
             _accessToken = null;
-            _email = null;
-            sessionStorage.removeItem('accessToken');
-            sessionStorage.removeItem('email');
+            localStorage.removeItem('accessToken');
+            if(_rememberMe) {
+                _rememberMe = false;
+                _refreshToken = null;
+                localStorageStorage.removeItem('refreshToken');
+            }
             AuthStore.emitChange();
             break;
 
