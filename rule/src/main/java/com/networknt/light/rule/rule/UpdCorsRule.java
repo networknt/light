@@ -40,7 +40,7 @@ public class UpdCorsRule extends AbstractRuleRule implements Rule {
         } else {
             eventData.put("enableCors", data.get("enableCors"));
             String corsHosts = (String)data.get("corsHosts");
-            if(corsHosts != null) {
+            if(corsHosts != null && corsHosts.length() > 0) {
                 eventData.put("corsHosts", corsHosts);
             }
             eventData.put("updateDate", new java.util.Date());
