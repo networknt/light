@@ -19,6 +19,7 @@ function _getErrors(res) {
 
 var APIEndpoints = AppConstants.APIEndpoints;
 var APIRoot = AppConstants.APIRoot;
+var ClientId = AppConstants.ClientId;
 
 module.exports = {
 
@@ -28,7 +29,8 @@ module.exports = {
                 email: email,
                 username: username,
                 password: password,
-                password_confirmation: passwordConfirmation
+                password_confirmation: passwordConfirmation,
+                clientId: ClientId
             }})
             .set('Accept', 'application/json')
             .end(function(error, res) {
@@ -46,11 +48,14 @@ module.exports = {
 
     login: function(userIdEmail, password, rememberMe) {
         console.log('login in WebAPIUtils is been called');
+
         APIEndpoints.SIGNIN.data = {
             userIdEmail: userIdEmail,
             password: password,
-            rememberMe: rememberMe
+            rememberMe: rememberMe,
+            clientId: ClientId
         };
+
         console.log('SIGNIN', APIEndpoints.SIGNIN);
 
         request.post(APIRoot)
@@ -63,8 +68,8 @@ module.exports = {
                         var errorMsgs = _getErrors(res);
                         ServerActionCreators.receiveLogin(null, errorMsgs);
                     } else {
-                        json = JSON.parse(res.text);
-                        ServerActionCreators.receiveLogin(json, null);
+                        console.log('res.text', res.text);
+                        ServerActionCreators.receiveLogin(res.text, null);
                     }
                 }
             });

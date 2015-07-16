@@ -8,6 +8,7 @@ var DefaultRoute = Router.DefaultRoute;
 
 var App = require('./components/App.js');
 var Login = require('./components/auth/Login.js');
+var Logout = require('./components/auth/Logout.js');
 //var Stories = require('./components/stories/StoriesPage.react.jsx');
 //var Story = require('./components/stories/StoryPage.react.jsx');
 //var StoryNew = require('./components/stories/StoryNew.react.jsx');
@@ -51,6 +52,7 @@ module.exports = (
         <Route name="blogAdmin" path="/admin/blogAdmin" handler={BlogAdmin} />
         <Route name="accessAdmin" path="/admin/accessAdmin" handler={AccessAdmin} />
         <Route name="login" path="/login" handler={Login}/>
+        <Route name="logout" path="/logout" handler={Logout}/>
         <Route name="signup" path="/signup" handler={Signup}/>
     </Route>
 );
