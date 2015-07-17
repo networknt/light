@@ -23,7 +23,7 @@ var Router = require('react-router')
     , Route = Router.Route;
 
 var AjaxInterceptor = require('ajax-interceptor');
-
+var AuthStore = require('./stores/AuthStore.js');
 
 /**
  * init http hooks for oauth
@@ -31,8 +31,13 @@ var AjaxInterceptor = require('ajax-interceptor');
  */
 AjaxInterceptor.addRequestCallback(function(xhr) {
     console.debug("request",xhr);
-
+    // get the access token from store and put it into the header.
+    var accessToken = AuthStore.getAccessToken();
+    if(accessToken) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+    }
 });
+
 AjaxInterceptor.addResponseCallback(function(xhr) {
     console.debug("response",xhr);
 });

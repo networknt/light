@@ -75,14 +75,14 @@ module.exports = {
             });
     },
 
-    loadStories: function() {
-        request.get(APIEndpoints.STORIES)
+    loadBlogs: function() {
+        request.get('http://example:8080/api/rs?cmd=' +  encodeURIComponent(JSON.stringify(APIEndpoints.BLOGS)))
             .set('Accept', 'application/json')
-            .set('Authorization', sessionStorage.getItem('accessToken'))
             .end(function(error, res){
                 if (res) {
+                    console.log('loadBlogs res', res);
                     json = JSON.parse(res.text);
-                    ServerActionCreators.receiveStories(json);
+                    ServerActionCreators.receiveBlogs(json);
                 }
             });
     },
