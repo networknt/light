@@ -30,6 +30,13 @@ module.exports = {
         WebAPIUtils.login(userIdEmail, password, rememberMe);
     },
 
+    init: function() {
+        console.log('the inti action is called', AppDispatcher);
+        AppDispatcher.dispatch({
+            type: ActionTypes.INIT
+        });
+    },
+
     logout: function() {
         AppDispatcher.dispatch({
             type: ActionTypes.LOGOUT

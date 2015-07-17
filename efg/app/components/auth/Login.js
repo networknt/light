@@ -21,7 +21,7 @@ var Login = React.createClass({
     },
 
     _onChange: function() {
-        this.setState({ errors: AuthStore.getErrors(), rememberMe : !this.state.rememberMe });
+        this.setState({rememberMe : !this.state.rememberMe });
     },
 
     _onSubmit: function(e) {
@@ -54,7 +54,7 @@ var Login = React.createClass({
                             </div>
                             <div className="card--login__field">
                                 <label name="rememberMe">Remember me</label>
-                                <input type="checkbox" checked={this.state.rememberMe || this.props.rememberMe } onChange={this.onChange} name="rememberMe" ref="rememberMe" />
+                                <input type="checkbox" checked={this.state.rememberMe || this.props.rememberMe} onChange={this.onChange} name="rememberMe" ref="rememberMe" />
                             </div>
                             <button type="submit" className="card--login__submit">Login</button>
                         </form>

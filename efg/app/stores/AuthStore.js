@@ -106,6 +106,23 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             }
             AuthStore.emitChange();
             break;
+        case ActionTypes.INIT:
+            console.log('init is called');
+            var accessToken = localStorage.getItem('accessToken');
+            if(accessToken) {
+                _isLoggedIn = true;
+                _accessToken = accessToken;
+                var jwt = jwtDecode(_accessToken);
+                console.log('jwt', jwt);
+                _currentUser = jwt.user;
+            }
+            var refreshToken = localStorage.getItem('refreshToken');
+            if(refreshToken) {
+                _rememberMe = true;
+                _refreshToken = refreshToken;
+            }
+            AuthStore.emitChange();
+            break;
 
         default:
     }

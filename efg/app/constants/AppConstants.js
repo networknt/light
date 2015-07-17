@@ -40,6 +40,7 @@ module.exports = {
         LOGIN_REQUEST: null,
         LOGIN_RESPONSE: null,
         LOGOUT: null,
+        INIT: null,
         SIGNUP_REQUEST: null,
 
 
