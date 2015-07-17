@@ -58,11 +58,12 @@ var Header = React.createClass({
                         <Nav navbar>
                             <NavItemLink to="about" eventKey={1}>About</NavItemLink>
                             <NavItemLink to="contact" eventKey={2}>Contact</NavItemLink>
-                            <DropdownButton eventKey={3} title='Admin' >
-                                <MenuItemLink to="roleAdmin" eventKey={4} onSelect={()=>{}}>Role Admin</MenuItemLink>
-                                <MenuItemLink to="userAdmin" eventKey={5} onSelect={()=>{}}>User Admin</MenuItemLink>
-                                <MenuItemLink to="blogAdmin" eventKey={6}>Blog Admin</MenuItemLink>
-                                <MenuItemLink to="accessAdmin" eventKey={7}>Access Admin</MenuItemLink>
+                            <NavItemLink to="blogs" eventKey={3}>Blogs</NavItemLink>
+                            <DropdownButton eventKey={4} title='Admin' >
+                                <MenuItemLink to="roleAdmin" eventKey={5} onSelect={()=>{}}>Role Admin</MenuItemLink>
+                                <MenuItemLink to="userAdmin" eventKey={6} onSelect={()=>{}}>User Admin</MenuItemLink>
+                                <MenuItemLink to="blogAdmin" eventKey={7}>Blog Admin</MenuItemLink>
+                                <MenuItemLink to="accessAdmin" eventKey={8}>Access Admin</MenuItemLink>
                             </DropdownButton>
                         </Nav>
                         {rightNav}

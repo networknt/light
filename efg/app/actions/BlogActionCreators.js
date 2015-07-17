@@ -9,28 +9,28 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    loadStories: function() {
+    loadBlogs: function() {
         AppDispatcher.dispatch({
-            type: ActionTypes.LOAD_STORIES
+            type: ActionTypes.LOAD_BLOGS
         });
-        WebAPIUtils.loadStories();
+        WebAPIUtils.loadBlogs();
     },
 
-    loadStory: function(storyId) {
+    loadBlog: function(blogId) {
         AppDispatcher.dispatch({
-            type: ActionTypes.LOAD_STORY,
-            storyId: storyId
+            type: ActionTypes.LOAD_BLOG,
+            blogId: blogId
         });
-        WebAPIUtils.loadStory(storyId);
+        WebAPIUtils.loadBlog(blogId);
     },
 
-    createStory: function(title, body) {
+    createBlog: function(title, body) {
         AppDispatcher.dispatch({
-            type: ActionTypes.CREATE_STORY,
+            type: ActionTypes.CREATE_BLOG,
             title: title,
             body: body
         });
-        WebAPIUtils.createStory(title, body);
+        WebAPIUtils.createBlog(title, body);
     }
 
 };

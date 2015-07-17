@@ -30,8 +30,10 @@ module.exports = {
         REGISTRATION:   {
 
         },
-        STORIES: {
-
+        BLOGS: {
+            category: 'demo',
+            name: 'getDropdown',
+            readOnly: false
         }
     },
 
@@ -48,12 +50,12 @@ module.exports = {
         REDIRECT: null,
 
         // Blog
-        LOAD_STORIES: null,
-        RECEIVE_STORIES: null,
-        LOAD_STORY: null,
-        RECEIVE_STORY: null,
-        CREATE_STORY: null,
-        RECEIVE_CREATED_STORY: null
+        LOAD_BLOGS: null,
+        RECEIVE_BLOGS: null,
+        LOAD_BLOG: null,
+        RECEIVE_BLOG: null,
+        CREATE_BLOG: null,
+        RECEIVE_CREATED_BLOG: null
     })
 
 };
