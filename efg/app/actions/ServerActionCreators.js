@@ -16,9 +16,9 @@ module.exports = {
         });
     },
 
-    receiveStories: function(json) {
+    receiveBlogs: function(json) {
         AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_STORIES,
+            type: ActionTypes.RECEIVE_BLOGS,
             json: json
         });
     },

@@ -27,6 +27,7 @@ module.exports = {
             password: password,
             rememberMe: rememberMe
         });
+        console.log('WebAPIUtils', WebAPIUtils);
         WebAPIUtils.login(userIdEmail, password, rememberMe);
     },
 
