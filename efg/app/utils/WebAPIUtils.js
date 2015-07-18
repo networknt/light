@@ -7,7 +7,8 @@ var request = require('superagent');
 
 function _getErrors(res) {
     var errorMsgs = ["Something went wrong, please try again"];
-    if ((json = JSON.parse(res.text))) {
+    var json = JSON.parse(res.text);
+    if (json) {
         if (json['errors']) {
             errorMsgs = json['errors'];
         } else if (json['error']) {
@@ -76,42 +77,41 @@ module.exports = {
     },
 
     loadBlogs: function() {
+        console.log('WebAPIUtils logBlogs is called');
         request.get('http://example:8080/api/rs?cmd=' +  encodeURIComponent(JSON.stringify(APIEndpoints.BLOGS)))
             .set('Accept', 'application/json')
             .end(function(error, res){
                 if (res) {
                     console.log('loadBlogs res', res);
-                    json = JSON.parse(res.text);
+                    var json = JSON.parse(res.text);
                     ServerActionCreators.receiveBlogs(json);
                 }
             });
     },
 
-    loadStory: function(storyId) {
+    loadBlog: function(blogId) {
         request.get(APIEndpoints.STORIES + '/' + storyId)
             .set('Accept', 'application/json')
-            .set('Authorization', sessionStorage.getItem('accessToken'))
             .end(function(error, res){
                 if (res) {
-                    json = JSON.parse(res.text);
-                    ServerActionCreators.receiveStory(json);
+                    var json = JSON.parse(res.text);
+                    ServerActionCreators.receiveBlog(json);
                 }
             });
     },
 
-    createStory: function(title, body) {
+    createBlog: function(title, body) {
         request.post(APIEndpoints.STORIES)
             .set('Accept', 'application/json')
-            .set('Authorization', sessionStorage.getItem('accessToken'))
-            .send({ story: { title: title, body: body } })
+            .send({ blog: { title: title, body: body } })
             .end(function(error, res){
                 if (res) {
                     if (res.error) {
                         var errorMsgs = _getErrors(res);
-                        ServerActionCreators.receiveCreatedStory(null, errorMsgs);
+                        ServerActionCreators.receiveCreatedBlog(null, errorMsgs);
                     } else {
-                        json = JSON.parse(res.text);
-                        ServerActionCreators.receiveCreatedStory(json, null);
+                        var json = JSON.parse(res.text);
+                        ServerActionCreators.receiveCreatedBlog(json, null);
                     }
                 }
             });

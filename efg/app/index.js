@@ -40,6 +40,8 @@ AjaxInterceptor.addRequestCallback(function(xhr) {
 
 AjaxInterceptor.addResponseCallback(function(xhr) {
     console.debug("response",xhr);
+    // intercept token expire error and refresh token.
+    
 });
 
 // Will proxify XHR to fire the above callbacks

@@ -24,6 +24,13 @@ module.exports = {
         WebAPIUtils.loadBlog(blogId);
     },
 
+    receiveBlog: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_BLOG,
+            json: json
+        });
+    },
+
     createBlog: function(title, body) {
         AppDispatcher.dispatch({
             type: ActionTypes.CREATE_BLOG,
@@ -31,6 +38,14 @@ module.exports = {
             body: body
         });
         WebAPIUtils.createBlog(title, body);
+    },
+
+    receiveCreatedBlog: function(json, errors) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_CREATED_STORY,
+            json: json,
+            errors: errors
+        });
     }
 
 };

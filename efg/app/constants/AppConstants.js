@@ -33,7 +33,7 @@ module.exports = {
         BLOGS: {
             category: 'demo',
             name: 'getDropdown',
-            readOnly: false
+            readOnly: true
         }
     },
 
