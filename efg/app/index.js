@@ -41,7 +41,21 @@ AjaxInterceptor.addRequestCallback(function(xhr) {
 AjaxInterceptor.addResponseCallback(function(xhr) {
     console.debug("response",xhr);
     // intercept token expire error and refresh token.
-    
+    console.log('xhr.status', xhr.status);
+    console.log('xhr.requesturl', xhr.responseURL);
+    console.log('xhr.responseText', xhr.responseText);
+    //var error = JSON.parse(xhr.responseText);
+    //console.log('error', error);
+    //console.log('xhr.error', JSON.parse(xhr.responseText).error);
+
+    if(xhr.status === 401 && xhr.responseText === '{"error":"token_expired"}') {
+        console.log('token expired, renewing...');
+        
+
+    } else {
+        console.log('other error that needs to be displayed.');
+
+    }
 });
 
 // Will proxify XHR to fire the above callbacks

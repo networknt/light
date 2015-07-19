@@ -39,7 +39,7 @@
                         try { return new ActiveXObject("Microsoft.XMLHTTP"); } catch (e4) {}
                     };
             var xhr = new XHR();
-            xhr.open('POST', '/api/rs', true);
+            xhr.open('POST', 'http://example:8080/api/rs', true);
             xhr.setRequestHeader('Content-type', 'application/json');
 
             var error = '{"category": "log", "name": "logEvent", "readOnly":false, "data": {' +
