@@ -23,6 +23,7 @@ var Router = require('react-router')
     , Route = Router.Route;
 
 var AjaxInterceptor = require('ajax-interceptor');
+var AuthActionCreators = require('./actions/AuthActionCreators.js');
 var AuthStore = require('./stores/AuthStore.js');
 var AppConstants = require('./constants/AppConstants.js');
 
@@ -66,7 +67,8 @@ AjaxInterceptor.addResponseCallback(function(xhr) {
         refreshReq.onreadystatechange = function () {
             if(refreshReq.readyState == 4 && refreshReq.status == 200) {
                 console.log('refreshToken', refreshReq.responseText);
-
+                var jsonPayload = JSON.parse(refreshReq.responseText);
+                AuthActionCreators.refresh(jsonPayload.accessToken);
             }
         }
         refreshReq.open('POST', 'http://example:8080/api/rs', true);

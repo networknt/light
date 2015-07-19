@@ -97,6 +97,11 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             }
             AuthStore.emitChange();
             break;
+        case ActionTypes.REFRESH:
+            console.log('refreshed access token is saved');
+            _accessToken = payload.accessToken;
+            localStorage.setItem('accessToken', _accessToken);
+            break;
 
         case ActionTypes.LOGOUT:
             console.log('logout  action type in AuthStore');
