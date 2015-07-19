@@ -24,13 +24,17 @@ var Router = require('react-router')
 
 var AjaxInterceptor = require('ajax-interceptor');
 var AuthStore = require('./stores/AuthStore.js');
+var AppConstants = require('./constants/AppConstants.js');
+
+var httpBuffer = [];
 
 /**
  * init http hooks for oauth
  *
  */
+
 AjaxInterceptor.addRequestCallback(function(xhr) {
-    console.debug("request",xhr);
+    console.debug("request callback",xhr);
     // get the access token from store and put it into the header.
     var accessToken = AuthStore.getAccessToken();
     if(accessToken) {
@@ -41,19 +45,37 @@ AjaxInterceptor.addRequestCallback(function(xhr) {
 AjaxInterceptor.addResponseCallback(function(xhr) {
     console.debug("response",xhr);
     // intercept token expire error and refresh token.
-    console.log('xhr.status', xhr.status);
-    console.log('xhr.requesturl', xhr.responseURL);
-    console.log('xhr.responseText', xhr.responseText);
-    //var error = JSON.parse(xhr.responseText);
-    //console.log('error', error);
-    //console.log('xhr.error', JSON.parse(xhr.responseText).error);
-
+    //console.log('xhr.status', xhr.status);
+    //console.log('xhr.requesturl', xhr.responseURL);
+    //console.log('xhr.responseText', xhr.responseText);
     if(xhr.status === 401 && xhr.responseText === '{"error":"token_expired"}') {
         console.log('token expired, renewing...');
-        
+        httpBuffer.push(xhr);
+        var refreshToken = {
+            category:'user',
+            name:'refreshToken',
+            readOnly:true,
+            data : {
+                refreshToken: AuthStore.getRefreshToken(),
+                userId: AuthStore.getUserId(),
+                clientId: AppConstants.ClientId
+            }
+        };
+
+        var refreshReq = new XMLHttpRequest();
+        refreshReq.onreadystatechange = function () {
+            if(refreshReq.readyState == 4 && refreshReq.status == 200) {
+                console.log('refreshToken', refreshReq.responseText);
+
+            }
+        }
+        refreshReq.open('POST', 'http://example:8080/api/rs', true);
+        refreshReq.setRequestHeader('Authorization', '');
+        refreshReq.send(JSON.stringify(refreshToken));
 
     } else {
-        console.log('other error that needs to be displayed.');
+        console.log('other error or success that needs to be displayed.', xhr.status);
+        console.log('response', xhr.responseText);
 
     }
 });

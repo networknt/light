@@ -29,7 +29,7 @@ var Login = React.createClass({
         this.setState({ errors: [] });
         var userIdEmail = this.refs.userIdEmail.getDOMNode().value;
         var password = this.refs.password.getDOMNode().value;
-        var rememberMe = this.state.rememberMe;
+        var rememberMe = this.refs.rememberMe.getDOMNode().checked;
         console.log('userIdEmail', userIdEmail);
         console.log('password', password);
         console.log('rememberMe', rememberMe);
@@ -54,7 +54,7 @@ var Login = React.createClass({
                             </div>
                             <div className="card--login__field">
                                 <label name="rememberMe">Remember me</label>
-                                <input type="checkbox" checked={this.state.rememberMe || this.props.rememberMe} onChange={this.onChange} name="rememberMe" ref="rememberMe" />
+                                <input type="checkbox" onChange={this.onChange} name="rememberMe" ref="rememberMe" />
                             </div>
                             <button type="submit" className="card--login__submit">Login</button>
                         </form>

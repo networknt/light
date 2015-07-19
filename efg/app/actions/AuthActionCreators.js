@@ -38,6 +38,7 @@ module.exports = {
         });
     },
 
+    
     logout: function() {
         AppDispatcher.dispatch({
             type: ActionTypes.LOGOUT

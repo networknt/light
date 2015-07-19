@@ -45,6 +45,10 @@ var AuthStore = assign({}, EventEmitter.prototype, {
         return _refreshToken;
     },
 
+    getUserId: function() {
+        return _currentUser.userId;
+    },
+
     getRememberMe: function() {
         return _rememberMe
     },
