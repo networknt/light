@@ -41,6 +41,7 @@ module.exports = {
         // Auth
         LOGIN_REQUEST: null,
         LOGIN_RESPONSE: null,
+        REFRESH: null,
         LOGOUT: null,
         INIT: null,
         SIGNUP_REQUEST: null,

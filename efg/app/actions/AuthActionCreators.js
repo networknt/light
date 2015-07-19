@@ -38,7 +38,14 @@ module.exports = {
         });
     },
 
-    
+    refresh: function(accessToken) {
+        console.log('refresh in AuthActionCreators is called.');
+        AppDispatcher.dispatch({
+            type: ActionTypes.REFRESH,
+            accessToken: accessToken
+        });
+    },
+
     logout: function() {
         AppDispatcher.dispatch({
             type: ActionTypes.LOGOUT
