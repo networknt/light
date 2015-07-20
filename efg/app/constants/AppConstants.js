@@ -29,11 +29,6 @@ module.exports = {
         },
         REGISTRATION:   {
 
-        },
-        BLOGS: {
-            category: 'demo',
-            name: 'getDropdown',
-            readOnly: true
         }
     },
 

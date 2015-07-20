@@ -8,18 +8,19 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    receiveLogin: function(json, errors) {
+    receiveLogin: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.LOGIN_RESPONSE,
             json: json,
-            errors: errors
+            error: error
         });
     },
 
-    receiveBlogs: function(json) {
+    receiveBlogs: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_BLOGS,
-            json: json
+            json: json,
+            error: error
         });
     },
 

@@ -22,18 +22,104 @@ var Router = require('react-router')
     , RouteHandler = Router.RouteHandler
     , Route = Router.Route;
 
-var AjaxInterceptor = require('ajax-interceptor');
+//var AjaxInterceptor = require('ajax-interceptor');
 var AuthActionCreators = require('./actions/AuthActionCreators.js');
 var AuthStore = require('./stores/AuthStore.js');
 var AppConstants = require('./constants/AppConstants.js');
+var axios = require('axios');
 
-var httpBuffer = [];
+
+
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+    config.headers = config.headers || {};
+    var accessToken = AuthStore.getAccessToken();
+    // TODO Do not put access token into header of refresh token post. In this case,
+    // we don't need to remove the authorizationData before sending refresh token post.
+    // chances are some other requests might be sent during the time slot and got login
+    // is required error and forced to login page.
+    // TODO I really don't like this checking. need to find another way? backend?
+    if (accessToken) {
+        if(config.data && config.data.name && config.data.name === 'refreshToken') {
+            return config;
+        }
+        config.headers.Authorization = 'Bearer ' + accessToken;
+    }
+    return config;
+}, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+});
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    // Do something with response data
+    console.log('response interceptor', response);
+    return response;
+}, function (error) {
+    // Do something with response error
+    console.log('error response interceptor', error);
+    if(error.status == 401) {
+        console.log('401 error response')
+        if(error.data.error == 'token_expired') {
+            console.log('token expired');
+            var savedConfig = error.config;
+            // get accessToken from refreshToken
+            var refreshToken = {
+                category:'user',
+                name:'refreshToken',
+                readOnly:true,
+                data : {
+                    refreshToken: AuthStore.getRefreshToken(),
+                    userId: AuthStore.getUserId(),
+                    clientId: AppConstants.ClientId
+                }
+            };
+            axios.post('http://example:8080/api/rs', refreshToken)
+                .then(function (response) {
+                    console.log('refresh token result', response.data);
+                    var accessToken = response.data.accessToken;
+                    AuthActionCreators.refresh(accessToken);
+                    // now need to resend the savedConfig here.
+                    savedConfig.headers = savedConfig.headers || {};
+                    var accessToken = AuthStore.getAccessToken();
+                    if(accessToken) {
+                        savedConfig.headers.Authorization = 'Bearer ' + accessToken;
+                    }
+                    console.log('saveConfig before post', savedConfig);
+                    axios.get('http://example:8080/api/rs', savedConfig.params)
+                        .then(function (response) {
+                            console.log('retry is OK', response.data);
+                            Promise.resolve(response);
+                        })
+                        .catch(function(response) {
+                            console.log('retry get error', response.data);
+                            Promise.reject(response);
+                        });
+                })
+                .catch(function(response) {
+                    console.log('error in refresh token', response.data);
+                });
+        }
+
+    } else if(error.status == 403) {
+        console.log('403 error response');
+        // 403 forbidden. The user is logged in but doesn't have permission for the request.
+        // logout and redirect to login page.
+
+
+    }
+    return Promise.reject(error);
+});
+
+
+//var httpBuffer = [];
 
 /**
  * init http hooks for oauth
  *
  */
-
+/*
 AjaxInterceptor.addRequestCallback(function(xhr) {
     console.debug("request callback",xhr);
     // get the access token from store and put it into the header.
@@ -85,6 +171,7 @@ AjaxInterceptor.addResponseCallback(function(xhr) {
 
 // Will proxify XHR to fire the above callbacks
 AjaxInterceptor.wire();
+*/
 
 var router = require('./stores/RouteStore.js').getRouter();
 
