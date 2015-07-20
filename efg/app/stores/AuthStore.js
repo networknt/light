@@ -77,8 +77,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                 //_currentUser = JSON.parse(base64.base64Decode(payload.json.accessToken.split('.')[1])).user;
                 // Save authorizationData object into local storage so it can last longer than the browser session. local storage will
                 // fall back to Cookie if HTML5 is not supported by the browser.
-                var jsonPayload = JSON.parse(payload.json);
-                _accessToken = jsonPayload.accessToken;
+                _accessToken = payload.json.accessToken;
                 localStorage.setItem('accessToken', _accessToken);
                 console.log('_accessToken', _accessToken);
                 var jwt = jwtDecode(_accessToken);
@@ -86,14 +85,14 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                 _currentUser = jwt.user;
 
                 if(_rememberMe) {
-                    _refreshToken = jsonPayload.refreshToken;
+                    _refreshToken = payload.json.refreshToken;
                     localStorage.setItem('refreshToken', _refreshToken);
                 }
                 // Redirect to the attempted url if the login page was redirected upon 401 and 403 error.
                 // httpBuffer.redirectToAttemptedUrl();
             }
-            if (payload.errors) {
-                _errors = payload.errors;
+            if (payload.error) {
+                _errors = payload.error;
             }
             AuthStore.emitChange();
             break;

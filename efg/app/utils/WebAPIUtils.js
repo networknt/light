@@ -3,7 +3,7 @@
  */
 var ServerActionCreators = require('../actions/ServerActionCreators.js');
 var AppConstants = require('../constants/AppConstants.js');
-var request = require('superagent');
+var request = require('axios');
 
 function _getErrors(res) {
     var errorMsgs = ["Something went wrong, please try again"];
@@ -59,6 +59,17 @@ module.exports = {
 
         console.log('SIGNIN', APIEndpoints.SIGNIN);
 
+        request.post(APIRoot, APIEndpoints.SIGNIN)
+        .then(function (response) {
+            console.log('login response data', response.data);
+            ServerActionCreators.receiveLogin(response.data, null);
+        })
+        .catch(function (response) {
+            console.log('login catch response data', response.data);
+            ServerActionCreators.receiveLogin(null, response.data);
+        });
+
+        /*
         request.post(APIRoot)
             .send(APIEndpoints.SIGNIN)
             .set('Accept', 'application/json')
@@ -74,18 +85,25 @@ module.exports = {
                     }
                 }
             });
+        */
+
     },
 
     loadBlogs: function() {
+        var getBlogs = {
+            category: 'demo',
+            name: 'getDropdown',
+            readOnly: true
+        }
         console.log('WebAPIUtils logBlogs is called');
-        request.get('http://example:8080/api/rs?cmd=' +  encodeURIComponent(JSON.stringify(APIEndpoints.BLOGS)))
-            .set('Accept', 'application/json')
-            .end(function(error, res){
-                if (res) {
-                    console.log('loadBlogs res', res);
-                    var json = JSON.parse(res.text);
-                    ServerActionCreators.receiveBlogs(json);
-                }
+        request.get('http://example:8080/api/rs', {params: { cmd: encodeURIComponent(JSON.stringify(getBlogs))}})
+            .then(function(response) {
+                console.log('loadBlogs data', response.data);
+                ServerActionCreators.receiveBlogs(response.data, null);
+            })
+            .catch(function(){
+                console.log('catch loadBlogs', response.data);
+                ServerActionCreators.receiveBlogs(null, response.data);
             });
     },
 
