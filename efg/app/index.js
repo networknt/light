@@ -70,6 +70,7 @@ AjaxInterceptor.addResponseCallback(function(xhr) {
                 var jsonPayload = JSON.parse(refreshReq.responseText);
                 AuthActionCreators.refresh(jsonPayload.accessToken);
             }
+            
         }
         refreshReq.open('POST', 'http://example:8080/api/rs', true);
         refreshReq.setRequestHeader('Authorization', '');
