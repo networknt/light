@@ -87,18 +87,32 @@ axios.interceptors.response.use(function (response) {
                         savedConfig.headers.Authorization = 'Bearer ' + accessToken;
                     }
                     console.log('saveConfig before post', savedConfig);
+                    if(savedConfig.method == 'get') {
+                        axios.get(buildUrl(savedConfig.url, savedConfig.paramSerializer(savedConfig.params)))
+                            .then(function (response) {
+                                console.log('retry is OK', response.data);
+                                Promise.resolve(response);
+                            })
+                            .catch(function(response) {
+                                console.log('retry get error', response.data);
+                                Promise.reject(response);
+                            });
+                    } else if (savedConfig.method == 'post') {
+                        axios.post(savedConfig.url, savedConfig.data)
+                            .then(function (response) {
+                                console.log('retry is OK', response.data);
+                                Promise.resolve(response);
+                            })
+                            .catch(function(response) {
+                                console.log('retry get error', response.data);
+                                Promise.reject(response);
+                            });
+
+                    }
                     axios.get('http://example:8080/api/rs', savedConfig.params)
-                        .then(function (response) {
-                            console.log('retry is OK', response.data);
-                            Promise.resolve(response);
-                        })
-                        .catch(function(response) {
-                            console.log('retry get error', response.data);
-                            Promise.reject(response);
-                        });
                 })
                 .catch(function(response) {
-                    console.log('error in refresh token', response.data);
+                    console.log('error in refresh token', response);
                 });
         }
 
@@ -172,6 +186,14 @@ AjaxInterceptor.addResponseCallback(function(xhr) {
 // Will proxify XHR to fire the above callbacks
 AjaxInterceptor.wire();
 */
+
+
+function buildUrl(url, serializedParams) {
+    if (serializedParams.length > 0) {
+        url += ((url.indexOf('?') == -1) ? '?' : '&') + serializedParams;
+    }
+    return url;
+};
 
 var router = require('./stores/RouteStore.js').getRouter();
 
