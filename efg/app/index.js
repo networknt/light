@@ -27,7 +27,7 @@ var AuthActionCreators = require('./actions/AuthActionCreators.js');
 var AuthStore = require('./stores/AuthStore.js');
 var AppConstants = require('./constants/AppConstants.js');
 var axios = require('axios');
-
+var buildUrl = require('./utils/buildUrl.js');
 
 
 // Add a request interceptor
@@ -76,9 +76,9 @@ axios.interceptors.response.use(function (response) {
                 }
             };
             axios.post('http://example:8080/api/rs', refreshToken)
-                .then(function (response) {
-                    console.log('refresh token result', response.data);
-                    var accessToken = response.data.accessToken;
+                .then(function (refreshResponse) {
+                    console.log('refresh token result', refreshResponse.data);
+                    var accessToken = refreshResponse.data.accessToken;
                     AuthActionCreators.refresh(accessToken);
                     // now need to resend the savedConfig here.
                     savedConfig.headers = savedConfig.headers || {};
@@ -88,20 +88,20 @@ axios.interceptors.response.use(function (response) {
                     }
                     console.log('saveConfig before post', savedConfig);
                     if(savedConfig.method == 'get') {
-                        axios.get(buildUrl(savedConfig.url, savedConfig.paramSerializer(savedConfig.params)))
-                            .then(function (response) {
-                                console.log('retry is OK', response.data);
-                                Promise.resolve(response);
+                        axios.get(buildUrl(savedConfig.url, savedConfig.params))
+                            .then(function (savedResponse) {
+                                console.log('retry is OK', savedResponse.data);
+                                return savedResponse;
                             })
-                            .catch(function(response) {
-                                console.log('retry get error', response.data);
-                                Promise.reject(response);
+                            .catch(function(savedError) {
+                                console.log('retry get error', savedError.data);
+                                Promise.reject(savedError);
                             });
                     } else if (savedConfig.method == 'post') {
                         axios.post(savedConfig.url, savedConfig.data)
                             .then(function (response) {
                                 console.log('retry is OK', response.data);
-                                Promise.resolve(response);
+                                return Promise.resolve(response);
                             })
                             .catch(function(response) {
                                 console.log('retry get error', response.data);
@@ -109,10 +109,9 @@ axios.interceptors.response.use(function (response) {
                             });
 
                     }
-                    axios.get('http://example:8080/api/rs', savedConfig.params)
                 })
-                .catch(function(response) {
-                    console.log('error in refresh token', response);
+                .catch(function(refreshError) {
+                    console.log('error in refresh token', refreshError);
                 });
         }
 
@@ -121,9 +120,8 @@ axios.interceptors.response.use(function (response) {
         // 403 forbidden. The user is logged in but doesn't have permission for the request.
         // logout and redirect to login page.
 
-
+        return Promise.reject(error);
     }
-    return Promise.reject(error);
 });
 
 

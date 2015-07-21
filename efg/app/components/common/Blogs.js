@@ -50,6 +50,7 @@ var Blogs = React.createClass({
 
 var BlogItem = React.createClass({
     render: function() {
+        console.log('blogItem', this.props.blog);
         return (
             <li className="blog">
                 <div className="blog__title">
@@ -67,6 +68,7 @@ var BlogItem = React.createClass({
 
 var BlogsList = React.createClass({
     render: function() {
+        console.log('BlogList blogs ', this.props.blogs);
         return (
             <ul className="large-8 medium-10 small-12 small-centered columns">
         {this.props.blogs.map(function(blog, index){

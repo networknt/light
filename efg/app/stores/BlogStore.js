@@ -48,7 +48,7 @@ BlogStore.dispatchToken = AppDispatcher.register(function(payload) {
 
         case ActionTypes.RECEIVE_BLOGS:
             _blogs = payload.json;
-            console.log('_blogs = ', _blogs);
+            console.log('blogStore _blogs = ', _blogs);
             BlogStore.emitChange();
             break;
 
