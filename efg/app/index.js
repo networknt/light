@@ -34,15 +34,7 @@ var buildUrl = require('./utils/buildUrl.js');
 axios.interceptors.request.use(function (config) {
     config.headers = config.headers || {};
     var accessToken = AuthStore.getAccessToken();
-    // TODO Do not put access token into header of refresh token post. In this case,
-    // we don't need to remove the authorizationData before sending refresh token post.
-    // chances are some other requests might be sent during the time slot and got login
-    // is required error and forced to login page.
-    // TODO I really don't like this checking. need to find another way? backend?
     if (accessToken) {
-        if(config.data && config.data.name && config.data.name === 'refreshToken') {
-            return config;
-        }
         config.headers.Authorization = 'Bearer ' + accessToken;
     }
     return config;
@@ -59,63 +51,17 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
     // Do something with response error
     console.log('error response interceptor', error);
-    if(error.status == 401) {
-        console.log('401 error response')
-        if(error.data.error == 'token_expired') {
+    if (error.status == 401) {
+        //console.log('401 error response')
+        if (error.data.error == 'token_expired') {
             console.log('token expired');
-            var savedConfig = error.config;
+            var originalConfig = error.config;
             // get accessToken from refreshToken
-            var refreshToken = {
-                category:'user',
-                name:'refreshToken',
-                readOnly:true,
-                data : {
-                    refreshToken: AuthStore.getRefreshToken(),
-                    userId: AuthStore.getUserId(),
-                    clientId: AppConstants.ClientId
-                }
-            };
-            axios.post('http://example:8080/api/rs', refreshToken)
-                .then(function (refreshResponse) {
-                    console.log('refresh token result', refreshResponse.data);
-                    var accessToken = refreshResponse.data.accessToken;
-                    AuthActionCreators.refresh(accessToken);
-                    // now need to resend the savedConfig here.
-                    savedConfig.headers = savedConfig.headers || {};
-                    var accessToken = AuthStore.getAccessToken();
-                    if(accessToken) {
-                        savedConfig.headers.Authorization = 'Bearer ' + accessToken;
-                    }
-                    console.log('saveConfig before post', savedConfig);
-                    if(savedConfig.method == 'get') {
-                        axios.get(buildUrl(savedConfig.url, savedConfig.params))
-                            .then(function (savedResponse) {
-                                console.log('retry is OK', savedResponse.data);
-                                return savedResponse;
-                            })
-                            .catch(function(savedError) {
-                                console.log('retry get error', savedError.data);
-                                Promise.reject(savedError);
-                            });
-                    } else if (savedConfig.method == 'post') {
-                        axios.post(savedConfig.url, savedConfig.data)
-                            .then(function (response) {
-                                console.log('retry is OK', response.data);
-                                return Promise.resolve(response);
-                            })
-                            .catch(function(response) {
-                                console.log('retry get error', response.data);
-                                Promise.reject(response);
-                            });
-
-                    }
-                })
-                .catch(function(refreshError) {
-                    console.log('error in refresh token', refreshError);
-                });
+            var promise = rereshToken(originalConfig);
+            axios(originalConfig, promise);
         }
 
-    } else if(error.status == 403) {
+    } else if (error.status == 403) {
         console.log('403 error response');
         // 403 forbidden. The user is logged in but doesn't have permission for the request.
         // logout and redirect to login page.
@@ -125,66 +71,68 @@ axios.interceptors.response.use(function (response) {
 });
 
 
-//var httpBuffer = [];
+function refreshToken(originalConfig) {
+    var refreshTokenPost = {
+        category: 'user',
+        name: 'refreshToken',
+        readOnly: true,
+        data: {
+            refreshToken: AuthStore.getRefreshToken(),
+            userId: AuthStore.getUserId(),
+            clientId: AppConstants.ClientId
+        }
+    };
 
-/**
- * init http hooks for oauth
- *
- */
-/*
-AjaxInterceptor.addRequestCallback(function(xhr) {
-    console.debug("request callback",xhr);
-    // get the access token from store and put it into the header.
-    var accessToken = AuthStore.getAccessToken();
-    if(accessToken) {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-    }
-});
+    // Return a new promise.
+    return new Promise(function (resolve, reject) {
+        // Do the usual XHR stuff
+        var req = new XMLHttpRequest();
+        req.open('POST', 'http://example:8080/api/rs');
 
-AjaxInterceptor.addResponseCallback(function(xhr) {
-    console.debug("response",xhr);
-    // intercept token expire error and refresh token.
-    //console.log('xhr.status', xhr.status);
-    //console.log('xhr.requesturl', xhr.responseURL);
-    //console.log('xhr.responseText', xhr.responseText);
-    if(xhr.status === 401 && xhr.responseText === '{"error":"token_expired"}') {
-        console.log('token expired, renewing...');
-        httpBuffer.push(xhr);
-        var refreshToken = {
-            category:'user',
-            name:'refreshToken',
-            readOnly:true,
-            data : {
-                refreshToken: AuthStore.getRefreshToken(),
-                userId: AuthStore.getUserId(),
-                clientId: AppConstants.ClientId
+        req.onload = function () {
+            // This is called even on 404 etc
+            // so check the status
+            if (req.status == 200) {
+                console.log('refresh token success', req.response);
+                var accessToken = JSON.parse(req.response).accessToken;
+                console.log('accessToken in refreshToken', accessToken);
+                AuthActionCreators.refresh(accessToken);
+                originalConfig.headers = originalConfig.headers || {};
+                var accessToken = AuthStore.getAccessToken();
+                if (accessToken) {
+                    originalConfig.headers.Authorization = 'Bearer ' + accessToken;
+                }
+                // Resolve the promise with the response text
+                resolve(req.response);
+            }
+            else {
+                // Otherwise reject with the status text
+                // which will hopefully be a meaningful error
+                reject(Error(req.statusText));
             }
         };
 
-        var refreshReq = new XMLHttpRequest();
-        refreshReq.onreadystatechange = function () {
-            if(refreshReq.readyState == 4 && refreshReq.status == 200) {
-                console.log('refreshToken', refreshReq.responseText);
-                var jsonPayload = JSON.parse(refreshReq.responseText);
-                AuthActionCreators.refresh(jsonPayload.accessToken);
-            }
-            
-        }
-        refreshReq.open('POST', 'http://example:8080/api/rs', true);
-        refreshReq.setRequestHeader('Authorization', '');
-        refreshReq.send(JSON.stringify(refreshToken));
+        // Handle network errors
+        req.onerror = function () {
+            reject(Error("Network Error"));
+        };
 
-    } else {
-        console.log('other error or success that needs to be displayed.', xhr.status);
-        console.log('response', xhr.responseText);
+        // Make the request
+        req.send(JSON.stringify(refreshTokenPost));
+    });
+};
 
+function retryRequest(config, promise) {
+    console.log("retryRequest config", config);
+    function successCallback(response) {
+        console.log('internal retryRequest response', response);
+        promise.resolve(response);
     }
-});
-
-// Will proxify XHR to fire the above callbacks
-AjaxInterceptor.wire();
-*/
-
+    function errorCallback(response) {
+        promise.reject(response);
+    }
+    axios(originalConfig).then(successCallback, errorCallback);
+}
 
 function buildUrl(url, serializedParams) {
     if (serializedParams.length > 0) {
@@ -192,6 +140,10 @@ function buildUrl(url, serializedParams) {
     }
     return url;
 };
+
+function type(obj) {
+    return Object.prototype.toString.call(obj).slice(8, -1);
+}
 
 var router = require('./stores/RouteStore.js').getRouter();
 
