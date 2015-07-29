@@ -50,24 +50,16 @@ axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
     // Do something with response error
-    console.log('error response interceptor', error);
+    //console.log('error response interceptor', error);
     if (error.status == 401) {
         //console.log('401 error response')
         if (error.data.error == 'token_expired') {
             console.log('token expired');
             var originalConfig = error.config;
             // get accessToken from refreshToken
-            var promise = rereshToken(originalConfig);
-            axios(originalConfig, promise);
-        }
-
-    } else if (error.status == 403) {
-        console.log('403 error response');
-        // 403 forbidden. The user is logged in but doesn't have permission for the request.
-        // logout and redirect to login page.
-
-        return Promise.reject(error);
-    }
+            refreshToken(originalConfig).then(axios(originalConfig), null);
+        };
+    };
 });
 
 
@@ -86,6 +78,7 @@ function refreshToken(originalConfig) {
     // Return a new promise.
     return new Promise(function (resolve, reject) {
         // Do the usual XHR stuff
+        console.log('refresh is called.');
         var req = new XMLHttpRequest();
         req.open('POST', 'http://example:8080/api/rs');
 
@@ -122,6 +115,7 @@ function refreshToken(originalConfig) {
     });
 };
 
+/*
 function retryRequest(config, promise) {
     console.log("retryRequest config", config);
     function successCallback(response) {
@@ -133,6 +127,7 @@ function retryRequest(config, promise) {
     }
     axios(originalConfig).then(successCallback, errorCallback);
 }
+*/
 
 function buildUrl(url, serializedParams) {
     if (serializedParams.length > 0) {
