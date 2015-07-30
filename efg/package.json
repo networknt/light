@@ -10,6 +10,7 @@
     "css-loader": "^0.12.1",
     "file-loader": "^0.8.4",
     "flux": "^2.0.3",
+    "jquery": "^2.1.4",
     "jsx-loader": "^0.13.2",
     "jwt-decode": "^1.1.1",
     "keymirror": "^0.1.1",

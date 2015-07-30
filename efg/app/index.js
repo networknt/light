@@ -26,6 +26,73 @@ var Router = require('react-router')
 var AuthActionCreators = require('./actions/AuthActionCreators.js');
 var AuthStore = require('./stores/AuthStore.js');
 var AppConstants = require('./constants/AppConstants.js');
+var $ = require('jquery');
+
+$.ajaxSetup({
+    beforeSend: function (xhr) {
+        console.log('beforeSend', xhr);
+        var accessToken = AuthStore.getAccessToken();
+        if (accessToken) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+        }
+    }
+});
+
+$.ajaxPrefilter(function(options, originalOptions, jqxhr) {
+    // you could pass this option in on a retry so that it doesn't
+    // get all recursive on you.
+    if (options.refreshRetry === true) {
+        return;
+    }
+    // our own deferred object to handle done/fail callbacks
+    var deferred = $.Deferred();
+
+    //self.currentRequests.push(options.url);
+    //jqxhr.always(function(){
+    //    self.currentRequests.splice($.inArray(options.url, self.currentRequests), 1);
+    //});
+    jqxhr.done(deferred.resolve);
+    jqxhr.fail(function() {
+        var args = Array.prototype.slice.call(arguments);
+        var refreshToken = {
+            category: 'user',
+            name: 'refreshToken',
+            readOnly: true,
+            data: {
+                refreshToken: AuthStore.getRefreshToken(),
+                userId: AuthStore.getUserId(),
+                clientId: AppConstants.ClientId
+            }
+        };
+        console.log('jqxhr = ', jqxhr);
+        if (jqxhr.status === 401 && jqxhr.responseText === '{"error":"token_expired"}') {
+            console.log('token expired, renew...');
+            var refreshReq = new XMLHttpRequest();
+            refreshReq.onreadystatechange = function () {
+                if(refreshReq.readyState == 4 && refreshReq.status == 200) {
+                    console.log('refreshToken', refreshReq.responseText);
+                    var jsonPayload = JSON.parse(refreshReq.responseText);
+                    AuthActionCreators.refresh(jsonPayload.accessToken);
+                    var newOpts = $.extend({}, originalOptions, {
+                        refreshRetry: true
+                    });
+                    // pass this one on to our deferred pass or fail.
+                    $.ajax(newOpts).then(deferred.resolve, deferred.reject);
+
+                }
+            }
+            refreshReq.open('POST', 'http://example:8080/api/rs', true);
+            refreshReq.send(JSON.stringify(refreshToken));
+        } else {
+            console.log('other error than 401', jqxhr.responseText);
+            deferred.rejectWith(jqxhr, args);
+        }
+    });
+
+    return deferred.promise(jqxhr);
+});
+
+/*
 var axios = require('axios');
 var buildUrl = require('./utils/buildUrl.js');
 
@@ -115,7 +182,7 @@ function refreshToken(originalConfig) {
     });
 };
 
-/*
+
 function retryRequest(config, promise) {
     console.log("retryRequest config", config);
     function successCallback(response) {
@@ -127,7 +194,6 @@ function retryRequest(config, promise) {
     }
     axios(originalConfig).then(successCallback, errorCallback);
 }
-*/
 
 function buildUrl(url, serializedParams) {
     if (serializedParams.length > 0) {
@@ -139,6 +205,7 @@ function buildUrl(url, serializedParams) {
 function type(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1);
 }
+*/
 
 var router = require('./stores/RouteStore.js').getRouter();
 

@@ -3,7 +3,7 @@
  */
 var ServerActionCreators = require('../actions/ServerActionCreators.js');
 var AppConstants = require('../constants/AppConstants.js');
-var request = require('axios');
+var $ = require('jquery');
 
 function _getErrors(res) {
     var errorMsgs = ["Something went wrong, please try again"];
@@ -58,35 +58,21 @@ module.exports = {
         };
 
         console.log('SIGNIN', APIEndpoints.SIGNIN);
-
-        request.post(APIRoot, APIEndpoints.SIGNIN)
-        .then(function (response) {
-            console.log('login response data', response.data);
-            ServerActionCreators.receiveLogin(response.data, null);
-        })
-        .catch(function (response) {
-            console.log('login catch response data', response.data);
-            ServerActionCreators.receiveLogin(null, response.data);
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: 'http://example:8080/api/rs',
+            data: JSON.stringify(APIEndpoints.SIGNIN),
+            dataType: 'json',
+            error: function(jqXHR, status, error) {
+                console.log('login error', error);
+                ServerActionCreators.receiveLogin(null, error);
+            },
+            success: function(result, status, xhr) {
+                console.log('login success', result);
+                ServerActionCreators.receiveLogin(result, null);
+            }
         });
-
-        /*
-        request.post(APIRoot)
-            .send(APIEndpoints.SIGNIN)
-            .set('Accept', 'application/json')
-            .end(function(error, res){
-                if (res) {
-                    console.log('res =', res);
-                    if (res.error) {
-                        var errorMsgs = _getErrors(res);
-                        ServerActionCreators.receiveLogin(null, errorMsgs);
-                    } else {
-                        console.log('res.text', res.text);
-                        ServerActionCreators.receiveLogin(res.text, null);
-                    }
-                }
-            });
-        */
-
     },
 
     loadBlogs: function() {
@@ -96,15 +82,18 @@ module.exports = {
             readOnly: true
         }
         console.log('WebAPIUtils logBlogs is called');
-        request.get('http://example:8080/api/rs', {params: { cmd: encodeURIComponent(JSON.stringify(getBlogs))}})
-            .then(function(response) {
-                console.log('loadBlogs data', response.data);
-                ServerActionCreators.receiveBlogs(response.data, null);
-            })
-            .catch(function(){
-                console.log('catch loadBlogs', response.data);
-                ServerActionCreators.receiveBlogs(null, response.data);
-            });
+        $.ajax({
+            type: 'GET',
+            url: 'http://example:8080/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getBlogs))}
+        }).done(function(data) {
+            console.log('done', data);
+            ServerActionCreators.receiveBlogs(data, null);
+
+        }).fail(function(error) {
+            console.log('error', error);
+            ServerActionCreators.receiveBlogs(null, error);
+        });
     },
 
     loadBlog: function(blogId) {
