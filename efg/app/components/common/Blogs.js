@@ -55,12 +55,10 @@ var BlogItem = React.createClass({
             <li className="blog">
                 <div className="blog__title">
                     <Link to="blog" params={ {blogId: this.props.blog.id} }>
-            {this.props.blog.title}
+            {this.props.blog.label}
                     </Link>
                 </div>
-                <div className="blog__body">{this.props.blog['abstract']}...</div>
-                <span className="blog__user">{this.props.blog.user.username}</span>
-                <span className="blog__date"> - {timeago(this.props.blog.created_at)}</span>
+                <div className="blog__body">{this.props.blog.value}</div>
             </li>
         );
     }

@@ -27,6 +27,32 @@ var AuthActionCreators = require('./actions/AuthActionCreators.js');
 var AuthStore = require('./stores/AuthStore.js');
 var AppConstants = require('./constants/AppConstants.js');
 var $ = require('jquery');
+var buffer = [];  // save all the requests that gets token expired
+var refreshing = false;
+
+function replayBuffer() {
+    var deferred;
+    var promises = [];
+
+    for(var i in buffer) {
+        deferred = buffer[i].deferred;
+        buffer[i].options.refreshRetry = true;
+        promises.push($.ajax(buffer[i].options).then(deferred.resolve, deferred.reject));
+    }
+
+    buffer = [];
+
+    $.when.apply($, promises)
+        .done(function() {
+            console.log('retry requests are all done');
+            refreshing = false;
+        })
+        .fail(function(){
+            refreshing = false;
+            console.log('at least one retry failed');
+            AuthActionCreators.logout();
+        });
+};
 
 $.ajaxSetup({
     beforeSend: function (xhr) {
@@ -67,22 +93,23 @@ $.ajaxPrefilter(function(options, originalOptions, jqxhr) {
         console.log('jqxhr = ', jqxhr);
         if (jqxhr.status === 401 && jqxhr.responseText === '{"error":"token_expired"}') {
             console.log('token expired, renew...');
-            var refreshReq = new XMLHttpRequest();
-            refreshReq.onreadystatechange = function () {
-                if(refreshReq.readyState == 4 && refreshReq.status == 200) {
-                    console.log('refreshToken', refreshReq.responseText);
-                    var jsonPayload = JSON.parse(refreshReq.responseText);
-                    AuthActionCreators.refresh(jsonPayload.accessToken);
-                    var newOpts = $.extend({}, originalOptions, {
-                        refreshRetry: true
-                    });
-                    // pass this one on to our deferred pass or fail.
-                    $.ajax(newOpts).then(deferred.resolve, deferred.reject);
-
+            buffer.push({options: options, deferred: deferred});
+            if(!refreshing) {
+                var refreshReq = new XMLHttpRequest();
+                refreshReq.onreadystatechange = function () {
+                    if(refreshReq.readyState == 4 && refreshReq.status == 200) {
+                        console.log('refreshToken', refreshReq.responseText);
+                        var jsonPayload = JSON.parse(refreshReq.responseText);
+                        AuthActionCreators.refresh(jsonPayload.accessToken);
+                        replayBuffer();
+                    } else {
+                        console.log('failed to get access token from refresh token');
+                        AuthActionCreators.logout();
+                    }
                 }
+                refreshReq.open('POST', 'http://example:8080/api/rs', true);
+                refreshReq.send(JSON.stringify(refreshToken));
             }
-            refreshReq.open('POST', 'http://example:8080/api/rs', true);
-            refreshReq.send(JSON.stringify(refreshToken));
         } else {
             console.log('other error than 401', jqxhr.responseText);
             deferred.rejectWith(jqxhr, args);

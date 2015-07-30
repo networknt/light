@@ -16,6 +16,7 @@ var Signup = require('./components/auth/Signup.js');
 var About = require('./components/common/About.js');
 var Contact = require('./components/common/Contact.js');
 var Blogs = require('./components/common/Blogs.js');
+var Blog = require('./components/common/Blog.js');
 var Admin = React.createClass({
     render: function() {
         return <div>Admin</div>;
@@ -48,6 +49,7 @@ module.exports = (
         <Route name="about" path="/about" handler={About} />
         <Route name="contact" path="/contact" handler={Contact} />
         <Route name="blogs" path="/blogs" handler={Blogs} />
+        <Route name="blog" path="/blog" handler={Blog} />
         <Route name="roleAdmin" path="/admin/roleAdmin" handler={RoleAdmin} />
         <Route name="userAdmin" path="/admin/userAdmin" handler={UserAdmin} />
         <Route name="blogAdmin" path="/admin/blogAdmin" handler={BlogAdmin} />

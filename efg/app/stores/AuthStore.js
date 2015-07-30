@@ -110,7 +110,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             if(_rememberMe) {
                 _rememberMe = false;
                 _refreshToken = null;
-                localStorageStorage.removeItem('refreshToken');
+                localStorage.removeItem('refreshToken');
             }
             AuthStore.emitChange();
             break;
