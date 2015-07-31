@@ -20,6 +20,7 @@ function _getErrors(res) {
 
 var APIEndpoints = AppConstants.APIEndpoints;
 var APIRoot = AppConstants.APIRoot;
+var host = AppConstants.host;
 var ClientId = AppConstants.ClientId;
 
 module.exports = {
@@ -72,6 +73,23 @@ module.exports = {
                 console.log('login success', result);
                 ServerActionCreators.receiveLogin(result, null);
             }
+        });
+    },
+
+    loadMenu: function() {
+        console.log('WebAPIUtils loadMenus is called');
+        $.ajax({
+            type: 'POST',
+            url: 'http://example:8080/api/rs',
+            data: JSON.stringify(APIEndpoints.GETMENU),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            console.log('done', data);
+            ServerActionCreators.receiveMenu(data, null);
+        }).fail(function(error) {
+            console.log('error', error);
+            ServerActionCreators.receiveMenu(null, error);
         });
     },
 

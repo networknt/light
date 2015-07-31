@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 var keyMirror = require('keymirror');
-
+var host = 'example';
 
 module.exports = {
+
     APIRoot:  'http://example:8080/api/rs',
 
     ClientId: 'example@Browser',
@@ -29,6 +30,14 @@ module.exports = {
         },
         REGISTRATION:   {
 
+        },
+        GETMENU: {
+            category : 'menu',
+            name : 'getMenu',
+            readOnly: true,
+            data : {
+                host : host
+            }
         }
     },
 
@@ -41,7 +50,9 @@ module.exports = {
         INIT: null,
         SIGNUP_REQUEST: null,
 
-
+        // Menu
+        LOAD_MENU: null,
+        RECEIVE_MENU: null,
         // Routes
         REDIRECT: null,
 

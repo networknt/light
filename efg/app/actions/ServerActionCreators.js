@@ -24,6 +24,14 @@ module.exports = {
         });
     },
 
+    receiveMenu: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_MENU,
+            json: json,
+            error: error
+        });
+    },
+
     receiveStory: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_STORY,

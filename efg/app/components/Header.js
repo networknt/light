@@ -8,6 +8,8 @@ var Router = require('react-router')
 
 var ReactPropTypes = React.PropTypes;
 var AuthActionCreators = require('../actions/AuthActionCreators.js');
+var MenuActionCreators = require('../actions/MenuActionCreators.js');
+var MenuStore = require('../stores/MenuStore.js');
 
 var ReactBootstrap = require('react-bootstrap')
     , Nav = ReactBootstrap.Nav
@@ -25,12 +27,34 @@ var ReactRouterBootstrap = require('react-router-bootstrap')
     , ListGroupItemLink = ReactRouterBootstrap.ListGroupItemLink;
 
 
-
 var Header = React.createClass({
 
     propTypes: {
         isLoggedIn: ReactPropTypes.bool,
         email: ReactPropTypes.string
+    },
+
+    getInitialState: function() {
+        return {
+            menu: MenuStore.getMenu(),
+            errors: []
+        };
+    },
+
+    componentDidMount: function() {
+        MenuStore.addChangeListener(this._onChange);
+        MenuActionCreators.loadMenu();
+    },
+
+    componentWillUnmount: function() {
+        MenuStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function() {
+        this.setState({
+            menu: MenuStore.getMenu(),
+            errors: MenuStore.getErrors()
+        });
     },
 
     logout: function(e) {
