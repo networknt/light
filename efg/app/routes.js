@@ -7,16 +7,19 @@ var Route = Router.Route;
 var DefaultRoute = Router.DefaultRoute;
 
 var App = require('./components/App.js');
-var Login = require('./components/auth/Login.js');
-var Logout = require('./components/auth/Logout.js');
+var LogIn = require('./components/auth/Login.js');
+var LogOut = require('./components/auth/Logout.js');
 //var Stories = require('./components/stories/StoriesPage.react.jsx');
 //var Story = require('./components/stories/StoryPage.react.jsx');
 //var StoryNew = require('./components/stories/StoryNew.react.jsx');
-var Signup = require('./components/auth/Signup.js');
+var SignUp = require('./components/auth/Signup.js');
 var About = require('./components/common/About.js');
 var Contact = require('./components/common/Contact.js');
 var Blogs = require('./components/common/Blogs.js');
 var Blog = require('./components/common/Blog.js');
+var News = require('./components/common/News.js');
+var Forum = require('./components/common/Forum.js');
+
 var Admin = React.createClass({
     render: function() {
         return <div>Admin</div>;
@@ -50,12 +53,15 @@ module.exports = (
         <Route name="contact" path="/contact" handler={Contact} />
         <Route name="blogs" path="/blogs" handler={Blogs} />
         <Route name="blog" path="/blog" handler={Blog} />
+        <Route name="news" path="/news" handler={News} />
+        <Route name="forum" path="/forum" handler={Forum} />
+        <Route name="admin" path="/admin" handler={Admin} />
         <Route name="roleAdmin" path="/admin/roleAdmin" handler={RoleAdmin} />
         <Route name="userAdmin" path="/admin/userAdmin" handler={UserAdmin} />
         <Route name="blogAdmin" path="/admin/blogAdmin" handler={BlogAdmin} />
         <Route name="accessAdmin" path="/admin/accessAdmin" handler={AccessAdmin} />
-        <Route name="login" path="/login" handler={Login}/>
-        <Route name="logout" path="/logout" handler={Logout}/>
-        <Route name="signup" path="/signup" handler={Signup}/>
+        <Route name="logIn" path="/logIn" handler={LogIn}/>
+        <Route name="logOut" path="/logOut" handler={LogOut}/>
+        <Route name="signUp" path="/signUp" handler={SignUp}/>
     </Route>
 );

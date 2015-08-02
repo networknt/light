@@ -45,6 +45,10 @@ var AuthStore = assign({}, EventEmitter.prototype, {
         return _refreshToken;
     },
 
+    getRoles: function () {
+        return _currentUser.roles;
+    },
+
     getUserId: function() {
         return _currentUser.userId;
     },
