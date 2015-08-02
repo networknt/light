@@ -104,8 +104,7 @@ var Header = React.createClass({
                     if(item.left && this.hasAccess(item)) {
                         if(item.out_Own) {
                             console.log('this one has outOwn', item.out_Own);
-                            return
-                            <DropdownButton title={item.label} >
+                            return <DropdownButton title={item.label} >
                             {item.out_Own.map(function(subItem, subIndex) {
                                 return <NavItemLink to={subItem.menuItemId}>{subItem.label}</NavItemLink>
                             }, this)}

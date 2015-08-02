@@ -47,6 +47,65 @@ var AccessAdmin = React.createClass({
     }
 });
 
+var DbAdmin = React.createClass({
+    render: function() {
+        return <div>DbAdmin</div>;
+    }
+});
+
+var MenuAdmin = React.createClass({
+    render: function() {
+        return <div>MenuAdmin</div>;
+    }
+});
+
+var RuleAdmin = React.createClass({
+    render: function() {
+        return <div>RuleAdmin</div>;
+    }
+});
+
+var FormAdmin = React.createClass({
+    render: function() {
+        return <div>FormAdmin</div>;
+    }
+});
+
+var PageAdmin = React.createClass({
+    render: function() {
+        return <div>PageAdmin</div>;
+    }
+});
+
+var HostAdmin = React.createClass({
+    render: function() {
+        return <div>HostAdmin</div>;
+    }
+});
+
+var ForumAdmin = React.createClass({
+    render: function() {
+        return <div>ForumAdmin</div>;
+    }
+});
+var NewsAdmin = React.createClass({
+    render: function() {
+        return <div>NewsAdmin</div>;
+    }
+});
+
+var ProductAdmin = React.createClass({
+    render: function() {
+        return <div>ProductAdmin</div>;
+    }
+});
+
+var CatalogAdmin = React.createClass({
+    render: function() {
+        return <div>CatalogAdmin</div>;
+    }
+});
+
 module.exports = (
     <Route name="app" path="/" handler={App}>
         <Route name="about" path="/about" handler={About} />
@@ -59,7 +118,17 @@ module.exports = (
         <Route name="roleAdmin" path="/admin/roleAdmin" handler={RoleAdmin} />
         <Route name="userAdmin" path="/admin/userAdmin" handler={UserAdmin} />
         <Route name="blogAdmin" path="/admin/blogAdmin" handler={BlogAdmin} />
+        <Route name="forumAdmin" path="/admin/forumAdmin" handler={ForumAdmin} />
+        <Route name="newsAdmin" path="/admin/newsAdmin" handler={NewsAdmin} />
+        <Route name="productAdmin" path="/admin/productAdmin" handler={ProductAdmin} />
+        <Route name="catalogAdmin" path="/admin/catalogAdmin" handler={ProductAdmin} />
         <Route name="accessAdmin" path="/admin/accessAdmin" handler={AccessAdmin} />
+        <Route name="dbAdmin" path="/admin/dbAdmin" handler={DbAdmin} />
+        <Route name="menuAdmin" path="/admin/menuAdmin" handler={MenuAdmin} />
+        <Route name="ruleAdmin" path="/admin/ruleAdmin" handler={RuleAdmin} />
+        <Route name="formAdmin" path="/admin/formAdmin" handler={FormAdmin} />
+        <Route name="pageAdmin" path="/admin/pageAdmin" handler={PageAdmin} />
+        <Route name="hostAdmin" path="/admin/hostAdmin" handler={HostAdmin} />
         <Route name="logIn" path="/logIn" handler={LogIn}/>
         <Route name="logOut" path="/logOut" handler={LogOut}/>
         <Route name="signUp" path="/signUp" handler={SignUp}/>
