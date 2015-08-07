@@ -91,7 +91,7 @@ var Header = React.createClass({
                 {outOwn.map(function(item, index){
                     //console.log('item = ', item);
                     if(!item.left && this.hasAccess(item)) {
-                        return <NavItemLink to={item.menuItemId}>{item.label}</NavItemLink>
+                        return <NavItemLink key={item.menuItemId} to={item.menuItemId}>{item.label}</NavItemLink>
                     }
                 }, this)}
             </Nav>
@@ -104,13 +104,13 @@ var Header = React.createClass({
                     if(item.left && this.hasAccess(item)) {
                         if(item.out_Own) {
                             console.log('this one has outOwn', item.out_Own);
-                            return <DropdownButton title={item.label} >
+                            return <DropdownButton key={item.menuItemId} title={item.label} >
                             {item.out_Own.map(function(subItem, subIndex) {
-                                return <NavItemLink to={subItem.menuItemId}>{subItem.label}</NavItemLink>
+                                return <NavItemLink key={subItem.menuItemId} to={subItem.menuItemId}>{subItem.label}</NavItemLink>
                             }, this)}
                             </DropdownButton>
                         } else {
-                            return <NavItemLink to={item.menuItemId}>{item.label}</NavItemLink>
+                            return <NavItemLink key={item.menuItemId} to={item.menuItemId}>{item.label}</NavItemLink>
                         }
                     }
                 }, this)}
