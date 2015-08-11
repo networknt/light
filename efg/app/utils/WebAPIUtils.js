@@ -62,7 +62,7 @@ module.exports = {
         $.ajax({
             type: 'POST',
             contentType: 'application/json',
-            url: 'http://example:8080/api/rs',
+            url: '/api/rs',
             data: JSON.stringify(APIEndpoints.SIGNIN),
             dataType: 'json',
             error: function(jqXHR, status, error) {
@@ -80,7 +80,7 @@ module.exports = {
         console.log('WebAPIUtils loadMenus is called');
         $.ajax({
             type: 'POST',
-            url: 'http://example:8080/api/rs',
+            url: '/api/rs',
             data: JSON.stringify(APIEndpoints.GETMENU),
             contentType: 'application/json',
             dataType: 'json'
@@ -102,7 +102,7 @@ module.exports = {
         console.log('WebAPIUtils logBlogs is called');
         $.ajax({
             type: 'GET',
-            url: 'http://example:8080/api/rs',
+            url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getBlogs))}
         }).done(function(data) {
             console.log('done', data);

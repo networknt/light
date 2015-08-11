@@ -18,7 +18,7 @@ var host = 'example';
 
 module.exports = {
 
-    APIRoot:  'http://example:8080/api/rs',
+    APIRoot:  '/api/rs',
 
     ClientId: 'example@Browser',
 
