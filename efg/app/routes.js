@@ -20,6 +20,7 @@ var Blog = require('./components/common/Blog.js');
 var News = require('./components/common/News.js');
 var Forum = require('./components/common/Forum.js');
 var Catalog = require('./components/catalog/Catalog.js');
+var Cart = require('./components/catalog/Cart.js');
 
 var Admin = React.createClass({
     render: function() {
@@ -110,6 +111,7 @@ var CatalogAdmin = React.createClass({
 module.exports = (
     <Route name="app" path="/" handler={App}>
         <Route name="about" path="/about" handler={About} />
+        <Route name="cart" path="/cart" handler={Cart} />
         <Route name="contact" path="/contact" handler={Contact} />
         <Route name="blogs" path="/blogs" handler={Blogs} />
         <Route name="blog" path="/blog" handler={Blog} />

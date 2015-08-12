@@ -68,7 +68,7 @@ var Header = React.createClass({
     },
 
     hasAccess: function(item) {
-        //console.log('AuthStore.getRoles() = ', AuthStore.getRoles());
+        console.log('AuthStore.getRoles() = ', AuthStore.getRoles());
         //console.log('item.roles', item.roles);
         for (var i = 0; i < AuthStore.getRoles().length; i++) {
             if (item.roles != null) {
