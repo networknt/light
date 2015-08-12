@@ -116,6 +116,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                 _refreshToken = null;
                 localStorage.removeItem('refreshToken');
             }
+            _currentUser = { userId: '', roles: ['anonymous']};
             AuthStore.emitChange();
             break;
         case ActionTypes.INIT:
