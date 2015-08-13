@@ -16,6 +16,7 @@
     "keymirror": "^0.1.1",
     "less": "^2.5.1",
     "less-loader": "^2.2.0",
+    "lodash": "^3.10.1",
     "object-assign": "^3.0.0",
     "react": "^0.13.3",
     "react-bootstrap": "^0.24.3",

@@ -27,6 +27,8 @@ var ReactRouterBootstrap = require('react-router-bootstrap')
     , ButtonLink = ReactRouterBootstrap.ButtonLink
     , ListGroupItemLink = ReactRouterBootstrap.ListGroupItemLink;
 
+var CheckoutButton = require('./cart/CheckoutButton.js');
+
 
 var Header = React.createClass({
 
@@ -91,7 +93,13 @@ var Header = React.createClass({
                 {outOwn.map(function(item, index){
                     //console.log('item = ', item);
                     if(!item.left && this.hasAccess(item)) {
-                        return <NavItemLink key={item.menuItemId} to={item.menuItemId}>{item.label}</NavItemLink>
+                        if(item.menuItemId == 'cart') {
+                            return <NavItemLink key={item.menuItemId} to={item.menuItemId}>
+                                <CheckoutButton/>
+                            </NavItemLink>
+                        } else {
+                            return <NavItemLink key={item.menuItemId} to={item.menuItemId}>{item.label}</NavItemLink>
+                        }
                     }
                 }, this)}
             </Nav>

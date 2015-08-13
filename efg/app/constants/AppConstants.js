@@ -62,7 +62,17 @@ module.exports = {
         LOAD_BLOG: null,
         RECEIVE_BLOG: null,
         CREATE_BLOG: null,
-        RECEIVE_CREATED_BLOG: null
+        RECEIVE_CREATED_BLOG: null,
+
+        // Commerce
+        RECEIVE_ALL_PRODUCTS: null, // load mock products
+        ADD_PRODUCT_TO_CART: null,
+        SET_PRODUCT_VARIANT: null, // set product variation
+        SET_QTY: null,
+        REMOVE_CART_ITEM: null,
+        SET_PRODUCT_INVENTORY: null,
+        REMOVE_ONE_FROM_INVENTORY: null,
+        TOGGLE_CART: null // Open/close cart
     })
 
 };
