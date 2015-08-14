@@ -20,7 +20,7 @@ var Blog = require('./components/common/Blog.js');
 var News = require('./components/common/News.js');
 var Forum = require('./components/common/Forum.js');
 var Catalog = require('./components/catalog/Catalog.js');
-var Cart = require('./components/catalog/Cart.js');
+var Cart = require('./components/cart/Cart.js');
 
 var Admin = React.createClass({
     render: function() {

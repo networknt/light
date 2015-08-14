@@ -49,8 +49,8 @@ module.exports = {
     },
 
     receiveAll: function(products) {
-        Dispatcher.dispatch({
-            type: Constant.RECEIVE_ALL_PRODUCTS,
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_ALL_PRODUCTS,
             products: products
         });
     }
