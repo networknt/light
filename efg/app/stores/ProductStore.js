@@ -99,3 +99,4 @@ ProductStore.dispatchToken = AppDispatcher.register(function(action) {
 var productStore = new ProductStore();
 
 module.exports = productStore;
+                
