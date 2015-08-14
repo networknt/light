@@ -93,31 +93,31 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch (type) {
 
         case ActionTypes.ADD_PRODUCT_TO_CART:
-            var product = action.product;
+            var product = payload.product;
             var i = product.variantIndex;
             var cartItem = _getItemBySku(product.variants[i].sku);
             if(!cartItem) {
-                var newItem = _create(action.product);
+                var newItem = _create(payload.product);
                 _add(newItem);
             }else {
                 cartItem.qty += 1;
             }
-            cartStore.emitChange();
+            CartStore.emitChange();
             break;
 
         case ActionTypes.SET_QTY:
-            _setQty(action.qty, action.sku);
-            cartStore.emitChange();
+            _setQty(action.qty, payload.sku);
+            CartStore.emitChange();
             break;
 
         case ActionTypes.REMOVE_CART_ITEM:
-            _remove(action.sku);
-            cartStore.emitChange();
+            _remove(payload.sku);
+            CartStore.emitChange();
             break;
 
         case ActionTypes.TOGGLE_CART:
             _toggleCart();
-            cartStore.emitChange();
+            CartStore.emitChange();
             break;
 
         default:
