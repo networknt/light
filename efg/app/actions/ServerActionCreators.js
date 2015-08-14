@@ -25,6 +25,7 @@ module.exports = {
     },
 
     receiveMenu: function(json, error) {
+        console.log('ServerActionCreators receiveMenu', json);
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_MENU,
             json: json,
@@ -45,7 +46,13 @@ module.exports = {
             json: json,
             errors: errors
         });
-    }
+    },
 
+    receiveAll: function(products) {
+        Dispatcher.dispatch({
+            type: Constant.RECEIVE_ALL_PRODUCTS,
+            products: products
+        });
+    }
 };
 

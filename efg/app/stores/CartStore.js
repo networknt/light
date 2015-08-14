@@ -1,8 +1,6 @@
 /**
  * Created by steve on 12/08/15.
  */
-'use strict';
-
 var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var EventEmitter = require('events').EventEmitter;
@@ -48,53 +46,52 @@ function _toggleCart() {
     _isOpen = !_isOpen;
 }
 
-class CartStore extends EventEmitter {
+var CartStore = assign({}, EventEmitter.prototype, {
 
-    constructor() {
-        super();
-    }
-
-    addChangeListener(callback) {
-        this.on(CHANGE_EVENT, callback);
-    }
-
-    removeChangeListener(callback) {
-        this.removeListener(CHANGE_EVENT, callback);
-    }
-
-    emitChange() {
+    emitChange: function() {
         this.emit(CHANGE_EVENT);
-    }
+    },
 
-    getAll() {
+    addChangeListener: function(callback) {
+        this.on(CHANGE_EVENT, callback);
+    },
+
+    removeChangeListener: function(callback) {
+        this.removeListener(CHANGE_EVENT, callback);
+    },
+
+    getAll: function() {
+        console.log('CartStore getAll is called', _cartItems);
         return _cartItems;
-    }
+    },
 
-    getCartItemsCount() {
+    getCartItemsCount: function() {
+        console.log('CartStore getCartItemsCound is called');
         return _.reduce(_cartItems, function(count, item) {
             return (count = count + Number(item.qty));
         }, 0);
-    }
+    },
 
-    getCartTotal() {
+    getCartTotal: function() {
+        console.log('CartStore getCartTotal is called');
         return _.reduce(_cartItems, function(total, item) {
             total = total + Number(item.price * item.qty);
             total.toFixed(2);
             return total;
         }, 0);
-    }
+    },
 
-    getCartStatus() {
+    getCartStatus: function() {
+        console.log('CartStore getCartStatus is called', _isOpen)
         return _isOpen;
     }
+});
 
-}
 
-var cartStore = new CartStore();
+CartStore.dispatchToken = AppDispatcher.register(function(payload) {
+    var type = payload.type;
+    switch (type) {
 
-CartStore.DispactToken = AppDispatcher.register(function(action) {
-
-    switch(action.type) {
         case ActionTypes.ADD_PRODUCT_TO_CART:
             var product = action.product;
             var i = product.variantIndex;
@@ -125,10 +122,9 @@ CartStore.DispactToken = AppDispatcher.register(function(action) {
 
         default:
             return true;
+
     }
-
     return true;
-
 });
 
-module.exports = cartStore;
+module.exports = CartStore;
