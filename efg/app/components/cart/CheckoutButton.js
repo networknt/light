@@ -3,7 +3,6 @@
  */
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var CheckoutModal = require('./CheckoutModal');
 var Modal = require('react-bootstrap').Modal;
 var ModalHeader = require('react-bootstrap').ModalHeader;
 var ModalBody = require('react-bootstrap').ModalBody;
@@ -11,7 +10,7 @@ var ModalFooter = require('react-bootstrap').ModalFooter;
 var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
-var CheckoutCart = require('./CheckoutCart')
+var Cart = require('./Cart')
 var CheckoutDone = require('./CheckoutDone')
 
 function getStateFromStores() {
@@ -50,12 +49,14 @@ var CheckoutButton = React.createClass({
     },
 
     render: function() {
-        var contents = <CheckoutCart
-            cartItems={this.state.cartItems}
-            onCheckout={this.onCheckout}
-            totalPrice={ this.state.cartTotal.toFixed(2) }
-            onRequestHide={this.state.onRequestHide}
-            />;
+        var buyButton
+        if (this.state.cartItems.length > 0) {
+            buyButton = (
+                <Button className="btn btn-success" onClick={this.state.onCheckout}>
+                    Buy now <span className="glyphicon glyphicon-play"></span>
+                </Button>
+            )
+        }
 
         return (
             <div>
@@ -69,10 +70,13 @@ var CheckoutButton = React.createClass({
                         <Modal.Title>Cart</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        {contents}
+                        <Cart cartItems={ this.state.cartItems } totalPrice={ this.state.totalPrice } />
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={this.close}>Close</Button>
+                        {buyButton}
+                        <Button className="btn btn-default" onClick={this.close}>
+                            <span className="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             </div>
