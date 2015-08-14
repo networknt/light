@@ -11,6 +11,8 @@ var ModalFooter = require('react-bootstrap').ModalFooter;
 var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
+var CheckoutCart = require('./CheckoutCart')
+var CheckoutDone = require('./CheckoutDone')
 
 function getStateFromStores() {
     return {
@@ -48,6 +50,13 @@ var CheckoutButton = React.createClass({
     },
 
     render: function() {
+        var contents = <CheckoutCart
+            cartItems={this.state.cartItems}
+            onCheckout={this.onCheckout}
+            totalPrice={ this.state.cartTotal.toFixed(2) }
+            onRequestHide={this.state.onRequestHide}
+            />;
+
         return (
             <div>
                 <div onClick={this.open}>
@@ -57,11 +66,10 @@ var CheckoutButton = React.createClass({
                 </div>
                 <Modal show={this.state.showModal} onHide={this.close}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title>Cart</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <h4>Text in a modal</h4>
-                        <h4>Overflowing text to show scroll behavior</h4>
+                        {contents}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.close}>Close</Button>
