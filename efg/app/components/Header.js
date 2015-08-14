@@ -125,30 +125,6 @@ var Header = React.createClass({
             </Nav>
         );
 
-        /*
-        var rightNav = this.props.isLoggedIn ? (
-            <Nav navbar right>
-                <NavItemLink to="logout" onClick={this.logout}>Logout</NavItemLink>
-            </Nav>
-        ) : (
-            <Nav navbar right>
-                <NavItemLink to="login" eventKey={8}>Login</NavItemLink>
-                <NavItemLink to="signup" eventKey={9}>Signup</NavItemLink>
-            </Nav>
-        );
-         <Nav navbar>
-         <NavItemLink to="about" eventKey={1}>About</NavItemLink>
-         <NavItemLink to="contact" eventKey={2}>Contact</NavItemLink>
-         <NavItemLink to="blogs" eventKey={3}>Blogs</NavItemLink>
-         <DropdownButton eventKey={4} title='Admin' >
-         <MenuItemLink to="roleAdmin" eventKey={5} onSelect={()=>{}}>Role Admin</MenuItemLink>
-         <MenuItemLink to="userAdmin" eventKey={6} onSelect={()=>{}}>User Admin</MenuItemLink>
-         <MenuItemLink to="blogAdmin" eventKey={7}>Blog Admin</MenuItemLink>
-         <MenuItemLink to="accessAdmin" eventKey={8}>Access Admin</MenuItemLink>
-         </DropdownButton>
-         </Nav>
-
-        */
         return (
             <div>
                 <Navbar brand={<a href='/'>React-Bootstrap</a>} toggleNavKey={0}>
