@@ -47,7 +47,7 @@ RouteStore.dispatchToken = AppDispatcher.register(function(payload) {
         AuthStore.dispatchToken,
         BlogStore.dispatchToken
     ]);
-    console.log('payload', payload);
+    //console.log('payload', payload);
     var type = payload.type;
 
     switch(type) {

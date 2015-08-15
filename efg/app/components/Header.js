@@ -70,7 +70,7 @@ var Header = React.createClass({
     },
 
     hasAccess: function(item) {
-        console.log('AuthStore.getRoles() = ', AuthStore.getRoles());
+        //console.log('AuthStore.getRoles() = ', AuthStore.getRoles());
         //console.log('item.roles', item.roles);
         for (var i = 0; i < AuthStore.getRoles().length; i++) {
             if (item.roles != null) {
@@ -94,9 +94,9 @@ var Header = React.createClass({
                     //console.log('item = ', item);
                     if(!item.left && this.hasAccess(item)) {
                         if(item.menuItemId == 'cart') {
-                            return <NavItemLink key={item.menuItemId} to={item.menuItemId}>
+                            return <NavItem>
                                 <CheckoutButton/>
-                            </NavItemLink>
+                            </NavItem>
                         } else {
                             return <NavItemLink key={item.menuItemId} to={item.menuItemId}>{item.label}</NavItemLink>
                         }

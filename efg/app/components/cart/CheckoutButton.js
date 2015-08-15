@@ -11,7 +11,6 @@ var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
 var Cart = require('./Cart')
-var CheckoutDone = require('./CheckoutDone')
 
 function getStateFromStores() {
     return {
@@ -38,6 +37,7 @@ var CheckoutButton = React.createClass({
 
     open: function() {
         this.setState({showModal: true});
+        //console.log('cartItems = ', this.state.cartItems);
     },
 
     componentDidMount: function() {
@@ -85,13 +85,8 @@ var CheckoutButton = React.createClass({
 
     _onChange: function() {
         this.setState(getStateFromStores());
-    },
-
-    _toggleCart: function (e) {
-        e.preventDefault();
-        CartActionCreators.toggleCart();
+        console.log('onChange is called', this.state.cartItems);
     }
-
 
 });
 

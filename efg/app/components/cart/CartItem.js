@@ -60,16 +60,16 @@ var CartItem = React.createClass({
         var sku = this.props.cartItem.sku;
         var id = this.props.cartItem.id;
         var initialInventory = this.props.cartItem.initialInventory;
-        CartActionCreator.setQty(qty, sku);
-        ProductActionCreator.setInventory(id, initialInventory, qty);
+        CartActionCreators.setQty(qty, sku);
+        ProductActionCreators.setInventory(id, initialInventory, qty);
     },
 
     _onClickRemove: function(e) {
         e.preventDefault();
         var id = this.props.cartItem.id;
         var initialInventory = this.props.cartItem.initialInventory;
-        CartActionCreator.remove(this.props.cartItem.sku);
-        ProductActionCreator.setInventory(id, initialInventory, null);
+        CartActionCreators.remove(this.props.cartItem.sku);
+        ProductActionCreators.setInventory(id, initialInventory, null);
     }
 
 });

@@ -63,7 +63,7 @@ class ProductStore extends EventEmitter {
 
 ProductStore.dispatchToken = AppDispatcher.register(function(action) {
 
-    console.info(`Action type: ${action.type}`);
+    //console.info(`Action type: ${action.type}`);
     switch(action.type) {
         case ActionTypes.RECEIVE_ALL_PRODUCTS:
             console.log('received products');

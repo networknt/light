@@ -64,9 +64,9 @@ var AuthStore = assign({}, EventEmitter.prototype, {
 });
 
 AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
-    console.log('payload', payload);
+    //console.log('payload', payload);
     var type = payload.type;
-    console.log('type', type);
+    //console.log('type', type);
     switch(type) {
         case ActionTypes.LOGIN_REQUEST:
             // This is an indicator if refresh token will be used to get another access token after access token is expired.
@@ -83,7 +83,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                 // fall back to Cookie if HTML5 is not supported by the browser.
                 _accessToken = payload.json.accessToken;
                 localStorage.setItem('accessToken', _accessToken);
-                console.log('_accessToken', _accessToken);
+                //console.log('_accessToken', _accessToken);
                 var jwt = jwtDecode(_accessToken);
                 console.log('jwt', jwt);
                 _currentUser = jwt.user;
@@ -101,13 +101,13 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             AuthStore.emitChange();
             break;
         case ActionTypes.REFRESH:
-            console.log('refreshed access token is saved');
+            //console.log('refreshed access token is saved');
             _accessToken = payload.accessToken;
             localStorage.setItem('accessToken', _accessToken);
             break;
 
         case ActionTypes.LOGOUT:
-            console.log('logout  action type in AuthStore');
+            //console.log('logout  action type in AuthStore');
             _isLoggedIn = false;
             _accessToken = null;
             localStorage.removeItem('accessToken');
@@ -120,13 +120,13 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             AuthStore.emitChange();
             break;
         case ActionTypes.INIT:
-            console.log('init is called');
+            //console.log('init is called');
             var accessToken = localStorage.getItem('accessToken');
             if(accessToken) {
                 _isLoggedIn = true;
                 _accessToken = accessToken;
                 var jwt = jwtDecode(_accessToken);
-                console.log('jwt', jwt);
+                //console.log('jwt', jwt);
                 _currentUser = jwt.user;
             }
             var refreshToken = localStorage.getItem('refreshToken');
