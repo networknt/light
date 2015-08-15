@@ -94,7 +94,7 @@ var Header = React.createClass({
                     //console.log('item = ', item);
                     if(!item.left && this.hasAccess(item)) {
                         if(item.menuItemId == 'cart') {
-                            return <NavItem>
+                            return <NavItem key={item.menuItemId}>
                                 <CheckoutButton/>
                             </NavItem>
                         } else {

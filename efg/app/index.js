@@ -22,7 +22,6 @@ var Router = require('react-router')
     , RouteHandler = Router.RouteHandler
     , Route = Router.Route;
 
-//var AjaxInterceptor = require('ajax-interceptor');
 var AuthActionCreators = require('./actions/AuthActionCreators.js');
 var AuthStore = require('./stores/AuthStore.js');
 var AppConstants = require('./constants/AppConstants.js');
