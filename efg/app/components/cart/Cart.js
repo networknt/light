@@ -34,7 +34,7 @@ var Cart = React.createClass({
                         <td></td>
                         <td>Total</td>
                         <td className="text-right">
-                            <strong>{ this.props.totalPrice }</strong>
+                            <strong>{ this.props.totalPrice.toFixed(2)}</strong>
                         </td>
                     </tr>
                 </tbody>

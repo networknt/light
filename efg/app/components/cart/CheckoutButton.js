@@ -70,7 +70,7 @@ var CheckoutButton = React.createClass({
                         <Modal.Title>Cart</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Cart cartItems={ this.state.cartItems } totalPrice={ this.state.totalPrice } />
+                        <Cart cartItems={ this.state.cartItems } totalPrice={ this.state.cartTotal } />
                     </Modal.Body>
                     <Modal.Footer>
                         {buyButton}
