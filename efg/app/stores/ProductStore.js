@@ -13,6 +13,9 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 var _ = require('lodash');
 var _products = {};
+var _catalog = [];
+var _offset = 0;
+
 
 // Helper object to track state of current selected product variant
 var _variant = {
@@ -52,8 +55,16 @@ class ProductStore extends EventEmitter {
         this.removeListener(CHANGE_EVENT, callback);
     }
 
-    getAll() {
+    getProducts() {
         return _products;
+    }
+
+    getCatalog() {
+        return _catalog;
+    }
+
+    getOffset() {
+        return _offset;
     }
 
     getVariantIndex(variants, sku) {

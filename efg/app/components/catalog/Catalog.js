@@ -5,10 +5,38 @@ var React = require('react');
 var ProductList = require('./ProductList');
 var TreePath = require('./TreePath');
 var SearchForm = require('./SearchForm');
-var WebAPIUtils = require('../../utils/WebAPIUtils.js');
-WebAPIUtils.getAllProducts();
+var WebAPIUtils = require('../../utils/WebAPIUtils');
+var ProductStore = require('../../stores/ProductStore');
+var ProductActionCreators = require('../../actions/ProductActionCreators');
 
 var Catalog = React.createClass({
+
+    getInitialState: function() {
+        return {
+            catalog: [],
+            products: {},
+            offset: 0
+        };
+    },
+
+    componentDidMount: function() {
+        ProductStore.addChangeListener(this._onChange);
+        ProductActionCreators.loadCatalog();
+        ProductActionCreators.loadProducts();
+    },
+
+    componentWillUnmount: function() {
+        ProductStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function() {
+        this.setState({
+            catalog: ProductStore.getCatalog(),
+            products: ProductStore.getProducts(),
+            offset: ProductStore.getOffset
+        });
+    },
+
     render: function() {
         return (
             <div>
@@ -23,6 +51,17 @@ var Catalog = React.createClass({
                     </div>
                 </div>
                 <ProductList/>
+                <ReactPaginate previousLabel={"previous"}
+                               nextLabel={"next"}
+                               breakLabel={<li className="break"><a href="">...</a></li>}
+                               pageNum={this.state.pageNum}
+                               marginPagesDisplayed={1}
+                               pageRangeDisplayed={2}
+                               clickCallback={this.handlePageClick}
+                               containerClassName={"pagination"}
+                               subContainerClassName={"pages pagination"}
+                               activeClass={"active"} />
+
             </div>
         );
     }

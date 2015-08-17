@@ -32,6 +32,20 @@ module.exports = {
             initialInventory: initialInventory,
             qty: qty
         });
+    },
+
+    loadCatalog: function() {
+        AppDispatcher.dispatch({
+            type: ActionTypes.LOAD_CATALOG
+        });
+        WebAPIUtils.loadCatalog();
+    },
+
+    loadProducts: function() {
+        AppDispatcher.dispatch({
+            type: ActionTypes.LOAD_PRODUCTS
+        });
+        WebAPIUtils.loadProducts();
     }
 
 };

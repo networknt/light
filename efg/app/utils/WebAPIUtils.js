@@ -20,7 +20,7 @@ function _getErrors(res) {
 
 var APIEndpoints = AppConstants.APIEndpoints;
 var APIRoot = AppConstants.APIRoot;
-var host = AppConstants.host;
+var Host = AppConstants.Host;
 var ClientId = AppConstants.ClientId;
 
 module.exports = {
@@ -51,19 +51,25 @@ module.exports = {
     login: function(userIdEmail, password, rememberMe) {
         console.log('login in WebAPIUtils is been called');
 
-        APIEndpoints.SIGNIN.data = {
-            userIdEmail: userIdEmail,
-            password: password,
-            rememberMe: rememberMe,
-            clientId: ClientId
+        var signIn =  {
+            category : 'user',
+            name : 'signInUser',
+            readOnly: false,
+            data: {
+                userIdEmail: userIdEmail,
+                password: password,
+                rememberMe: rememberMe,
+                clientId: ClientId
+            }
         };
 
-        console.log('SIGNIN', APIEndpoints.SIGNIN);
+
+        console.log('login', signIn);
         $.ajax({
             type: 'POST',
             contentType: 'application/json',
             url: '/api/rs',
-            data: JSON.stringify(APIEndpoints.SIGNIN),
+            data: JSON.stringify(signIn),
             dataType: 'json',
             error: function(jqXHR, status, error) {
                 console.log('login error', error);
@@ -77,11 +83,20 @@ module.exports = {
     },
 
     loadMenu: function() {
+        var getMenu = {
+            category : 'menu',
+            name : 'getMenu',
+            readOnly: true,
+            data : {
+                host : Host
+            }
+
+        }
         console.log('WebAPIUtils loadMenus is called');
         $.ajax({
             type: 'POST',
             url: '/api/rs',
-            data: JSON.stringify(APIEndpoints.GETMENU),
+            data: JSON.stringify(getMenu),
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
@@ -141,6 +156,53 @@ module.exports = {
                 }
             });
     },
+
+    loadCatalog: function() {
+        var getCatalogTree = {
+            category: 'catalog',
+            name: 'getCatalogTree',
+            readOnly: true,
+            data: {
+                host: AppConstants.host
+            }
+        };
+
+        console.log('WebAPIUtils loadCatalog is called', getCatalogTree);
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getCatalogTree))}
+        }).done(function(data) {
+            console.log('done', data);
+            ServerActionCreators.receiveCatalog(data, null);
+
+        }).fail(function(error) {
+            console.log('error', error);
+            ServerActionCreators.receiveCatalog(null, error);
+        });
+    },
+
+    loadProduct: function() {
+        var getBlogs = {
+            category: 'demo',
+            name: 'getDropdown',
+            readOnly: true
+        }
+        console.log('WebAPIUtils logBlogs is called');
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getBlogs))}
+        }).done(function(data) {
+            console.log('done', data);
+            ServerActionCreators.receiveBlogs(data, null);
+
+        }).fail(function(error) {
+            console.log('error', error);
+            ServerActionCreators.receiveBlogs(null, error);
+        });
+    },
+
     /**
      * Simulate retreiving data from an database
      */

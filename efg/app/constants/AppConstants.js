@@ -14,32 +14,13 @@
  * limitations under the License.
  */
 var keyMirror = require('keymirror');
-var host = 'example';
 
 module.exports = {
+    Host: 'example',
 
     APIRoot:  '/api/rs',
 
     ClientId: 'example@Browser',
-
-    APIEndpoints: {
-        SIGNIN:         {
-            category : 'user',
-            name : 'signInUser',
-            readOnly: false
-        },
-        REGISTRATION:   {
-
-        },
-        GETMENU: {
-            category : 'menu',
-            name : 'getMenu',
-            readOnly: true,
-            data : {
-                host : host
-            }
-        }
-    },
 
     ActionTypes: keyMirror({
         // Auth
@@ -66,13 +47,17 @@ module.exports = {
 
         // Commerce
         RECEIVE_ALL_PRODUCTS: null, // load mock products
+        RECEIVE_CATALOG: null,
+        RECEIVE_PRODUCTS: null,
         ADD_PRODUCT_TO_CART: null,
         SET_PRODUCT_VARIANT: null, // set product variation
         SET_QTY: null,
         REMOVE_CART_ITEM: null,
         SET_PRODUCT_INVENTORY: null,
         REMOVE_ONE_FROM_INVENTORY: null,
-        TOGGLE_CART: null // Open/close cart
+        TOGGLE_CART: null, // Open/close cart
+        LOAD_CATALOG: null,
+        LOAD_PRODUCTS: null
     })
 
 };
