@@ -14,6 +14,7 @@ var CHANGE_EVENT = 'change';
 var _ = require('lodash');
 var _products = {};
 var _catalog = [];
+var _selectedCatalog = null;
 var _offset = 0;
 
 
@@ -37,66 +38,75 @@ function _removeOneFromInventory(product) {
     --_products[id].variants[i].inventory;
 }
 
-class ProductStore extends EventEmitter {
 
-    constructor() {
-        super();
-    }
+var ProductStore = assign({}, EventEmitter.prototype, {
 
-    emitChange() {
+    emitChange: function() {
         this.emit(CHANGE_EVENT);
-    }
+    },
 
-    addChangeListener(callback) {
+    addChangeListener: function(callback) {
         this.on(CHANGE_EVENT, callback);
-    }
+    },
 
-    removeChangeListener(callback) {
+    removeChangeListener: function(callback) {
         this.removeListener(CHANGE_EVENT, callback);
-    }
+    },
 
-    getProducts() {
+    getProducts: function() {
         return _products;
-    }
+    },
 
-    getCatalog() {
+    getCatalog: function() {
         return _catalog;
-    }
+    },
 
-    getOffset() {
+    getSelectedCatalog: function() {
+        return _selectedCatalog;
+    },
+
+    getOffset: function() {
         return _offset;
-    }
+    },
 
-    getVariantIndex(variants, sku) {
+    getVariantIndex: function(variants, sku) {
         return _.findIndex(variants, variant => variant.sku === sku);
     }
-}
+});
 
-ProductStore.dispatchToken = AppDispatcher.register(function(action) {
+ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
+    var type = payload.type;
+    switch(type) {
 
-    //console.info(`Action type: ${action.type}`);
-    switch(action.type) {
         case ActionTypes.RECEIVE_ALL_PRODUCTS:
             console.log('received products');
             _products = action.products;
             _products.forEach(_productsMixin);
-            productStore.emitChange();
+            ProductStore.emitChange();
             break;
 
         case ActionTypes.SET_PRODUCT_VARIANT:
             var id = action.productId;
             _products[id].variantIndex = action.variantIndex;
-            productStore.emitChange();
+            ProductStore.emitChange();
             break;
 
         case ActionTypes.SET_PRODUCT_INVENTORY:
             _setInventory(action.id, action.initialInventory, action.qty);
-            productStore.emitChange();
+            ProductStore.emitChange();
             break;
 
         case ActionTypes.REMOVE_ONE_FROM_INVENTORY:
             _removeOneFromInventory(action.product);
-            productStore.emitChange();
+            ProductStore.emitChange();
+            break;
+
+        case ActionTypes.RECEIVE_CATALOG:
+            _catalog = payload.json;
+            console.log('ProductStore _catalog = ', _catalog);
+            _selectedCatalog = _catalog[0]['@rid'];
+            console.log('ProductStore _selectedCatalog', _selectedCatalog);
+            ProductStore.emitChange();
             break;
 
         default:
@@ -104,10 +114,7 @@ ProductStore.dispatchToken = AppDispatcher.register(function(action) {
     }
 
     return true;
-
 });
 
-var productStore = new ProductStore();
-
-module.exports = productStore;
+module.exports = ProductStore;
                 

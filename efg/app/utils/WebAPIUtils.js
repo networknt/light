@@ -182,7 +182,7 @@ module.exports = {
         });
     },
 
-    loadProduct: function() {
+    loadProducts: function() {
         var getBlogs = {
             category: 'demo',
             name: 'getDropdown',

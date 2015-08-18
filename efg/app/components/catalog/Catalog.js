@@ -8,21 +8,20 @@ var SearchForm = require('./SearchForm');
 var WebAPIUtils = require('../../utils/WebAPIUtils');
 var ProductStore = require('../../stores/ProductStore');
 var ProductActionCreators = require('../../actions/ProductActionCreators');
+var ReactPaginate = require('react-paginate');
 
 var Catalog = React.createClass({
 
     getInitialState: function() {
         return {
-            catalog: [],
-            products: {},
-            offset: 0
+            catalogTree: [],
+            selectedCatalog: null
         };
     },
 
-    componentDidMount: function() {
+    componentWillMount: function() {
         ProductStore.addChangeListener(this._onChange);
         ProductActionCreators.loadCatalog();
-        ProductActionCreators.loadProducts();
     },
 
     componentWillUnmount: function() {
@@ -31,37 +30,18 @@ var Catalog = React.createClass({
 
     _onChange: function() {
         this.setState({
-            catalog: ProductStore.getCatalog(),
-            products: ProductStore.getProducts(),
-            offset: ProductStore.getOffset
+            catalogTree: ProductStore.getCatalog(),
+            selectedCatalog: ProductStore.getSelectedCatalog()
         });
     },
 
     render: function() {
         return (
-            <div>
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="pull-left">
-                            <TreePath/>
-                        </div>
-                        <div className="pull-left">
-                            <SearchForm/>
-                        </div>
-                    </div>
+            <div className="panel panel-default">
+                <div className="panel-body">
+                    <ul className="category-tree">
+                    </ul>
                 </div>
-                <ProductList/>
-                <ReactPaginate previousLabel={"previous"}
-                               nextLabel={"next"}
-                               breakLabel={<li className="break"><a href="">...</a></li>}
-                               pageNum={this.state.pageNum}
-                               marginPagesDisplayed={1}
-                               pageRangeDisplayed={2}
-                               clickCallback={this.handlePageClick}
-                               containerClassName={"pagination"}
-                               subContainerClassName={"pages pagination"}
-                               activeClass={"active"} />
-
             </div>
         );
     }
