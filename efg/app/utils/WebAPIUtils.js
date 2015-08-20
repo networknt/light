@@ -158,7 +158,7 @@ module.exports = {
     },
 
     loadCatalog: function() {
-        var data = {
+        var data = [{
             "id": 1,
             "name": "All Categories",
             "children": [
@@ -217,7 +217,68 @@ module.exports = {
                     ]
                 }
             ]
+        },
+        {
+            "id": 20,
+            "name": "My Categories",
+            "children": [
+                {
+                    "id": 21,
+                    "name": "For Sale",
+                    "children": [
+                        {
+                            "id": 23,
+                            "name": "Audio & Stereo"
+                        },
+                        {
+                            "id": 24,
+                            "name": "Baby & Kids Stuff"
+                        },
+                        {
+                            "id": 25,
+                            "name": "Music, Films, Books & Games"
+                        }
+                    ]
+                },
+                {
+                    "id": 26,
+                    "name": "Motors",
+                    "children": [
+                        {
+                            "id": 27,
+                            "name": "Car Parts & Accessories"
+                        },
+                        {
+                            "id": 28,
+                            "name": "Cars"
+                        },
+                        {
+                            "id": 33,
+                            "name": "Motorbike Parts & Accessories"
+                        }
+                    ]
+                },
+                {
+                    "id": 39,
+                    "name": "Jobs",
+                    "children": [
+                        {
+                            "id": 30,
+                            "name": "Accountancy"
+                        },
+                        {
+                            "id": 31,
+                            "name": "Financial Services & Insurance"
+                        },
+                        {
+                            "id": 32,
+                            "name": "Bar Staff & Management"
+                        }
+                    ]
+                }
+            ]
         }
+        ];
         ServerActionCreators.receiveCatalog(data, null);
     },
 

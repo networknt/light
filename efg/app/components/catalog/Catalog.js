@@ -30,7 +30,7 @@ var Catalog = React.createClass({
 
     _onChange: function() {
         this.setState({
-            data: ProductStore.getCatalog(),
+            data: ProductStore.getCatalog()
         });
     },
 
@@ -50,9 +50,11 @@ var Catalog = React.createClass({
             <div className="panel panel-default">
                 <div className="panel-body">
                     <ul className="category-tree">
-                        <TreeNode key={this.state.data.id}
-                                  data={this.state.data}
-                                  onCategorySelect={this.onSelect} />
+                        {this.state.data.map(function(category) {
+                            return <TreeNode key={category.id}
+                                             data={category}
+                                             onCategorySelect={this.onSelect}/>;
+                        }.bind(this))}
                     </ul>
                 </div>
             </div>
