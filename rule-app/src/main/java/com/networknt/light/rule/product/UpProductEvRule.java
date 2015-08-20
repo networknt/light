@@ -17,7 +17,6 @@
 package com.networknt.light.rule.product;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.post.AbstractPostRule;
 
 import java.util.Map;
 

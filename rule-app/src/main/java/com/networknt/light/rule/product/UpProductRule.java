@@ -17,7 +17,6 @@
 package com.networknt.light.rule.product;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.post.AbstractPostRule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Direction;
@@ -34,7 +33,7 @@ import java.util.Map;
  *
  * AccessLevel R [user]
  */
-public class UpProductRule extends AbstractPostRule implements Rule {
+public class UpProductRule extends AbstractProductRule implements Rule {
     static final Logger logger = LoggerFactory.getLogger(UpProductRule.class);
 
     public boolean execute (Object ...objects) throws Exception {
