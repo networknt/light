@@ -156,87 +156,6 @@ module.exports = {
                 }
             });
     },
-    /*
-    loadCatalog: function() {
-        var data = [
-            {
-                "@rid": "#42:47",
-                "host": "www.example.com",
-                "description": "catalog1",
-                "catalogId": "catalog1",
-                "createDate": "2015-08-18T01:13:37.763",
-                "updateDate": "2015-08-18T01:13:37.798",
-                "out_Own": [
-                    {
-                        "@rid": "#42:48",
-                        "host": "www.example.com",
-                        "description": "catalog11",
-                        "catalogId": "catalog11",
-                        "createDate": "2015-08-18T01:13:37.772",
-                        "in_Own": [
-                            "#42:47"
-                        ],
-                        "updateDate": "2015-08-18T01:13:37.812",
-                        "out_Own": [
-                            {
-                                "@rid": "#42:50",
-                                "host": "www.example.com",
-                                "description": "catalog111",
-                                "catalogId": "catalog111",
-                                "createDate": "2015-08-18T01:13:37.778",
-                                "in_Own": [
-                                    "#42:48"
-                                ]
-                            },
-                            {
-                                "@rid": "#42:52",
-                                "host": "www.example.com",
-                                "description": "catalog112",
-                                "catalogId": "catalog112",
-                                "createDate": "2015-08-18T01:13:37.784",
-                                "in_Own": [
-                                    "#42:48"
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        "@rid": "#42:49",
-                        "host": "www.example.com",
-                        "description": "catalog12",
-                        "catalogId": "catalog12",
-                        "createDate": "2015-08-18T01:13:37.775",
-                        "in_Own": [
-                            "#42:47"
-                        ],
-                        "updateDate": "2015-08-18T01:13:37.819",
-                        "out_Own": [
-                            {
-                                "@rid": "#42:51",
-                                "host": "www.example.com",
-                                "description": "catalog121",
-                                "catalogId": "catalog121",
-                                "createDate": "2015-08-18T01:13:37.781",
-                                "in_Own": [
-                                    "#42:49"
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "@rid": "#42:53",
-                "host": "www.example.com",
-                "description": "catalog2",
-                "catalogId": "catalog2",
-                "createDate": "2015-08-18T01:13:37.787"
-            }
-        ];
-
-        ServerActionCreators.receiveCatalog(data, null);
-    },
-    */
 
     loadCatalog: function() {
         var getCatalogTree = {
@@ -254,7 +173,7 @@ module.exports = {
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getCatalogTree))}
         }).done(function(data) {
-            console.log('done', data);
+            console.log('catalog', data);
             ServerActionCreators.receiveCatalog(data, null);
 
         }).fail(function(error) {
@@ -263,24 +182,29 @@ module.exports = {
         });
     },
 
-    loadProducts: function() {
-        var getBlogs = {
-            category: 'demo',
-            name: 'getDropdown',
-            readOnly: true
+    loadProducts: function(rid) {
+        var getCatalogProduct = {
+            category: 'catalog',
+            name: 'getCatalogProduct',
+            readOnly: true,
+            data: {
+                pageSize: 10,
+                pageNo: 1,
+                '@rid': rid
+            }
         }
-        console.log('WebAPIUtils logBlogs is called');
+        console.log('WebAPIUtils getCatalogProduct is called');
         $.ajax({
             type: 'GET',
             url: '/api/rs',
-            data:  { cmd: encodeURIComponent(JSON.stringify(getBlogs))}
+            data:  { cmd: encodeURIComponent(JSON.stringify(getCatalogProduct))}
         }).done(function(data) {
-            console.log('done', data);
-            ServerActionCreators.receiveBlogs(data, null);
+            console.log('product', data);
+            ServerActionCreators.receiveProducts(data, null);
 
         }).fail(function(error) {
             console.log('error', error);
-            ServerActionCreators.receiveBlogs(null, error);
+            ServerActionCreators.receiveProducts(null, error);
         });
     },
 

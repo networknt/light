@@ -44,6 +44,7 @@ var Catalog = React.createClass({
         if (this.props.onCategorySelect) {
             this.props.onCategorySelect(node);
         }
+        ProductActionCreators.selectCatalog(node.props.data['@rid']);
     },
     render: function() {
         return (

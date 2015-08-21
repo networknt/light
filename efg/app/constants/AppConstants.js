@@ -57,6 +57,7 @@ module.exports = {
         REMOVE_ONE_FROM_INVENTORY: null,
         TOGGLE_CART: null, // Open/close cart
         LOAD_CATALOG: null,
+        SELECT_CATALOG: null,
         LOAD_PRODUCTS: null
     })
 

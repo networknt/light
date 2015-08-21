@@ -41,11 +41,12 @@ module.exports = {
         WebAPIUtils.loadCatalog();
     },
 
-    loadProducts: function() {
+    selectCatalog: function(rid) {
         AppDispatcher.dispatch({
-            type: ActionTypes.LOAD_PRODUCTS
+            type: ActionTypes.SELECT_CATALOG,
+            rid: rid
         });
-        WebAPIUtils.loadProducts();
+        WebAPIUtils.loadProducts(rid);
     }
 
 };

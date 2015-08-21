@@ -104,8 +104,14 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
         case ActionTypes.RECEIVE_CATALOG:
             _catalog = payload.json;
             console.log('ProductStore _catalog = ', _catalog);
-            //_selectedCatalog = _catalog[0]['@rid'];
-            //console.log('ProductStore _selectedCatalog', _selectedCatalog);
+            _selectedCatalog = _catalog[0]['@rid'];
+            console.log('ProductStore _selectedCatalog', _selectedCatalog);
+            ProductStore.emitChange();
+            break;
+
+        case ActionTypes.SELECT_CATALOG:
+            _selectedCatalog = payload.rid;
+            console.log('ProductStore _selectedCatalog', _selectedCatalog);
             ProductStore.emitChange();
             break;
 
