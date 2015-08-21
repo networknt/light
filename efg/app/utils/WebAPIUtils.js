@@ -156,133 +156,88 @@ module.exports = {
                 }
             });
     },
-
+    /*
     loadCatalog: function() {
-        var data = [{
-            "id": 1,
-            "name": "All Categories",
-            "children": [
-                {
-                    "id": 2,
-                    "name": "For Sale",
-                    "children": [
-                        {
-                            "id": 3,
-                            "name": "Audio & Stereo"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Baby & Kids Stuff"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Music, Films, Books & Games"
-                        }
-                    ]
-                },
-                {
-                    "id": 6,
-                    "name": "Motors",
-                    "children": [
-                        {
-                            "id": 7,
-                            "name": "Car Parts & Accessories"
-                        },
-                        {
-                            "id": 8,
-                            "name": "Cars"
-                        },
-                        {
-                            "id": 13,
-                            "name": "Motorbike Parts & Accessories"
-                        }
-                    ]
-                },
-                {
-                    "id": 9,
-                    "name": "Jobs",
-                    "children": [
-                        {
-                            "id": 10,
-                            "name": "Accountancy"
-                        },
-                        {
-                            "id": 11,
-                            "name": "Financial Services & Insurance"
-                        },
-                        {
-                            "id": 12,
-                            "name": "Bar Staff & Management"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "id": 20,
-            "name": "My Categories",
-            "children": [
-                {
-                    "id": 21,
-                    "name": "For Sale",
-                    "children": [
-                        {
-                            "id": 23,
-                            "name": "Audio & Stereo"
-                        },
-                        {
-                            "id": 24,
-                            "name": "Baby & Kids Stuff"
-                        },
-                        {
-                            "id": 25,
-                            "name": "Music, Films, Books & Games"
-                        }
-                    ]
-                },
-                {
-                    "id": 26,
-                    "name": "Motors",
-                    "children": [
-                        {
-                            "id": 27,
-                            "name": "Car Parts & Accessories"
-                        },
-                        {
-                            "id": 28,
-                            "name": "Cars"
-                        },
-                        {
-                            "id": 33,
-                            "name": "Motorbike Parts & Accessories"
-                        }
-                    ]
-                },
-                {
-                    "id": 39,
-                    "name": "Jobs",
-                    "children": [
-                        {
-                            "id": 30,
-                            "name": "Accountancy"
-                        },
-                        {
-                            "id": 31,
-                            "name": "Financial Services & Insurance"
-                        },
-                        {
-                            "id": 32,
-                            "name": "Bar Staff & Management"
-                        }
-                    ]
-                }
-            ]
-        }
+        var data = [
+            {
+                "@rid": "#42:47",
+                "host": "www.example.com",
+                "description": "catalog1",
+                "catalogId": "catalog1",
+                "createDate": "2015-08-18T01:13:37.763",
+                "updateDate": "2015-08-18T01:13:37.798",
+                "out_Own": [
+                    {
+                        "@rid": "#42:48",
+                        "host": "www.example.com",
+                        "description": "catalog11",
+                        "catalogId": "catalog11",
+                        "createDate": "2015-08-18T01:13:37.772",
+                        "in_Own": [
+                            "#42:47"
+                        ],
+                        "updateDate": "2015-08-18T01:13:37.812",
+                        "out_Own": [
+                            {
+                                "@rid": "#42:50",
+                                "host": "www.example.com",
+                                "description": "catalog111",
+                                "catalogId": "catalog111",
+                                "createDate": "2015-08-18T01:13:37.778",
+                                "in_Own": [
+                                    "#42:48"
+                                ]
+                            },
+                            {
+                                "@rid": "#42:52",
+                                "host": "www.example.com",
+                                "description": "catalog112",
+                                "catalogId": "catalog112",
+                                "createDate": "2015-08-18T01:13:37.784",
+                                "in_Own": [
+                                    "#42:48"
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "@rid": "#42:49",
+                        "host": "www.example.com",
+                        "description": "catalog12",
+                        "catalogId": "catalog12",
+                        "createDate": "2015-08-18T01:13:37.775",
+                        "in_Own": [
+                            "#42:47"
+                        ],
+                        "updateDate": "2015-08-18T01:13:37.819",
+                        "out_Own": [
+                            {
+                                "@rid": "#42:51",
+                                "host": "www.example.com",
+                                "description": "catalog121",
+                                "catalogId": "catalog121",
+                                "createDate": "2015-08-18T01:13:37.781",
+                                "in_Own": [
+                                    "#42:49"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "@rid": "#42:53",
+                "host": "www.example.com",
+                "description": "catalog2",
+                "catalogId": "catalog2",
+                "createDate": "2015-08-18T01:13:37.787"
+            }
         ];
+
         ServerActionCreators.receiveCatalog(data, null);
     },
+    */
 
-    /*
     loadCatalog: function() {
         var getCatalogTree = {
             category: 'catalog',
@@ -307,7 +262,6 @@ module.exports = {
             ServerActionCreators.receiveCatalog(null, error);
         });
     },
-    */
 
     loadProducts: function() {
         var getBlogs = {
