@@ -85,6 +85,7 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
 
                     // populate activation schema and it will be removed once the user activate the account.
                     addActivation(userId);
+                    inputMap.put("result", "{\"result\": \"Pending Activation\"}");
                 }
             }
         }
