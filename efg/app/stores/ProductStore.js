@@ -12,7 +12,9 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 var _ = require('lodash');
-var _products = {};
+var _products = [];
+var _ancestors = [];
+var _allowUpdate = false;
 var _catalog = [];
 var _selectedCatalog = null;
 var _offset = 0;
@@ -65,6 +67,14 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         return _selectedCatalog;
     },
 
+    getAncestors: function() {
+        return _ancestors;
+    },
+
+    getAllowUpdate: function() {
+        return _allowUpdate;
+    },
+
     getOffset: function() {
         return _offset;
     },
@@ -106,6 +116,16 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             console.log('ProductStore _catalog = ', _catalog);
             _selectedCatalog = _catalog[0]['@rid'];
             console.log('ProductStore _selectedCatalog', _selectedCatalog);
+            ProductStore.emitChange();
+            break;
+
+        case ActionTypes.RECEIVE_PRODUCTS:
+            _products = payload.json.products? payload.json.products :[];
+            _ancestors = payload.json.ancestors;
+            _allowUpdate = payload.json.allowAdd;
+            console.log('ProductStore _products = ', _products);
+            console.log('ProductStore _ancestors = ', _ancestors);
+            console.log('ProductStore _allowUpdate = ', _allowUpdate);
             ProductStore.emitChange();
             break;
 

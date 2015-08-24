@@ -48,6 +48,7 @@ var Product = React.createClass({
                 >
                 {inventory > 0 ? 'Add to cart' : 'Sold Out!'}
                 </button>
+                <Link to='editProduct' parms={{rid: product['@rid']}} className='btn btn-xs btn-default'>Edit</Link>
             </div>
         )
     },

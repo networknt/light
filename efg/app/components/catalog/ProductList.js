@@ -4,8 +4,18 @@
 'use strict';
 
 var React = require('react');
-var Product = require('./Product');
+var Router = require('react-router')
+    , RouteHandler = Router.RouteHandler
+    , Route = Router.Route;
 
+var ReactBootstrap = require('react-bootstrap');
+var Button = require('react-bootstrap').Button;
+
+var ReactRouterBootstrap = require('react-router-bootstrap')
+    , ButtonLink = ReactRouterBootstrap.ButtonLink
+
+var Product = require('./Product');
+var Ancestor = require('./Ancestor');
 
 function getProduct(product, index) {
     return (
@@ -13,18 +23,37 @@ function getProduct(product, index) {
     );
 }
 
-var ProductList = React.createClass({
+function getAncestor(ancestor, index) {
+    return (
+        <Ancestor ancestor={ancestor} key={index} />
+    );
+}
 
+var ProductList = React.createClass({
     render: function() {
         console.log('products', this.props.products);
         var products = Object.keys(this.props.products).length ===0 ? '' : this.props.products.map(getProduct, this);
+        var ancestors = Object.keys(this.props.ancestors).length ===0 ? '' : this.props.ancestors.map(getAncestor, this);
         return (
-            <div className="row">
-                {products}
+            <div>
+                {ancestors}
+                <ButtonLink to='newProduct'>New Product</ButtonLink>
+                <div className="row">
+                    {products}
+                </div>
             </div>
         )
+    },
+    contextTypes: {
+        router: React.PropTypes.func.isRequired
     }
 
 })
 
+/*
+ <Button className="btn btn-default" onClick={this.addProduct}>
+ <span className="glyphicon glyphicon-shopping-cart"></span> Add Product
+ </Button>
+
+ */
 module.exports = ProductList;

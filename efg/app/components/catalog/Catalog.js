@@ -15,7 +15,10 @@ var Catalog = React.createClass({
 
     getInitialState: function() {
         return {
-            data: []
+            catalog: [],
+            products: {},
+            ancestors: [],
+            allowUpdate: false
         };
     },
 
@@ -30,12 +33,15 @@ var Catalog = React.createClass({
 
     _onChange: function() {
         this.setState({
-            data: ProductStore.getCatalog()
+            catalog: ProductStore.getCatalog(),
+            ancestors: ProductStore.getAncestors(),
+            allowUpdate: ProductStore.getAllowUpdate(),
+            products: ProductStore.getProducts()
         });
     },
 
     onSelect: function (node) {
-        console.log('selected = ', node.props.data['@rid']);
+        console.log('selected = ', node.props.catalog['@rid']);
         if (this.state.selected && this.state.selected.isMounted()) {
             this.state.selected.setState({selected: false});
         }
@@ -44,20 +50,21 @@ var Catalog = React.createClass({
         if (this.props.onCategorySelect) {
             this.props.onCategorySelect(node);
         }
-        ProductActionCreators.selectCatalog(node.props.data['@rid']);
+        ProductActionCreators.selectCatalog(node.props.catalog['@rid']);
     },
     render: function() {
         return (
             <div className="panel panel-default">
                 <div className="panel-body">
                     <ul className="category-tree">
-                        {this.state.data.map(function(category) {
+                        {this.state.catalog.map(function(category) {
                             return <TreeNode key={category.catalogId}
-                                             data={category}
+                                             catalog={category}
                                              onCategorySelect={this.onSelect}/>;
                         }.bind(this))}
                     </ul>
                 </div>
+                <ProductList products={this.state.products} ancestors={this.state.ancestors} allowUpdate={this.state.allowUpdate}/>
             </div>
         );
     }
@@ -75,11 +82,11 @@ var TreeNode = React.createClass({
         ev.stopPropagation();
     },
     onChildDisplayToggle: function (ev) {
-        if (this.props.data.out_Own) {
+        if (this.props.catalog.out_Own) {
             if (this.state.out_Own && this.state.out_Own.length) {
                 this.setState({out_Own: null});
             } else {
-                this.setState({out_Own: this.props.data.out_Own});
+                this.setState({out_Own: this.props.catalog.out_Own});
             }
         }
         ev.preventDefault();
@@ -88,7 +95,7 @@ var TreeNode = React.createClass({
     render: function () {
         if (!this.state.out_Own) this.state.out_Own = [];
         var classes = classNames({
-            'has-children': (this.props.data.out_Own ? true : false),
+            'has-children': (this.props.catalog.out_Own ? true : false),
             'open': (this.state.out_Own.length ? true : false),
             'closed': (this.state.out_Own ? false : true),
             'selected': (this.state.selected ? true : false)
@@ -97,13 +104,13 @@ var TreeNode = React.createClass({
             <li ref="node" className={classes}
                 onClick={this.onChildDisplayToggle}>
                 <a onClick={this.onCategorySelect}
-                   data-id={this.props.data.catalogId}>
-                    {this.props.data.catalogId}
+                   data-id={this.props.catalog.catalogId}>
+                    {this.props.catalog.catalogId}
                 </a>
                 <ul>
                     {this.state.out_Own.map(function(child) {
                         return <TreeNode key={child.catalogId}
-                                         data={child}
+                                         catalog={child}
                                          onCategorySelect={this.props.onCategorySelect}/>;
                     }.bind(this))}
                 </ul>
