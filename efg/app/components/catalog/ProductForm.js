@@ -13,11 +13,9 @@ class ProductForm extends BaseForm {
     }
 
     componentDidMount() {
-        CategoryStore.getResources().then(data => {
-            this.setState({
-                loaded:     true,
-                categories: data.categories
-            });
+        this.setState({
+            loaded: true,
+            selectedCatalog: this.store.getSelectedCatalog()
         });
     }
 

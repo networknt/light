@@ -407,16 +407,16 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         if(sortedBy == null) {
             sortedBy = "createDate";
         }
-        boolean allowAdd = false;
+        boolean allowUpdate = false;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         if(payload != null) {
             Map<String,Object> user = (Map<String, Object>)payload.get("user");
             List roles = (List)user.get("roles");
             if(roles.contains("owner")) {
-                allowAdd = true;
+                allowUpdate = true;
             } else if(roles.contains("admin") || roles.contains("catalogAdmin") || roles.contains("productAdmin")){
                 if(host.equals(user.get("host"))) {
-                    allowAdd = true;
+                    allowUpdate = true;
                 }
             }
         }
@@ -477,20 +477,23 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", total);
             result.put("products", products);
-            result.put("allowAdd", allowAdd);
+            result.put("rid", rid);
+            result.put("allowUpdate", allowUpdate);
             result.put("ancestors", ancestors);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         } else {
-            // there is no product available. but still need to return allowAdd
+            // there is no product available. but still need to return allowUpdate
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", 0);
-            result.put("allowAdd", allowAdd);
+            result.put("rid", rid);
+            result.put("allowUpdate", allowUpdate);
             result.put("ancestors", ancestors);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         }
     }
+
 
     protected String getCatalogProductDb(String rid, String sortedBy) {
         String json = null;
@@ -539,4 +542,46 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         }
         return ancestors;
     }
+
+    public boolean getProduct(Object ...objects) throws Exception {
+        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        String catalogId = (String)data.get("catalogId");
+        String host = (String)data.get("host");
+        if(catalogId == null) {
+            inputMap.put("result", "catalogId is required");
+            inputMap.put("responseCode", 400);
+            return false;
+        } else {
+            String json = getProductDb(catalogId);
+            if(json != null) {
+                inputMap.put("result", json);
+                return true;
+            } else {
+                inputMap.put("result", "Not Found");
+                inputMap.put("responseCode", 404);
+                return false;
+            }
+        }
+    }
+
+
+    protected String getProductDb(String catalogId) {
+        String json = null;
+        String sql = "select from product where parentId = ?";
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> products = graph.getRawGraph().command(query).execute(catalogId);
+            if(products.size() > 0) {
+                json = OJSONWriter.listToJSON(products, null);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return json;
+    }
+
 }

@@ -8,6 +8,13 @@
       "readOnly": false,
       "title": "Submit",
       "success": "/page/com-networknt-light-v-catalog-admin-home"
+    },
+    {
+      "category": "catalog",
+      "name": "updCatalog",
+      "readOnly": false,
+      "title": "Product List",
+      "success": "/page/com-networknt-light-v-product-admin-home"
     }
   ],
   "schema": {
