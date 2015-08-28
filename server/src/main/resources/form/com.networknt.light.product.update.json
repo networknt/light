@@ -1,0 +1,106 @@
+{
+  "formId": "com.networknt.light.product.update",
+  "version": 1,
+  "action": [
+    {
+      "category": "catalog",
+      "name": "updProduct",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-product-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Product",
+    "required": [
+      "catalogId",
+      "productId",
+      "name",
+      "description",
+      "variants"
+    ],
+    "properties": {
+      "productId": {
+        "title": "Product Id",
+        "type": "string",
+        "readonly": true
+      },
+      "catalogId": {
+        "title": "CatalogId",
+        "type": "string",
+        "format": "strapselectdynamic"
+      },
+      "name": {
+        "title": "Name",
+        "type": "string"
+      },
+      "description": {
+        "title": "Description",
+        "type": "string"
+      },
+      "variants": {
+        "type": "array",
+        "maxItems": 10,
+        "items": {
+          "type": "object",
+          "properties": {
+            "sku": {
+              "title": "SKU",
+              "type": "string"
+            },
+            "price": {
+              "title": "Price",
+              "type": "number"
+            },
+            "type": {
+              "title": "Type",
+              "type": "string"
+            },
+            "image": {
+              "title": "Image",
+              "type": "string"
+            },
+            "inventory": {
+              "title": "Inventory",
+              "type": "number"
+            }
+          },
+          "required": [
+            "sku",
+            "price",
+            "type",
+            "image",
+            "inventory"
+          ]
+        }
+      }
+    }
+  },
+  "form": [
+    {
+      "key": "catalogId",
+      "options": {
+        "category": "catalog",
+        "name": "getCatalogDropdown"
+      }
+    },
+    "productId",
+    "name",
+    "description",
+    {
+      "key": "variants",
+      "add": "New",
+      "style": {
+        "add": "btn-success"
+      },
+      "items": [
+        "variants[].sku",
+        "variants[].price",
+        "variants[].type",
+        "variants[].image",
+        "variants[].inventory"
+      ]
+    }
+  ]
+}

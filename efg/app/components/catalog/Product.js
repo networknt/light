@@ -19,6 +19,7 @@ var Product = React.createClass({
     render: function() {
 
         var product = this.props.product;
+        console.log('Product', product);
         var variantIndex, i = product.variantIndex;
         var variants = product.variants;
         var inventory = variants[i].inventory;
@@ -48,7 +49,6 @@ var Product = React.createClass({
                 >
                 {inventory > 0 ? 'Add to cart' : 'Sold Out!'}
                 </button>
-                <Link to='editProduct' parms={{rid: product['@rid']}} className='btn btn-xs btn-default'>Edit</Link>
             </div>
         )
     },

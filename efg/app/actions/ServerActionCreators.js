@@ -48,13 +48,6 @@ module.exports = {
         });
     },
 
-    receiveAll: function(products) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_ALL_PRODUCTS,
-            products: products
-        });
-    },
-
     receiveCatalog: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_CATALOG,

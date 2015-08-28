@@ -21,8 +21,7 @@ import com.networknt.light.rule.Rule;
 /**
  * Created by steve on 24/08/15.
  *
- * This is the endpoint for product admin page to list all the products belong to a
- * single catalog.
+ * This is the endpoint for product admin page to list all the products
  *
  * AccessLevel R [owner, admin, catalogAdmin]
  */

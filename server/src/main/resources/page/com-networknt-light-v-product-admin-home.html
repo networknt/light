@@ -25,8 +25,8 @@
                 value: 'host'
             },
             {
-                title: 'Catalog Id',
-                value: 'catalogId'
+                title: 'Product Id',
+                value: 'productId'
             },
             {
                 title: 'Description',
@@ -83,10 +83,6 @@
 
         //The function that is responsible of fetching the result from the server
         $scope.fetchResult = function () {
-            var catalog = modelDataService.getModelData();
-            console.log('catalog = ', catalog);
-            $scope.getProduct.data = {catalogId: catalog.catalogId};
-            console.log('getProduct = ', $scope.getProduct);
             $http.get('api/rs', {params: { cmd: encodeURIComponent(JSON.stringify($scope.getProduct))}})
                     .success(function (result, status, headers, config) {
                         $scope.products = result;

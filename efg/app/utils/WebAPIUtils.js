@@ -92,7 +92,7 @@ module.exports = {
             }
 
         }
-        console.log('WebAPIUtils loadMenus is called');
+        console.log('WebAPIUtils loadMenus is called', getMenu);
         $.ajax({
             type: 'POST',
             url: '/api/rs',
@@ -100,7 +100,7 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            console.log('done', data);
+            console.log('getMenu done', data);
             ServerActionCreators.receiveMenu(data, null);
         }).fail(function(error) {
             console.log('error', error);
@@ -211,6 +211,7 @@ module.exports = {
     /**
      * Simulate retreiving data from an database
      */
+    /*
     getAllProducts: function() {
         // Fetch
         var products =
@@ -437,5 +438,5 @@ module.exports = {
         ServerActionCreators.receiveAll(products);
     }
 
-
+    */
 };

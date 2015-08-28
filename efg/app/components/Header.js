@@ -85,7 +85,7 @@ var Header = React.createClass({
     },
 
     render: function() {
-        //console.log('this.state.menu = ', this.state.menu);
+        console.log('this.state.menu = ', this.state.menu);
         var outOwn = this.state.menu.out_Own? this.state.menu.out_Own : [];
         //console.log('outOwn = ', outOwn);
         var rightNav = (

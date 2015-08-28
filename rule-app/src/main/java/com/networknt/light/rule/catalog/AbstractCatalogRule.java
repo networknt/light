@@ -52,15 +52,15 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
     public boolean addProduct(Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        String parentId = (String) data.get("parentId");
+        String catalogId = (String) data.get("catalogId");
         String host = (String) data.get("host");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OrientVertex parent = getBranchByHostId(graph, branchType, host, parentId);
-            if(parent == null) {
-                error = "Id " + parentId + " doesn't exist on host " + host;
+            Vertex catalog = DbService.getVertexByRid(graph, catalogId);
+            if(catalog == null) {
+                error = "Id " + catalogId + " doesn't exist on host " + host;
                 inputMap.put("responseCode", 400);
             } else {
                 Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -68,6 +68,8 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.putAll((Map<String, Object>) inputMap.get("data"));
+                // replace catalogId as it is @rid which is not stable in event.
+                eventData.put("catalogId", catalog.getProperty("catalogId"));
                 eventData.put("productId", HashUtil.generateUUID());
                 eventData.put("createDate", new java.util.Date());
                 eventData.put("createUserId", user.get("userId"));
@@ -107,13 +109,16 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
-            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            OrientVertex createUser = (OrientVertex)graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            String catalogId = (String)data.remove("catalogId");
             OrientVertex product = graph.addVertex("class:Product", data);
             createUser.addEdge("Create", product);
             // parent
-            OrientVertex parent = getBranchByHostId(graph, branchType, host, (String) data.get("parentId"));
-            if(parent != null) {
-                parent.addEdge("HasProduct", product);
+            OrientVertex catalog = getBranchByHostId(graph, branchType, host, catalogId);
+            if(catalog != null) {
+                product.reload();
+                createUser.reload();
+                catalog.addEdge("HasProduct", product);
             }
             // tag
             Set<String> inputTags = data.get("tags") != null? new HashSet<String>(Arrays.asList(((String) data.get("tags")).split("\\s*,\\s*"))) : new HashSet<String>();
@@ -139,7 +144,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             logger.error("Exception:", e);
             graph.rollback();
         } finally {
-            graph.shutdown();
+net            graph.shutdown();
         }
     }
 
@@ -548,31 +553,56 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String catalogId = (String)data.get("catalogId");
         String host = (String)data.get("host");
-        if(catalogId == null) {
-            inputMap.put("result", "catalogId is required");
-            inputMap.put("responseCode", 400);
-            return false;
+        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        String json = null;
+        Map<String,Object> user = (Map<String, Object>)payload.get("user");
+        List roles = (List)user.get("roles");
+        if(roles.contains("owner")) {
+            json = getProductDb();
         } else {
-            String json = getProductDb(catalogId);
-            if(json != null) {
-                inputMap.put("result", json);
-                return true;
+            if(host.equals(user.get("host"))) {
+                json = getProductDb(host);
             } else {
-                inputMap.put("result", "Not Found");
-                inputMap.put("responseCode", 404);
+                inputMap.put("result", "Permission denied");
+                inputMap.put("responseCode", 401);
                 return false;
             }
         }
+        if(json != null) {
+            inputMap.put("result", json);
+            return true;
+        } else {
+            inputMap.put("result", "Not Found");
+            inputMap.put("responseCode", 404);
+            return false;
+        }
     }
 
-
-    protected String getProductDb(String catalogId) {
+    protected String getProductDb(String host) {
         String json = null;
-        String sql = "select from product where parentId = ?";
+        String sql = "select from product where host = ?";
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> products = graph.getRawGraph().command(query).execute(catalogId);
+            List<ODocument> products = graph.getRawGraph().command(query).execute(host);
+            if(products.size() > 0) {
+                json = OJSONWriter.listToJSON(products, null);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return json;
+    }
+
+    protected String getProductDb() {
+        String json = null;
+        String sql = "select from product";
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> products = graph.getRawGraph().command(query).execute();
             if(products.size() > 0) {
                 json = OJSONWriter.listToJSON(products, null);
             }

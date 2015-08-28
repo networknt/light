@@ -59,6 +59,10 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         return _products;
     },
 
+    getVariantIndex: function(variants, sku) {
+        return _.findIndex(variants, variant => variant.sku === sku);
+    },
+
     getCatalog: function() {
         return _catalog;
     },
@@ -77,10 +81,6 @@ var ProductStore = assign({}, EventEmitter.prototype, {
 
     getOffset: function() {
         return _offset;
-    },
-
-    getVariantIndex: function(variants, sku) {
-        return _.findIndex(variants, variant => variant.sku === sku);
     }
 });
 
@@ -89,9 +89,10 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
 
         case ActionTypes.RECEIVE_ALL_PRODUCTS:
-            console.log('received products');
             _products = action.products;
+            console.log('received all products', _products);
             _products.forEach(_productsMixin);
+            console.log('received all products after mixin', _products);
             ProductStore.emitChange();
             break;
 
@@ -121,6 +122,7 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
 
         case ActionTypes.RECEIVE_PRODUCTS:
             _products = payload.json.products? payload.json.products :[];
+            _products.forEach(_productsMixin);
             _ancestors = payload.json.ancestors;
             _allowUpdate = payload.json.allowAdd;
             console.log('ProductStore _products = ', _products);

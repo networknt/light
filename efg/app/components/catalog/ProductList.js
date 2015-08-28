@@ -37,7 +37,6 @@ var ProductList = React.createClass({
         return (
             <div>
                 {ancestors}
-                <ButtonLink to='newProduct'>New Product</ButtonLink>
                 <div className="row">
                     {products}
                 </div>
@@ -50,10 +49,4 @@ var ProductList = React.createClass({
 
 })
 
-/*
- <Button className="btn btn-default" onClick={this.addProduct}>
- <span className="glyphicon glyphicon-shopping-cart"></span> Add Product
- </Button>
-
- */
 module.exports = ProductList;
