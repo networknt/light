@@ -11,9 +11,10 @@ var ActionTypes = AppConstants.ActionTypes;
 module.exports = {
 
     setProductVariant: function(variant) {
+        console.log('ProductActionCreator setProductVariant', variant);
         AppDispatcher.dispatch({
             type: ActionTypes.SET_PRODUCT_VARIANT,
-            productId: variant.productId,
+            productIndex: variant.productIndex,
             variantIndex: variant.variantIndex
         });
     },

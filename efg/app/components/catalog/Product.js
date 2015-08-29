@@ -19,19 +19,21 @@ var Product = React.createClass({
     render: function() {
 
         var product = this.props.product;
+        var productIndex = this.props.productIndex;
         console.log('Product', product);
+        console.log('Product Key', productIndex);
         var variantIndex, i = product.variantIndex;
         var variants = product.variants;
         var inventory = variants[i].inventory;
         var price = variants[i].price.toFixed(2);
         var variantProps = {
             variants: variants,
-            id: product.id
+            productIndex: productIndex
         };
 
         return (
             <div className="col-4 col-sm-4 col-lg-3">
-                <img src={'/assets/images/' + product.image} className="img-responsive" />
+                <img src={'/assets/images/' + product.variants[i].image} className="img-responsive" />
                 <h3>{product.title}</h3>
                 <h4>{ '$' + price }</h4>
                 <div className="cbp-vm-details">

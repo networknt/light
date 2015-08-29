@@ -144,7 +144,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             logger.error("Exception:", e);
             graph.rollback();
         } finally {
-net            graph.shutdown();
+            graph.shutdown();
         }
     }
 

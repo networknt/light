@@ -46,7 +46,6 @@ module.exports = {
         RECEIVE_CREATED_BLOG: null,
 
         // Commerce
-        RECEIVE_ALL_PRODUCTS: null, // load mock products
         RECEIVE_CATALOG: null,
         RECEIVE_PRODUCTS: null,
         ADD_PRODUCT_TO_CART: null,

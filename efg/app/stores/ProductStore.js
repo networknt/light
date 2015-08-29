@@ -88,27 +88,20 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
 
-        case ActionTypes.RECEIVE_ALL_PRODUCTS:
-            _products = action.products;
-            console.log('received all products', _products);
-            _products.forEach(_productsMixin);
-            console.log('received all products after mixin', _products);
-            ProductStore.emitChange();
-            break;
-
         case ActionTypes.SET_PRODUCT_VARIANT:
-            var id = action.productId;
-            _products[id].variantIndex = action.variantIndex;
+            var productIndex = payload.productIndex;
+            console.log('ProductStore SET_PRODUCT_VARIANT payload =', payload);
+            _products[productIndex].variantIndex = payload.variantIndex;
             ProductStore.emitChange();
             break;
 
         case ActionTypes.SET_PRODUCT_INVENTORY:
-            _setInventory(action.id, action.initialInventory, action.qty);
+            _setInventory(payload.id, payload.initialInventory, payload.qty);
             ProductStore.emitChange();
             break;
 
         case ActionTypes.REMOVE_ONE_FROM_INVENTORY:
-            _removeOneFromInventory(action.product);
+            _removeOneFromInventory(payload.product);
             ProductStore.emitChange();
             break;
 
