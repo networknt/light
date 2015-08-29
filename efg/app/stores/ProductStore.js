@@ -29,15 +29,15 @@ function _productsMixin(product) {
     _.extend(product, _variant);
 }
 
-function _setInventory(id, initialInventory, qty=0) {
-    var i = _products[id].variantIndex;
-    _products[id].variants[i].inventory = initialInventory - qty;
+function _setInventory(productIndex, initialInventory, qty=0) {
+    var i = _products[productIndex].variantIndex;
+    _products[productIndex].variants[i].inventory = initialInventory - qty;
 }
 
 function _removeOneFromInventory(product) {
+    console.log('_removeOneFromInventory product = ', product);
     var i = product.variantIndex;
-    var id = product.id;
-    --_products[id].variants[i].inventory;
+    --_products[product.index].variants[i].inventory;
 }
 
 
@@ -89,14 +89,14 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
 
         case ActionTypes.SET_PRODUCT_VARIANT:
-            var productIndex = payload.productIndex;
+            var index = payload.index;
             console.log('ProductStore SET_PRODUCT_VARIANT payload =', payload);
-            _products[productIndex].variantIndex = payload.variantIndex;
+            _products[index].variantIndex = payload.variantIndex;
             ProductStore.emitChange();
             break;
 
         case ActionTypes.SET_PRODUCT_INVENTORY:
-            _setInventory(payload.id, payload.initialInventory, payload.qty);
+            _setInventory(payload.productIndex, payload.initialInventory, payload.qty);
             ProductStore.emitChange();
             break;
 

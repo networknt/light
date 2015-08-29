@@ -14,7 +14,7 @@ module.exports = {
         console.log('ProductActionCreator setProductVariant', variant);
         AppDispatcher.dispatch({
             type: ActionTypes.SET_PRODUCT_VARIANT,
-            productIndex: variant.productIndex,
+            index: variant.index,
             variantIndex: variant.variantIndex
         });
     },
@@ -26,10 +26,10 @@ module.exports = {
         });
     },
 
-    setInventory: function (id, initialInventory, qty) {
+    setInventory: function (productIndex, initialInventory, qty) {
         AppDispatcher.dispatch({
             type: ActionTypes.SET_PRODUCT_INVENTORY,
-            id: id,
+            productIndex: productIndex,
             initialInventory: initialInventory,
             qty: qty
         });

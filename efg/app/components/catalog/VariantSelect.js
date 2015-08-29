@@ -10,7 +10,7 @@ var VariantSelect = React.createClass({
 
     propTypes: {
         variants: React.PropTypes.array.isRequired,
-        productIndex: React.PropTypes.number.isRequired
+        index: React.PropTypes.number.isRequired
     },
 
     render: function() {
@@ -25,9 +25,9 @@ var VariantSelect = React.createClass({
     },
 
     _setProductVariant: function(e) {
-        var productIndex = this.props.productIndex;
+        var index = this.props.index;
         var variantIndex = Number(e.target.value);
-        ProductActionCreator.setProductVariant({productIndex, variantIndex});
+        ProductActionCreator.setProductVariant({index, variantIndex});
     }
 
 });

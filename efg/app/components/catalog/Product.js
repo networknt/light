@@ -19,16 +19,15 @@ var Product = React.createClass({
     render: function() {
 
         var product = this.props.product;
-        var productIndex = this.props.productIndex;
-        console.log('Product', product);
-        console.log('Product Key', productIndex);
+        product.index = this.props.productIndex;
+        console.log('Product product = ', product);
         var variantIndex, i = product.variantIndex;
         var variants = product.variants;
         var inventory = variants[i].inventory;
         var price = variants[i].price.toFixed(2);
         var variantProps = {
             variants: variants,
-            productIndex: productIndex
+            index: product.index
         };
 
         return (
@@ -58,6 +57,7 @@ var Product = React.createClass({
     _addToCart: function(e) {
         e.preventDefault();
         var product = this.props.product;
+        product.index = this.props.productIndex;
         CartActionCreator.addToCart(product);
         ProductActionCreator.removeOneFromInventory(product);
     }
