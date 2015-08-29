@@ -96,6 +96,7 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             break;
 
         case ActionTypes.SET_PRODUCT_INVENTORY:
+            console.log('ProductStore SET_PRODUCT_INVENTORY payload = ', payload);
             _setInventory(payload.productIndex, payload.initialInventory, payload.qty);
             ProductStore.emitChange();
             break;

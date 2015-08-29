@@ -106,7 +106,7 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
             break;
 
         case ActionTypes.SET_QTY:
-            _setQty(action.qty, payload.sku);
+            _setQty(payload.qty, payload.sku);
             CartStore.emitChange();
             break;
 

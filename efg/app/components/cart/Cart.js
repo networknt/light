@@ -15,7 +15,7 @@ var Cart = React.createClass({
     render: function() {
         console.log('cartItems = ', this.props.cartItems);
         var cartItems = this.props.cartItems.map(function(cartItem) {
-            return <CartItem key={cartItem.id} cartItem={cartItem} />
+            return <CartItem key={cartItem.index} cartItem={cartItem} />
         });
 
         return (
