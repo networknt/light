@@ -18,7 +18,7 @@ module.exports = {
             variantIndex: variant.variantIndex
         });
     },
-
+    /*
     removeOneFromInventory: function(product) {
         AppDispatcher.dispatch({
             type: ActionTypes.REMOVE_ONE_FROM_INVENTORY,
@@ -34,6 +34,7 @@ module.exports = {
             qty: qty
         });
     },
+    */
 
     loadCatalog: function() {
         AppDispatcher.dispatch({

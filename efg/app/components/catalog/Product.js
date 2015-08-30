@@ -57,9 +57,8 @@ var Product = React.createClass({
     _addToCart: function(e) {
         e.preventDefault();
         var product = this.props.product;
-        product.index = this.props.productIndex;
         CartActionCreator.addToCart(product);
-        ProductActionCreator.removeOneFromInventory(product);
+        //ProductActionCreator.removeOneFromInventory(product);
     }
 });
 

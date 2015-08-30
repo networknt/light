@@ -58,18 +58,18 @@ var CartItem = React.createClass({
     _setQty: function(e) {
         var qty = Number(e.target.value);
         var sku = this.props.cartItem.sku;
-        var productIndex = this.props.cartItem.index;
-        var initialInventory = this.props.cartItem.initialInventory;
+        //var productIndex = this.props.cartItem.index;
+        //var initialInventory = this.props.cartItem.initialInventory;
         CartActionCreators.setQty(qty, sku);
-        ProductActionCreators.setInventory(productIndex, initialInventory, qty);
+        //ProductActionCreators.setInventory(productIndex, initialInventory, qty);
     },
 
     _onClickRemove: function(e) {
         e.preventDefault();
-        var productIndex = this.props.cartItem.index;
-        var initialInventory = this.props.cartItem.initialInventory;
+        //var productIndex = this.props.cartItem.index;
+        //var initialInventory = this.props.cartItem.initialInventory;
         CartActionCreators.remove(this.props.cartItem.sku);
-        ProductActionCreators.setInventory(productIndex, initialInventory, null);
+        //ProductActionCreators.setInventory(productIndex, initialInventory, null);
     }
 
 });
