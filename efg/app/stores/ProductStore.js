@@ -111,6 +111,7 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             //console.log('ProductStore _catalog = ', _catalog);
             _selectedCatalog = _catalog[0]['@rid'];
             //console.log('ProductStore _selectedCatalog', _selectedCatalog);
+            WebAPIUtils.loadProducts(_selectedCatalog);
             ProductStore.emitChange();
             break;
 

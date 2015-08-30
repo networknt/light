@@ -38,11 +38,6 @@ var Catalog = React.createClass({
             allowUpdate: ProductStore.getAllowUpdate(),
             products: ProductStore.getProducts()
         });
-        /*
-        if(this.state.products.length == 0) {
-            ProductActionCreators.selectCatalog(this.state.catalog[0]['@rid']);
-        }
-        */
     },
 
     onSelect: function (node) {

@@ -175,7 +175,6 @@ module.exports = {
         }).done(function(data) {
             console.log('catalog', data);
             ServerActionCreators.receiveCatalog(data, null);
-
         }).fail(function(error) {
             console.log('error', error);
             ServerActionCreators.receiveCatalog(null, error);
@@ -206,7 +205,7 @@ module.exports = {
             console.log('error', error);
             ServerActionCreators.receiveProducts(null, error);
         });
-    },
+    }
 
     /**
      * Simulate retreiving data from an database
