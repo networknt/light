@@ -14,15 +14,16 @@
     "type": "object",
     "title": "Product",
     "required": [
-      "catalogId",
+      "in_HasProduct",
       "name",
       "description",
       "variants"
     ],
     "properties": {
-      "catalogId": {
+      "in_HasProduct": {
         "title": "CatalogId",
-        "type": "string",
+        "type": "array",
+        "maxItems": 1,
         "format": "strapselectdynamic"
       },
       "name": {
@@ -73,7 +74,7 @@
   },
   "form": [
     {
-      "key": "catalogId",
+      "key": "in_HasProduct",
       "options": {
         "category": "catalog",
         "name": "getCatalogDropdown"

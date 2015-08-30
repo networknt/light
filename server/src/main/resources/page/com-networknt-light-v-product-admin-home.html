@@ -1,6 +1,6 @@
 <script type='text/javascript'>
     angular.module('lightApp').controller('com.networknt.light.ProductAdminHomeCtrl', ['$scope', '$http', '$location', 'toaster', 'modelDataService', function ($scope, $http, $location, toaster, modelDataService) {
-        console.log('productAdminHome is called.')
+        console.log('productAdminHome is called in the beginning.')
         $scope.getProduct = {
             category : 'catalog',
             name : 'getProduct',
@@ -77,6 +77,7 @@
         };
 
         $scope.update = function(product) {
+            console.log('product-admin-home update product =', product);
             modelDataService.setModelData(product);
             $location.path("/form/com.networknt.light.product.update");
         };

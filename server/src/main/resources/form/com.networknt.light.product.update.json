@@ -14,22 +14,23 @@
     "type": "object",
     "title": "Product",
     "required": [
-      "catalogId",
+      "in_HasProduct",
       "productId",
       "name",
       "description",
       "variants"
     ],
     "properties": {
+      "in_HasProduct": {
+        "title": "CatalogId",
+        "type": "array",
+        "maxItems": 1,
+        "format": "strapselectdynamic"
+      },
       "productId": {
         "title": "Product Id",
         "type": "string",
         "readonly": true
-      },
-      "catalogId": {
-        "title": "CatalogId",
-        "type": "string",
-        "format": "strapselectdynamic"
       },
       "name": {
         "title": "Name",
@@ -79,7 +80,7 @@
   },
   "form": [
     {
-      "key": "catalogId",
+      "key": "in_HasProduct",
       "options": {
         "category": "catalog",
         "name": "getCatalogDropdown"
