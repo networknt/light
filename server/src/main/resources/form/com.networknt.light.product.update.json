@@ -65,6 +65,22 @@
             "inventory": {
               "title": "Inventory",
               "type": "number"
+            },
+            "weight": {
+              "title": "Weight",
+              "type": "number"
+            },
+            "height": {
+              "title" : "Height",
+              "type": "number"
+            },
+            "width": {
+              "title": "Width",
+              "type": "number"
+            },
+            "length": {
+              "title": "Length",
+              "type": "number"
             }
           },
           "required": [
@@ -72,7 +88,11 @@
             "price",
             "type",
             "image",
-            "inventory"
+            "inventory",
+            "weight",
+            "height",
+            "width",
+            "length"
           ]
         }
       }
@@ -100,7 +120,11 @@
         "variants[].price",
         "variants[].type",
         "variants[].image",
-        "variants[].inventory"
+        "variants[].inventory",
+        "variants[].weight",
+        "variants[].height",
+        "variants[].width",
+        "variants[].length"
       ]
     }
   ]
