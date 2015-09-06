@@ -11,33 +11,40 @@ var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
 var Cart = require('./Cart')
+var Login = require('../auth/Login');
+var CheckoutCart = require('./CheckoutCart');
+var Shipping = require('./Shipping');
+var AuthStore = require('../../stores/AuthStore');
 
 function getStateFromStores() {
     return {
         cartItems: CartStore.getAll(),
         cartItemsCount: CartStore.getCartItemsCount(),
         cartTotal: CartStore.getCartTotal(),
-        showModal: CartStore.getCartStatus()
+        showModal: CartStore.getCartStatus(),
+        screen: 'cart',
+        title: 'Cart'
     };
 }
 
 var CheckoutButton = React.createClass({
-    propTypes: {
-        cartItems: React.PropTypes.array,
-        cartItemsCount: React.PropTypes.number,
-        cartTotal: React.PropTypes.number,
-        showModal: React.PropTypes.bool
-    },
 
     getInitialState: () => getStateFromStores(),
 
     close: function() {
-        this.setState({ showModal: false});
+        this.setState({ showModal: false, screen: 'cart', title: 'Cart'});
     },
 
     open: function() {
         this.setState({showModal: true});
         //console.log('cartItems = ', this.state.cartItems);
+    },
+
+    onShipping: function() {
+        this.setState({
+            screen: 'shipping',
+            title: 'Shipping'
+        })
     },
 
     componentDidMount: function() {
@@ -48,14 +55,36 @@ var CheckoutButton = React.createClass({
         CartStore.removeChangeListener(this._onChange);
     },
 
+
     render: function() {
-        var buyButton
+        var buyButton;
         if (this.state.cartItems.length > 0) {
             buyButton = (
-                <Button className="btn btn-success" onClick={this.state.onCheckout}>
+                <Button className="btn btn-success" onClick={this.onShipping}>
                     Buy now <span className="glyphicon glyphicon-play"></span>
                 </Button>
             )
+        }
+
+        var contents;
+        if(AuthStore.isLoggedIn()) {
+            console.log('is logged in');
+            if(this.state.screen === 'cart') {
+                contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
+                                          title = {this.state.title} close = {this.close} onShipping = {this.onShipping}/>
+            } else if (this.state.screen === 'shipping') {
+                contents =  <Shipping cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
+                                      title = {this.state.title} close = {this.close} onPayment = {this.onPayment} />
+            } else if (this.state.screen === 'payment') {
+                contents =  <Payment cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
+                                     title = {this.state.title} close = {this.close} onPayment = {this.onCheckoutDone} />
+            } else {
+                contents =  <CheckoutDone cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
+                                          title = {this.state.title} close = {this.close} />
+            }
+        } else {
+            console.log('is not logged in');
+            contents =  <Login/>
         }
 
         return (
@@ -66,18 +95,7 @@ var CheckoutButton = React.createClass({
                     <span>Checkout</span>
                 </div>
                 <Modal show={this.state.showModal} onHide={this.close}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Cart</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Cart cartItems={ this.state.cartItems } totalPrice={ this.state.cartTotal } />
-                    </Modal.Body>
-                    <Modal.Footer>
-                        {buyButton}
-                        <Button className="btn btn-default" onClick={this.close}>
-                            <span className="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
-                        </Button>
-                    </Modal.Footer>
+                    {contents}
                 </Modal>
             </div>
         )

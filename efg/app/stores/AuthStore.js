@@ -34,6 +34,7 @@ var AuthStore = assign({}, EventEmitter.prototype, {
     },
 
     isLoggedIn: function() {
+        console.log('isLoggedIn', _isLoggedIn);
         return _isLoggedIn;
     },
 
@@ -74,6 +75,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             break;
 
         case ActionTypes.LOGIN_RESPONSE:
+            console.log('Login response is callled.');
             if (payload.json) {
                 // Successfully logged in and get access token back. If remember me is checked, then a refresh token is returned as well.
                 _isLoggedIn = true;
@@ -101,13 +103,13 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             AuthStore.emitChange();
             break;
         case ActionTypes.REFRESH:
-            //console.log('refreshed access token is saved');
+            console.log('refreshed access token is saved');
             _accessToken = payload.accessToken;
             localStorage.setItem('accessToken', _accessToken);
             break;
 
         case ActionTypes.LOGOUT:
-            //console.log('logout  action type in AuthStore');
+            console.log('logout  action type in AuthStore');
             _isLoggedIn = false;
             _accessToken = null;
             localStorage.removeItem('accessToken');
@@ -120,19 +122,25 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             AuthStore.emitChange();
             break;
         case ActionTypes.INIT:
-            //console.log('init is called');
             var accessToken = localStorage.getItem('accessToken');
             if(accessToken) {
+                console.log('there is an accessToken', accessToken);
                 _isLoggedIn = true;
                 _accessToken = accessToken;
                 var jwt = jwtDecode(_accessToken);
                 //console.log('jwt', jwt);
                 _currentUser = jwt.user;
-            }
-            var refreshToken = localStorage.getItem('refreshToken');
-            if(refreshToken) {
-                _rememberMe = true;
-                _refreshToken = refreshToken;
+
+                var refreshToken = localStorage.getItem('refreshToken');
+                if(refreshToken) {
+                    _rememberMe = true;
+                    _refreshToken = refreshToken;
+                }
+            } else {
+                console.log('there is no accessToken');
+                _isLoggedIn = false;
+                _accessToken = null;
+                _currentUser = { userId: '', roles: ['anonymous']};
             }
             AuthStore.emitChange();
             break;

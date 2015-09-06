@@ -31,12 +31,6 @@ var CheckoutButton = require('./cart/CheckoutButton.js');
 
 
 var Header = React.createClass({
-
-    propTypes: {
-        isLoggedIn: ReactPropTypes.bool,
-        email: ReactPropTypes.string
-    },
-
     getInitialState: function() {
         return {
             menu: MenuStore.getMenu(),

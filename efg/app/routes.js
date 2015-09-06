@@ -21,8 +21,6 @@ var News = require('./components/common/News.js');
 var Forum = require('./components/common/Forum.js');
 var Catalog = require('./components/catalog/Catalog.js');
 var Cart = require('./components/cart/Cart.js');
-var NewProduct = require('./components/catalog/NewProduct.js');
-var EditProduct = require('./components/catalog/EditProduct.js');
 
 var Admin = React.createClass({
     render: function() {
@@ -120,8 +118,6 @@ module.exports = (
         <Route name="news" path="/news" handler={News} />
         <Route name="forum" path="/forum" handler={Forum} />
         <Route name="catalog" path="/catalog" handler={Catalog}/>
-        <Route name="newProduct" path="/catalog/newProduct" handler={NewProduct}/>
-        <Route name="editProduct" path="/catalog/:rid/editProduct" handler={EditProduct}/>
         <Route name="admin" path="/admin" handler={Admin} />
         <Route name="roleAdmin" path="/admin/roleAdmin" handler={RoleAdmin} />
         <Route name="userAdmin" path="/admin/userAdmin" handler={UserAdmin} />

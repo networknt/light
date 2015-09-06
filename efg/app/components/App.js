@@ -9,6 +9,8 @@ var AuthStore = require('../stores/AuthStore.js');
 var RouteStore = require('../stores/RouteStore.js');
 var AuthActionCreators = require('../actions/AuthActionCreators.js');
 
+console.log('App is called');
+
 function getStateFromStores() {
     return {
         isLoggedIn: AuthStore.isLoggedIn()
@@ -23,11 +25,7 @@ var App = React.createClass({
 
     componentDidMount: function() {
         AuthStore.addChangeListener(this._onChange);
-        var accessToken = localStorage.getItem('accessToken');
-        if(accessToken) {
-            console.log('init is triggered');
-            AuthActionCreators.init();
-        }
+        AuthActionCreators.init();
     },
 
     componentWillUnmount: function() {
@@ -41,7 +39,7 @@ var App = React.createClass({
     render: function() {
         return (
             <div className="app">
-                <Header isLoggedIn={this.state.isLoggedIn} />
+                <Header/>
                 <RouteHandler/>
                 <Footer/>
             </div>
