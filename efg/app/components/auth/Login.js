@@ -9,19 +9,7 @@ var ErrorNotice = require('../../components/common/ErrorNotice.js');
 var Login = React.createClass({
 
     getInitialState: function() {
-        return { errors: [], rememberMe: false };
-    },
-
-    componentDidMount: function() {
-        AuthStore.addChangeListener(this._onChange);
-    },
-
-    componentWillUnmount: function() {
-        AuthStore.removeChangeListener(this._onChange);
-    },
-
-    _onChange: function() {
-        this.setState({rememberMe : !this.state.rememberMe });
+        return { errors: []};
     },
 
     _onSubmit: function(e) {
@@ -54,7 +42,7 @@ var Login = React.createClass({
                             </div>
                             <div className="card--login__field">
                                 <label name="rememberMe">Remember me</label>
-                                <input type="checkbox" onChange={this.onChange} name="rememberMe" ref="rememberMe" />
+                                <input type="checkbox" name="rememberMe" ref="rememberMe" />
                             </div>
                             <button type="submit" className="card--login__submit">Login</button>
                         </form>

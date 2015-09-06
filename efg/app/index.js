@@ -120,6 +120,16 @@ $.ajaxPrefilter(function(options, originalOptions, jqxhr) {
 
 var router = require('./stores/RouteStore.js').getRouter();
 
+// TODO remove it
+var warn = console.warn;
+console.warn = function(warning) {
+    if (/(setState)/.test(warning)) {
+        throw new Error(warning);
+    }
+    warn.apply(console, arguments);
+};
+
+
 router.run(function (Handler) {
     React.render(<Handler/>, document.getElementById('content'));
 });
