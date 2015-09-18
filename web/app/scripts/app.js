@@ -54,7 +54,7 @@ var lightApp = angular.module('lightApp', [
                     console.log(res.data);
                     console.log(res.status);
                     if (res.status === 401) {
-                        if(res.data && res.data === 'token_expired') {
+                        if(res.data && res.data.error === 'token_expired') {
                             // token expired
                             console.log('logout() is called');
                             $rootScope.logout();

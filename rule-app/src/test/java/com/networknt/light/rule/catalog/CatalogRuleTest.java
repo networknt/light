@@ -70,6 +70,8 @@ public class CatalogRuleTest extends TestCase {
     String getExamCatalogProduct2 = "{\"readOnly\":true,\"category\":\"catalog\",\"name\":\"getCatalogProduct\",\"data\":{\"host\":\"www.example.com\",\"pageSize\":3,\"pageNo\":2}}";
     String getExamCatalogProduct3 = "{\"readOnly\":true,\"category\":\"catalog\",\"name\":\"getCatalogProduct\",\"data\":{\"host\":\"www.example.com\",\"pageSize\":3,\"pageNo\":3}}";
 
+    String getExamProduct = "{\"readOnly\":true,\"category\":\"catalog\",\"name\":\"getProduct\",\"data\":{\"host\":\"www.example.com\"}}";
+
     public CatalogRuleTest(String name) {
         super(name);
     }
@@ -327,6 +329,11 @@ public class CatalogRuleTest extends TestCase {
 
         }
 
+        // get product for a single catalog by catalogId
+        {
+            String json = getProduct(getExamProduct, "catalog1", ownerToken);
+            System.out.println("product for catalog1" + json);
+        }
     }
 
     private void addCatalog(String json, JsonToken token) throws Exception {
@@ -377,4 +384,20 @@ public class CatalogRuleTest extends TestCase {
         assertTrue(ruleResult);
         return (String)jsonMap.get("result");
     }
+
+    private String getProduct(String json, String catalogId, JsonToken token) throws Exception {
+        Map<String, Object> jsonMap = null;
+        boolean ruleResult = false;
+        jsonMap = mapper.readValue(json,
+                new TypeReference<HashMap<String, Object>>() {
+                });
+        jsonMap.put("payload", token.getPayload());
+        Map<String, Object> data = (Map<String, Object>)jsonMap.get("data");
+        data.put("catalogId", catalogId);
+        GetProductRule rule = new GetProductRule();
+        ruleResult = rule.execute(jsonMap);
+        assertTrue(ruleResult);
+        return (String)jsonMap.get("result");
+    }
+
 }

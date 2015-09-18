@@ -29,7 +29,7 @@ angular.module('lightApp')
             if (rejection.status === 401) {
                 var authService = $injector.get('authService');
                 console.log('rejection.data', rejection.data);
-                if(rejection.data === 'token_expired') {
+                if(rejection.data.error === 'token_expired') {
                     console.log("token expired, renewing...")
                     httpBuffer.append(rejection.config, deferred);
                     console.log("rejection and deferred are added to httpBuffer", rejection, deferred);

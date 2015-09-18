@@ -1,0 +1,33 @@
+{
+  "name": "web",
+  "version": "0.0.0",
+  "dependencies": {
+    "babel": "^5.6.14",
+    "babel-core": "^5.2.17",
+    "babel-loader": "^5.2.2",
+    "bootstrap": "^3.3.5",
+    "css-loader": "^0.12.1",
+    "file-loader": "^0.8.4",
+    "jquery": "^2.1.4",
+    "jsx-loader": "^0.13.2",
+    "less": "^2.5.1",
+    "less-loader": "^2.2.0",
+    "react": "^0.13.3",
+    "react-bootstrap": "^0.23.5",
+    "react-router": "^0.13.3",
+    "react-router-bootstrap": "^0.16.0",
+    "style-loader": "^0.12.3",
+    "url-loader": "^0.5.6"
+  },
+  "devDependencies": {
+    "webpack": "^1.10.0",
+    "webpack-dev-server": "^1.10.0"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "grunt test",
+    "start": "webpack-dev-server --content-base app"
+  }
+}
