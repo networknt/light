@@ -20,18 +20,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.tools.DiagnosticCollector;
-import javax.tools.FileObject;
-import javax.tools.ForwardingJavaFileManager;
-import javax.tools.JavaCompiler;
+import javax.tools.*;
 import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
-import javax.tools.SimpleJavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.StandardLocation;
-import javax.tools.ToolProvider;
 
 /**
  * Compile a String or other {@link CharSequence}, returning a Java
@@ -291,11 +282,13 @@ public class CharSequenceCompiler<T> {
         }
         // Get a CompliationTask from the compiler and compile the sources
         final CompilationTask task = compiler.getTask(null, javaFileManager,
-                diagnostics, options, null, sources);
+				diagnostics, options, null, sources);
         final Boolean result = task.call();
         if (result == null || !result.booleanValue()) {
-            logger.error("Compile:" + diagnostics);
-            throw new CharSequenceCompilerException("Compilation failed.",
+            for(Diagnostic d: diagnostics.getDiagnostics()) {
+				logger.error(d.toString());
+			}
+			throw new CharSequenceCompilerException("Compilation failed.",
                     classes.keySet(), diagnostics);
         }
         try {

@@ -103,7 +103,7 @@ module.exports = {
             console.log('getMenu done', data);
             ServerActionCreators.receiveMenu(data, null);
         }).fail(function(error) {
-            console.log('error', error);
+            console.log('getMenu error', error);
             ServerActionCreators.receiveMenu(null, error);
         });
     },

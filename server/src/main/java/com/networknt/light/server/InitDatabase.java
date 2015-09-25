@@ -1618,6 +1618,44 @@ public class InitDatabase {
                             "        return user;\n" +
                             "    }\n" +
                             "\n" +
+                            "    protected Vertex addActivation(String userId) throws Exception {\n" +
+                            "        Vertex activation = null;\n" +
+                            "        String code = HashUtil.generateUUID();\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            activation = graph.addVertex(\"class:Activation\", \"userId\", userId, \"code\", code, \"createDate\", new Date());\n" +
+                            "            graph.commit();\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "        return activation;\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    protected void delActivation(String userId, String code) throws Exception {\n" +
+                            "        Vertex activation = null;\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            activation = graph.getVertexByKey(\"Activation.userId\", userId);\n" +
+                            "            if(activation != null && code != null && code.equals(activation.getProperty(\"code\"))) {\n" +
+                            "                activation.remove();\n" +
+                            "            }\n" +
+                            "            \n" +
+                            "            graph.commit();\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
                             "    protected void delUser(Map<String, Object> data) throws Exception {\n" +
                             "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
                             "        try {\n" +
@@ -1662,7 +1700,7 @@ public class InitDatabase {
                             "            graph.begin();\n" +
                             "            Vertex user = graph.getVertexByKey(\"User.userId\", data.get(\"userId\"));\n" +
                             "            if(user != null) {\n" +
-                            "                user.setProperty(\"role\", data.get(\"roles\"));\n" +
+                            "                user.setProperty(\"roles\", data.get(\"roles\"));\n" +
                             "                user.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
                             "                Vertex updateUser = graph.getVertexByKey(\"User.userId\", data.get(\"updateUserId\"));\n" +
                             "                updateUser.addEdge(\"Update\", user);\n" +

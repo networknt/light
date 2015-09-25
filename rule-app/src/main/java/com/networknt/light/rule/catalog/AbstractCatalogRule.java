@@ -264,6 +264,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                     inputMap.put("eventMap", eventMap);
                     eventData.put("productId", product.getProperty("productId"));
                     eventData.put("name", data.get("name"));
+                    eventData.put("host", data.get("host"));
                     eventData.put("description", data.get("description"));
                     eventData.put("variants", data.get("variants"));
                     eventData.put("updateDate", new java.util.Date());
