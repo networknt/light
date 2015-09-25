@@ -3250,20 +3250,20 @@
   },
   {
     "@type": "d",
-    "@rid": "#18:173",
+    "@rid": "#18:13",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10174,
+    "eventId": 10014,
     "createUserId": "stevehu",
     "data": {
-      "sourceCode": "/*\n * Copyright 2015 Network New Technologies Inc.\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\npackage com.networknt.light.rule.catalog;\n\nimport com.fasterxml.jackson.core.type.TypeReference;\nimport com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\nimport com.networknt.light.rule.BranchRule;\nimport com.networknt.light.rule.Rule;\nimport com.networknt.light.server.DbService;\nimport com.networknt.light.util.HashUtil;\nimport com.networknt.light.util.ServiceLocator;\nimport com.orientechnologies.orient.core.db.record.OIdentifiable;\nimport com.orientechnologies.orient.core.index.OCompositeKey;\nimport com.orientechnologies.orient.core.index.OIndex;\nimport com.orientechnologies.orient.core.record.impl.ODocument;\nimport com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;\nimport com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;\nimport com.tinkerpop.blueprints.Direction;\nimport com.tinkerpop.blueprints.Edge;\nimport com.tinkerpop.blueprints.Vertex;\nimport com.tinkerpop.blueprints.impls.orient.OrientGraph;\nimport com.tinkerpop.blueprints.impls.orient.OrientVertex;\nimport org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\n\nimport java.util.*;\nimport java.util.concurrent.ConcurrentMap;\n\n/**\n * Created by steve on 25/04/15.\n */\npublic abstract class AbstractCatalogRule extends BranchRule implements Rule {\n    static final Logger logger = LoggerFactory.getLogger(AbstractCatalogRule.class);\n    static final String branchType = \"catalog\";\n\n    public abstract boolean execute (Object ...objects) throws Exception;\n\n    public boolean addProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) inputMap.get(\"data\");\n        String host = (String) data.get(\"host\");\n        String error = null;\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n        String userHost = (String)user.get(\"host\");\n        if(userHost != null && !userHost.equals(host)) {\n            error = \"You can only add product from host: \" + host;\n            inputMap.put(\"responseCode\", 403);\n        } else {\n            Map eventMap = getEventMap(inputMap);\n            Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n            inputMap.put(\"eventMap\", eventMap);\n            eventData.putAll((Map<String, Object>) inputMap.get(\"data\"));\n            eventData.put(\"createDate\", new java.util.Date());\n            eventData.put(\"createUserId\", user.get(\"userId\"));\n            OrientGraph graph = ServiceLocator.getInstance().getGraph();\n            try {\n                // make sure parent exists if it is not empty.\n                List<String> parentRids = (List<String>)data.get(\"in_HasProduct\");\n                if(parentRids != null && parentRids.size() == 1) {\n                    Vertex parent = DbService.getVertexByRid(graph, parentRids.get(0));\n                    if(parent == null) {\n                        error = \"Parent with @rid \" + parentRids.get(0) + \" cannot be found.\";\n                        inputMap.put(\"responseCode\", 404);\n                    } else {\n                        // convert parent from @rid to id\n                        List in_HasProduct = new ArrayList();\n                        in_HasProduct.add(parent.getProperty(\"catalogId\"));\n                        eventData.put(\"in_HasProduct\", in_HasProduct);\n                    }\n                }\n                if(error == null) {\n                    eventData.put(\"productId\", HashUtil.generateUUID());\n                }\n            } catch (Exception e) {\n                logger.error(\"Exception:\", e);\n                throw e;\n            } finally {\n                graph.shutdown();\n            }\n        }\n        if(error != null) {\n            inputMap.put(\"result\", error);\n            return false;\n        } else {\n            // update the branch tree as the number of products has changed.\n            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage(\"branchMap\");\n            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get(\"treeCache\");\n            if(cache != null) {\n                cache.remove(host + branchType);\n            }\n            return true;\n        }\n    }\n\n    public boolean addProductEv (Object ...objects) throws Exception {\n        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n        addProductDb(data);\n        return true;\n    }\n\n    protected void addProductDb(Map<String, Object> data) throws Exception {\n        String className = \"Catalog\";\n        String id = \"catalogId\";\n        String index = className + \".\" + id;\n        String host = (String)data.get(\"host\");\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try{\n            graph.begin();\n            OrientVertex createUser = (OrientVertex)graph.getVertexByKey(\"User.userId\", data.remove(\"createUserId\"));\n            List<String> parentIds = (List<String>)data.remove(\"in_HasProduct\");\n            OrientVertex product = graph.addVertex(\"class:Product\", data);\n            createUser.addEdge(\"Create\", product);\n            // parent\n            if(parentIds != null && parentIds.size() == 1) {\n                OrientVertex parent = getBranchByHostId(graph, branchType, host, parentIds.get(0));\n                if(parent != null) {\n                    parent.addEdge(\"HasProduct\", product);\n                }\n            }\n            // tag\n            Set<String> inputTags = data.get(\"tags\") != null? new HashSet<String>(Arrays.asList(((String) data.get(\"tags\")).split(\"\\\\s*,\\\\s*\"))) : new HashSet<String>();\n            for(String tagId: inputTags) {\n                Vertex tag = null;\n                // get the tag is it exists\n                OIndex<?> tagHostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(\"tagHostIdIdx\");\n                logger.debug(\"tagHostIdIdx = \" + tagHostIdIdx);\n                OCompositeKey tagKey = new OCompositeKey(host, tagId);\n                logger.debug(\"tagKey =\" + tagKey);\n                OIdentifiable tagOid = (OIdentifiable) tagHostIdIdx.get(tagKey);\n                if (tagOid != null) {\n                    tag = graph.getVertex(tagOid.getRecord());\n                    product.addEdge(\"HasTag\", tag);\n                } else {\n                    tag = graph.addVertex(\"class:Tag\", \"host\", host, \"tagId\", tagId, \"createDate\", data.get(\"createDate\"));\n                    createUser.addEdge(\"Create\", tag);\n                    product.addEdge(\"HasTag\", tag);\n                }\n            }\n            graph.commit();\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            graph.rollback();\n        } finally {\n            graph.shutdown();\n        }\n    }\n\n    public boolean delProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) inputMap.get(\"data\");\n        String rid = (String)data.get(\"@rid\");\n        String host = (String)data.get(\"host\");\n        String error = null;\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OrientVertex product = (OrientVertex) DbService.getVertexByRid(graph, rid);\n            if(product != null) {\n                // check if the product has variant, if yes, you cannot delete it for now\n                // TODO fix it after orientdb 2.2 release.\n                // https://github.com/orientechnologies/orientdb/issues/1108\n                if(product.countEdges(Direction.OUT, \"HasComment\") > 0) {\n                    error = \"Product has comment(s), cannot be deleted\";\n                    inputMap.put(\"responseCode\", 400);\n                } else {\n                    Map eventMap = getEventMap(inputMap);\n                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n                    inputMap.put(\"eventMap\", eventMap);\n                    eventData.put(\"productId\", product.getProperty(\"productId\"));\n                }\n            } else {\n                error = \"@rid \" + rid + \" cannot be found\";\n                inputMap.put(\"responseCode\", 404);\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            throw e;\n        } finally {\n            graph.shutdown();\n        }\n        if(error != null) {\n            inputMap.put(\"result\", error);\n            return false;\n        } else {\n            // update the branch tree as the number of products has changed.\n            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage(\"branchMap\");\n            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get(\"treeCache\");\n            if(cache != null) {\n                cache.remove(host + branchType);\n            }\n            return true;\n        }\n    }\n\n    public boolean delProductEv (Object ...objects) throws Exception {\n        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n        delProductDb(data);\n        return true;\n    }\n\n    protected void delProductDb(Map<String, Object> data) throws Exception {\n        String className = \"Catalog\";\n        String id = \"catalogId\";\n        String index = className + \".\" + id;\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try{\n            graph.begin();\n            OrientVertex product = (OrientVertex)graph.getVertexByKey(\"Product.productId\", data.get(\"productId\"));\n            if(product != null) {\n                // TODO cascade deleting all comments belong to the product.\n                // Need to come up a query on that to get the entire tree.\n                /*\n                // https://github.com/orientechnologies/orientdb/issues/1108\n                delete graph...\n                */\n                graph.removeVertex(product);\n            }\n            graph.commit();\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            graph.rollback();\n        } finally {\n            graph.shutdown();\n        }\n    }\n\n    public boolean updProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) inputMap.get(\"data\");\n        String rid = (String) data.get(\"@rid\");\n        String host = (String) data.get(\"host\");\n        String error = null;\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            String userHost = (String)user.get(\"host\");\n            if(userHost != null && !userHost.equals(host)) {\n                inputMap.put(\"result\", \"You can only update \" + branchType + \" from host: \" + host);\n                inputMap.put(\"responseCode\", 403);\n                return false;\n            } else {\n                // update product itself and we might have a new api to move product from one parent to another.\n                Vertex product = DbService.getVertexByRid(graph, rid);\n                if(product != null) {\n                    Map eventMap = getEventMap(inputMap);\n                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n                    inputMap.put(\"eventMap\", eventMap);\n                    eventData.put(\"productId\", product.getProperty(\"productId\"));\n                    eventData.put(\"name\", data.get(\"name\"));\n                    eventData.put(\"description\", data.get(\"description\"));\n                    eventData.put(\"variants\", data.get(\"variants\"));\n                    eventData.put(\"updateDate\", new java.util.Date());\n                    eventData.put(\"updateUserId\", user.get(\"userId\"));\n\n                    // parent\n                    List parentRids = (List)data.get(\"in_HasProduct\");\n                    if(parentRids != null) {\n                        Vertex parent = DbService.getVertexByRid(graph, (String)parentRids.get(0));\n                        if(parent != null) {\n\n                            String storedParentRid = null;\n                            String storedParentId = null;\n                            for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.IN, \"HasProduct\")) {\n                                // we only expect one parent here.\n                                storedParentRid = vertex.getId().toString();\n                                storedParentId = vertex.getProperty(\"catalogId\");\n                            }\n                            if(parentRids.get(0).equals(storedParentRid)) {\n                                // same parent, do nothing\n                            } else {\n                                eventData.put(\"delParentId\", storedParentId);\n                                eventData.put(\"addParentId\", parent.getProperty(\"catalogId\"));\n                            }\n                        } else {\n                            inputMap.put(\"result\", \"Parent with @rid \" + parentRids.get(0) + \" cannot be found\");\n                            inputMap.put(\"responseCode\", 404);\n                            return false;\n                        }\n                    }\n\n                    // tags\n                    Set<String> inputTags = data.get(\"tags\") != null? new HashSet<String>(Arrays.asList(((String)data.get(\"tags\")).split(\"\\\\s*,\\\\s*\"))) : new HashSet<String>();\n                    Set<String> storedTags = new HashSet<String>();\n                    for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.OUT, \"HasTag\")) {\n                        storedTags.add((String)vertex.getProperty(\"tagId\"));\n                    }\n\n                    Set<String> addTags = new HashSet<String>(inputTags);\n                    Set<String> delTags = new HashSet<String>(storedTags);\n                    addTags.removeAll(storedTags);\n                    delTags.removeAll(inputTags);\n\n                    if(addTags.size() > 0) eventData.put(\"addTags\", addTags);\n                    if(delTags.size() > 0) eventData.put(\"delTags\", delTags);\n                } else {\n                    error = \"@rid \" + rid + \" cannot be found\";\n                    inputMap.put(\"responseCode\", 404);\n                }\n            }\n\n            // make sure parent exists if it is not empty.\n\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            throw e;\n        } finally {\n            graph.shutdown();\n        }\n        if(error != null) {\n            inputMap.put(\"result\", error);\n            return false;\n        } else {\n            // update the branch tree as the last update time has changed.\n            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage(\"branchMap\");\n            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get(\"treeCache\");\n            if(cache != null) {\n                cache.remove(host + branchType);\n            }\n            return true;\n        }\n    }\n\n    public boolean updProductEv (Object ...objects) throws Exception {\n        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n        updProductDb(data);\n        return true;\n    }\n\n    protected void updProductDb(Map<String, Object> data) throws Exception {\n        String host = (String)data.get(\"host\");\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try{\n            graph.begin();\n            Vertex updateUser = graph.getVertexByKey(\"User.userId\", data.remove(\"updateUserId\"));\n            OrientVertex product = (OrientVertex)graph.getVertexByKey(\"Product.productId\", data.get(\"productId\"));\n            if(product != null) {\n                updateUser.addEdge(\"Update\", product);\n                // fields\n                if(data.get(\"name\") != null) {\n                    product.setProperty(\"name\", data.get(\"name\"));\n                } else {\n                    product.removeProperty(\"name\");\n                }\n                if(data.get(\"description\") != null) {\n                    product.setProperty(\"description\", data.get(\"description\"));\n                } else {\n                    product.removeProperty(\"description\");\n                }\n                if(data.get(\"variants\") != null) {\n                    product.setProperty(\"variants\", data.get(\"variants\"));\n                } else {\n                    product.removeProperty(\"variants\");\n                }\n                product.setProperty(\"updateDate\", data.get(\"updateDate\"));\n\n                // handle addParent and delParent\n                String delParentId = (String)data.get(\"delParentId\");\n                if(delParentId != null) {\n                    for (Edge edge : (Iterable<Edge>) product.getEdges(Direction.IN, \"HasProduct\")) {\n                        graph.removeEdge(edge);\n                    }\n                }\n                String addParentId = (String)data.get(\"addParentId\");\n                if(addParentId != null) {\n                    OrientVertex parent = getBranchByHostId(graph, branchType, host, addParentId);\n                    if (parent != null) {\n                        parent.addEdge(\"HasProduct\", product);\n                    }\n                }\n\n\n                // handle addTags and delTags\n                OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(\"tagHostIdIdx\");\n                Set<String> addTags = (Set)data.get(\"addTags\");\n                if(addTags != null) {\n                    for(String tagId: addTags) {\n                        OCompositeKey key = new OCompositeKey(data.get(\"host\"), tagId);\n                        OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);\n                        if (oid != null) {\n                            OrientVertex tag = (OrientVertex)oid.getRecord();\n                            product.addEdge(\"HasTag\", tag);\n                        } else {\n                            Vertex tag = graph.addVertex(\"class:Tag\", \"host\", data.get(\"host\"), \"tagId\", tagId, \"createDate\", data.get(\"createDate\"));\n                            updateUser.addEdge(\"Create\", tag);\n                            product.addEdge(\"HasTag\", tag);\n                        }\n                    }\n                }\n                Set<String> delTags = (Set)data.get(\"delTags\");\n                if(delTags != null) {\n                    for(String tagId: delTags) {\n                        OCompositeKey key = new OCompositeKey(data.get(\"host\"), tagId);\n                        OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);\n                        if (oid != null) {\n                            OrientVertex tag = (OrientVertex) oid.getRecord();\n                            for (Edge edge : (Iterable<Edge>) product.getEdges(Direction.OUT, \"HasTag\")) {\n                                if(edge.getVertex(Direction.IN).equals(tag)) graph.removeEdge(edge);\n                            }\n                        }\n                    }\n                }\n            }\n            graph.commit();\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            graph.rollback();\n        } finally {\n            graph.shutdown();\n        }\n    }\n\n    public boolean getCatalogProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n        String rid = (String)data.get(\"@rid\");\n        String host = (String)data.get(\"host\");\n        if(rid == null) {\n            // check if catalogId exists and convert it to rid.\n            String catalogId = (String)data.get(\"catalogId\");\n            if(catalogId == null) {\n                inputMap.put(\"result\", \"@rid or catalogId is required\");\n                inputMap.put(\"responseCode\", 400);\n                return false;\n            } else {\n                // find out rid from catalogId\n                OrientGraph graph = ServiceLocator.getInstance().getGraph();\n                try {\n                    OrientVertex catalog = getBranchByHostId(graph, \"catalog\", host, catalogId);\n                    if(catalog == null) {\n                        inputMap.put(\"result\", \"CatalogId \"  + catalogId + \" doesn't exist on host \" + host);\n                        inputMap.put(\"responseCode\", 400);\n                    } else {\n                        rid = catalog.getId().toString();\n                    }\n                } catch (Exception e) {\n                    logger.error(\"Exception:\", e);\n                    throw e;\n                } finally {\n                    graph.shutdown();\n                }\n            }\n        }\n        Integer pageSize = (Integer)data.get(\"pageSize\");\n        Integer pageNo = (Integer)data.get(\"pageNo\");\n        if(pageSize == null) {\n            inputMap.put(\"result\", \"pageSize is required\");\n            inputMap.put(\"responseCode\", 400);\n            return false;\n        }\n        if(pageNo == null) {\n            inputMap.put(\"result\", \"pageNo is required\");\n            inputMap.put(\"responseCode\", 400);\n            return false;\n        }\n        String sortDir = (String)data.get(\"sortDir\");\n        String sortedBy = (String)data.get(\"sortedBy\");\n        if(sortDir == null) {\n            sortDir = \"desc\";\n        }\n        if(sortedBy == null) {\n            sortedBy = \"createDate\";\n        }\n        boolean allowUpdate = false;\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        if(payload != null) {\n            Map<String,Object> user = (Map<String, Object>)payload.get(\"user\");\n            List roles = (List)user.get(\"roles\");\n            if(roles.contains(\"owner\")) {\n                allowUpdate = true;\n            } else if(roles.contains(\"admin\") || roles.contains(\"catalogAdmin\") || roles.contains(\"productAdmin\")){\n                if(host.equals(user.get(\"host\"))) {\n                    allowUpdate = true;\n                }\n            }\n        }\n        // get ancestors\n        List<Map<String, Object>> ancestors = getAncestorDb(rid);\n\n        // TODO support the following lists: recent, popular\n        // Get the page from cache.\n        List<String> list = null;\n        Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage(\"branchMap\");\n        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)branchMap.get(\"listCache\");\n        if(listCache == null) {\n            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n                    .maximumWeightedCapacity(1000)\n                    .build();\n            branchMap.put(\"listCache\", listCache);\n        } else {\n            list = (List<String>)listCache.get(rid + sortedBy);\n        }\n\n        ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)branchMap.get(\"productCache\");\n        if(productCache == null) {\n            productCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n                    .maximumWeightedCapacity(1000)\n                    .build();\n            branchMap.put(\"productCache\", productCache);\n        }\n\n        if(list == null) {\n            // get the list for db\n            list = new ArrayList<String>();\n            String json = getCatalogProductDb(rid, sortedBy);\n            if(json != null) {\n                // convert json to list of maps.\n                List<Map<String, Object>> products = mapper.readValue(json,\n                        new TypeReference<ArrayList<HashMap<String, Object>>>() {\n                        });\n                for(Map<String, Object> product: products) {\n                    String productRid = (String)product.get(\"rid\");\n                    list.add(productRid);\n                    product.remove(\"@rid\");\n                    product.remove(\"@type\");\n                    product.remove(\"@version\");\n                    product.remove(\"@fieldTypes\");\n                    productCache.put(productRid, product);\n                }\n            }\n            listCache.put(rid + sortedBy, list);\n        }\n        long total = list.size();\n        if(total > 0) {\n            List<Map<String, Object>> products = new ArrayList<Map<String, Object>>();\n            for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {\n                String productRid = list.get(i);\n                Map<String, Object> product = (Map<String, Object>)productCache.get(productRid);\n                products.add(product);\n            }\n            Map<String, Object> result = new HashMap<String, Object>();\n            result.put(\"total\", total);\n            result.put(\"products\", products);\n            result.put(\"rid\", rid);\n            result.put(\"allowUpdate\", allowUpdate);\n            result.put(\"ancestors\", ancestors);\n            inputMap.put(\"result\", mapper.writeValueAsString(result));\n            return true;\n        } else {\n            // there is no product available. but still need to return allowUpdate\n            Map<String, Object> result = new HashMap<String, Object>();\n            result.put(\"total\", 0);\n            result.put(\"rid\", rid);\n            result.put(\"allowUpdate\", allowUpdate);\n            result.put(\"ancestors\", ancestors);\n            inputMap.put(\"result\", mapper.writeValueAsString(result));\n            return true;\n        }\n    }\n\n\n    protected String getCatalogProductDb(String rid, String sortedBy) {\n        String json = null;\n        // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.\n        String sql = \"select @rid, productId, name, description, variants, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId \" +\n                \"from (traverse out_Own, out_HasProduct from ?) where @class = 'Product' order by \" + sortedBy + \" desc\";\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> products = graph.getRawGraph().command(query).execute(rid);\n            if(products.size() > 0) {\n                json = OJSONWriter.listToJSON(products, null);\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n        } finally {\n            graph.shutdown();\n        }\n        return json;\n    }\n\n    protected List getAncestorDb(String rid) {\n        List<Map<String, Object>> ancestors = null;\n        String sql = \"select @rid, catalogId, description from (traverse in('Own') from ?)\";\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> docs = graph.getRawGraph().command(query).execute(rid);\n            if(docs.size() > 0) {\n                ancestors = new ArrayList<Map<String, Object>>();\n                for (int i=docs.size()-1; i >= 0; i--) {\n                    Map<String, Object> map = new HashMap<String, Object>();\n                    OrientVertex doc = graph.getVertex(docs.get(i).getRecord());\n                    String id = doc.getProperty(\"rid\").toString();\n                    id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));\n                    map.put(\"rid\", id);\n                    map.put(\"catalogId\", doc.getProperty(\"catalogId\"));\n                    map.put(\"description\", doc.getProperty(\"description\"));\n                    ancestors.add(map);\n                }\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n        } finally {\n            graph.shutdown();\n        }\n        return ancestors;\n    }\n\n    public boolean getProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n        String catalogId = (String)data.get(\"catalogId\");\n        String host = (String)data.get(\"host\");\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        String json = null;\n        Map<String,Object> user = (Map<String, Object>)payload.get(\"user\");\n        List roles = (List)user.get(\"roles\");\n        if(roles.contains(\"owner\")) {\n            json = getProductDb();\n        } else {\n            if(host.equals(user.get(\"host\"))) {\n                json = getProductDb(host);\n            } else {\n                inputMap.put(\"result\", \"Permission denied\");\n                inputMap.put(\"responseCode\", 401);\n                return false;\n            }\n        }\n        if(json != null) {\n            inputMap.put(\"result\", json);\n            return true;\n        } else {\n            inputMap.put(\"result\", \"Not Found\");\n            inputMap.put(\"responseCode\", 404);\n            return false;\n        }\n    }\n\n    protected String getProductDb(String host) {\n        String json = null;\n        String sql = \"select from product where host = ?\";\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> products = graph.getRawGraph().command(query).execute(host);\n            if(products.size() > 0) {\n                json = OJSONWriter.listToJSON(products, null);\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n        } finally {\n            graph.shutdown();\n        }\n        return json;\n    }\n\n    protected String getProductDb() {\n        String json = null;\n        String sql = \"select from product\";\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> products = graph.getRawGraph().command(query).execute();\n            if(products.size() > 0) {\n                json = OJSONWriter.listToJSON(products, null);\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n        } finally {\n            graph.shutdown();\n        }\n        return json;\n    }\n\n}\n",
+      "sourceCode": "/*\n * Copyright 2015 Network New Technologies Inc.\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n *     http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n */\n\npackage com.networknt.light.rule.catalog;\n\nimport com.fasterxml.jackson.core.type.TypeReference;\nimport com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;\nimport com.networknt.light.rule.BranchRule;\nimport com.networknt.light.rule.Rule;\nimport com.networknt.light.server.DbService;\nimport com.networknt.light.util.HashUtil;\nimport com.networknt.light.util.ServiceLocator;\nimport com.orientechnologies.orient.core.db.record.OIdentifiable;\nimport com.orientechnologies.orient.core.index.OCompositeKey;\nimport com.orientechnologies.orient.core.index.OIndex;\nimport com.orientechnologies.orient.core.record.impl.ODocument;\nimport com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;\nimport com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;\nimport com.tinkerpop.blueprints.Direction;\nimport com.tinkerpop.blueprints.Edge;\nimport com.tinkerpop.blueprints.Vertex;\nimport com.tinkerpop.blueprints.impls.orient.OrientGraph;\nimport com.tinkerpop.blueprints.impls.orient.OrientVertex;\nimport org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\n\nimport java.util.*;\nimport java.util.concurrent.ConcurrentMap;\n\n/**\n * Created by steve on 25/04/15.\n */\npublic abstract class AbstractCatalogRule extends BranchRule implements Rule {\n    static final Logger logger = LoggerFactory.getLogger(AbstractCatalogRule.class);\n    static final String branchType = \"catalog\";\n\n    public abstract boolean execute (Object ...objects) throws Exception;\n\n    public boolean addProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) inputMap.get(\"data\");\n        String host = (String) data.get(\"host\");\n        String error = null;\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n        String userHost = (String)user.get(\"host\");\n        if(userHost != null && !userHost.equals(host)) {\n            error = \"You can only add product from host: \" + host;\n            inputMap.put(\"responseCode\", 403);\n        } else {\n            Map eventMap = getEventMap(inputMap);\n            Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n            inputMap.put(\"eventMap\", eventMap);\n            eventData.putAll((Map<String, Object>) inputMap.get(\"data\"));\n            eventData.put(\"createDate\", new java.util.Date());\n            eventData.put(\"createUserId\", user.get(\"userId\"));\n            OrientGraph graph = ServiceLocator.getInstance().getGraph();\n            try {\n                // make sure parent exists if it is not empty.\n                List<String> parentRids = (List<String>)data.get(\"in_HasProduct\");\n                if(parentRids != null && parentRids.size() == 1) {\n                    Vertex parent = DbService.getVertexByRid(graph, parentRids.get(0));\n                    if(parent == null) {\n                        error = \"Parent with @rid \" + parentRids.get(0) + \" cannot be found.\";\n                        inputMap.put(\"responseCode\", 404);\n                    } else {\n                        // convert parent from @rid to id\n                        List in_HasProduct = new ArrayList();\n                        in_HasProduct.add(parent.getProperty(\"catalogId\"));\n                        eventData.put(\"in_HasProduct\", in_HasProduct);\n                    }\n                }\n                if(error == null) {\n                    eventData.put(\"productId\", HashUtil.generateUUID());\n                }\n            } catch (Exception e) {\n                logger.error(\"Exception:\", e);\n                throw e;\n            } finally {\n                graph.shutdown();\n            }\n        }\n        if(error != null) {\n            inputMap.put(\"result\", error);\n            return false;\n        } else {\n            // update the branch tree as the number of products has changed.\n            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage(\"branchMap\");\n            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get(\"treeCache\");\n            if(cache != null) {\n                cache.remove(host + branchType);\n            }\n            return true;\n        }\n    }\n\n    public boolean addProductEv (Object ...objects) throws Exception {\n        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n        addProductDb(data);\n        return true;\n    }\n\n    protected void addProductDb(Map<String, Object> data) throws Exception {\n        String className = \"Catalog\";\n        String id = \"catalogId\";\n        String index = className + \".\" + id;\n        String host = (String)data.get(\"host\");\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try{\n            graph.begin();\n            OrientVertex createUser = (OrientVertex)graph.getVertexByKey(\"User.userId\", data.remove(\"createUserId\"));\n            List<String> parentIds = (List<String>)data.remove(\"in_HasProduct\");\n            OrientVertex product = graph.addVertex(\"class:Product\", data);\n            createUser.addEdge(\"Create\", product);\n            // parent\n            if(parentIds != null && parentIds.size() == 1) {\n                OrientVertex parent = getBranchByHostId(graph, branchType, host, parentIds.get(0));\n                if(parent != null) {\n                    parent.addEdge(\"HasProduct\", product);\n                }\n            }\n            // tag\n            Set<String> inputTags = data.get(\"tags\") != null? new HashSet<String>(Arrays.asList(((String) data.get(\"tags\")).split(\"\\\\s*,\\\\s*\"))) : new HashSet<String>();\n            for(String tagId: inputTags) {\n                Vertex tag = null;\n                // get the tag is it exists\n                OIndex<?> tagHostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(\"tagHostIdIdx\");\n                logger.debug(\"tagHostIdIdx = \" + tagHostIdIdx);\n                OCompositeKey tagKey = new OCompositeKey(host, tagId);\n                logger.debug(\"tagKey =\" + tagKey);\n                OIdentifiable tagOid = (OIdentifiable) tagHostIdIdx.get(tagKey);\n                if (tagOid != null) {\n                    tag = graph.getVertex(tagOid.getRecord());\n                    product.addEdge(\"HasTag\", tag);\n                } else {\n                    tag = graph.addVertex(\"class:Tag\", \"host\", host, \"tagId\", tagId, \"createDate\", data.get(\"createDate\"));\n                    createUser.addEdge(\"Create\", tag);\n                    product.addEdge(\"HasTag\", tag);\n                }\n            }\n            graph.commit();\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            graph.rollback();\n        } finally {\n            graph.shutdown();\n        }\n    }\n\n    public boolean delProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) inputMap.get(\"data\");\n        String rid = (String)data.get(\"@rid\");\n        String host = (String)data.get(\"host\");\n        String error = null;\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OrientVertex product = (OrientVertex) DbService.getVertexByRid(graph, rid);\n            if(product != null) {\n                // check if the product has variant, if yes, you cannot delete it for now\n                // TODO fix it after orientdb 2.2 release.\n                // https://github.com/orientechnologies/orientdb/issues/1108\n                if(product.countEdges(Direction.OUT, \"HasComment\") > 0) {\n                    error = \"Product has comment(s), cannot be deleted\";\n                    inputMap.put(\"responseCode\", 400);\n                } else {\n                    Map eventMap = getEventMap(inputMap);\n                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n                    inputMap.put(\"eventMap\", eventMap);\n                    eventData.put(\"productId\", product.getProperty(\"productId\"));\n                }\n            } else {\n                error = \"@rid \" + rid + \" cannot be found\";\n                inputMap.put(\"responseCode\", 404);\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            throw e;\n        } finally {\n            graph.shutdown();\n        }\n        if(error != null) {\n            inputMap.put(\"result\", error);\n            return false;\n        } else {\n            // update the branch tree as the number of products has changed.\n            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage(\"branchMap\");\n            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get(\"treeCache\");\n            if(cache != null) {\n                cache.remove(host + branchType);\n            }\n            return true;\n        }\n    }\n\n    public boolean delProductEv (Object ...objects) throws Exception {\n        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n        delProductDb(data);\n        return true;\n    }\n\n    protected void delProductDb(Map<String, Object> data) throws Exception {\n        String className = \"Catalog\";\n        String id = \"catalogId\";\n        String index = className + \".\" + id;\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try{\n            graph.begin();\n            OrientVertex product = (OrientVertex)graph.getVertexByKey(\"Product.productId\", data.get(\"productId\"));\n            if(product != null) {\n                // TODO cascade deleting all comments belong to the product.\n                // Need to come up a query on that to get the entire tree.\n                /*\n                // https://github.com/orientechnologies/orientdb/issues/1108\n                delete graph...\n                */\n                graph.removeVertex(product);\n            }\n            graph.commit();\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            graph.rollback();\n        } finally {\n            graph.shutdown();\n        }\n    }\n\n    public boolean updProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) inputMap.get(\"data\");\n        String rid = (String) data.get(\"@rid\");\n        String host = (String) data.get(\"host\");\n        String error = null;\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            String userHost = (String)user.get(\"host\");\n            if(userHost != null && !userHost.equals(host)) {\n                inputMap.put(\"result\", \"You can only update \" + branchType + \" from host: \" + host);\n                inputMap.put(\"responseCode\", 403);\n                return false;\n            } else {\n                // update product itself and we might have a new api to move product from one parent to another.\n                Vertex product = DbService.getVertexByRid(graph, rid);\n                if(product != null) {\n                    Map eventMap = getEventMap(inputMap);\n                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n                    inputMap.put(\"eventMap\", eventMap);\n                    eventData.put(\"productId\", product.getProperty(\"productId\"));\n                    eventData.put(\"name\", data.get(\"name\"));\n                    eventData.put(\"host\", data.get(\"host\"));\n                    eventData.put(\"description\", data.get(\"description\"));\n                    eventData.put(\"variants\", data.get(\"variants\"));\n                    eventData.put(\"updateDate\", new java.util.Date());\n                    eventData.put(\"updateUserId\", user.get(\"userId\"));\n\n                    // parent\n                    List parentRids = (List)data.get(\"in_HasProduct\");\n                    if(parentRids != null) {\n                        Vertex parent = DbService.getVertexByRid(graph, (String)parentRids.get(0));\n                        if(parent != null) {\n\n                            String storedParentRid = null;\n                            String storedParentId = null;\n                            for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.IN, \"HasProduct\")) {\n                                // we only expect one parent here.\n                                storedParentRid = vertex.getId().toString();\n                                storedParentId = vertex.getProperty(\"catalogId\");\n                            }\n                            if(parentRids.get(0).equals(storedParentRid)) {\n                                // same parent, do nothing\n                            } else {\n                                eventData.put(\"delParentId\", storedParentId);\n                                eventData.put(\"addParentId\", parent.getProperty(\"catalogId\"));\n                            }\n                        } else {\n                            inputMap.put(\"result\", \"Parent with @rid \" + parentRids.get(0) + \" cannot be found\");\n                            inputMap.put(\"responseCode\", 404);\n                            return false;\n                        }\n                    }\n\n                    // tags\n                    Set<String> inputTags = data.get(\"tags\") != null? new HashSet<String>(Arrays.asList(((String)data.get(\"tags\")).split(\"\\\\s*,\\\\s*\"))) : new HashSet<String>();\n                    Set<String> storedTags = new HashSet<String>();\n                    for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.OUT, \"HasTag\")) {\n                        storedTags.add((String)vertex.getProperty(\"tagId\"));\n                    }\n\n                    Set<String> addTags = new HashSet<String>(inputTags);\n                    Set<String> delTags = new HashSet<String>(storedTags);\n                    addTags.removeAll(storedTags);\n                    delTags.removeAll(inputTags);\n\n                    if(addTags.size() > 0) eventData.put(\"addTags\", addTags);\n                    if(delTags.size() > 0) eventData.put(\"delTags\", delTags);\n                } else {\n                    error = \"@rid \" + rid + \" cannot be found\";\n                    inputMap.put(\"responseCode\", 404);\n                }\n            }\n\n            // make sure parent exists if it is not empty.\n\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            throw e;\n        } finally {\n            graph.shutdown();\n        }\n        if(error != null) {\n            inputMap.put(\"result\", error);\n            return false;\n        } else {\n            // update the branch tree as the last update time has changed.\n            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage(\"branchMap\");\n            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get(\"treeCache\");\n            if(cache != null) {\n                cache.remove(host + branchType);\n            }\n            return true;\n        }\n    }\n\n    public boolean updProductEv (Object ...objects) throws Exception {\n        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n        updProductDb(data);\n        return true;\n    }\n\n    protected void updProductDb(Map<String, Object> data) throws Exception {\n        String host = (String)data.get(\"host\");\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try{\n            graph.begin();\n            Vertex updateUser = graph.getVertexByKey(\"User.userId\", data.remove(\"updateUserId\"));\n            OrientVertex product = (OrientVertex)graph.getVertexByKey(\"Product.productId\", data.get(\"productId\"));\n            if(product != null) {\n                updateUser.addEdge(\"Update\", product);\n                // fields\n                if(data.get(\"name\") != null) {\n                    product.setProperty(\"name\", data.get(\"name\"));\n                } else {\n                    product.removeProperty(\"name\");\n                }\n                if(data.get(\"description\") != null) {\n                    product.setProperty(\"description\", data.get(\"description\"));\n                } else {\n                    product.removeProperty(\"description\");\n                }\n                if(data.get(\"variants\") != null) {\n                    product.setProperty(\"variants\", data.get(\"variants\"));\n                } else {\n                    product.removeProperty(\"variants\");\n                }\n                product.setProperty(\"updateDate\", data.get(\"updateDate\"));\n\n                // handle addParent and delParent\n                String delParentId = (String)data.get(\"delParentId\");\n                if(delParentId != null) {\n                    for (Edge edge : (Iterable<Edge>) product.getEdges(Direction.IN, \"HasProduct\")) {\n                        graph.removeEdge(edge);\n                    }\n                }\n                String addParentId = (String)data.get(\"addParentId\");\n                if(addParentId != null) {\n                    OrientVertex parent = getBranchByHostId(graph, branchType, host, addParentId);\n                    if (parent != null) {\n                        parent.addEdge(\"HasProduct\", product);\n                    }\n                }\n\n\n                // handle addTags and delTags\n                OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(\"tagHostIdIdx\");\n                Set<String> addTags = (Set)data.get(\"addTags\");\n                if(addTags != null) {\n                    for(String tagId: addTags) {\n                        OCompositeKey key = new OCompositeKey(data.get(\"host\"), tagId);\n                        OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);\n                        if (oid != null) {\n                            OrientVertex tag = (OrientVertex)oid.getRecord();\n                            product.addEdge(\"HasTag\", tag);\n                        } else {\n                            Vertex tag = graph.addVertex(\"class:Tag\", \"host\", data.get(\"host\"), \"tagId\", tagId, \"createDate\", data.get(\"createDate\"));\n                            updateUser.addEdge(\"Create\", tag);\n                            product.addEdge(\"HasTag\", tag);\n                        }\n                    }\n                }\n                Set<String> delTags = (Set)data.get(\"delTags\");\n                if(delTags != null) {\n                    for(String tagId: delTags) {\n                        OCompositeKey key = new OCompositeKey(data.get(\"host\"), tagId);\n                        OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);\n                        if (oid != null) {\n                            OrientVertex tag = (OrientVertex) oid.getRecord();\n                            for (Edge edge : (Iterable<Edge>) product.getEdges(Direction.OUT, \"HasTag\")) {\n                                if(edge.getVertex(Direction.IN).equals(tag)) graph.removeEdge(edge);\n                            }\n                        }\n                    }\n                }\n            }\n            graph.commit();\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n            graph.rollback();\n        } finally {\n            graph.shutdown();\n        }\n    }\n\n    public boolean getCatalogProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n        String rid = (String)data.get(\"@rid\");\n        String host = (String)data.get(\"host\");\n        if(rid == null) {\n            // check if catalogId exists and convert it to rid.\n            String catalogId = (String)data.get(\"catalogId\");\n            if(catalogId == null) {\n                inputMap.put(\"result\", \"@rid or catalogId is required\");\n                inputMap.put(\"responseCode\", 400);\n                return false;\n            } else {\n                // find out rid from catalogId\n                OrientGraph graph = ServiceLocator.getInstance().getGraph();\n                try {\n                    OrientVertex catalog = getBranchByHostId(graph, \"catalog\", host, catalogId);\n                    if(catalog == null) {\n                        inputMap.put(\"result\", \"CatalogId \"  + catalogId + \" doesn't exist on host \" + host);\n                        inputMap.put(\"responseCode\", 400);\n                    } else {\n                        rid = catalog.getId().toString();\n                    }\n                } catch (Exception e) {\n                    logger.error(\"Exception:\", e);\n                    throw e;\n                } finally {\n                    graph.shutdown();\n                }\n            }\n        }\n        Integer pageSize = (Integer)data.get(\"pageSize\");\n        Integer pageNo = (Integer)data.get(\"pageNo\");\n        if(pageSize == null) {\n            inputMap.put(\"result\", \"pageSize is required\");\n            inputMap.put(\"responseCode\", 400);\n            return false;\n        }\n        if(pageNo == null) {\n            inputMap.put(\"result\", \"pageNo is required\");\n            inputMap.put(\"responseCode\", 400);\n            return false;\n        }\n        String sortDir = (String)data.get(\"sortDir\");\n        String sortedBy = (String)data.get(\"sortedBy\");\n        if(sortDir == null) {\n            sortDir = \"desc\";\n        }\n        if(sortedBy == null) {\n            sortedBy = \"createDate\";\n        }\n        boolean allowUpdate = false;\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        if(payload != null) {\n            Map<String,Object> user = (Map<String, Object>)payload.get(\"user\");\n            List roles = (List)user.get(\"roles\");\n            if(roles.contains(\"owner\")) {\n                allowUpdate = true;\n            } else if(roles.contains(\"admin\") || roles.contains(\"catalogAdmin\") || roles.contains(\"productAdmin\")){\n                if(host.equals(user.get(\"host\"))) {\n                    allowUpdate = true;\n                }\n            }\n        }\n        // get ancestors\n        List<Map<String, Object>> ancestors = getAncestorDb(rid);\n\n        // TODO support the following lists: recent, popular\n        // Get the page from cache.\n        List<String> list = null;\n        Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage(\"branchMap\");\n        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)branchMap.get(\"listCache\");\n        if(listCache == null) {\n            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n                    .maximumWeightedCapacity(1000)\n                    .build();\n            branchMap.put(\"listCache\", listCache);\n        } else {\n            list = (List<String>)listCache.get(rid + sortedBy);\n        }\n\n        ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)branchMap.get(\"productCache\");\n        if(productCache == null) {\n            productCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()\n                    .maximumWeightedCapacity(1000)\n                    .build();\n            branchMap.put(\"productCache\", productCache);\n        }\n\n        if(list == null) {\n            // get the list for db\n            list = new ArrayList<String>();\n            String json = getCatalogProductDb(rid, sortedBy);\n            if(json != null) {\n                // convert json to list of maps.\n                List<Map<String, Object>> products = mapper.readValue(json,\n                        new TypeReference<ArrayList<HashMap<String, Object>>>() {\n                        });\n                for(Map<String, Object> product: products) {\n                    String productRid = (String)product.get(\"rid\");\n                    list.add(productRid);\n                    product.remove(\"@rid\");\n                    product.remove(\"@type\");\n                    product.remove(\"@version\");\n                    product.remove(\"@fieldTypes\");\n                    productCache.put(productRid, product);\n                }\n            }\n            listCache.put(rid + sortedBy, list);\n        }\n        long total = list.size();\n        if(total > 0) {\n            List<Map<String, Object>> products = new ArrayList<Map<String, Object>>();\n            for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {\n                String productRid = list.get(i);\n                Map<String, Object> product = (Map<String, Object>)productCache.get(productRid);\n                products.add(product);\n            }\n            Map<String, Object> result = new HashMap<String, Object>();\n            result.put(\"total\", total);\n            result.put(\"products\", products);\n            result.put(\"rid\", rid);\n            result.put(\"allowUpdate\", allowUpdate);\n            result.put(\"ancestors\", ancestors);\n            inputMap.put(\"result\", mapper.writeValueAsString(result));\n            return true;\n        } else {\n            // there is no product available. but still need to return allowUpdate\n            Map<String, Object> result = new HashMap<String, Object>();\n            result.put(\"total\", 0);\n            result.put(\"rid\", rid);\n            result.put(\"allowUpdate\", allowUpdate);\n            result.put(\"ancestors\", ancestors);\n            inputMap.put(\"result\", mapper.writeValueAsString(result));\n            return true;\n        }\n    }\n\n\n    protected String getCatalogProductDb(String rid, String sortedBy) {\n        String json = null;\n        // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.\n        String sql = \"select @rid, productId, name, description, variants, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId \" +\n                \"from (traverse out_Own, out_HasProduct from ?) where @class = 'Product' order by \" + sortedBy + \" desc\";\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> products = graph.getRawGraph().command(query).execute(rid);\n            if(products.size() > 0) {\n                json = OJSONWriter.listToJSON(products, null);\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n        } finally {\n            graph.shutdown();\n        }\n        return json;\n    }\n\n    protected List getAncestorDb(String rid) {\n        List<Map<String, Object>> ancestors = null;\n        String sql = \"select @rid, catalogId, description from (traverse in('Own') from ?)\";\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> docs = graph.getRawGraph().command(query).execute(rid);\n            if(docs.size() > 0) {\n                ancestors = new ArrayList<Map<String, Object>>();\n                for (int i=docs.size()-1; i >= 0; i--) {\n                    Map<String, Object> map = new HashMap<String, Object>();\n                    OrientVertex doc = graph.getVertex(docs.get(i).getRecord());\n                    String id = doc.getProperty(\"rid\").toString();\n                    id = id.substring(id.indexOf('[') + 1, id.indexOf(']'));\n                    map.put(\"rid\", id);\n                    map.put(\"catalogId\", doc.getProperty(\"catalogId\"));\n                    map.put(\"description\", doc.getProperty(\"description\"));\n                    ancestors.add(map);\n                }\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n        } finally {\n            graph.shutdown();\n        }\n        return ancestors;\n    }\n\n    public boolean getProduct(Object ...objects) throws Exception {\n        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n        String catalogId = (String)data.get(\"catalogId\");\n        String host = (String)data.get(\"host\");\n        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n        String json = null;\n        Map<String,Object> user = (Map<String, Object>)payload.get(\"user\");\n        List roles = (List)user.get(\"roles\");\n        if(roles.contains(\"owner\")) {\n            json = getProductDb();\n        } else {\n            if(host.equals(user.get(\"host\"))) {\n                json = getProductDb(host);\n            } else {\n                inputMap.put(\"result\", \"Permission denied\");\n                inputMap.put(\"responseCode\", 401);\n                return false;\n            }\n        }\n        if(json != null) {\n            inputMap.put(\"result\", json);\n            return true;\n        } else {\n            inputMap.put(\"result\", \"Not Found\");\n            inputMap.put(\"responseCode\", 404);\n            return false;\n        }\n    }\n\n    protected String getProductDb(String host) {\n        String json = null;\n        String sql = \"select from product where host = ?\";\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> products = graph.getRawGraph().command(query).execute(host);\n            if(products.size() > 0) {\n                json = OJSONWriter.listToJSON(products, null);\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n        } finally {\n            graph.shutdown();\n        }\n        return json;\n    }\n\n    protected String getProductDb() {\n        String json = null;\n        String sql = \"select from product\";\n        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n        try {\n            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);\n            List<ODocument> products = graph.getRawGraph().command(query).execute();\n            if(products.size() > 0) {\n                json = OJSONWriter.listToJSON(products, null);\n            }\n        } catch (Exception e) {\n            logger.error(\"Exception:\", e);\n        } finally {\n            graph.shutdown();\n        }\n        return json;\n    }\n\n}\n",
       "createUserId": "stevehu",
       "ruleClass": "com.networknt.light.rule.catalog.AbstractCatalogRule",
-      "createDate": "2015-09-24T01:16:19.907"
+      "createDate": "2015-09-25T00:57:08.047"
     },
     "name": "impRule",
     "category": "rule",
-    "createDate": "2015-09-24T01:16:19.907",
+    "createDate": "2015-09-25T00:57:08.047",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
@@ -13516,6 +13516,644 @@
     "name": "addPost",
     "category": "forum",
     "createDate": "2015-06-14T20:15:44.017",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "script": "CREATE CLASS Catalog extends V;\nCREATE PROPERTY Catalog.host STRING;\nCREATE PROPERTY Catalog.catalogId STRING;\nCREATE PROPERTY Catalog.description STRING;\nCREATE PROPERTY Catalog.attributes EMBEDDEDMAP;\nCREATE PROPERTY Catalog.createDate DATETIME;\nCREATE PROPERTY Catalog.updateDate DATETIME;\nCREATE INDEX catalogHostIdIdx ON Catalog(host, catalogId) UNIQUE;\nCREATE INDEX Catalog.updateDate ON Catalog(updateDate) NOTUNIQUE;\n\nCREATE CLASS Product extends V;\nCREATE PROPERTY Product.productId STRING;\nCREATE PROPERTY Product.name STRING;\nCREATE PROPERTY Product.host STRING;\nCREATE PROPERTY Product.description STRING;\nCREATE PROPERTY Product.attributes EMBEDDEDMAP;\nCREATE PROPERTY Product.variants EMBEDDEDLIST;\nCREATE PROPERTY Product.createDate DATETIME;\nCREATE PROPERTY Product.updateDate DATETIME;\nCREATE INDEX Product.productId ON Product(productId) UNIQUE;\nCREATE INDEX Product.host ON Product(host) NOTUNIQUE;\nCREATE INDEX Product.name ON Product(name) NOTUNIQUE;\n\nCREATE CLASS HasProduct extends E;\n\nCREATE CLASS Carrier extends V;\nCREATE PROPERTY Carrier.name STRING;\nCREATE PROPERTY Carrier.host STRING;\nCREATE PROPERTY Carrier.description STRING;\nCREATE PROPERTY Carrier.attributes EMBEDDEDMAP;\nCREATE PROPERTY Carrier.createDate DATETIME;\nCREATE PROPERTY Carrier.updateDate DATETIME;\nCREATE INDEX Carrier.host ON Carrier(host) NOTUNIQUE;\nCREATE INDEX Carrier.name ON Carrier(name) UNIQUE;\n\n\n\n\ncreate vertex Role set roleId = 'catalogAdmin', description = 'Catalog Admin'\ncreate vertex Role set roleId = 'productAdmin', description = 'Product Admin'\n",
+      "createDate": "2015-09-25T01:43:59.142"
+    },
+    "name": "execSchemaCmd",
+    "category": "db",
+    "createDate": "2015-09-25T01:43:59.142",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:2",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10003,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "script": "let catalogAdmin = create vertex MenuItem set menuItemId = 'catalogAdmin', label = 'Catalog Admin', path = '/page/com-networknt-light-v-catalog-admin-home'\nlet productAdmin = create vertex MenuItem set menuItemId = 'productAdmin', label = 'Product Admin', path = '/page/com-networknt-light-v-product-admin-home'\nlet catalog = create vertex MenuItem set menuItemId = 'catalog', label = 'Catalog', path = '/page/com-networknt-light-v-catalog-home', left = true, roles = 'anonymous, user'\nlet cart = create vertex MenuItem set menuItemId = 'cart', label = 'Cart', path = '/page/com-networknt-light-v-cart-home', left = false, roles = 'anonymous, user'\nlet admin = select from MenuItem where menuItemId = 'admin'\ncreate edge Own from $admin to $catalogAdmin\ncreate edge Own from $admin to $productAdmin\n\nlet networknt = select from Menu where host = 'www.networknt.com'\ncreate edge Own from $networknt to $catalog\ncreate edge Own from $networknt to $cart\n\nlet edibleforestgarden = select from Menu where host = 'www.edibleforestgarden.ca'\ncreate edge Own from $edibleforestgarden to $catalog\ncreate edge Own from $edibleforestgarden to $cart\n\nlet example = select from Menu where host = 'example'\ncreate edge Own from $example to $catalog\ncreate edge Own from $example to $cart\n",
+      "createDate": "2015-09-24T02:25:11.607"
+    },
+    "name": "execUpdateCmd",
+    "category": "db",
+    "createDate": "2015-09-24T02:25:11.607",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:115",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10116,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-05-02T12:17:06.274",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.catalog.GetCatalogProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-05-02T12:17:06.274",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:430",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10432,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-08-18T02:13:29.430",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.catalog.GetCatalogTreeRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-08-18T02:13:29.430",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:74",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10075,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-04-30T01:23:26.644",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.catalog.GetCatalogProductRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-04-30T01:23:26.643",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:447",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10449,
+    "createUserId": "stevehu",
+    "data": {
+      "path": "/page/com-networknt-light-v-catalog-home",
+      "tpl": null,
+      "updateDate": "2015-08-22T01:10:43.766",
+      "ctrl": null,
+      "left": true,
+      "updateUserId": "stevehu",
+      "roles": [
+        "anonymous",
+        "user"
+      ],
+      "host": "example",
+      "menuItemId": "catalog"
+    },
+    "name": "updMenuItem",
+    "category": "menu",
+    "createDate": "2015-08-22T01:10:43.766",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:1028",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 11030,
+    "createUserId": "stevehu",
+    "data": {
+      "path": "/page/com-networknt-light-v-cart-home",
+      "tpl": null,
+      "updateDate": "2015-09-06T02:16:29.086",
+      "ctrl": null,
+      "left": false,
+      "updateUserId": "stevehu",
+      "roles": [
+        "anonymous",
+        "user"
+      ],
+      "host": "example",
+      "menuItemId": "cart"
+    },
+    "name": "updMenuItem",
+    "category": "menu",
+    "createDate": "2015-09-06T02:16:29.086",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:1032",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 11034,
+    "createUserId": "stevehu",
+    "data": {
+      "path": "/page/com-networknt-light-v-cart-home",
+      "tpl": null,
+      "updateDate": "2015-09-06T02:16:52.823",
+      "ctrl": null,
+      "left": false,
+      "updateUserId": "stevehu",
+      "roles": [
+        "anonymous",
+        "user"
+      ],
+      "host": "example",
+      "menuItemId": "cart"
+    },
+    "name": "updMenuItem",
+    "category": "menu",
+    "createDate": "2015-09-06T02:16:52.823",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:1034",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 11036,
+    "createUserId": "stevehu",
+    "data": {
+      "path": "/page/com-networknt-light-v-cart-home",
+      "tpl": null,
+      "updateDate": "2015-09-06T02:25:59.352",
+      "ctrl": null,
+      "left": false,
+      "updateUserId": "stevehu",
+      "roles": [
+        "anonymous",
+        "user"
+      ],
+      "host": "example",
+      "menuItemId": "cart"
+    },
+    "name": "updMenuItem",
+    "category": "menu",
+    "createDate": "2015-09-06T02:25:59.352",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:1036",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 11038,
+    "createUserId": "stevehu",
+    "data": {
+      "path": "/page/com-networknt-light-v-cart-home",
+      "tpl": null,
+      "updateDate": "2015-09-06T02:30:12.427",
+      "ctrl": null,
+      "left": false,
+      "updateUserId": "stevehu",
+      "roles": [
+        "anonymous",
+        "user"
+      ],
+      "host": "example",
+      "menuItemId": "cart"
+    },
+    "name": "updMenuItem",
+    "category": "menu",
+    "createDate": "2015-09-06T02:30:12.427",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:1037",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 11039,
+    "createUserId": "stevehu",
+    "data": {
+      "path": "/page/com-networknt-light-v-cart-home",
+      "tpl": null,
+      "updateDate": "2015-09-06T02:37:08.010",
+      "ctrl": null,
+      "left": false,
+      "updateUserId": "stevehu",
+      "roles": [
+        "anonymous",
+        "user"
+      ],
+      "host": "example",
+      "menuItemId": "cart"
+    },
+    "name": "updMenuItem",
+    "category": "menu",
+    "createDate": "2015-09-06T02:37:08.010",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:9",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10010,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "example",
+      "description": "Computer Component",
+      "createUserId": "stevehu",
+      "catalogId": "computer",
+      "createDate": "2015-09-25T02:32:54.765"
+    },
+    "name": "addCatalog",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:32:54.765",
+    "catalogId": "IP3C-AEvQB6mMbh7LMJH4w",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:10",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10011,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "example",
+      "description": "Computer Case",
+      "createUserId": "stevehu",
+      "catalogId": "case",
+      "in_Own": [
+        "computer"
+      ],
+      "createDate": "2015-09-25T02:33:25.915"
+    },
+    "name": "addCatalog",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:33:25.915",
+    "catalogId": "aaEwp3FPSa-gZPzLJpRgWw",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:11",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10012,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "example",
+      "description": "Hard Drive",
+      "createUserId": "stevehu",
+      "catalogId": "hardDrive",
+      "in_Own": [
+        "computer"
+      ],
+      "createDate": "2015-09-25T02:33:49.007"
+    },
+    "name": "addCatalog",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:33:49.007",
+    "catalogId": "rD_YooyzQ9uI_Eu2uh5evA",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:12",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10013,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "example",
+      "description": "Desktop Case",
+      "createUserId": "stevehu",
+      "catalogId": "desktopCase",
+      "in_Own": [
+        "case"
+      ],
+      "createDate": "2015-09-25T02:34:11.850"
+    },
+    "name": "addCatalog",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:34:11.850",
+    "catalogId": "xHv-1FiaRlK4ykf4DsY79A",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:13",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10014,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "example",
+      "description": "Server Case",
+      "createUserId": "stevehu",
+      "catalogId": "serverCase",
+      "in_Own": [
+        "case"
+      ],
+      "createDate": "2015-09-25T02:34:29.776"
+    },
+    "name": "addCatalog",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:34:29.776",
+    "catalogId": "HCQp0DTaS4eL7jWj7yuqTw",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:5",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10006,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "dqGTGzAcSAOYWujmWmnGLA",
+      "name": "HP",
+      "host": "example",
+      "description": "HP Computer",
+      "variants": [
+        {
+          "sku": "1001",
+          "price": 1290,
+          "type": "Desktop",
+          "image": "1.png",
+          "inventory": 12,
+          "weight": 22,
+          "height": 20,
+          "width": 6,
+          "length": 14
+        },
+        {
+          "sku": "1002",
+          "price": 890,
+          "type": "Laptop",
+          "image": "2.png",
+          "inventory": 3,
+          "weight": 5.8,
+          "height": 2,
+          "width": 15,
+          "length": 8
+        }
+      ],
+      "in_HasProduct": [
+        "computer"
+      ],
+      "createDate": "2015-09-25T02:02:53.507"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:02:53.507",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:7",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10008,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "5E_MKOQdR3qENvnNwG-T-g",
+      "name": "IBM Computer",
+      "host": "example",
+      "description": "IBM Computer is the best in the world",
+      "variants": [
+        {
+          "sku": "2001",
+          "price": 1390,
+          "type": "Desktop",
+          "image": "3.png",
+          "inventory": 2,
+          "weight": 33,
+          "height": 12,
+          "width": 22,
+          "length": 19
+        }
+      ],
+      "in_HasProduct": [
+        "computer"
+      ],
+      "createDate": "2015-09-25T02:04:39.210"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:04:39.210",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:8",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10009,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "x3EQMrqTSWaslqdvBvs6gg",
+      "name": "Acer",
+      "host": "example",
+      "description": "Acer Case has most reasonable price",
+      "variants": [
+        {
+          "sku": "3001",
+          "price": 120,
+          "type": "Desktop",
+          "image": "4.png",
+          "inventory": 22,
+          "weight": 11,
+          "height": 12,
+          "width": 29,
+          "length": 12
+        }
+      ],
+      "in_HasProduct": [
+        "case"
+      ],
+      "createDate": "2015-09-25T02:06:13.597"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:06:13.597",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:9",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10010,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "8mrI0DmoSCGMcdlX1E2zRQ",
+      "name": "Dell",
+      "host": "example",
+      "description": "Dell Desktop Case",
+      "variants": [
+        {
+          "sku": "4001",
+          "price": 100,
+          "type": "Black",
+          "image": "5.png",
+          "inventory": 11,
+          "weight": 29,
+          "height": 12,
+          "width": 14,
+          "length": 9
+        },
+        {
+          "sku": "4002",
+          "price": 100,
+          "type": "White",
+          "image": "6.png",
+          "inventory": 22,
+          "weight": 12,
+          "height": 12,
+          "width": 23,
+          "length": 4
+        }
+      ],
+      "in_HasProduct": [
+        "desktopCase"
+      ],
+      "createDate": "2015-09-25T02:08:25.150"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:08:25.150",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:10",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10011,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "dp48Gjz9SligBuKo-LqEAg",
+      "name": "Sun",
+      "host": "example",
+      "description": "Sun Server Case",
+      "variants": [
+        {
+          "sku": "5001",
+          "price": 234,
+          "type": "USB",
+          "image": "7.png",
+          "inventory": 1,
+          "weight": 129,
+          "height": 22,
+          "width": 11,
+          "length": 8
+        },
+        {
+          "sku": "5002",
+          "price": 883,
+          "type": "SCSI",
+          "image": "8.png",
+          "inventory": 23,
+          "weight": 299,
+          "height": 19,
+          "width": 34,
+          "length": 8
+        }
+      ],
+      "in_HasProduct": [
+        "serverCase"
+      ],
+      "createDate": "2015-09-25T02:10:37.631"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:10:37.631",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:11",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10012,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "pu9Hn3vLSgmcfdECwJsHig",
+      "name": "Seagate",
+      "host": "example",
+      "description": "Seagate Drive",
+      "variants": [
+        {
+          "sku": "6001",
+          "price": 123,
+          "type": "Disk",
+          "image": "8.png",
+          "inventory": 11,
+          "weight": 1.3,
+          "height": 1.5,
+          "width": 12,
+          "length": 10
+        },
+        {
+          "sku": "6002",
+          "price": 345,
+          "type": "SSD",
+          "image": "9.png",
+          "inventory": 11,
+          "weight": 6,
+          "height": 9,
+          "width": 6,
+          "length": 6
+        }
+      ],
+      "in_HasProduct": [
+        "hardDrive"
+      ],
+      "createDate": "2015-09-25T02:12:15.688"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:12:15.688",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   }
