@@ -17,40 +17,57 @@ var webpack = require('webpack');
 var path = require('path');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+//require('es6-promise').polyfill();
+
+var host = "example";
+var port = "8001";
+var publicPath = "http://" + host + ":" + port + "/";
 
 module.exports = {
     entry: {
-        app: "./app/index.js",
+        app: ['webpack-dev-server/client?http://' + host + ":" + port, 'webpack/hot/dev-server', './app/index.js'],
+        // should mirror package.dependencies
         vendor: ['react',
             'react-router',
             'react-bootstrap',
-            'react-router-bootstrap']
+            'react-router-bootstrap'
+        ]
     },
     output: {
-        filename: "bundle.js"
+        path: __dirname,
+        filename: 'dist/bundle.js',
+        publicPath: publicPath
     },
     module: {
 
         loaders: [
-
-            // I highly recommend using the babel-loader as it gives you
-            // ES6/7 syntax and JSX transpiling out of the box
             {
                 test: /\.js$/,
-                loader: 'babel',
+                loaders: ['react-hot', 'babel'],
                 exclude: [nodeModulesPath]
             },
-            {test: /\.less$/, loader: "style!css!less"},
+            {
+                test: /\.css$/,
+                loaders: [
+                    "style-loader",
+                    "css-loader",
+                    "autoprefixer-loader?browsers=last 2 versions"
+                ]
+            },
             {
                 test: /\.scss$/,
                 loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=" + path.resolve(__dirname, "/app/assets/stylesheets_old"))
             },
+            {test: /\.less$/, loader: "style!css!less"},
+
             {test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
         ]
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js"),
-        new ExtractTextPlugin('style.css', {
+        new webpack.optimize.CommonsChunkPlugin("vendors", "dist/vendor.bundle.js"),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin(),
+        new ExtractTextPlugin('dist/style.css', {
             allChunks: true
         })
     ],
@@ -62,6 +79,10 @@ module.exports = {
             path:   /\/api(.*)/,
             // koa running on 3001 with koa-send and isomorphic react
             target:  'http://example:8080'
-        }]
+        }],
+        port: port,
+        publicPath: publicPath,
+        hot: true,
+        historyApiFallback: true
     }
 };

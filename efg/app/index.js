@@ -29,6 +29,10 @@ var $ = require('jquery');
 var buffer = [];  // save all the requests that gets token expired
 var refreshing = false;
 
+require('./assets/stylesheets/main.scss');
+
+window.React = React;
+
 function replayBuffer() {
     var deferred;
     var promises = [];

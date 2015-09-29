@@ -10,11 +10,12 @@ var ModalFooter = require('react-bootstrap').ModalFooter;
 var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
-var Cart = require('./Cart')
+var Cart = require('./Cart');
 var Login = require('../auth/Login');
 var CheckoutCart = require('./CheckoutCart');
 var Shipping = require('./Shipping');
 var AuthStore = require('../../stores/AuthStore');
+var classNames = require('classnames');
 
 function getStateFromStores() {
     return {
@@ -87,12 +88,18 @@ var CheckoutButton = React.createClass({
             contents =  <Login/>
         }
 
+        var cartHeaderIconClasses = classNames({
+           'badge': true,
+            'header-cart-num-items': true,
+            'hidden': this.state.cartItemsCount <= 0
+        });
+
         return (
             <div>
                 <div onClick={this.open}>
                     <span className="glyphicon glyphicon-shopping-cart"></span>
-                    <span className="badge">{this.state.cartItemsCount}</span>
-                    <span>Checkout</span>
+                    <span className={cartHeaderIconClasses}>{this.state.cartItemsCount}</span>
+                    <span className="header-cart-text">Checkout</span>
                 </div>
                 <Modal show={this.state.showModal} onHide={this.close}>
                     {contents}

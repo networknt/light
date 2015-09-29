@@ -1,0 +1,398 @@
+.Grid {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+
+.Grid-cell {
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1; }
+
+.Grid--gutters {
+  margin: -1em 0 0 -1em; }
+
+.Grid--gutters > .Grid-cell {
+  padding: 1em 0 0 1em; }
+
+.Grid--top {
+  -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start; }
+
+.Grid--bottom {
+  -webkit-align-items: flex-end;
+      -ms-flex-align: end;
+          align-items: flex-end; }
+
+.Grid--center {
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
+
+.Grid-cell--top {
+  -webkit-align-self: flex-start;
+      -ms-flex-item-align: start;
+          align-self: flex-start; }
+
+.Grid-cell--bottom {
+  -webkit-align-self: flex-end;
+      -ms-flex-item-align: end;
+          align-self: flex-end; }
+
+.Grid-cell--center {
+  -webkit-align-self: center;
+      -ms-flex-item-align: center;
+          align-self: center; }
+
+.Grid--fit > .Grid-cell {
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1; }
+
+.Grid--full > .Grid-cell {
+  -webkit-flex: 0 0 100%;
+      -ms-flex: 0 0 100%;
+          flex: 0 0 100%; }
+
+.Grid--1of2 > .Grid-cell {
+  -webkit-flex: 0 0 50%;
+      -ms-flex: 0 0 50%;
+          flex: 0 0 50%; }
+
+.Grid--1of3 > .Grid-cell {
+  -webkit-flex: 0 0 33.3333%;
+      -ms-flex: 0 0 33.3333%;
+          flex: 0 0 33.3333%; }
+
+.Grid--1of4 > .Grid-cell {
+  -webkit-flex: 0 0 25%;
+      -ms-flex: 0 0 25%;
+          flex: 0 0 25%; }
+
+@media (min-width: 24em) {
+  .small-Grid--fit > .Grid-cell {
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1; }
+  .small-Grid--full > .Grid-cell {
+    -webkit-flex: 0 0 100%;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%; }
+  .small-Grid--1of2 > .Grid-cell {
+    -webkit-flex: 0 0 50%;
+        -ms-flex: 0 0 50%;
+            flex: 0 0 50%; }
+  .small-Grid--1of3 > .Grid-cell {
+    -webkit-flex: 0 0 33.3333%;
+        -ms-flex: 0 0 33.3333%;
+            flex: 0 0 33.3333%; }
+  .small-Grid--1of4 > .Grid-cell {
+    -webkit-flex: 0 0 25%;
+        -ms-flex: 0 0 25%;
+            flex: 0 0 25%; } }
+
+@media (min-width: 48em) {
+  .large-Grid--fit > .Grid-cell {
+    -webkit-flex: 1;
+        -ms-flex: 1;
+            flex: 1; }
+  .large-Grid--full > .Grid-cell {
+    -webkit-flex: 0 0 100%;
+        -ms-flex: 0 0 100%;
+            flex: 0 0 100%; }
+  .large-Grid--1of2 > .Grid-cell {
+    -webkit-flex: 0 0 50%;
+        -ms-flex: 0 0 50%;
+            flex: 0 0 50%; }
+  .large-Grid--1of3 > .Grid-cell {
+    -webkit-flex: 0 0 33.3333%;
+        -ms-flex: 0 0 33.3333%;
+            flex: 0 0 33.3333%; }
+  .large-Grid--1of4 > .Grid-cell {
+    -webkit-flex: 0 0 25%;
+        -ms-flex: 0 0 25%;
+            flex: 0 0 25%; } }
+
+@font-face {
+  font-family: 'Roboto';
+  src: url("/app/assets/stylesheets/fonts/Roboto-Light.ttf"); }
+
+/*
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://example.com/MaterialIcons-Regular.eot);
+  src: local('Material Icons'),
+  local('MaterialIcons-Regular'),
+  url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
+  url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
+  url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+}
+*/
+html {
+  font-family: 'Roboto', sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%; }
+
+body {
+  font-size: 15px;
+  line-height: 20px;
+  margin: 0;
+  background-color: #EFEFEF; }
+
+.blogs {
+  background-color: #EFEFEF; }
+
+.blogHeader {
+  background-color: #81c784;
+  overflow: hidden;
+  width: 100%;
+  padding: 55px 0;
+  margin: 0;
+  text-align: center; }
+  .blogHeader .mainBlogHeader {
+    font-size: 30px;
+    color: rgba(255, 255, 255, 0.87);
+    font-weight: 300; }
+
+.blogsSection {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin: 30px;
+  padding-bottom: 40px;
+  margin-bottom: 10px; }
+  .blogsSection .blogsDescription {
+    width: 30%;
+    padding: 20px;
+    padding-left: 0;
+    padding-top: 0;
+    font-family: Roboto;
+    color: #777;
+    line-height: 1.2; }
+    .blogsSection .blogsDescription h1 {
+      margin-bottom: 20px;
+      margin-top: 5px; }
+    .blogsSection .blogsDescription p {
+      font-weight: 300;
+      font-size: 1em; }
+  .blogsSection .blogsList {
+    -webkit-flex-grow: 1;
+        -ms-flex-positive: 1;
+            flex-grow: 1; }
+    .blogsSection .blogsList .blogLeftAvatar {
+      border-color: #81c784;
+      border: 3px solid #81c784;
+      border-radius: 25%;
+      font-weight: 300;
+      font-size: 18px;
+      width: 25px;
+      height: 25px;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-justify-content: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center; }
+
+@media (max-width: 48em) {
+  .blogsDescription {
+    display: none; } }
+
+.blogRoot {
+  background-color: #EFEFEF;
+  padding: 20px; }
+
+.blogPostsRoot {
+  margin: 0;
+  width: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  font-family: Roboto; }
+  .blogPostsRoot .blogPostsPaper {
+    margin-bottom: 15px;
+    padding: 10px; }
+    .blogPostsRoot .blogPostsPaper .blogPost {
+      margin-top: 0;
+      padding: 10px; }
+    .blogPostsRoot .blogPostsPaper .strongDate {
+      font-size: 32px;
+      font-weight: 700;
+      color: black; }
+    .blogPostsRoot .blogPostsPaper .title {
+      font-size: 48px;
+      font-weight: 300;
+      line-height: 72px;
+      font-family: Lato serif; }
+      .blogPostsRoot .blogPostsPaper .title a {
+        text-decoration: none;
+        color: #66bb6a;
+        cursor: pointer; }
+    .blogPostsRoot .blogPostsPaper .year {
+      font-size: 24px;
+      font-weight: 300;
+      color: black; }
+    .blogPostsRoot .blogPostsPaper .content {
+      font-size: 24px;
+      font-weight: 300;
+      line-height: 40px; }
+  .blogPostsRoot hr {
+    color: rgba(13, 16, 14, 0.1);
+    width: 100%;
+    padding-bottom: 30px;
+    border-left: none;
+    border-right: none; }
+
+.blogPostsleftColumn {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-flex-grow: 2;
+      -ms-flex-positive: 2;
+          flex-grow: 2;
+  min-width: 70%; }
+
+.blogPostsRightColumn {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  height: 100%;
+  padding-left: 20px;
+  padding-top: 10px; }
+  .blogPostsRightColumn .blogInfo {
+    font-family: Roboto;
+    color: #777; }
+    .blogPostsRightColumn .blogInfo h1 {
+      margin-bottom: 20px;
+      margin-top: 5px; }
+    .blogPostsRightColumn .blogInfo p {
+      font-weight: 300;
+      font-size: 1em; }
+
+@media (max-width: 64em) {
+  .blogPostsRightColumn {
+    display: none; }
+  .blogPostsleftColumn {
+    max-width: 100%; } }
+
+.blogPostRoot {
+  background-color: #EFEFEF;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 40px; }
+  .blogPostRoot .blogPostPaper {
+    margin: 0;
+    padding: 30px;
+    width: 100%; }
+    .blogPostRoot .blogPostPaper .title {
+      font-size: 48px;
+      font-weight: 300;
+      line-height: 72px;
+      font-family: Lato serif;
+      color: #81c784;
+      margin-bottom: 10px; }
+    .blogPostRoot .blogPostPaper .date {
+      font-size: 24px;
+      font-weight: 300;
+      color: black;
+      margin-bottom: 50px; }
+    .blogPostRoot .blogPostPaper .content {
+      font-size: 24px;
+      font-weight: 300;
+      line-height: 40px; }
+  .blogPostRoot .aboutTheAuthor {
+    width: 96.7%;
+    margin-top: 30px;
+    line-height: 1.2;
+    padding: 30px;
+    padding-top: 0;
+    font-family: Roboto;
+    color: #999; }
+    .blogPostRoot .aboutTheAuthor h1 {
+      margin-bottom: 20px;
+      margin-top: 5px; }
+      .blogPostRoot .aboutTheAuthor h1 .author {
+        color: #81c784; }
+    .blogPostRoot .aboutTheAuthor p {
+      font-weight: 300;
+      font-size: 1em; }
+
+.loginRoot {
+  background-color: #EFEFEF;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+  .loginRoot .loginFormSection {
+    padding: 20px;
+    padding-top: 30px; }
+    .loginRoot .loginFormSection .loginForm {
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
+      -webkit-justify-content: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-flex-flow: column;
+          -ms-flex-flow: column;
+              flex-flow: column;
+      padding: 30px; }
+      .loginRoot .loginFormSection .loginForm .rememberMe {
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-align-items: center;
+            -ms-flex-align: center;
+                align-items: center;
+        -webkit-justify-content: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        margin: 10px; }
+      .loginRoot .loginFormSection .loginForm .login {
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-align-items: center;
+            -ms-flex-align: center;
+                align-items: center;
+        -webkit-justify-content: center;
+            -ms-flex-pack: center;
+                justify-content: center; }

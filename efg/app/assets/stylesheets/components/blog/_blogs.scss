@@ -1,0 +1,72 @@
+
+
+.blogs {
+  background-color: $colors-backgroundGrey;
+}
+
+.blogHeader {
+  background-color: $colors-green300;
+  overflow: hidden;
+  width: 100%;
+  padding: 55px 0;
+  margin: 0;
+  text-align: center;
+
+  .mainBlogHeader {
+    font-size: 30px;
+    color: $colors-darkWhite;
+    font-weight: $font-weight-light;
+  }
+}
+
+
+
+.blogsSection {
+  //width: 100%; This causes bad behavious with flexbox
+  display: flex;
+  flex-direction: row;
+  margin: 30px;
+  padding-bottom: 40px;
+  margin-bottom: 10px;
+
+  .blogsDescription {
+    width: 30%;
+    padding: 20px;
+    padding-left: 0;
+    padding-top: 0;
+    font-family: Roboto;
+    color: $textColorOverGreyBackground;
+    line-height: 1.2;
+    h1 {
+      margin-bottom: 20px;
+      margin-top: 5px;
+    }
+    p {
+      font-weight: $font-weight-light;
+      font-size: 1em;
+    }
+  }
+  
+  .blogsList {
+    flex-grow: 1;
+    .blogLeftAvatar {
+      //background-color: $colors-backgroundGrey;
+      border-color: $colors-green300;
+      border: 3px solid $colors-green300;
+      border-radius: 25%;
+      font-weight: $font-weight-light;
+      font-size: 18px;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+@media (max-width: 48em) {
+  .blogsDescription {
+    display: none;
+  }
+}
