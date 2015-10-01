@@ -17,10 +17,11 @@ var webpack = require('webpack');
 var path = require('path');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+require('es6-promise').polyfill();
 
 module.exports = {
     entry: {
-        app: "./app/index.js",
+        app: ['webpack-dev-server/client?http://example:8001', 'webpack/hot/dev-server', './app/index.js'],
         vendor: ['react',
             'react-router',
             'react-bootstrap',
@@ -37,7 +38,7 @@ module.exports = {
             // ES6/7 syntax and JSX transpiling out of the box
             {
                 test: /\.js$/,
-                loader: 'babel',
+                loaders: ['react-hot', 'babel'],
                 exclude: [nodeModulesPath]
             },
             {test: /\.less$/, loader: "style!css!less"},
@@ -45,11 +46,13 @@ module.exports = {
                 test: /\.scss$/,
                 loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=" + path.resolve(__dirname, "/app/assets/stylesheets_old"))
             },
+            {test: /\.css$/, loader: "css-loader!autoprefixer-loader?browsers=last 2 versions"},
             {test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
         ]
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.bundle.js"),
+        new webpack.HotModuleReplacementPlugin(),
         new ExtractTextPlugin('style.css', {
             allChunks: true
         })
@@ -62,6 +65,8 @@ module.exports = {
             path:   /\/api(.*)/,
             // koa running on 3001 with koa-send and isomorphic react
             target:  'http://example:8080'
-        }]
+        }],
+        hot: true,
+        historyApiFallback: true
     }
 };

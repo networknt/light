@@ -5,6 +5,8 @@ var React = require('react');
 var ProductActionCreator = require('../../actions/ProductActionCreators');
 var ReactPropTypes = React.PropTypes;
 
+var {Input} = require('react-bootstrap');
+
 
 var VariantSelect = React.createClass({
 
@@ -18,9 +20,9 @@ var VariantSelect = React.createClass({
             return <option key={index} value={index}>{variant.type} ${variant.price.toFixed(2)}</option>;
         });
         return (
-            <select onChange={this._setProductVariant}>
+            <Input type="select" onChange={this._setProductVariant} className="variantSelect">
                 {options}
-            </select>
+            </Input>
         );
     },
 
