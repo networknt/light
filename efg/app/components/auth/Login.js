@@ -6,6 +6,8 @@ var AuthActionCreators = require('../../actions/AuthActionCreators.js');
 var AuthStore = require('../../stores/AuthStore.js');
 var ErrorNotice = require('../../components/common/ErrorNotice.js');
 
+import {Grid, Row, Col} from 'react-bootstrap';
+
 var Login = React.createClass({
 
     getInitialState: function() {
@@ -27,27 +29,41 @@ var Login = React.createClass({
     render: function() {
         var errors = (this.state.errors.length > 0) ? <ErrorNotice errors={this.state.errors}/> : <div></div>;
         return (
-            <div>
+            <div className="login">
                 {errors}
-                <div className="row">
-                    <div className="card card--login small-10 medium-6 large-4 columns small-centered">
-                        <form onSubmit={this._onSubmit}>
-                            <div className="card--login__field">
-                                <label name="userIdEmail">UserId or Email</label>
+                <Grid>
+                    <form onSubmit={this._onSubmit} className="userLoginForm">
+                        <Row className="userLoginFormRow">
+                            <Col xs={4} md={4}>
+                                <label name="userIdEmail">UserId or Email:</label>
+                            </Col>
+                            <Col xs={5} md={5}>
                                 <input type="text" name="userIdEmail" ref="userIdEmail" />
-                            </div>
-                            <div className="card--login__field">
-                                <label name="password">Password</label>
-                                <input type="password" name="password" ref="password" />
-                            </div>
-                            <div className="card--login__field">
-                                <label name="rememberMe">Remember me</label>
-                                <input type="checkbox" name="rememberMe" ref="rememberMe" />
-                            </div>
-                            <button type="submit" className="card--login__submit">Login</button>
-                        </form>
-                    </div>
-                </div>
+                            </Col>
+                        </Row>
+                        <Row className="userLoginFormRow">
+                            <Col xs={4} md={4}>
+                                <label name="password">Password:</label>
+                            </Col>
+                            <Col xs={5} md={5}>
+                                <input type="password" name="password" ref="password"/>
+                            </Col>
+                        </Row>
+                        <Row className="userLoginFormRow">
+                            <Col xs={4} md={4}>
+                                <label name="rememberMe">Remember me:</label>
+                            </Col>
+                            <Col xs={5} md={5}>
+                                <input type="checkbox" name="rememberMe" ref="rememberMe" className="rememberMe"/>
+                            </Col>
+                        </Row>
+                        <Row className="userLoginFormRow">
+                            <Col xs={2} xsOffset={4} md={2} mdOffset={4}>
+                                <button type="submit" className="card--login__submit">Login</button>
+                            </Col>
+                        </Row>
+                    </form>
+                </Grid>
             </div>
         );
     }

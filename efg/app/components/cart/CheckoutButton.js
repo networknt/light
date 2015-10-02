@@ -85,7 +85,10 @@ var CheckoutButton = React.createClass({
             }
         } else {
             console.log('is not logged in');
-            contents =  <Login/>
+            contents =  <div className="checkoutButtonLogin">
+                            <h3>Login is required before you checkout</h3>
+                            <Login/>
+                        </div>
         }
 
         var cartHeaderIconClasses = classNames({
@@ -101,7 +104,7 @@ var CheckoutButton = React.createClass({
                     <span className={cartHeaderIconClasses}>{this.state.cartItemsCount}</span>
                     <span className="header-cart-text">Checkout</span>
                 </div>
-                <Modal show={this.state.showModal} onHide={this.close}>
+                <Modal show={this.state.showModal} onHide={this.close} className="checkoutButtonModal">
                     {contents}
                 </Modal>
             </div>

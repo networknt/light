@@ -26,4 +26,35 @@
     }
   }
 }
+.login {
+  align-items:center;
+  .userLoginForm {
+    position: relative;
+    margin-left:auto;
+    margin-right:auto;
+    padding: 10px;
+    .userLoginFormRow {
+      margin:10px;
+      input {
+        width: 100%;
+      }
+      .rememberMe {
+        width: 0%;
+        float:left;
+      }
+    }
+  }
+}
+.checkoutButtonModal {
+  width:100%;
+  position: relative;
+  .checkoutButtonLogin {
+    text-align: center;
+    h3 {
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+    }
+  }
+}
 
