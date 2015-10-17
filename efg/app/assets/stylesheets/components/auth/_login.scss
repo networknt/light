@@ -27,24 +27,13 @@
   }
 }
 .login {
-  align-items:center;
-  .userLoginForm {
-    position: relative;
-    margin-left:auto;
-    margin-right:auto;
-    padding: 10px;
-    .userLoginFormRow {
-      margin:10px;
-      input {
-        width: 100%;
-      }
-      .rememberMe {
-        width: 0%;
-        float:left;
-      }
+  .loginForm{
+    .loginTitle {
+      font-size:20px;
     }
   }
 }
+
 .checkoutButtonModal {
   width:100%;
   position: relative;

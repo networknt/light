@@ -6,22 +6,25 @@ var AuthActionCreators = require('../../actions/AuthActionCreators.js');
 var AuthStore = require('../../stores/AuthStore.js');
 var ErrorNotice = require('../../components/common/ErrorNotice.js');
 
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Input, ButtonInput, FormControls} from 'react-bootstrap';
 
 var Login = React.createClass({
 
     getInitialState: function() {
-        return { errors: []};
+        return {errors: []};
     },
 
     _onSubmit: function(e) {
         e.preventDefault();
         this.setState({ errors: [] });
-        var userIdEmail = this.refs.userIdEmail.getDOMNode().value;
-        var password = this.refs.password.getDOMNode().value;
-        var rememberMe = this.refs.rememberMe.getDOMNode().checked;
+        console.log('userIdEmail', this);
+        console.log('password', this.refs.password);
+        console.log('rememberMe', this.refs.rememberMe);
+        var userIdEmail = this.refs.userIdEmail.refs.input.getDOMNode().value;
         console.log('userIdEmail', userIdEmail);
+        var password = this.refs.password.refs.input.getDOMNode().value;
         console.log('password', password);
+        var rememberMe = this.refs.rememberMe.refs.input.getDOMNode().checked;
         console.log('rememberMe', rememberMe);
         AuthActionCreators.login(userIdEmail, password, rememberMe);
     },
@@ -30,40 +33,16 @@ var Login = React.createClass({
         var errors = (this.state.errors.length > 0) ? <ErrorNotice errors={this.state.errors}/> : <div></div>;
         return (
             <div className="login">
-                {errors}
-                <Grid>
-                    <form onSubmit={this._onSubmit} className="userLoginForm">
-                        <Row className="userLoginFormRow">
-                            <Col xs={4} md={4}>
-                                <label name="userIdEmail">UserId or Email:</label>
-                            </Col>
-                            <Col xs={5} md={5}>
-                                <input type="text" name="userIdEmail" ref="userIdEmail" />
-                            </Col>
-                        </Row>
-                        <Row className="userLoginFormRow">
-                            <Col xs={4} md={4}>
-                                <label name="password">Password:</label>
-                            </Col>
-                            <Col xs={5} md={5}>
-                                <input type="password" name="password" ref="password"/>
-                            </Col>
-                        </Row>
-                        <Row className="userLoginFormRow">
-                            <Col xs={4} md={4}>
-                                <label name="rememberMe">Remember me:</label>
-                            </Col>
-                            <Col xs={5} md={5}>
-                                <input type="checkbox" name="rememberMe" ref="rememberMe" className="rememberMe"/>
-                            </Col>
-                        </Row>
-                        <Row className="userLoginFormRow">
-                            <Col xs={2} xsOffset={4} md={2} mdOffset={4}>
-                                <button type="submit" className="card--login__submit">Login</button>
-                            </Col>
-                        </Row>
-                    </form>
-                </Grid>
+                <div className="loginErrors">
+                    {errors}
+                </div>
+                <form onSubmit={this._onSubmit} className="loginForm form-horizontal">
+                    <FormControls.Static className="col-xs-9 col-xs-offset-2 loginTitle" value="Login" />
+                    <Input type="text" label="UserId or Email" id="userIdEmail" ref="userIdEmail" labelClassName="col-xs-2" wrapperClassName="col-xs-9"/>
+                    <Input type="password" label="Password" id="password" ref="password" labelClassName="col-xs-2" wrapperClassName="col-xs-9"/>
+                    <Input type="checkbox" label="Remember me" id="rememberMe" ref="rememberMe" className="rememberMe" wrapperClassName="col-xs-offset-2 col-xs-9"/>
+                    <ButtonInput type="submit" bsStyle="primary" wrapperClassName="col-xs-offset-2 col-xs-9">Login</ButtonInput>
+                </form>
             </div>
         );
     }

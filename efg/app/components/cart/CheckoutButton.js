@@ -4,9 +4,6 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var Modal = require('react-bootstrap').Modal;
-var ModalHeader = require('react-bootstrap').ModalHeader;
-var ModalBody = require('react-bootstrap').ModalBody;
-var ModalFooter = require('react-bootstrap').ModalFooter;
 var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
@@ -84,19 +81,11 @@ var CheckoutButton = React.createClass({
                                           title = {this.state.title} close = {this.close} />
             }
         } else {
-            console.log('is not logged in');
             contents =  <div className="checkoutButtonLogin">
-                            <h3>Login is required before you checkout</h3>
+                            <Modal.Title>Login required before checkout...</Modal.Title>
                             <Login/>
                         </div>
         }
-
-        var cartHeaderIconClasses = classNames({
-           'badge': true,
-            'header-cart-num-items': true,
-            'hidden': this.state.cartItemsCount <= 0
-        });
-
         return (
             <div>
                 <div onClick={this.open}>
@@ -105,10 +94,19 @@ var CheckoutButton = React.createClass({
                     <span className="header-cart-text">Checkout</span>
                 </div>
                 <Modal show={this.state.showModal} onHide={this.close} className="checkoutButtonModal">
-                    {contents}
+                    <Modal.Body>
+                        {contents}
+                    </Modal.Body>
                 </Modal>
             </div>
         )
+
+
+        var cartHeaderIconClasses = classNames({
+           'badge': true,
+            'header-cart-num-items': true,
+            'hidden': this.state.cartItemsCount <= 0
+        });
     },
 
     _onChange: function() {
