@@ -9,7 +9,7 @@ var ProductActionCreator = require('../../actions/ProductActionCreators');
 var CartActionCreator = require('../../actions/CartActionCreators');
 var VariantSelect = require('./VariantSelect');
 var _ = require('lodash');
-var {Button, Panel} = require('react-bootstrap');
+var {Button, Panel, Well} = require('react-bootstrap');
 
 var Product = React.createClass({
 
@@ -32,7 +32,7 @@ var Product = React.createClass({
         };
 
         return (
-            <Panel className="productPanel">
+            <Well className="productPanel">
                 <img src={'/assets/images/' + product.variants[i].image} className="img-responsive productImage" />
                 <h3>{product.title}</h3>
                 <h4>{ '$' + price }</h4>
@@ -48,7 +48,7 @@ var Product = React.createClass({
                         disabled={inventory === 0}>
                     {inventory > 0 ? 'Add to cart' : 'Sold Out!'}
                 </Button>
-            </Panel>
+            </Well>
         )
     },
 

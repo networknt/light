@@ -11,6 +11,8 @@ var ProductActionCreators = require('../../actions/ProductActionCreators');
 var ReactPaginate = require('react-paginate');
 var classNames = require('classnames');
 
+var {Panel, Button, Glyphicon} = require('react-bootstrap');
+
 var Catalog = React.createClass({
 
     getInitialState: function() {
@@ -18,7 +20,8 @@ var Catalog = React.createClass({
             catalog: [],
             products: [],
             ancestors: [],
-            allowUpdate: false
+            allowUpdate: false,
+            categoryTreeOpen: true
         };
     },
 
@@ -40,6 +43,12 @@ var Catalog = React.createClass({
         });
     },
 
+    _toggleCategories: function() {
+        this.setState({
+            categoryTreeOpen: !this.state.categoryTreeOpen
+        });
+    },
+
     onSelect: function (node) {
         console.log('selected = ', node.props.catalog['@rid']);
         if (this.state.selected && this.state.selected.isMounted()) {
@@ -54,17 +63,27 @@ var Catalog = React.createClass({
     },
     render: function() {
         return (
-            <div className="panel panel-default">
-                <div className="panel-body">
-                    <ul className="category-tree">
-                        {this.state.catalog.map(function(category) {
-                            return <TreeNode key={category.catalogId}
-                                             catalog={category}
-                                             onCategorySelect={this.onSelect}/>;
-                        }.bind(this))}
-                    </ul>
+            <div className="catalogView container">
+                <div className="row">
+                    {this.state.categoryTreeOpen ?
+                        <div className="col-xs-3">
+                            <Panel collapsible expanded={this.state.categoryTreeOpen}>
+                                <ul className="category-tree">
+                                    {this.state.catalog.map(function(category) {
+                                        return <TreeNode key={category.catalogId}
+                                                         catalog={category}
+                                                         onCategorySelect={this.onSelect}/>;
+                                    }.bind(this))}
+                                </ul>
+                            </Panel>
+                        </div>
+                        : null
+                    }
+                    <div className={this.state.categoryTreeOpen ? "col-xs-9" : "col-xs-12"}>
+                        <Button bsStyle="default" onClick={this._toggleCategories}><Glyphicon glyph={this.state.categoryTreeOpen ? "menu-left" : "menu-right"}></Glyphicon></Button>
+                        <ProductList products={this.state.products} ancestors={this.state.ancestors} allowUpdate={this.state.allowUpdate}/>
+                    </div>
                 </div>
-                <ProductList products={this.state.products} ancestors={this.state.ancestors} allowUpdate={this.state.allowUpdate}/>
             </div>
         );
     }
