@@ -17,15 +17,9 @@ var Login = React.createClass({
     _onSubmit: function(e) {
         e.preventDefault();
         this.setState({ errors: [] });
-        console.log('userIdEmail', this);
-        console.log('password', this.refs.password);
-        console.log('rememberMe', this.refs.rememberMe);
         var userIdEmail = this.refs.userIdEmail.refs.input.getDOMNode().value;
-        console.log('userIdEmail', userIdEmail);
         var password = this.refs.password.refs.input.getDOMNode().value;
-        console.log('password', password);
         var rememberMe = this.refs.rememberMe.refs.input.getDOMNode().checked;
-        console.log('rememberMe', rememberMe);
         AuthActionCreators.login(userIdEmail, password, rememberMe);
     },
 

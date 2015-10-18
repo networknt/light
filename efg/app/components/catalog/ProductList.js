@@ -37,7 +37,7 @@ var ProductList = React.createClass({
         return (
             <div>
                 {ancestors}
-                <div className="row">
+                <div className="productList">
                     {products}
                 </div>
             </div>

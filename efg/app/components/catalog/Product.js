@@ -32,25 +32,23 @@ var Product = React.createClass({
         };
 
         return (
-            <div className="col-4 col-sm-4 col-lg-3">
-                <Panel className="productPanel">
-                    <img src={'/assets/images/' + product.variants[i].image} className="img-responsive productImage" />
-                    <h3>{product.title}</h3>
-                    <h4>{ '$' + price }</h4>
-                    <div className="cbp-vm-details">
-                        {product.description}
-                    </div>
-                    <div className="cbp-vm-variants">
-                        {(_.size(variants) > 1) ?
-                            <VariantSelect {...variantProps} /> : product.variants[i].type + ' $' + price}
-                    </div>
-                    <Button className="cbp-vm-icon cbp-vm-add productAddButton"
-                            onClick={this._addToCart}
-                            disabled={inventory === 0}>
-                        {inventory > 0 ? 'Add to cart' : 'Sold Out!'}
-                    </Button>
-                </Panel>
-            </div>
+            <Panel className="productPanel">
+                <img src={'/assets/images/' + product.variants[i].image} className="img-responsive productImage" />
+                <h3>{product.title}</h3>
+                <h4>{ '$' + price }</h4>
+                <div className="cbp-vm-details">
+                    {product.description}
+                </div>
+                <div className="cbp-vm-variants">
+                    {(_.size(variants) > 1) ?
+                        <VariantSelect {...variantProps} /> : product.variants[i].type + ' $' + price}
+                </div>
+                <Button className="cbp-vm-icon cbp-vm-add productAddButton"
+                        onClick={this._addToCart}
+                        disabled={inventory === 0}>
+                    {inventory > 0 ? 'Add to cart' : 'Sold Out!'}
+                </Button>
+            </Panel>
         )
     },
 
