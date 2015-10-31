@@ -4,6 +4,7 @@
 var React = require('react')
 
 var ProductSummary = React.createClass({
+
     render: function() {
         var quoteStyles = {
             textAlign: 'left',

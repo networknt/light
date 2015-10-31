@@ -12,6 +12,7 @@ var _ = require('lodash');
 var {Button, Panel, Well} = require('react-bootstrap');
 
 var Product = React.createClass({
+    displayName: 'Product',
 
     propTypes: {
         product: React.PropTypes.object.isRequired

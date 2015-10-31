@@ -43,12 +43,17 @@ module.exports = {
         WebAPIUtils.loadCatalog();
     },
 
-    selectCatalog: function(rid) {
+    selectCatalog: function(node, selected, onCategorySelect) {
+        console.log('ProductActionCreators is called' || node || selected || onCategorySelect);
         AppDispatcher.dispatch({
             type: ActionTypes.SELECT_CATALOG,
-            rid: rid
+            rid: node.props.catalog['@rid'],
+            node: node,
+            selected: selected,
+            onCategorySelect: onCategorySelect
         });
-        WebAPIUtils.loadProducts(rid);
+
+        WebAPIUtils.loadProducts(node.props.catalog['@rid']);
     }
 
 };

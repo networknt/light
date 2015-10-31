@@ -12,6 +12,11 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 var _ = require('lodash');
+
+var _selected = null;
+var _node = null;
+var _onCategorySelect = null;
+
 var _products = [];
 var _ancestors = [];
 var _allowUpdate = false;
@@ -81,7 +86,20 @@ var ProductStore = assign({}, EventEmitter.prototype, {
 
     getOffset: function() {
         return _offset;
+    },
+
+    getSelected: function() {
+        return _selected;
+    },
+
+    getNode: function() {
+        return _node;
+    },
+
+    getOnCategorySelect: function() {
+        return _onCategorySelect;
     }
+
 });
 
 ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
@@ -112,7 +130,7 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             _selectedCatalog = _catalog[0]['@rid'];
             //console.log('ProductStore _selectedCatalog', _selectedCatalog);
             WebAPIUtils.loadProducts(_selectedCatalog);
-            ProductStore.emitChange();
+            //ProductStore.emitChange();
             break;
 
         case ActionTypes.RECEIVE_PRODUCTS:
@@ -128,8 +146,16 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
 
         case ActionTypes.SELECT_CATALOG:
             _selectedCatalog = payload.rid;
-            console.log('ProductStore _selectedCatalog', _selectedCatalog);
-            ProductStore.emitChange();
+            _selected = payload.selected;
+            _node = payload.node;
+            _onCategorySelect = payload.onCategorySelect;
+
+            console.log('ProductStore.SELECT_CATALOG _selectedCatalog', _selectedCatalog);
+            console.log('ProductStore.SELECT_CATALOG _selected', _selected);
+            console.log('ProductStore.SELECT_CATALOG _node', _node);
+            console.log('ProductStore.SELECT_CATALOG _onCategorySelect', _onCategorySelect);
+            //Wait until products is updated from db.
+            //ProductStore.emitChange();
             break;
 
         default:

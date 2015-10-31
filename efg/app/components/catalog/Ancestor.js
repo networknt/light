@@ -4,6 +4,8 @@
 var React = require('react');
 
 var Ancestor = React.createClass({
+    displayName: 'Ancestor',
+
     render: function() {
         return (
             <div>

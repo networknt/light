@@ -19,7 +19,7 @@ var Ancestor = require('./Ancestor');
 
 function getProduct(product, index) {
     return (
-        <Product product={product} productIndex={index} key={index} />
+        <Product product={product} productIndex={index} key={product.productId} />
     );
 }
 
@@ -30,6 +30,8 @@ function getAncestor(ancestor, index) {
 }
 
 var ProductList = React.createClass({
+    displayName: 'ProductList',
+
     render: function() {
         console.log('products', this.props.products);
         var products = Object.keys(this.props.products).length ===0 ? '' : this.props.products.map(getProduct, this);
