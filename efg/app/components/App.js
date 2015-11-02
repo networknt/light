@@ -9,15 +9,29 @@ var AuthStore = require('../stores/AuthStore.js');
 var RouteStore = require('../stores/RouteStore.js');
 var AuthActionCreators = require('../actions/AuthActionCreators.js');
 
+const ThemeManager = require('material-ui/lib/styles/theme-manager');
+const LightRawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme');
+
 console.log('App is called');
 
 function getStateFromStores() {
     return {
-        isLoggedIn: AuthStore.isLoggedIn()
+        isLoggedIn: AuthStore.isLoggedIn(),
+        muiTheme: ThemeManager.getMuiTheme(LightRawTheme)
     };
 }
 
 var App = React.createClass({
+
+    childContextTypes: {
+        muiTheme: React.PropTypes.object
+    },
+
+    getChildContext() {
+        return {
+            muiTheme: this.state.muiTheme,
+        };
+    },
 
     getInitialState: function() {
         return getStateFromStores();

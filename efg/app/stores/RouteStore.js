@@ -4,7 +4,7 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var AuthStore = require('../stores/AuthStore.js');
-var BlogStore = require('../stores/BlogStore.js');
+//var BlogStore = require('../stores/BlogStore.js');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 
@@ -44,8 +44,7 @@ var RouteStore = assign({}, EventEmitter.prototype, {
 
 RouteStore.dispatchToken = AppDispatcher.register(function(payload) {
     AppDispatcher.waitFor([
-        AuthStore.dispatchToken,
-        BlogStore.dispatchToken
+        AuthStore.dispatchToken
     ]);
     //console.log('payload', payload);
     var type = payload.type;

@@ -15,8 +15,9 @@ var LogOut = require('./components/auth/Logout.js');
 var SignUp = require('./components/auth/Signup.js');
 var About = require('./components/common/About.js');
 var Contact = require('./components/common/Contact.js');
-var Blogs = require('./components/common/Blogs.js');
-var Blog = require('./components/common/Blog.js');
+var BlogList = require('./components/blog/Blogs.js');
+var Blog = require('./components/blog/Blog.js');
+var BlogPost = require('./components/blog/BlogPost.js');
 var News = require('./components/common/News.js');
 var Forum = require('./components/common/Forum.js');
 var Catalog = require('./components/catalog/Catalog.js');
@@ -114,8 +115,9 @@ module.exports = (
         <Route name="schemaForm" path="/schemaForm" handler={SchemaForm} />
         <Route name="cart" path="/cart" handler={Cart} />
         <Route name="contact" path="/contact" handler={Contact} />
-        <Route name="blogs" path="/blogs" handler={Blogs} />
-        <Route name="blog" path="/blog" handler={SchemaForm} />
+        <Route name="blog" path="/blog" handler={BlogList} />
+        <Route name="blog/:blogRid" handler={Blog} />
+        <Route name="blog/:blogRid/:postId" handler={BlogPost} />
         <Route name="news" path="/news" handler={News} />
         <Route name="forum" path="/forum" handler={Forum} />
         <Route name="catalog" path="/catalog" handler={Catalog}/>

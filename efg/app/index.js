@@ -29,7 +29,7 @@ var $ = require('jquery');
 
 var buffer = [];  // save all the requests that gets token expired
 var refreshing = false;
-
+let injectTapEventPlugin = require('react-tap-event-plugin');
 require('./assets/stylesheets/main.scss');
 
 
@@ -136,6 +136,7 @@ console.warn = function(warning) {
     warn.apply(console, arguments);
 };
 
+injectTapEventPlugin();
 
 router.run(function (Handler) {
     React.render(<Handler/>, document.getElementById('content'));

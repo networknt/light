@@ -397,6 +397,19 @@ body {
             -ms-flex-pack: center;
                 justify-content: center; }
 
+.login .loginForm .loginTitle {
+  font-size: 20px; }
+
+.checkoutButtonModal {
+  width: 100%;
+  position: relative; }
+  .checkoutButtonModal .checkoutButtonLogin {
+    text-align: center; }
+    .checkoutButtonModal .checkoutButtonLogin h3 {
+      margin-left: auto;
+      margin-right: auto;
+      position: relative; }
+
 .header-cart-num-items {
   background-color: red !important;
   position: relative;
@@ -461,3 +474,32 @@ body {
   border: 1px solid black;
   content: "";
   cursor: default; }
+
+.productList {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap; }
+  .productList .productPanel {
+    -webkit-flex: 0 0 20%;
+        -ms-flex: 0 0 20%;
+            flex: 0 0 20%;
+    margin: 10px;
+    text-align: center; }
+    .productList .productPanel .productImage {
+      margin-left: auto;
+      margin-right: auto;
+      display: block; }
+    .productList .productPanel .variantSelect {
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 10px;
+      display: block; }
+    .productList .productPanel .productAddButton {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 10px; }

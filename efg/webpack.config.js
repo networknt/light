@@ -25,7 +25,8 @@ module.exports = {
         vendor: ['react',
             'react-router',
             'react-bootstrap',
-            'react-router-bootstrap']
+            'react-router-bootstrap',
+            'material-ui']
     },
     output: {
         filename: "bundle.js"

@@ -58,6 +58,10 @@ module.exports = {
         LOAD_CATALOG: null,
         SELECT_CATALOG: null,
         LOAD_PRODUCTS: null
-    })
+    }),
+
+    monthNames: ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ]
 
 };
