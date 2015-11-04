@@ -96,12 +96,12 @@ var Header = React.createClass({
                                     <CheckoutButton/>
                                 </NavItem>
                             );
+                        } else {
                             return (
                                 <LinkContainer to={item.menuItemId}>
                                     <NavItem eventKey={item.menuItemId}>{item.label}</NavItem>
                                 </LinkContainer>
                             );
-                        } else {
                         }
                     }
                 }, this)}
