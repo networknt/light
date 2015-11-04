@@ -19,13 +19,16 @@ var ReactBootstrap = require('react-bootstrap')
     , NavItem = ReactBootstrap.NavItem
     , DropdownButton = ReactBootstrap.DropdownButton
     , MenuItem = ReactBootstrap.MenuItem
-    , ListGroup = ReactBootstrap.ListGroup;
+    , ListGroup = ReactBootstrap.ListGroup
+    , NavBrand = ReactBootstrap.NavBrand
+    , NavDropdown = ReactBootstrap.NavDropdown;
 
 var ReactRouterBootstrap = require('react-router-bootstrap')
     , NavItemLink = ReactRouterBootstrap.NavItemLink
     , MenuItemLink = ReactRouterBootstrap.MenuItemLink
     , ButtonLink = ReactRouterBootstrap.ButtonLink
-    , ListGroupItemLink = ReactRouterBootstrap.ListGroupItemLink;
+    , ListGroupItemLink = ReactRouterBootstrap.ListGroupItemLink
+    , LinkContainer = ReactRouterBootstrap.LinkContainer;
 
 var CheckoutButton = require('./cart/CheckoutButton.js');
 
@@ -88,11 +91,17 @@ var Header = React.createClass({
                     //console.log('item = ', item);
                     if(!item.left && this.hasAccess(item)) {
                         if(item.menuItemId == 'cart') {
-                            return <NavItem key={item.menuItemId}>
-                                <CheckoutButton/>
-                            </NavItem>
+                            return (
+                                <NavItem eventKey={item.menuItemId}>
+                                    <CheckoutButton/>
+                                </NavItem>
+                            );
+                            return (
+                                <LinkContainer to={item.menuItemId}>
+                                    <NavItem eventKey={item.menuItemId}>{item.label}</NavItem>
+                                </LinkContainer>
+                            );
                         } else {
-                            return <NavItemLink key={item.menuItemId} to={item.menuItemId}>{item.label}</NavItemLink>
                         }
                     }
                 }, this)}
@@ -106,13 +115,25 @@ var Header = React.createClass({
                     if(item.left && this.hasAccess(item)) {
                         if(item.out_Own) {
                             console.log('this one has outOwn', item.out_Own);
-                            return <DropdownButton key={item.menuItemId} title={item.label} >
-                            {item.out_Own.map(function(subItem, subIndex) {
-                                return <NavItemLink key={subItem.menuItemId} to={subItem.menuItemId}>{subItem.label}</NavItemLink>
-                            }, this)}
-                            </DropdownButton>
+                            return (
+                                <NavDropdown eventKey={item.menuItemId} title={item.label} >
+                                    {
+                                        item.out_Own.map(function(subItem, subIndex) {
+                                            return (
+                                                <LinkContainer to={subItem.menuItemId}>
+                                                    <NavItem eventKey={subItem.menuItemId} >{subItem.label}</NavItem>
+                                                </LinkContainer>
+                                            );
+                                        }, this)
+                                    }
+                                </NavDropdown>
+                            );
                         } else {
-                            return <NavItemLink key={item.menuItemId} to={item.menuItemId}>{item.label}</NavItemLink>
+                            return (
+                                <LinkContainer to={item.menuItemId}>
+                                    <NavItem eventKey={item.menuItemId} >{item.label}</NavItem>
+                                </LinkContainer>
+                            );
                         }
                     }
                 }, this)}
@@ -121,7 +142,8 @@ var Header = React.createClass({
 
         return (
             <div>
-                <Navbar brand={<a href='/'>React-Bootstrap</a>} toggleNavKey={0}>
+                <Navbar toggleNavKey={0}>
+                    <NavBrand><a href="/">React-Bootstrap</a></NavBrand>
                     <CollapsibleNav eventKey={0}>
                         {leftNav}
                         {rightNav}

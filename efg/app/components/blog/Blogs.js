@@ -1,6 +1,6 @@
 var React =  require('react');
 var BlogRow = require('./BlogRow');
-var {List, Paper} = require('material-ui');
+var {List, Paper, ListItem} = require('material-ui');
 var BlogStore = require('../../stores/BlogStore');
 var BlogAction = require('../../actions/BlogActions');
 
@@ -22,6 +22,40 @@ var Blogs = React.createClass({
             blogs: BlogStore.getBlogs()
         });
     },
+    _createItems: function (blogs) {
+        var children;
+        if (blogs.out_Own) {
+            children = blogs.out_Own.map(function (child) {
+                return this._createItems(child);
+            }.bind(this));
+        }
+        return (
+            <ListItem
+                leftAvatar={this._getLeftAvatar(blogs)}
+                primaryText={this._getPrimaryText(blogs)}
+                secondaryText={blogs.description}
+                onTouchTap={this._onTouchTap}
+                nestedItems={children}></ListItem>
+        );
+    },
+
+    _getLeftAvatar: function(blogs) {
+        var count = "0";
+        if (blogs.out_HasPost != null && blogs.out_HasPost.length > 0) {
+            count = blogs.out_HasPost.length.toString();
+        }
+        return (
+            <div className="blogLeftAvatar">{count}</div>
+        );
+    },
+
+    _getPrimaryText: function(blogs) {
+        return (
+            <p>
+                {blogs.blogId}
+            </p>
+        );
+    },
 
     render: function() {
         return (
@@ -40,10 +74,8 @@ var Blogs = React.createClass({
                         <List>
                             {
                                 this.state.blogs.map(function (blog) {
-                                    return (
-                                        <BlogRow blog={blog}></BlogRow>
-                                    );
-                                })
+                                    return this._createItems(blog);
+                                }.bind(this))
                             }
                         </List>
                     </Paper>

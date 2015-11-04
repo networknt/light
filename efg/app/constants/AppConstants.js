@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var keyMirror = require('keymirror');
+var keyMirror = require('fbjs/lib/keyMirror');
 
 module.exports = {
     Host: 'example',

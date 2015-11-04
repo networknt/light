@@ -7,14 +7,8 @@ var AuthStore = require('../stores/AuthStore.js');
 //var BlogStore = require('../stores/BlogStore.js');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
-
-var Router = require('react-router');
+import {Router, Route} from 'react-router';
 var routes = require('../routes.js');
-
-var router = Router.create({
-    routes: routes,
-    location: Router.HistoryLocation
-});
 
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
@@ -33,8 +27,8 @@ var RouteStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getRouter: function() {
-        return router;
+    getRoutes: function() {
+        return routes;
     },
 
     redirectHome: function() {

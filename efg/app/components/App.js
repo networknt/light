@@ -54,7 +54,7 @@ var App = React.createClass({
         return (
             <div className="app">
                 <Header/>
-                <RouteHandler/>
+                {this.props.children}
                 <Footer/>
             </div>
         );

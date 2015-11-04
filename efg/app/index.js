@@ -16,11 +16,9 @@
 
 require('bootstrap/less/bootstrap.less');
 
-var React = require('react');
-
-var Router = require('react-router')
-    , RouteHandler = Router.RouteHandler
-    , Route = Router.Route;
+import React        from 'react';
+import ReactDOM     from 'react-dom';
+import Router       from 'react-router';
 
 var AuthActionCreators = require('./actions/AuthActionCreators.js');
 var AuthStore = require('./stores/AuthStore.js');
@@ -125,7 +123,7 @@ $.ajaxPrefilter(function(options, originalOptions, jqxhr) {
     return deferred.promise(jqxhr);
 });
 
-var router = require('./stores/RouteStore.js').getRouter();
+var routes = require('./stores/RouteStore.js').getRoutes();
 
 // TODO remove it
 var warn = console.warn;
@@ -138,6 +136,8 @@ console.warn = function(warning) {
 
 injectTapEventPlugin();
 
-router.run(function (Handler) {
-    React.render(<Handler/>, document.getElementById('content'));
-});
+ReactDOM.render(<Router>{routes}</Router>, document.getElementById('content'));
+//
+//router.run(function (Handler) {
+//    React.render(<Handler/>, document.getElementById('content'));
+//});
