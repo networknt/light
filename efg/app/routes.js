@@ -110,34 +110,34 @@ var CatalogAdmin = React.createClass({
 });
 
 module.exports = (
-    <Route name="app" path="/" component={App}>
-        <Route name="about" path="/about" component={About} />
-        <Route name="schemaForm" path="/schemaForm" component={SchemaForm} />
-        <Route name="cart" path="/cart" component={Cart} />
-        <Route name="contact" path="/contact" component={Contact} />
-        <Route name="blog" path="/blog" component={BlogList} />
-        <Route name="blog/:blogRid" component={Blog} />
-        <Route name="blog/:blogRid/:postId" component={BlogPost} />
-        <Route name="news" path="/news" component={News} />
-        <Route name="forum" path="/forum" component={Forum} />
-        <Route name="catalog" path="/catalog" component={Catalog}/>
-        <Route name="admin" path="/admin" component={Admin} />
-        <Route name="roleAdmin" path="/admin/roleAdmin" component={RoleAdmin} />
-        <Route name="userAdmin" path="/admin/userAdmin" component={UserAdmin} />
-        <Route name="blogAdmin" path="/admin/blogAdmin" component={BlogAdmin} />
-        <Route name="forumAdmin" path="/admin/forumAdmin" component={ForumAdmin} />
-        <Route name="newsAdmin" path="/admin/newsAdmin" component={NewsAdmin} />
-        <Route name="productAdmin" path="/admin/productAdmin" component={ProductAdmin} />
-        <Route name="catalogAdmin" path="/admin/catalogAdmin" component={ProductAdmin} />
-        <Route name="accessAdmin" path="/admin/accessAdmin" component={AccessAdmin} />
-        <Route name="dbAdmin" path="/admin/dbAdmin" component={DbAdmin} />
-        <Route name="menuAdmin" path="/admin/menuAdmin" component={MenuAdmin} />
-        <Route name="ruleAdmin" path="/admin/ruleAdmin" component={RuleAdmin} />
-        <Route name="formAdmin" path="/admin/formAdmin" component={FormAdmin} />
-        <Route name="pageAdmin" path="/admin/pageAdmin" component={PageAdmin} />
-        <Route name="hostAdmin" path="/admin/hostAdmin" component={HostAdmin} />
-        <Route name="logIn" path="/logIn" component={LogIn}/>
-        <Route name="logOut" path="/logOut" component={LogOut}/>
-        <Route name="signUp" path="/signUp" component={SignUp}/>
+    <Route path="/" component={App}>
+        <Route path="about" component={About} />
+        <Route path="schemaForm" component={SchemaForm} />
+        <Route path="cart" component={Cart} />
+        <Route path="contact" component={Contact} />
+        <Route path="blog" component={BlogList} />
+        <Route path="blog/:blogRid" component={Blog} />
+        <Route path="blog/:blogRid/:postId" component={BlogPost} />
+        <Route path="news" component={News} />
+        <Route path="forum" component={Forum} />
+        <Route path="catalog" component={Catalog}/>
+        <Route path="admin"  component={Admin} />
+        <Route path="admin/roleAdmin" component={RoleAdmin} />
+        <Route path="admin/userAdmin" component={UserAdmin} />
+        <Route path="admin/blogAdmin" component={BlogAdmin} />
+        <Route path="admin/forumAdmin" component={ForumAdmin} />
+        <Route path="admin/newsAdmin" component={NewsAdmin} />
+        <Route path="admin/productAdmin" component={ProductAdmin} />
+        <Route path="admin/catalogAdmin" component={ProductAdmin} />
+        <Route path="admin/accessAdmin" component={AccessAdmin} />
+        <Route path="admin/dbAdmin" component={DbAdmin} />
+        <Route path="admin/menuAdmin" component={MenuAdmin} />
+        <Route path="admin/ruleAdmin" component={RuleAdmin} />
+        <Route path="admin/formAdmin" component={FormAdmin} />
+        <Route path="admin/pageAdmin" component={PageAdmin} />
+        <Route path="admin/hostAdmin" component={HostAdmin} />
+        <Route path="logIn" component={LogIn}/>
+        <Route path="logOut" component={LogOut}/>
+        <Route path="signUp" component={SignUp}/>
     </Route>
 );

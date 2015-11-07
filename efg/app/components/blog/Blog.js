@@ -5,10 +5,10 @@ var BlogActions = require('../../actions/BlogActions');
 var {List, ListItem, Paper, RaisedButton} = require('material-ui');
 var AppConstants = require('../../constants/AppConstants');
 
-var Navigation = require('react-router').Navigation;
+var History = require('react-router').History;
 
 var Blog = React.createClass({
-    mixins: [Navigation],
+    mixins: [History],
 
     componentDidMount: function() {
         BlogStore.addChangeListener(this._receiveBlogPosts);
@@ -27,7 +27,8 @@ var Blog = React.createClass({
         })
     },
     _routeToPost: function(postRid) {
-        this.transitionTo("/blog/" + this.props.params.blogRid + "/" + postRid.substring(1));
+        //this.transitionTo("/blog/" + this.props.params.blogRid + "/" + postRid.substring(1));
+        this.history.pushState(null, '/blog/'+ this.props.params.blogRid + '/' + postRid.substring(1), null)
     },
 
     render: function() {

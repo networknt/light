@@ -4,7 +4,11 @@ var {List, Paper, ListItem} = require('material-ui');
 var BlogStore = require('../../stores/BlogStore');
 var BlogAction = require('../../actions/BlogActions');
 
+var History = require('react-router').History;
+
 var Blogs = React.createClass({
+
+    mixins: [History],
 
     getInitialState: function() {
         return {
@@ -22,6 +26,12 @@ var Blogs = React.createClass({
             blogs: BlogStore.getBlogs()
         });
     },
+
+    _onBlogTouch: function (blogRid) {
+        //this.history.pushState(null, '/blog/'+ event.currentTarget.id, null);
+        this.history.pushState(null, '/blog/' + blogRid.substring(1));
+    },
+
     _createItems: function (blogs) {
         var children;
         if (blogs.out_Own) {
@@ -29,13 +39,15 @@ var Blogs = React.createClass({
                 return this._createItems(child);
             }.bind(this));
         }
+        var boundClick = this._onBlogTouch.bind(this, blogs["@rid"]);
         return (
             <ListItem
                 leftAvatar={this._getLeftAvatar(blogs)}
                 primaryText={this._getPrimaryText(blogs)}
                 secondaryText={blogs.description}
-                onTouchTap={this._onTouchTap}
-                nestedItems={children}></ListItem>
+                onTouchTap={boundClick}
+                nestedItems={children}
+                id={blogs["@rid"].substring(1)}/>
         );
     },
 
