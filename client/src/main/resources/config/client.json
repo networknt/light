@@ -1,0 +1,32 @@
+{
+  "tls": {
+    "verifyHostname": false,
+    "trustStore": "trust.keystore",
+    "trustPass": "nopassword",
+    "keyStore": "config/key.jks",
+    "keyPass": "password"
+  },
+  "restTemplate" : {
+    "maxConnectionTotal": 12,
+    "maxConnectionPerRoute" : 3,
+    "routes" : {
+      "google.com": 40,
+      "yahoo.com": 10
+    },
+    "timeoutMilliseconds" : 60000
+  },
+  "asyncRestTemplate": {
+    "maxConnectionTotal": 100,
+    "maxConnectionPerRoute" : 20,
+    "routes": {
+      "google.com": 40,
+      "yahoo.com": 10
+    },
+    "reactor": {
+      "ioThreadCount": 1,
+      "connectTimeout": 30000,
+      "soTimeout": 30000
+    },
+    "timeoutMilliseconds" : 60000
+  }
+}

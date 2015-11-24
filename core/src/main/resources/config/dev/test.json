@@ -1,0 +1,3 @@
+{
+  "key": "application level config is in config folder with subfolder dev/sit/uat/prod and dev is the default if no system properties API_ENV is defined"
+}

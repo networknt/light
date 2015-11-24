@@ -39,11 +39,13 @@ import java.util.Map;
  */
 public class JwtUtil {
     public static String TOKEN_EXPIRED_MESSAGE = "Invalid iat and/or exp.";
+    static final String OAUTH2_CONFIG = "oauth2";
+    static final Map<String, Object> oauth2Config = ServiceLocator.getInstance().getConfig(OAUTH2_CONFIG);
 
     static VerifierProviders verifierProviders = null;
     static{
         try {
-            final Verifier hmacVerifier = new HmacSHA256Verifier(ServiceLocator.getInstance().getJwtSigningKey().getBytes());
+            final Verifier hmacVerifier = new HmacSHA256Verifier(((String)oauth2Config.get("signingKey")).getBytes());
             VerifierProvider hmacLocator = new VerifierProvider() {
                 @Override
                 public List<Verifier> findVerifier(String signerId, String keyId) {
@@ -91,26 +93,26 @@ public class JwtUtil {
 
     public static JsonToken createToken(Map<String, Object> userMap) throws InvalidKeyException {
         // Current time and signing algorithm
-        HmacSHA256Signer signer = new HmacSHA256Signer(ServiceLocator.getInstance().getJwtIssuer(),
-            null, ServiceLocator.getInstance().getJwtSigningKey().getBytes());
+        HmacSHA256Signer signer = new HmacSHA256Signer((String)oauth2Config.get("issuer"),
+            null, ((String)oauth2Config.get("signingKey")).getBytes());
 
         // Configure JSON token with signer and SystemClock
         JsonToken token = new JsonToken(signer);
-        token.setAudience(ServiceLocator.getInstance().getJwtAudience());
-        token.setParam("typ", ServiceLocator.getInstance().getJwtTyp());
+        token.setAudience((String) oauth2Config.get("audience"));
+        token.setParam("typ", (String)oauth2Config.get("typ"));
         token.setIssuedAt(Instant.now());
-        token.setExpiration(Instant.now().plusSeconds(new Integer(ServiceLocator.getInstance().getJwtExpireInSecond())));
+        token.setExpiration(Instant.now().plusSeconds((Integer)oauth2Config.get("expireInSecond")));
         Map<String, Object> payload = token.getPayload();
         payload.put("user", userMap);
         return token;
     }
 
     public static JsonToken Deserialize(String jwt) throws Exception {
-        JsonTokenParser parser = new JsonTokenParser(verifierProviders, new SignedTokenAudienceChecker(ServiceLocator.getInstance().getJwtAudience()));
+        JsonTokenParser parser = new JsonTokenParser(verifierProviders, new SignedTokenAudienceChecker((String)oauth2Config.get("audience")));
         return parser.deserialize(jwt);
     }
     public static JsonToken VerifyAndDeserialize(String jwt) throws Exception {
-        JsonTokenParser parser = new JsonTokenParser(verifierProviders, new SignedTokenAudienceChecker(ServiceLocator.getInstance().getJwtAudience()));
+        JsonTokenParser parser = new JsonTokenParser(verifierProviders, new SignedTokenAudienceChecker((String)oauth2Config.get("audience")));
         return parser.verifyAndDeserialize(jwt);
     }
 }

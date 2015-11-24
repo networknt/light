@@ -27,6 +27,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
 import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
@@ -39,17 +41,19 @@ import java.util.Map;
  * Created by husteve on 9/4/2014.
  */
 public class InitDatabase {
-    static final org.slf4j.Logger logger = LoggerFactory.getLogger(InitDatabase.class);
+    static final XLogger logger = XLoggerFactory.getXLogger(InitDatabase.class);
+    static final String SERVER_CONFIG = "server";
+    static final Map<String, Object> serverConfig = ServiceLocator.getInstance().getConfig(SERVER_CONFIG);
 
     public static void main(final String[] args) {
         initDb();
     }
 
     public static void initDb() {
-        logger.debug("Start initdb()");
+        logger.entry();
         initVertex();;
         refreshDoc();
-        logger.debug("End initdb()");
+        logger.exit();
     }
 
     public static void initVertex() {
@@ -517,10 +521,10 @@ public class InitDatabase {
             List roles = new ArrayList<String>();
             roles.add("owner");
             roles.add("user");
-            Vertex credentialOwner = graph.addVertex("class:Credential", "password", HashUtil.generateStorngPasswordHash(ServiceLocator.getInstance().getOwnerPass()));
+            Vertex credentialOwner = graph.addVertex("class:Credential", "password", HashUtil.generateStorngPasswordHash((String) serverConfig.get("ownerPass")));
             Vertex userOwner = graph.addVertex("class:User",
-                    "userId", ServiceLocator.getInstance().getOwnerId(),
-                    "email", ServiceLocator.getInstance().getOwnerEmail(),
+                    "userId", serverConfig.get("ownerId"),
+                    "email", serverConfig.get("ownerEmail"),
                     "roles", roles,
                     "credential", credentialOwner,
                     "createDate", new java.util.Date());
@@ -528,11 +532,11 @@ public class InitDatabase {
 
             roles = new ArrayList<String>();
             roles.add("user");
-            Vertex credentialTest = graph.addVertex("class:Credential", "password", HashUtil.generateStorngPasswordHash(ServiceLocator.getInstance().getTestPass()));
+            Vertex credentialTest = graph.addVertex("class:Credential", "password", HashUtil.generateStorngPasswordHash((String) serverConfig.get("testPass")));
             Vertex userTest = graph.addVertex("class:User",
-                    "userId", ServiceLocator.getInstance().getTestId(),
+                    "userId", serverConfig.get("testId"),
                     "host", "example",
-                    "email", ServiceLocator.getInstance().getTestEmail(),
+                    "email", serverConfig.get("testEmail"),
                     "roles", roles,
                     "credential", credentialTest,
                     "createDate", new java.util.Date());

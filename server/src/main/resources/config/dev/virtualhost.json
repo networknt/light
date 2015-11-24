@@ -1,0 +1,26 @@
+{
+  "demo.networknt.com" : {
+    "base" : "/home/demo/web",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "demo.networknt.com"
+  },
+  "www.edibleforestgarden.ca" : {
+    "base" : "/home/edibleforestgarden/web",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "www.edibleforestgarden.ca"
+  },
+  "www.networknt.com" : {
+    "base" : "/home/networknt/web",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "www.networknt.com"
+  },
+  "example" : {
+    "base" : "/home/example/web",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "example"
+  }
+}

@@ -70,7 +70,8 @@ public class LightServer {
 
     static public void start() {
         // hosts and server configuration
-        Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
+        Map<String, Object> hostConfigMap = ServiceLocator.getInstance().getConfig(ServiceLocator.HOST_CONFIG);
+        Map<String, Object> serverConfigMap = ServiceLocator.getInstance().getConfig(ServiceLocator.SERVER_CONFIG);
 
         OrientGraphFactory factory = ServiceLocator.getInstance().getFactory();
         // check if database exists, if not create it and init it.
@@ -99,10 +100,10 @@ public class LightServer {
         }
 
         NameVirtualHostHandler virtualHostHandler = new NameVirtualHostHandler();
-        Iterator<String> it = hostMap.keySet().iterator();
+        Iterator<String> it = hostConfigMap.keySet().iterator();
         while (it.hasNext()) {
             String host = it.next();
-            Map<String, String> hostPropMap = (Map<String, String>)hostMap.get(host);
+            Map<String, String> hostPropMap = (Map<String, String>)hostConfigMap.get(host);
             String base = hostPropMap.get("base");
             String transferMinSize = hostPropMap.get("transferMinSize");
             virtualHostHandler
@@ -122,8 +123,8 @@ public class LightServer {
                                                     websocket(new WebSocketHandler()))
                             ));
         }
-        String ip = ServiceLocator.getInstance().getIp();
-        String port = ServiceLocator.getInstance().getPort();
+        String ip = (String)serverConfigMap.get("ip");
+        String port = (String)serverConfigMap.get("port");
         server = Undertow
                 .builder()
                 .addHttpListener(Integer.valueOf(port), ip)
