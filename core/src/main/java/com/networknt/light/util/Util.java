@@ -18,6 +18,8 @@ package com.networknt.light.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -27,11 +29,11 @@ import java.util.Map;
  * Created by husteve on 8/28/2014.
  */
 public class Util {
-    static final Logger logger = LoggerFactory.getLogger(Util.class);
+    static final XLogger logger = XLoggerFactory.getXLogger(Util.class);
 
     public static String getCommandRuleId(Map<String, Object> jsonMap) throws Exception {
+        logger.entry(jsonMap);
         Class c = Class.forName("com.networknt.light.rule.Rule");
-        logger.debug("jsonMap = "  + jsonMap);
         String commandName = (String) jsonMap.get("name");
         // Ev rules should only be called internally not from browser.
         if(commandName.endsWith("Ev")) {
@@ -44,6 +46,7 @@ public class Util {
                 (jsonMap.get("category") == null? "" : jsonMap.get("category") + ".") +
                 (jsonMap.get("version") == null? "" : jsonMap.get("version") + ".") +
                 ruleId;
+        logger.exit(ruleId);
         return ruleId;
     }
 

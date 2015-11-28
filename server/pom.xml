@@ -21,6 +21,10 @@
         </dependency>
         <dependency>
             <groupId>com.networknt.light</groupId>
+            <artifactId>client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt.light</groupId>
             <artifactId>rule-engine</artifactId>
         </dependency>
         <dependency>
