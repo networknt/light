@@ -380,6 +380,11 @@ public class RestHandler implements HttpHandler {
                 }
             }
         }
+        // set cache control header here.
+        if(ruleMap.get("cacheControl") != null) {
+            exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, (String)ruleMap.get("cacheControl"));
+        }
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
 
         // inject exchange to the command here in order to handle more complicated logic like etag
         jsonMap.put("exchange", exchange);
@@ -426,13 +431,8 @@ public class RestHandler implements HttpHandler {
             if(responseCode != null) exchange.setResponseCode(responseCode);
         }
         if(logger.isDebugEnabled()) {
-            logger.debug("response success: {} ", result);
+            logger.debug("response ls: {} ", result);
         }
-        // set cache control header here.
-        if(ruleMap.get("cacheControl") != null) {
-            exchange.getResponseHeaders().put(Headers.CACHE_CONTROL, (String)ruleMap.get("cacheControl"));
-        }
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
         if(result != null) {
             exchange.getResponseSender().send(ByteBuffer.wrap(result.getBytes("utf-8")));
         }
