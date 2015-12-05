@@ -251,6 +251,15 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
                 if(lastName != null && !lastName.equals(user.getProperty("lastName"))) {
                     user.setProperty("lastName", lastName);
                 }
+                // TODO update shipping address and payment address here.
+                Map<String, Object> shippingAddress = (Map<String, Object>)data.get("shippingAddress");
+                if(shippingAddress != null) {
+                    user.setProperty("shippingAddress", shippingAddress);
+                }
+                Map<String, Object> paymentAddress = (Map<String, Object>)data.get("paymentAddress");
+                if(paymentAddress != null) {
+                    user.setProperty("paymentAddress", paymentAddress);
+                }
                 user.setProperty("updateDate", data.get("updateDate"));
             }
             graph.commit();

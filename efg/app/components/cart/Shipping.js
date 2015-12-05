@@ -31,7 +31,7 @@ var Shipping = React.createClass({
                     <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Cart cartItems={ this.props.cartItems } totalPrice={ this.props.totalPrice } />
+                    <Address cartItems={ this.props.cartItems } totalPrice={ this.props.totalPrice } />
                 </Modal.Body>
                 <Modal.Footer>
                     {buyButton}
