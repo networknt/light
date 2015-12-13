@@ -57,7 +57,13 @@ module.exports = {
         TOGGLE_CART: null, // Open/close cart
         LOAD_CATALOG: null,
         SELECT_CATALOG: null,
-        LOAD_PRODUCTS: null
+        LOAD_PRODUCTS: null,
+        RECEIVE_UPD_USER_PROFILE: null,
+        RECEIVE_USER: null,
+
+        // Form
+        GET_FORM: null,
+        RECEIVE_FORM: null
     }),
 
     monthNames: ["January", "February", "March", "April", "May", "June",

@@ -45,6 +45,20 @@ var CheckoutButton = React.createClass({
         })
     },
 
+    onPayment: function() {
+        this.setState({
+            screen: 'payment',
+            title: 'Payment'
+        })
+    },
+
+    onCheckoutDone: function() {
+        this.setState({
+            screen: 'confirm',
+            title: 'Checkout Confirmation'
+        })
+    },
+
     componentDidMount: function() {
         CartStore.addChangeListener(this._onChange);
     },

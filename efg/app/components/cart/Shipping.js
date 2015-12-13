@@ -10,8 +10,8 @@ var ModalFooter = require('react-bootstrap').ModalFooter;
 var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
-var Cart = require('./Cart')
-
+var Cart = require('./Cart');
+var Address = require('./Address');
 var Shipping = React.createClass({
 
     render: function() {
@@ -31,7 +31,7 @@ var Shipping = React.createClass({
                     <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Cart cartItems={ this.props.cartItems } totalPrice={ this.props.totalPrice } />
+                    <Address addressType="shippingAddress"/>
                 </Modal.Body>
                 <Modal.Footer>
                     {buyButton}

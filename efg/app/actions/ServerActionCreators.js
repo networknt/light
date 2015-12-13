@@ -62,7 +62,30 @@ module.exports = {
             json: json,
             error: error
         });
-    }
+    },
 
+    receiveUser: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_USER,
+            json: json,
+            error: error
+        });
+    },
+
+    receiveUpdUserProfile: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_UPD_USER_PROFILE,
+            json: json,
+            error: error
+        });
+    },
+
+    receiveForm: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_FORM,
+            json: json,
+            error: error
+        });
+    }
 };
 

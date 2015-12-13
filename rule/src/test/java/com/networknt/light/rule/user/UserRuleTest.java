@@ -40,6 +40,7 @@ public class UserRuleTest extends TestCase {
     String signInAdmin = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"stevehu\",\"password\":\"123456\",\"rememberMe\":true,\"clientId\":\"example@Browser\"}}";
 
     String signUpUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"signUpUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"email\":\"steve@gmail.com\",\"password\":\"abcdefg\",\"passwordConfirm\":\"abcdefg\",\"firstName\":\"steve\",\"lastName\":\"hu\"}}";
+    String activateUser = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"activateUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\"}}";
     String getUserByEmail = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"host\":\"www.example.com\",\"email\":\"steve@gmail.com\"}}";
     String getUserByUserId = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\"}}";
     String getUserByRid = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"getUser\",\"data\":{\"host\":\"www.exmaple.com\"}}";
@@ -52,6 +53,10 @@ public class UserRuleTest extends TestCase {
     String signInUserNewPass = "{\"readOnly\":true,\"category\":\"user\",\"name\":\"signInUser\",\"data\":{\"host\":\"www.example.com\",\"userIdEmail\":\"steve@gmail.com\",\"password\":\"123456\",\"clientId\":\"example@Browser\"}}";
 
     String updUserProfile = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updProfile\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"firstName\":\"Steve\",\"lastName\":\"Hu\"}}";
+    String updUserProfileAddShippingAddress = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updProfile\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"shippingAddress\":{\"city\":\"Mississauga\",\"postCode\":\"L5K2M3\"}}}";
+    String updUserProfileUpdShippingAddress = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updProfile\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"shippingAddress\":{\"city\":\"Toronto\",\"province\":\"Ontario\",\"country\":\"Canada\",\"postCode\":\"L2L2L2\"}}}";
+    String updUserProfileDelShippingAddressCountry = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updProfile\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"shippingAddress\":{\"city\":\"Toronto\",\"province\":\"Ontario\",\"postCode\":\"L2L2L2\"}}}";
+    String updUserProfileAddPaymentAddress = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"updProfile\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\",\"paymentAddress\":{\"city\":\"Mississauga\",\"province\":\"Ontario\",\"postCode\":\"L5K2M3\"}}}";
 
     String delUser = "{\"readOnly\":false,\"category\":\"user\",\"name\":\"delUser\",\"data\":{\"host\":\"www.example.com\",\"userId\":\"steve\"}}";
 
@@ -139,6 +144,25 @@ public class UserRuleTest extends TestCase {
                 Map<String, Object> eventMap = (Map<String, Object>) jsonMap.get("eventMap");
                 SignUpUserEvRule rule = new SignUpUserEvRule();
                 ruleResult = rule.execute(eventMap);
+                assertTrue(ruleResult);
+            }
+            // get activate code
+            String activationCode = null;
+            {
+                ActivateUserRule rule = new ActivateUserRule();
+                Map<String, Object> data = (Map)jsonMap.get("data");
+                String userId = (String)data.get("userId");
+                activationCode = rule.getActivationCode(userId);
+            }
+            // activate user
+            {
+                jsonMap = mapper.readValue(activateUser,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> data = (Map)jsonMap.get("data");
+                data.put("code", activationCode);
+                ActivateUserRule valRule = new ActivateUserRule();
+                ruleResult = valRule.execute(jsonMap);
                 assertTrue(ruleResult);
             }
             // get user by email
@@ -291,7 +315,7 @@ public class UserRuleTest extends TestCase {
                 jsonMap = mapper.readValue(result,
                         new TypeReference<HashMap<String, Object>>() {
                         });
-                userToken = JwtUtil.Deserialize((String)jsonMap.get("accessToken"));
+                userToken = JwtUtil.Deserialize((String) jsonMap.get("accessToken"));
                 assertNull(jsonMap.get("refreshToken"));
                 SignInUserEvRule rule = new SignInUserEvRule();
                 ruleResult = rule.execute(eventMap);
@@ -331,6 +355,152 @@ public class UserRuleTest extends TestCase {
                 assertEquals("Steve", jsonMap.get("firstName"));
                 assertEquals("Hu", jsonMap.get("lastName"));
             }
+            // Update profile with shipping address added
+            {
+                jsonMap = mapper.readValue(updUserProfileAddShippingAddress,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
+                Map<String, Object> payload = userToken.getPayload();
+                jsonMap.put("payload", payload);
+                UpdProfileRule valRule = new UpdProfileRule();
+                ruleResult = valRule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                UpdProfileEvRule rule = new UpdProfileEvRule();
+                ruleResult = rule.execute(eventMap);
+                assertTrue(ruleResult);
+
+            }
+            // get user to check shipping address
+            {
+                jsonMap = mapper.readValue(getUserByUserId,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                GetUserRule rule = new GetUserRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                String result = (String) jsonMap.get("result");
+                System.out.println("result = " + result);
+                jsonMap = mapper.readValue(result,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> shippingAddress = (Map)jsonMap.get("shippingAddress");
+                assertEquals("Mississauga", shippingAddress.get("city"));
+                assertEquals("L5K2M3", shippingAddress.get("postCode"));
+            }
+
+            // update profile with shipping address updated
+            {
+                jsonMap = mapper.readValue(updUserProfileUpdShippingAddress,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
+                Map<String, Object> payload = userToken.getPayload();
+                jsonMap.put("payload", payload);
+                UpdProfileRule valRule = new UpdProfileRule();
+                ruleResult = valRule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                UpdProfileEvRule rule = new UpdProfileEvRule();
+                ruleResult = rule.execute(eventMap);
+                assertTrue(ruleResult);
+
+            }
+            // get user to check shipping address
+            {
+                jsonMap = mapper.readValue(getUserByUserId,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                GetUserRule rule = new GetUserRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                String result = (String) jsonMap.get("result");
+                System.out.println("result = " + result);
+                jsonMap = mapper.readValue(result,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> shippingAddress = (Map)jsonMap.get("shippingAddress");
+                assertEquals("Toronto", shippingAddress.get("city"));
+                assertEquals("L2L2L2", shippingAddress.get("postCode"));
+                assertEquals("Ontario", shippingAddress.get("province"));
+                assertEquals("Canada", shippingAddress.get("country"));
+            }
+
+            // update profile with shipping address removed country
+            {
+                jsonMap = mapper.readValue(updUserProfileDelShippingAddressCountry,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
+                Map<String, Object> payload = userToken.getPayload();
+                jsonMap.put("payload", payload);
+                UpdProfileRule valRule = new UpdProfileRule();
+                ruleResult = valRule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                UpdProfileEvRule rule = new UpdProfileEvRule();
+                ruleResult = rule.execute(eventMap);
+                assertTrue(ruleResult);
+
+            }
+            // get user to check shipping address
+            {
+                jsonMap = mapper.readValue(getUserByUserId,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                GetUserRule rule = new GetUserRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                String result = (String) jsonMap.get("result");
+                System.out.println("result = " + result);
+                jsonMap = mapper.readValue(result,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> shippingAddress = (Map)jsonMap.get("shippingAddress");
+                assertEquals("Toronto", shippingAddress.get("city"));
+                assertEquals("L2L2L2", shippingAddress.get("postCode"));
+                assertEquals("Ontario", shippingAddress.get("province"));
+                assertNull(shippingAddress.get("country"));
+            }
+
+            // update profile with payment address added
+            {
+                jsonMap = mapper.readValue(updUserProfileAddPaymentAddress,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> data = (Map<String, Object>) jsonMap.get("data");
+                Map<String, Object> payload = userToken.getPayload();
+                jsonMap.put("payload", payload);
+                UpdProfileRule valRule = new UpdProfileRule();
+                ruleResult = valRule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>)jsonMap.get("eventMap");
+                UpdProfileEvRule rule = new UpdProfileEvRule();
+                ruleResult = rule.execute(eventMap);
+                assertTrue(ruleResult);
+
+            }
+            // get user to check payment address
+            {
+                jsonMap = mapper.readValue(getUserByUserId,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                GetUserRule rule = new GetUserRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                String result = (String) jsonMap.get("result");
+                System.out.println("result = " + result);
+                jsonMap = mapper.readValue(result,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                Map<String, Object> paymentAddress = (Map)jsonMap.get("paymentAddress");
+                assertEquals("Mississauga", paymentAddress.get("city"));
+                assertEquals("Ontario", paymentAddress.get("province"));
+                assertEquals("L5K2M3", paymentAddress.get("postCode"));
+            }
+
+
             // lock user
             {
                 jsonMap = mapper.readValue(lockUser,

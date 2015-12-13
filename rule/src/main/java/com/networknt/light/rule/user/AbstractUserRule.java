@@ -137,6 +137,24 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return activation;
     }
 
+    protected String getActivationCode(String userId) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        String code = null;
+        try {
+            Vertex activation = graph.getVertexByKey("Activation.userId", userId);
+            if(activation != null) {
+                code = activation.getProperty("code");
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+        return code;
+    }
+
     protected void delActivation(String userId, String code) throws Exception {
         Vertex activation = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -250,6 +268,15 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
                 String lastName = (String)data.get("lastName");
                 if(lastName != null && !lastName.equals(user.getProperty("lastName"))) {
                     user.setProperty("lastName", lastName);
+                }
+                // TODO update shipping address and payment address here.
+                Map<String, Object> shippingAddress = (Map<String, Object>)data.get("shippingAddress");
+                if(shippingAddress != null) {
+                    user.setProperty("shippingAddress", shippingAddress);
+                }
+                Map<String, Object> paymentAddress = (Map<String, Object>)data.get("paymentAddress");
+                if(paymentAddress != null) {
+                    user.setProperty("paymentAddress", paymentAddress);
                 }
                 user.setProperty("updateDate", data.get("updateDate"));
             }

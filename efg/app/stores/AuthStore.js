@@ -17,6 +17,8 @@ var _currentUser = { userId: '', roles: ['anonymous']};
 var _rememberMe = false;
 var _accessToken = '';
 var _refreshToken = '';
+var _shippingAddress;
+var _paymentAddress;
 var _errors = [];
 
 var AuthStore = assign({}, EventEmitter.prototype, {
@@ -55,7 +57,15 @@ var AuthStore = assign({}, EventEmitter.prototype, {
     },
 
     getRememberMe: function() {
-        return _rememberMe
+        return _rememberMe;
+    },
+
+    getShippingAddress: function() {
+        return _shippingAddress;
+    },
+
+    getPaymentAddress: function() {
+        return _paymentAddress;
     },
 
     getErrors: function() {
@@ -94,8 +104,18 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                     _refreshToken = payload.json.refreshToken;
                     localStorage.setItem('refreshToken', _refreshToken);
                 }
+                // handle shippingAddress and paymentAddress
+                console.log('LOGIN_RESPONSE', payload.json.shippingAddress);
+                if(payload.json.shippingAddress) {
+                    _shippingAddress = payload.json.shippingAddress;
+                }
+                if(payload.json.paymentAddress) {
+                    _paymentAddress = payload.json.paymentAddress;
+                }
+
                 // Redirect to the attempted url if the login page was redirected upon 401 and 403 error.
                 // httpBuffer.redirectToAttemptedUrl();
+
             }
             if (payload.error) {
                 _errors = payload.error;

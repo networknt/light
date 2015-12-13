@@ -23,6 +23,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,11 +50,11 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
         } else {
             OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
-                Vertex user = null;
+                OrientVertex user = null;
                 if(isEmail(userIdEmail)) {
-                    user = getUserByEmail(graph, userIdEmail);
+                    user = (OrientVertex)getUserByEmail(graph, userIdEmail);
                 } else {
-                    user = getUserByUserId(graph, userIdEmail);
+                    user = (OrientVertex)getUserByUserId(graph, userIdEmail);
                 }
                 if(user != null) {
                     if(checkPassword(graph, user, inputPassword)) {
@@ -62,8 +63,14 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
                             Map eventMap = getEventMap(inputMap);
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                             inputMap.put("eventMap", eventMap);
-                            Map<String, String> tokens = new HashMap<String, String>();
+                            Map<String, Object> tokens = new HashMap<String, Object>();
                             tokens.put("accessToken", jwt);
+                            if(user.getProperty("shippingAddress") != null) {
+                                tokens.put("shippingAddress", user.getProperty("shippingAddress"));
+                            }
+                            if(user.getProperty("paymentAddress") != null) {
+                                tokens.put("paymentAddress", user.getProperty("paymentAddress"));
+                            }
                             if(rememberMe != null && rememberMe) {
                                 // generate refreshToken
                                 String refreshToken = HashUtil.generateUUID();

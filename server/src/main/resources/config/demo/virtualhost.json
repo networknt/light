@@ -1,0 +1,20 @@
+{
+  "demo.networknt.com": {
+    "base": "/home/networknt/web",
+    "transferMinSize": "100",
+    "supportDevices": [
+      "Browser",
+      "Android",
+      "iOS"
+    ]
+  },
+  "demo.edibleforestgarden.ca": {
+    "base": "/home/edibleforestgarden/web",
+    "transferMinSize": "100",
+    "supportDevices": [
+      "Browser",
+      "Android",
+      "iOS"
+    ]
+  }
+}

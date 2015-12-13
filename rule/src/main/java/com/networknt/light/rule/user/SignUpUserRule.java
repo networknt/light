@@ -47,15 +47,6 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
             error = "The email address " + email + " has been signed up. Please login or recover your password.";
             inputMap.put("responseCode", 400);
         } else {
-            OrientGraph graph = ServiceLocator.getInstance().getGraph();
-            try {
-
-            } catch (Exception e) {
-                logger.error("Exception:", e);
-                throw e;
-            } finally {
-                graph.shutdown();
-            }
 
             if(isUserInDbByUserId(userId)) {
                 error = "The userId " + userId + " has been used by another user.";

@@ -46,17 +46,17 @@ RouteStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
 
         case ActionTypes.REDIRECT:
-            router.transitionTo(action.route);
+            //router.transitionTo(action.route);
             break;
 
         case ActionTypes.LOGIN_RESPONSE:
             if (AuthStore.isLoggedIn()) {
-                router.transitionTo('app');
+                //router.transitionTo('app');
             }
             break;
 
         case ActionTypes.RECEIVE_CREATED_STORY:
-            router.transitionTo('app');
+            //router.transitionTo('app');
             break;
 
         default:

@@ -1,0 +1,20 @@
+{
+  "local.edibleforestgarden.ca" : {
+    "base" : "/home/edibleforestgarden/web",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "www.edibleforestgarden.ca"
+  },
+  "local.networknt.com" : {
+    "base" : "/home/networknt/web",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "www.networknt.com"
+  },
+  "example" : {
+    "base" : "/home/example/web",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "example"
+  }
+}
