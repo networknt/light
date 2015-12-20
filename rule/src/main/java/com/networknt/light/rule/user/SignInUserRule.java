@@ -71,6 +71,7 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
                             if(user.getProperty("paymentAddress") != null) {
                                 tokens.put("paymentAddress", user.getProperty("paymentAddress"));
                             }
+                            tokens.put("rid", user.getIdentity().toString());
                             if(rememberMe != null && rememberMe) {
                                 // generate refreshToken
                                 String refreshToken = HashUtil.generateUUID();

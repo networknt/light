@@ -7,12 +7,18 @@ var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
+var AddressActionCreators = require('../../actions/AddressActionCreators');
 var Cart = require('./Cart');
 var Login = require('../auth/Login');
 var CheckoutCart = require('./CheckoutCart');
 var Shipping = require('./Shipping');
+var ShippingTax = require('./ShippingTax');
+var CheckoutDone = require('./CheckoutDone');
+var Payment = require('./Payment');
 var AuthStore = require('../../stores/AuthStore');
 var classNames = require('classnames');
+var utils = require('react-schema-form/lib/utils.js');
+
 
 function getStateFromStores() {
     return {
@@ -20,6 +26,7 @@ function getStateFromStores() {
         cartItemsCount: CartStore.getCartItemsCount(),
         cartTotal: CartStore.getCartTotal(),
         showModal: CartStore.getCartStatus(),
+        shippingAddress: AuthStore.getShippingAddress() || {},
         screen: 'cart',
         title: 'Cart'
     };
@@ -30,6 +37,7 @@ var CheckoutButton = React.createClass({
     getInitialState: () => getStateFromStores(),
 
     close: function() {
+        console.log('CheckoutButton close is called');
         this.setState({ showModal: false, screen: 'cart', title: 'Cart'});
     },
 
@@ -41,21 +49,53 @@ var CheckoutButton = React.createClass({
     onShipping: function() {
         this.setState({
             screen: 'shipping',
-            title: 'Shipping'
+            title: 'Shipping Address'
         })
+    },
+
+    onConfirmShippingAddress: function() {
+
+        this.setState({
+            screen: 'shippingTax',
+            title: 'Shipping and Tax'
+        })
+    },
+
+    onUpdateShippingAddress: function() {
+        // call API to update
+        console.log('onUpdateShippingAddress', this.state.shippingAddress);
+        console.log('onUpdateShippingAddress cartItems', this.state.cartItems);
+        var data = {};
+
+        data.shippingAddress = this.state.shippingAddress;
+        data.cartTotal = this.state.cartTotal;
+        data.cartItems = this.state.cartItems;
+
+        console.log('onUpdateShippingAddres data = ', data);
+        AddressActionCreators.updateShippingAddress(data);
+        this.setState({
+            screen: 'shippingTax',
+            title: 'Shipping and Tax'
+        })
+    },
+
+    onShippingAddressChange: function(key, val) {
+        //console.log('ExamplePage.onModelChange:', key);
+        //console.log('ExamplePage.onModelChange:', val);
+        this.setState({shippingAddress: utils.selectOrSet(key, this.state.shippingAddress, val)});
     },
 
     onPayment: function() {
         this.setState({
             screen: 'payment',
-            title: 'Payment'
+            title: 'BrainTree Payment Gateway'
         })
     },
 
-    onCheckoutDone: function() {
+    onPlaceOrder: function() {
         this.setState({
-            screen: 'confirm',
-            title: 'Checkout Confirmation'
+            screen: 'checkoutDone',
+            title: 'Order Summary'
         })
     },
 
@@ -86,10 +126,19 @@ var CheckoutButton = React.createClass({
                                           title = {this.state.title} close = {this.close} onShipping = {this.onShipping}/>
             } else if (this.state.screen === 'shipping') {
                 contents =  <Shipping cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
-                                      title = {this.state.title} close = {this.close} onPayment = {this.onPayment} />
+                                      title = {this.state.title} close = {this.close}
+                                      onConfirmShippingAddress = {this.onConfirmShippingAddress}
+                                      onUpdateShippingAddress = {this.onUpdateShippingAddress}
+                                      shippingAddress={this.state.shippingAddress}
+                                      onShippingAddressChange={this.onShippingAddressChange}
+
+                    />
+            } else if (this.state.screen === 'shippingTax') {
+                contents =  <ShippingTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
+                                     title = {this.state.title} close = {this.close} onPayment = {this.onPayment} />
             } else if (this.state.screen === 'payment') {
                 contents =  <Payment cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
-                                     title = {this.state.title} close = {this.close} onPayment = {this.onCheckoutDone} />
+                                     title = {this.state.title} close = {this.close} onPlaceOrder = {this.onPlaceOrder} />
             } else {
                 contents =  <CheckoutDone cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
                                           title = {this.state.title} close = {this.close} />
@@ -113,7 +162,7 @@ var CheckoutButton = React.createClass({
                     </Modal.Body>
                 </Modal>
             </div>
-        )
+        );
 
 
         var cartHeaderIconClasses = classNames({
@@ -124,8 +173,12 @@ var CheckoutButton = React.createClass({
     },
 
     _onChange: function() {
-        this.setState(getStateFromStores());
-        console.log('onChange is called', this.state.cartItems);
+        //console.log('onChange is called', this.state.cartItems);
+        this.setState({
+            cartItems: CartStore.getAll(),
+            cartItemsCount: CartStore.getCartItemsCount(),
+            cartTotal: CartStore.getCartTotal()
+        })
     }
 
 });

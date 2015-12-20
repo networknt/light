@@ -58,12 +58,22 @@ module.exports = {
         LOAD_CATALOG: null,
         SELECT_CATALOG: null,
         LOAD_PRODUCTS: null,
-        RECEIVE_UPD_USER_PROFILE: null,
         RECEIVE_USER: null,
 
         // Form
         GET_FORM: null,
-        RECEIVE_FORM: null
+        RECEIVE_FORM: null,
+
+        // Address
+        UPDATE_SHIPPING_ADDRESS: null,
+        UPD_SHIPPING_ADDRESS_RESPONSE: null,
+        UPDATE_PAYMENT_ADDRESS: null,
+
+        // Payment
+        GET_CLIENT_TOKEN: null,
+        RECEIVE_CLIENT_TOKEN: null
+
+
     }),
 
     monthNames: ["January", "February", "March", "April", "May", "June",

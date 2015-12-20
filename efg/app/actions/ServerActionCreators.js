@@ -72,9 +72,9 @@ module.exports = {
         });
     },
 
-    receiveUpdUserProfile: function(json, error) {
+    receiveUpdShippingAddress: function(json, error) {
         AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_UPD_USER_PROFILE,
+            type: ActionTypes.UPD_SHIPPING_ADDRESS_RESPONSE,
             json: json,
             error: error
         });
@@ -86,6 +86,16 @@ module.exports = {
             json: json,
             error: error
         });
+    },
+
+    receiveClientToken: function(json, error) {
+        console.log('ServerActionCreator receiveClientToken is callled');
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_CLIENT_TOKEN,
+            json: json,
+            error: error
+        });
     }
+
 };
 

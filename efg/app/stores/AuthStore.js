@@ -14,6 +14,7 @@ var CHANGE_EVENT = 'change';
 // a 'remember me' using localStorage
 var _isLoggedIn = false;
 var _currentUser = { userId: '', roles: ['anonymous']};
+var _rid;
 var _rememberMe = false;
 var _accessToken = '';
 var _refreshToken = '';
@@ -54,6 +55,10 @@ var AuthStore = assign({}, EventEmitter.prototype, {
 
     getUserId: function() {
         return _currentUser.userId;
+    },
+
+    getRid: function() {
+        return _rid;
     },
 
     getRememberMe: function() {
@@ -104,6 +109,8 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                     _refreshToken = payload.json.refreshToken;
                     localStorage.setItem('refreshToken', _refreshToken);
                 }
+                _rid = payload.json.rid;
+                console.log('_rid = ', _rid);
                 // handle shippingAddress and paymentAddress
                 console.log('LOGIN_RESPONSE', payload.json.shippingAddress);
                 if(payload.json.shippingAddress) {

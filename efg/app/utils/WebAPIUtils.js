@@ -231,26 +231,26 @@ module.exports = {
         });
     },
 
-    updUserProfile: function(user) {
-        var updUserProfile = {
-            category: 'user',
-            name: 'updUserProfile',
+    updShippingAddress: function(data) {
+        var updAddress = {
+            category: 'shipping',
+            name: 'updAddress',
             readOnly: false,
-            data: user.data
+            data: data
         };
-        console.log('WebAPIUtils updUserProfile is called');
+        console.log('WebAPIUtils updShippingAddress is called');
         $.ajax({
             type: 'POST',
             url: '/api/rs',
-            data: JSON.stringify(updUserProfile),
+            data: JSON.stringify(updAddress),
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            console.log('updUserProfile done', data);
-            ServerActionCreators.receiveUpdUserProfile(data, null);
+            console.log('updShippingAddress done', data);
+            ServerActionCreators.receiveUpdShippingAddress(data, null);
         }).fail(function(error) {
-            console.log('updUserProfile error', error);
-            ServerActionCreators.receiveUpdUserProfile(null, error);
+            console.log('updShippingAddress error', error);
+            ServerActionCreators.receiveUpdShippingAddress(null, error);
         });
     },
 
@@ -276,5 +276,27 @@ module.exports = {
             console.log('receiveForm error', error);
             ServerActionCreators.receiveForm(null, error);
         });
+    },
+
+    getClientToken: function() {
+        var getClientToken = {
+            category: 'payment',
+            name: 'getClientToken',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getClientToken))}
+        }).done(function(data) {
+            console.log('receiveClientToken token ', data);
+            ServerActionCreators.receiveClientToken(data, null);
+
+        }).fail(function(error) {
+            console.log('receiveClientToken error', error);
+            ServerActionCreators.receiveClientToken(null, error);
+        });
     }
+
+
 };

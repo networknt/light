@@ -71,6 +71,7 @@
         <json-schema-validator.version>2.2.6</json-schema-validator.version>
         <httpclient.version>4.5.1</httpclient.version>
         <httpasyncclient.version>4.1</httpasyncclient.version>
+        <braintree.version>2.53.0</braintree.version>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <buildTimestamp>${maven.build.timestamp}</buildTimestamp>
 
@@ -430,6 +431,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpasyncclient</artifactId>
                 <version>${httpasyncclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.braintreepayments.gateway</groupId>
+                <artifactId>braintree-java</artifactId>
+                <version>${braintree.version}</version>
             </dependency>
 
             <dependency>

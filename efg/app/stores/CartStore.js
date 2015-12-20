@@ -11,6 +11,10 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 var _ = require('lodash');
 
+var _shipping;
+var _tax;
+var _clientToken;
+
 var _cartItems = [];
 var _isOpen = false;
 
@@ -43,6 +47,7 @@ function _create(product) {
 }
 
 function _toggleCart() {
+    console.log('CartStore toggleCart is called.');
     _isOpen = !_isOpen;
 }
 
@@ -61,19 +66,19 @@ var CartStore = assign({}, EventEmitter.prototype, {
     },
 
     getAll: function() {
-        console.log('CartStore getAll is called', _cartItems);
+        //console.log('CartStore getAll is called', _cartItems);
         return _cartItems;
     },
 
     getCartItemsCount: function() {
-        console.log('CartStore getCartItemsCound is called');
+        //console.log('CartStore getCartItemsCound is called');
         return _.reduce(_cartItems, function(count, item) {
             return (count = count + Number(item.qty));
         }, 0);
     },
 
     getCartTotal: function() {
-        console.log('CartStore getCartTotal is called');
+        //console.log('CartStore getCartTotal is called');
         return _.reduce(_cartItems, function(total, item) {
             total = total + Number(item.price * item.qty);
             total.toFixed(2);
@@ -81,8 +86,20 @@ var CartStore = assign({}, EventEmitter.prototype, {
         }, 0);
     },
 
+    getShipping: function() {
+        return _shipping;
+    },
+
+    getTax: function() {
+        return _tax;
+    },
+
+    getClientToken: function() {
+        return _clientToken;
+    },
+
     getCartStatus: function() {
-        console.log('CartStore getCartStatus is called', _isOpen)
+        //console.log('CartStore getCartStatus is called', _isOpen)
         return _isOpen;
     }
 });
@@ -117,6 +134,15 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
 
         case ActionTypes.TOGGLE_CART:
             _toggleCart();
+            CartStore.emitChange();
+            break;
+        case ActionTypes.UPD_SHIPPING_ADDRESS_RESPONSE:
+            _shipping = payload.json.shipping;
+            _tax = payload.json.tax;
+            CartStore.emitChange();
+            break;
+        case ActionTypes.RECEIVE_CLIENT_TOKEN:
+            _clientToken = payload.json.clientToken;
             CartStore.emitChange();
             break;
 

@@ -9,18 +9,32 @@ var ModalBody = require('react-bootstrap').ModalBody;
 var ModalFooter = require('react-bootstrap').ModalFooter;
 var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
+var AuthStore = require('../../stores/AuthStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
 var Cart = require('./Cart');
 var Address = require('./Address');
 var Shipping = React.createClass({
 
+
     render: function() {
         console.log('Shipping total price = ', this.props.totalPrice);
-        var buyButton
-        if (this.props.cartItems.length > 0) {
-            buyButton = (
-                <Button className="btn btn-success" onClick={this.props.onShipping}>
-                    Buy now <span className="glyphicon glyphicon-play"></span>
+        var button;
+        if(AuthStore.getShippingAddress()) {
+            button = (
+                <span>
+                <Button className="btn btn-success" onClick={this.props.onUpdateShippingAddress}>
+                    Update<span className="glyphicon glyphicon-play"></span>
+                </Button>
+                <Button className="btn btn-success" onClick={this.props.onConfirmShippingAddress}>
+                    Confirm<span className="glyphicon glyphicon-play"></span>
+                </Button>
+                </span>
+
+            );
+        } else {
+            button = (
+                <Button className="btn btn-success" onClick={this.props.onUpdateShippingAddress}>
+                    Update<span className="glyphicon glyphicon-play"></span>
                 </Button>
             )
         }
@@ -31,10 +45,10 @@ var Shipping = React.createClass({
                     <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Address addressType="shippingAddress"/>
+                    <Address model={this.props.shippingAddress} onModelChange={this.props.onShippingAddressChange} />
                 </Modal.Body>
                 <Modal.Footer>
-                    {buyButton}
+                    {button}
                     <Button className="btn btn-default" onClick={this.props.close}>
                         <span className="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
                     </Button>
