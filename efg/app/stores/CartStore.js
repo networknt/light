@@ -12,7 +12,7 @@ var CHANGE_EVENT = 'change';
 var _ = require('lodash');
 
 var _shipping;
-var _tax;
+var _taxes;
 var _clientToken;
 
 var _cartItems = [];
@@ -47,7 +47,7 @@ function _create(product) {
 }
 
 function _toggleCart() {
-    console.log('CartStore toggleCart is called.');
+    //console.log('CartStore toggleCart is called.');
     _isOpen = !_isOpen;
 }
 
@@ -90,8 +90,9 @@ var CartStore = assign({}, EventEmitter.prototype, {
         return _shipping;
     },
 
-    getTax: function() {
-        return _tax;
+    getTaxes: function() {
+
+        return _taxes;
     },
 
     getClientToken: function() {
@@ -137,8 +138,10 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
             CartStore.emitChange();
             break;
         case ActionTypes.UPD_SHIPPING_ADDRESS_RESPONSE:
+            console.log('shippingAddress update res ', payload.json);
             _shipping = payload.json.shipping;
-            _tax = payload.json.tax;
+            _taxes = payload.json.taxes;
+
             CartStore.emitChange();
             break;
         case ActionTypes.RECEIVE_CLIENT_TOKEN:

@@ -61,7 +61,7 @@ var Header = React.createClass({
     },
 
     logout: function(e) {
-        console.log('logout is called.');
+        //console.log('logout is called.');
         e.preventDefault();
         AuthActionCreators.logout();
     },
@@ -82,7 +82,7 @@ var Header = React.createClass({
     },
 
     render: function() {
-        console.log('this.state.menu = ', this.state.menu);
+        //console.log('this.state.menu = ', this.state.menu);
         var outOwn = this.state.menu.out_Own? this.state.menu.out_Own : [];
         //console.log('outOwn = ', outOwn);
         var rightNav = (
@@ -114,7 +114,7 @@ var Header = React.createClass({
                     //console.log('item = ', item);
                     if(item.left && this.hasAccess(item)) {
                         if(item.out_Own) {
-                            console.log('this one has outOwn', item.out_Own);
+                            //console.log('this one has outOwn', item.out_Own);
                             return (
                                 <NavDropdown eventKey={item.menuItemId} title={item.label} >
                                     {

@@ -11,7 +11,7 @@ var ActionTypes = AppConstants.ActionTypes;
 module.exports = {
 
     setProductVariant: function(variant) {
-        console.log('ProductActionCreator setProductVariant', variant);
+        //console.log('ProductActionCreator setProductVariant', variant);
         AppDispatcher.dispatch({
             type: ActionTypes.SET_PRODUCT_VARIANT,
             index: variant.index,
@@ -44,7 +44,7 @@ module.exports = {
     },
 
     selectCatalog: function(node, selected, onCategorySelect) {
-        console.log('ProductActionCreators is called' || node || selected || onCategorySelect);
+        //console.log('ProductActionCreators is called' || node || selected || onCategorySelect);
         AppDispatcher.dispatch({
             type: ActionTypes.SELECT_CATALOG,
             rid: node.props.catalog['@rid'],

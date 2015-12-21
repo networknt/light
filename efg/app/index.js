@@ -60,7 +60,7 @@ function replayBuffer() {
 
 $.ajaxSetup({
     beforeSend: function (xhr) {
-        console.log('beforeSend', xhr);
+        //console.log('beforeSend', xhr);
         var accessToken = AuthStore.getAccessToken();
         if (accessToken) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
@@ -94,7 +94,7 @@ $.ajaxPrefilter(function(options, originalOptions, jqxhr) {
                 clientId: AppConstants.ClientId
             }
         };
-        console.log('jqxhr = ', jqxhr);
+        //console.log('jqxhr = ', jqxhr);
         if (jqxhr.status === 401 && jqxhr.responseText === '{"error":"token_expired"}') {
             console.log('token expired, renew...');
             buffer.push({options: options, deferred: deferred});

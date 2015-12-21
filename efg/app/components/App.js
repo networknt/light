@@ -12,7 +12,7 @@ var AuthActionCreators = require('../actions/AuthActionCreators.js');
 const ThemeManager = require('material-ui/lib/styles/theme-manager');
 const LightRawTheme = require('material-ui/lib/styles/raw-themes/light-raw-theme');
 
-console.log('App is called');
+//console.log('App is called');
 
 function getStateFromStores() {
     return {

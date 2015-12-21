@@ -40,9 +40,9 @@ MenuStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.RECEIVE_MENU:
-            console.log('MenuStore RECEIVE_MENU', payload.json);
+            //console.log('MenuStore RECEIVE_MENU', payload.json);
             _menu = payload.json;
-            console.log('menuStore _menu = ', _menu);
+            //console.log('menuStore _menu = ', _menu);
             MenuStore.emitChange();
             break;
     }

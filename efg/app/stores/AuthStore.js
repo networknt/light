@@ -37,7 +37,7 @@ var AuthStore = assign({}, EventEmitter.prototype, {
     },
 
     isLoggedIn: function() {
-        console.log('isLoggedIn', _isLoggedIn);
+        //console.log('isLoggedIn', _isLoggedIn);
         return _isLoggedIn;
     },
 

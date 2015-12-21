@@ -37,9 +37,9 @@ FormStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.RECEIVE_FORM:
-            console.log('FormStore RECEIVE_FORM', payload.json);
-            console.log('FormStore RECEIVE_FORM', payload.json.formId);
-            console.log('FormStore RECEIVE_FORM', _forms);
+            //console.log('FormStore RECEIVE_FORM', payload.json);
+            //console.log('FormStore RECEIVE_FORM', payload.json.formId);
+            //console.log('FormStore RECEIVE_FORM', _forms);
             _forms[payload.json.formId] = payload.json;
             FormStore.emitChange();
             break;

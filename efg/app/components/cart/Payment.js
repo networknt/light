@@ -19,7 +19,7 @@ var Payment = React.createClass({
     },
 
     onReady: function () {
-        console.log('Drop-In ready');
+        //console.log('Drop-In ready');
     },
 
     onError: function (err) {
@@ -34,7 +34,7 @@ var Payment = React.createClass({
     },
 
     componentDidMount: function() {
-        console.log('Payment:componentDidMount is called');
+        //console.log('Payment:componentDidMount is called');
         PaymentStore.addChangeListener(this._onChange);
         PaymentActionCreators.getClientToken();
     },

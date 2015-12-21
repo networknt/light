@@ -1,6 +1,3 @@
-/**
- * Created by steve on 19/12/15.
- */
 var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var EventEmitter = require('events').EventEmitter;
@@ -9,10 +6,10 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _clientToken;
+var _total;
 var _errors = [];
 
-var PaymentStore = assign({}, EventEmitter.prototype, {
+var OrderStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -26,9 +23,8 @@ var PaymentStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getClientToken: function() {
-        //console.log('clientToken = ', _clientToken);
-        return _clientToken;
+    getTotal: function() {
+        return _total;
     },
 
     getErrors: function() {
@@ -37,17 +33,16 @@ var PaymentStore = assign({}, EventEmitter.prototype, {
 
 });
 
-PaymentStore.dispatchToken = AppDispatcher.register(function(payload) {
+OrderStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.RECEIVE_CLIENT_TOKEN:
-            //console.log('PaymentStore RECEIVE_CLIENT_TOKEN', payload.json);
-            _clientToken = payload.json.clientToken;
-            //console.log('_clientToken = ', _clientToken);
-            PaymentStore.emitChange();
+        case ActionTypes.RECEIVE_ADD_ORDER:
+            //console.log('OrderStore RECEIVE_ADD_ORDER', payload.json);
+            _total = payload.json.total;
+            OrderStore.emitChange();
             break;
     }
     return true;
 });
 
-module.exports = PaymentStore;
+module.exports = OrderStore;

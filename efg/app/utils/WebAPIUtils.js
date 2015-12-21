@@ -49,7 +49,7 @@ module.exports = {
     },
 
     login: function(userIdEmail, password, rememberMe) {
-        console.log('login in WebAPIUtils is been called');
+        //console.log('login in WebAPIUtils is been called');
 
         var signIn =  {
             category : 'user',
@@ -64,7 +64,7 @@ module.exports = {
         };
 
 
-        console.log('login', signIn);
+        //console.log('login', signIn);
         $.ajax({
             type: 'POST',
             contentType: 'application/json',
@@ -72,11 +72,11 @@ module.exports = {
             data: JSON.stringify(signIn),
             dataType: 'json',
             error: function(jqXHR, status, error) {
-                console.log('login error', error);
+                //console.log('login error', error);
                 ServerActionCreators.receiveLogin(null, error);
             },
             success: function(result, status, xhr) {
-                console.log('login success', result);
+                //console.log('login success', result);
                 ServerActionCreators.receiveLogin(result, null);
             }
         });
@@ -92,7 +92,7 @@ module.exports = {
             }
 
         }
-        console.log('WebAPIUtils loadMenus is called', getMenu);
+        //console.log('WebAPIUtils loadMenus is called', getMenu);
         $.ajax({
             type: 'POST',
             url: '/api/rs',
@@ -100,10 +100,10 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            console.log('getMenu done', data);
+            //console.log('getMenu done', data);
             ServerActionCreators.receiveMenu(data, null);
         }).fail(function(error) {
-            console.log('getMenu error', error);
+            //console.log('getMenu error', error);
             ServerActionCreators.receiveMenu(null, error);
         });
     },
@@ -114,17 +114,17 @@ module.exports = {
             name: 'getDropdown',
             readOnly: true
         }
-        console.log('WebAPIUtils logBlogs is called');
+        //console.log('WebAPIUtils logBlogs is called');
         $.ajax({
             type: 'GET',
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getBlogs))}
         }).done(function(data) {
-            console.log('done', data);
+            //console.log('done', data);
             ServerActionCreators.receiveBlogs(data, null);
 
         }).fail(function(error) {
-            console.log('error', error);
+            //console.log('error', error);
             ServerActionCreators.receiveBlogs(null, error);
         });
     },
@@ -167,16 +167,16 @@ module.exports = {
             }
         };
 
-        console.log('WebAPIUtils loadCatalog is called', getCatalogTree);
+        //console.log('WebAPIUtils loadCatalog is called', getCatalogTree);
         $.ajax({
             type: 'GET',
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getCatalogTree))}
         }).done(function(data) {
-            console.log('catalog', data);
+            //console.log('catalog', data);
             ServerActionCreators.receiveCatalog(data, null);
         }).fail(function(error) {
-            console.log('error', error);
+            //console.log('error', error);
             ServerActionCreators.receiveCatalog(null, error);
         });
     },
@@ -192,17 +192,17 @@ module.exports = {
                 '@rid': rid
             }
         }
-        console.log('WebAPIUtils getCatalogProduct is called');
+        //console.log('WebAPIUtils getCatalogProduct is called');
         $.ajax({
             type: 'GET',
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getCatalogProduct))}
         }).done(function(data) {
-            console.log('product', data);
+            //console.log('product', data);
             ServerActionCreators.receiveProducts(data, null);
 
         }).fail(function(error) {
-            console.log('error', error);
+            //console.log('error', error);
             ServerActionCreators.receiveProducts(null, error);
         });
     },
@@ -216,17 +216,17 @@ module.exports = {
                 userId: userId
             }
         };
-        console.log('WebAPIUtils getUser is called');
+        //console.log('WebAPIUtils getUser is called');
         $.ajax({
             type: 'GET',
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getUser))}
         }).done(function(data) {
-            console.log('retrieveUserProfile user', data);
+            //console.log('retrieveUserProfile user', data);
             ServerActionCreators.receiveUser(data, null);
 
         }).fail(function(error) {
-            console.log('retrieveUserProfile error', error);
+            //console.log('retrieveUserProfile error', error);
             ServerActionCreators.receiveUser(null, error);
         });
     },
@@ -238,7 +238,7 @@ module.exports = {
             readOnly: false,
             data: data
         };
-        console.log('WebAPIUtils updShippingAddress is called');
+        //console.log('WebAPIUtils updShippingAddress is called');
         $.ajax({
             type: 'POST',
             url: '/api/rs',
@@ -246,10 +246,10 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            console.log('updShippingAddress done', data);
+            //console.log('updShippingAddress done', data);
             ServerActionCreators.receiveUpdShippingAddress(data, null);
         }).fail(function(error) {
-            console.log('updShippingAddress error', error);
+            //console.log('updShippingAddress error', error);
             ServerActionCreators.receiveUpdShippingAddress(null, error);
         });
     },
@@ -263,17 +263,17 @@ module.exports = {
                 formId: formId
             }
         };
-        console.log('WebAPIUtils getForm is called', formId);
+        //console.log('WebAPIUtils getForm is called', formId);
         $.ajax({
             type: 'GET',
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getForm))}
         }).done(function(data) {
-            console.log('receiveForm form', data);
+            //console.log('receiveForm form', data);
             ServerActionCreators.receiveForm(data, null);
 
         }).fail(function(error) {
-            console.log('receiveForm error', error);
+            //console.log('receiveForm error', error);
             ServerActionCreators.receiveForm(null, error);
         });
     },
@@ -289,14 +289,36 @@ module.exports = {
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getClientToken))}
         }).done(function(data) {
-            console.log('receiveClientToken token ', data);
+            //console.log('receiveClientToken token ', data);
             ServerActionCreators.receiveClientToken(data, null);
 
         }).fail(function(error) {
-            console.log('receiveClientToken error', error);
+            //console.log('receiveClientToken error', error);
             ServerActionCreators.receiveClientToken(null, error);
         });
-    }
+    },
 
+    addOrder: function(order) {
+        var addOrder = {
+            category: 'order',
+            name: 'addOrder',
+            readOnly: false,
+            data: order
+        };
+        //console.log('WebAPIUtils addOrder is called');
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(addOrder),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            //console.log('addOrder done', data);
+            ServerActionCreators.receiveAddOrder(data, null);
+        }).fail(function(error) {
+            //console.log('addOrder error', error);
+            ServerActionCreators.receiveAddOrder(null, error);
+        });
+    }
 
 };

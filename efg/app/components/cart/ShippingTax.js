@@ -29,7 +29,7 @@ var ShippingTax = React.createClass({
                     <Modal.Title>{this.props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Cart cartItems={ this.props.cartItems } totalPrice={ this.props.totalPrice } shipping={CartStore.getShipping()} tax={CartStore.getTax()}/>
+                    <Cart cartItems={ this.props.cartItems } totalPrice={ this.props.totalPrice } shipping={CartStore.getShipping()} taxes={CartStore.getTaxes()}/>
                 </Modal.Body>
                 <Modal.Footer>
                     {buyButton}

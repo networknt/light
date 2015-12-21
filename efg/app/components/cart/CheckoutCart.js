@@ -13,7 +13,7 @@ var CheckoutCart = React.createClass({
 
 
     render: function() {
-        console.log('CheckoutCart totalPrice = ', this.props.totalPrice);
+        //console.log('CheckoutCart totalPrice = ', this.props.totalPrice);
         var buyButton
         if (this.props.cartItems.length > 0) {
             buyButton = (

@@ -21,7 +21,7 @@ var BlogActions = {
             contentType: 'application/json',
             dataType: 'json',
             error: function(jqXHR, status, error) {
-                console.log('BlogActions.getBlogs - Error received, using mock data.', error);
+                //console.log('BlogActions.getBlogs - Error received, using mock data.', error);
                 AppDispatcher.dispatch({
                     type: BlogConstants.ActionTypes.BLOGS_RESPONSE,
                     json: MockBlogData.getBlogs(),
@@ -58,7 +58,7 @@ var BlogActions = {
             contentType: 'application/json',
             dataType: 'json',
             error: function(jqXHR, status, error) {
-                console.log('BlogActions.getBlogPosts - Error received, using mock data.', error);
+                //console.log('BlogActions.getBlogPosts - Error received, using mock data.', error);
                 AppDispatcher.dispatch({
                     type: BlogConstants.ActionTypes.BLOG_POSTS_RESPONSE,
                     json: MockBlogData.getBlogPosts(),
@@ -91,7 +91,7 @@ var BlogActions = {
             contentType: 'application/json',
             dataType: 'json',
             error: function(jqXHR, status, error) {
-                console.log('BlogActions.getBlogPosts - Error received, using mock data.', error);
+                //console.log('BlogActions.getBlogPosts - Error received, using mock data.', error);
                 AppDispatcher.dispatch({
                     type: BlogConstants.ActionTypes.BLOG_POST_RESPONSE,
                     json: MockBlogData.getPost(),

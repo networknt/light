@@ -25,7 +25,7 @@ module.exports = {
     },
 
     receiveMenu: function(json, error) {
-        console.log('ServerActionCreators receiveMenu', json);
+        //console.log('ServerActionCreators receiveMenu', json);
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_MENU,
             json: json,
@@ -89,9 +89,18 @@ module.exports = {
     },
 
     receiveClientToken: function(json, error) {
-        console.log('ServerActionCreator receiveClientToken is callled');
+        //console.log('ServerActionCreator receiveClientToken is callled');
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_CLIENT_TOKEN,
+            json: json,
+            error: error
+        });
+    },
+
+    receiveAddOrder: function(json, error) {
+        //console.log('ServerActionCreator receiveAddOrder is callled');
+        AppDispatcher.dispatch({
+            type: ActionTypes.RECEIVE_ADD_ORDER,
             json: json,
             error: error
         });

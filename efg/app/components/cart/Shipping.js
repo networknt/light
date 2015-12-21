@@ -17,7 +17,7 @@ var Shipping = React.createClass({
 
 
     render: function() {
-        console.log('Shipping total price = ', this.props.totalPrice);
+        //console.log('Shipping total price = ', this.props.totalPrice);
         var button;
         if(AuthStore.getShippingAddress()) {
             button = (

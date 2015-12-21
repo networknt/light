@@ -8,6 +8,7 @@ var Button = require('react-bootstrap').Button;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
 var AddressActionCreators = require('../../actions/AddressActionCreators');
+var OrderActionCreators = require('../../actions/OrderActionCreators');
 var Cart = require('./Cart');
 var Login = require('../auth/Login');
 var CheckoutCart = require('./CheckoutCart');
@@ -37,7 +38,7 @@ var CheckoutButton = React.createClass({
     getInitialState: () => getStateFromStores(),
 
     close: function() {
-        console.log('CheckoutButton close is called');
+        //console.log('CheckoutButton close is called');
         this.setState({ showModal: false, screen: 'cart', title: 'Cart'});
     },
 
@@ -63,15 +64,15 @@ var CheckoutButton = React.createClass({
 
     onUpdateShippingAddress: function() {
         // call API to update
-        console.log('onUpdateShippingAddress', this.state.shippingAddress);
-        console.log('onUpdateShippingAddress cartItems', this.state.cartItems);
+        //console.log('onUpdateShippingAddress', this.state.shippingAddress);
+        //console.log('onUpdateShippingAddress cartItems', this.state.cartItems);
         var data = {};
 
         data.shippingAddress = this.state.shippingAddress;
         data.cartTotal = this.state.cartTotal;
         data.cartItems = this.state.cartItems;
 
-        console.log('onUpdateShippingAddres data = ', data);
+        //console.log('onUpdateShippingAddres data = ', data);
         AddressActionCreators.updateShippingAddress(data);
         this.setState({
             screen: 'shippingTax',
@@ -86,6 +87,23 @@ var CheckoutButton = React.createClass({
     },
 
     onPayment: function() {
+        // before switching to payment gateway, save the order here.
+        var order = {};
+        // all the numbers should be calculated on the server and only items should be passed here
+        // need at least @rid/productId, sku, quantity in order to calculate all the numbers.
+        //console.log('cartItems', this.state.cartItems);
+        var items = [];
+        this.state.cartItems.forEach(function(cartItem) {
+            var item = {};
+            item.rid = cartItem.rid;
+            item.sku = cartItem.sku;
+            item.qty = cartItem.qty;
+            items.push(item);
+        });
+        order.items = items;
+        //console.log('order', order);
+
+        OrderActionCreators.addOrder(order);
         this.setState({
             screen: 'payment',
             title: 'BrainTree Payment Gateway'
@@ -120,7 +138,7 @@ var CheckoutButton = React.createClass({
 
         var contents;
         if(AuthStore.isLoggedIn()) {
-            console.log('is logged in');
+            //console.log('is logged in');
             if(this.state.screen === 'cart') {
                 contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
                                           title = {this.state.title} close = {this.close} onShipping = {this.onShipping}/>

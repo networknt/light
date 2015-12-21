@@ -27,19 +27,18 @@ module.exports = {
             password: password,
             rememberMe: rememberMe
         });
-        console.log('WebAPIUtils', WebAPIUtils);
         WebAPIUtils.login(userIdEmail, password, rememberMe);
     },
 
     init: function() {
-        console.log('the inti action is called', AppDispatcher);
+        //console.log('the inti action is called', AppDispatcher);
         AppDispatcher.dispatch({
             type: ActionTypes.INIT
         });
     },
 
     refresh: function(accessToken) {
-        console.log('refresh in AuthActionCreators is called.');
+        //console.log('refresh in AuthActionCreators is called.');
         AppDispatcher.dispatch({
             type: ActionTypes.REFRESH,
             accessToken: accessToken

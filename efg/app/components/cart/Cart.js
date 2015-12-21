@@ -30,26 +30,25 @@ var Cart = React.createClass({
                 </tr>
             );
         }
-        var tax;
-        if(this.props.tax) {
-            tax = (
-                <tr>
-                    <td></td>
-                    <td>Tax</td>
-                    <td className="text-right">
-                        <strong>{ this.props.tax.toFixed(2)}</strong>
-                    </td>
-                </tr>
-            )
+        var taxes = [];
+        let tax = 0.0;
+        console.log('Cart this.props.taxes = ', this.props.taxes);
+        if(this.props.taxes) {
+            console.log('Cart taxes is not null');
+            for(var key in this.props.taxes) {
+                taxes.push(<tr><td></td><td>{key}</td><td className="text-right"><strong>{ this.props.taxes[key].toFixed(2)}</strong></td></tr>)
+                tax += this.props.taxes[key];
+            }
+            console.log('Cart taxes = ', taxes);
         }
         var orderTotal;
-        if(this.props.shipping && this.props.tax) {
+        if(this.props.shipping && this.props.taxes) {
             orderTotal = (
                 <tr>
                     <td></td>
                     <td>Total</td>
                     <td className="text-right">
-                        <strong>{ (this.props.totalPrice + this.props.shipping + this.props.tax).toFixed(2)}</strong>
+                        <strong>{ (this.props.totalPrice + this.props.shipping + tax).toFixed(2)}</strong>
                     </td>
                 </tr>
             )
@@ -75,7 +74,7 @@ var Cart = React.createClass({
                         </td>
                     </tr>
                     {shipping}
-                    {tax}
+                    {taxes}
                     {orderTotal}
                 </tbody>
             </table>

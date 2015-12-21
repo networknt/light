@@ -40,7 +40,7 @@ function _setInventory(productIndex, initialInventory, qty=0) {
 }
 
 function _removeOneFromInventory(product) {
-    console.log('_removeOneFromInventory product = ', product);
+    //console.log('_removeOneFromInventory product = ', product);
     var i = product.variantIndex;
     --_products[product.index].variants[i].inventory;
 }
@@ -108,13 +108,13 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
 
         case ActionTypes.SET_PRODUCT_VARIANT:
             var index = payload.index;
-            console.log('ProductStore SET_PRODUCT_VARIANT payload =', payload);
+            //console.log('ProductStore SET_PRODUCT_VARIANT payload =', payload);
             _products[index].variantIndex = payload.variantIndex;
             ProductStore.emitChange();
             break;
 
         case ActionTypes.SET_PRODUCT_INVENTORY:
-            console.log('ProductStore SET_PRODUCT_INVENTORY payload = ', payload);
+            //console.log('ProductStore SET_PRODUCT_INVENTORY payload = ', payload);
             _setInventory(payload.productIndex, payload.initialInventory, payload.qty);
             ProductStore.emitChange();
             break;
@@ -138,9 +138,9 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             _products.forEach(_productsMixin);
             _ancestors = payload.json.ancestors;
             _allowUpdate = payload.json.allowAdd;
-            console.log('ProductStore _products = ', _products);
-            console.log('ProductStore _ancestors = ', _ancestors);
-            console.log('ProductStore _allowUpdate = ', _allowUpdate);
+            //console.log('ProductStore _products = ', _products);
+            //console.log('ProductStore _ancestors = ', _ancestors);
+            //console.log('ProductStore _allowUpdate = ', _allowUpdate);
             ProductStore.emitChange();
             break;
 
@@ -150,10 +150,10 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             _node = payload.node;
             _onCategorySelect = payload.onCategorySelect;
 
-            console.log('ProductStore.SELECT_CATALOG _selectedCatalog', _selectedCatalog);
-            console.log('ProductStore.SELECT_CATALOG _selected', _selected);
-            console.log('ProductStore.SELECT_CATALOG _node', _node);
-            console.log('ProductStore.SELECT_CATALOG _onCategorySelect', _onCategorySelect);
+            //console.log('ProductStore.SELECT_CATALOG _selectedCatalog', _selectedCatalog);
+            //console.log('ProductStore.SELECT_CATALOG _selected', _selected);
+            //console.log('ProductStore.SELECT_CATALOG _node', _node);
+            //console.log('ProductStore.SELECT_CATALOG _onCategorySelect', _onCategorySelect);
             //Wait until products is updated from db.
             //ProductStore.emitChange();
             break;

@@ -22,7 +22,7 @@ var Product = React.createClass({
 
         var product = this.props.product;
         product.index = this.props.productIndex;
-        console.log('Product product = ', product);
+        //console.log('Product product = ', product);
         var variantIndex, i = product.variantIndex;
         var variants = product.variants;
         var inventory = variants[i].inventory;

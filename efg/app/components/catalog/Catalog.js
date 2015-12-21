@@ -36,7 +36,7 @@ var Catalog = React.createClass({
     },
 
     _onChange: function() {
-        console.log('_onChange is called');
+        //console.log('_onChange is called');
         if(ProductStore.getSelected() && ProductStore.getSelected().isMounted()) {
             this.state.selected.setState({selected: false});
         }

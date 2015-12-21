@@ -48,11 +48,14 @@ public class UpdAddressRule extends AbstractAddressRule implements Rule {
                 eventData.put("updateDate", new java.util.Date());
 
                 // now return the shipping cost and tax according to the address.
-                Integer cartTotal = (Integer)data.get("cartTotal");
+                double cartTotal = ((Number)data.get("cartTotal")).doubleValue();
                 resultMap = new HashMap<String, Object>();
-                int shipping = 15;
+                Map<String, Object> shippingAddress = (Map<String, Object>)data.get("shippingAddress");
+                double shipping = AbstractAddressRule.calculateShipping((String) shippingAddress.get("province"), cartTotal);
                 resultMap.put("shipping", shipping);
-                resultMap.put("tax", (cartTotal + shipping) * 0.13);
+                // calculate taxes
+                Map<String, Double> taxes = calculateTax((String)shippingAddress.get("province"), cartTotal + shipping);
+                resultMap.put("taxes", taxes);
             } else {
                 error = "User with rid " + rid + " cannot be found.";
                 inputMap.put("responseCode", 404);

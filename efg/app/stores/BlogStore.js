@@ -36,18 +36,18 @@ var BlogStore = _.extend({}, EventEmitter.prototype, {
 });
 
 AppDispatcher.register(function(payload) {
-    console.log("BlogStore payload:", payload);
+    //console.log("BlogStore payload:", payload);
     if (payload == null) return;
     if (payload.type === BlogConstants.ActionTypes.BLOGS_RESPONSE) {
-        console.log("BlogStore received BLOGS:", payload.json);
+        //console.log("BlogStore received BLOGS:", payload.json);
         _blogs = payload.json;
         BlogStore.emitChange();
     } else if (payload.type === BlogConstants.ActionTypes.BLOG_POSTS_RESPONSE) {
-        console.log("BlogStore received BLOG_POSTS:", payload.json);
+        //console.log("BlogStore received BLOG_POSTS:", payload.json);
         _blogPosts = payload.json;
         BlogStore.emitChange();
     } else if (payload.type === BlogConstants.ActionTypes.BLOG_POST_RESPONSE) {
-        console.log("BlogStore received BLOG_POST:", payload.json);
+        //console.log("BlogStore received BLOG_POST:", payload.json);
         _post = payload.json;
         BlogStore.emitChange();
     }

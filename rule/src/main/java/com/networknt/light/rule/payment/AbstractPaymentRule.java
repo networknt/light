@@ -5,10 +5,14 @@ import com.braintreegateway.Environment;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +39,36 @@ public abstract class AbstractPaymentRule extends AbstractRule implements Rule {
 
     public abstract boolean execute (Object ...objects) throws Exception;
 
+    /**
+     * To save the customer transaction into database.
+     *
+     * @param data
+     * @throws Exception
+     */
+    protected void addTransaction(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex user = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            List<String> addMenuItems = (List<String>)data.remove("addMenuItems");
+            OrientVertex menuItem = graph.addVertex("class:MenuItem", data);
+            if(addMenuItems != null && addMenuItems.size() > 0) {
+                // find vertex for each menuItem id and create edge to it.
+                for(String menuItemId: addMenuItems) {
+                    Vertex childMenuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
+                    menuItem.addEdge("Own", childMenuItem);
+                }
+            }
+            user.addEdge("Create", menuItem);
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
 
 
 }
