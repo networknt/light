@@ -1,15 +1,15 @@
 /**
  * Created by steve on 12/04/15.
  */
-var React = require('react')
-var ProductSummary = require('./ProductSummary')
+var React = require('react');
+var ProductSummary = require('./ProductSummary');
 
 var CheckoutDone = React.createClass({
 
     render: function() {
         var summaries = this.props.products.map(function(product) {
             return <ProductSummary key={ product.id } product={ product } />
-        })
+        });
 
         return (
             <div>
@@ -36,6 +36,6 @@ var CheckoutDone = React.createClass({
             </div>
         )
     }
-})
+});
 
-module.exports = CheckoutDone
+module.exports = CheckoutDone;

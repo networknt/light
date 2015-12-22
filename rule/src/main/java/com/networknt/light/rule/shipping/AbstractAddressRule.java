@@ -8,6 +8,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,51 +48,71 @@ public abstract class AbstractAddressRule extends AbstractRule implements Rule {
         }
     }
 
-    public static Map<String, Double> calculateTax(String province, double subTotal) {
-        Map<String, Double> taxes = new HashMap<String, Double>();
+    public static Map<String, BigDecimal> calculateTax(String province, BigDecimal subTotal) {
+        Map<String, BigDecimal> taxes = new HashMap<String, BigDecimal>();
+        BigDecimal gst = subTotal.multiply(new BigDecimal(0.05));
+        gst = gst.setScale(2, RoundingMode.HALF_UP);
         switch(province) {
             case "AB":
-                taxes.put("GST(5%)", subTotal * 0.05);
+                taxes.put("GST", gst);
                 break;
             case "BC":
-                taxes.put("GST(5%)", subTotal * 0.05);
-                taxes.put("PST(7%)", subTotal * 0.07);
+                taxes.put("GST", gst);
+                BigDecimal bc = subTotal.multiply(new BigDecimal(0.07));
+                bc = bc.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("PST", bc);
                 break;
             case "MB":
-                taxes.put("GST(5%)", subTotal * 0.05);
-                taxes.put("PST(8%)", subTotal * 0.08);
+                taxes.put("GST", gst);
+                BigDecimal mb = subTotal.multiply(new BigDecimal(0.08));
+                mb = mb.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("PST", mb);
                 break;
             case "NB":
-                taxes.put("HST(13%)", subTotal * 0.13);
+                BigDecimal nb = subTotal.multiply(new BigDecimal(0.13));
+                nb = nb.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("HST", nb);
                 break;
             case "NF":
-                taxes.put("HST(13%)", subTotal * 0.13);
+                BigDecimal nf = subTotal.multiply(new BigDecimal(0.13));
+                nf = nf.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("HST", nf);
                 break;
             case "NS":
-                taxes.put("HST(15%)", subTotal * 0.15);
+                BigDecimal ns = subTotal.multiply(new BigDecimal(0.15));
+                ns = ns.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("HST", ns);
                 break;
             case "NT":
-                taxes.put("GST(5%)", subTotal * 0.05);
+                taxes.put("GST", gst);
                 break;
             case "NU":
-                taxes.put("GST(5%)", subTotal * 0.05);
+                taxes.put("GST", gst);
                 break;
             case "ON":
-                taxes.put("HST(13%)", subTotal * 0.13);
+                BigDecimal on = subTotal.multiply(new BigDecimal(0.13));
+                on = on.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("HST", on);
                 break;
             case "PE":
-                taxes.put("HST(14%)", subTotal * 0.14);
+                BigDecimal pe = subTotal.multiply(new BigDecimal(0.14));
+                pe = pe.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("HST", pe);
                 break;
             case "QC":
-                taxes.put("GST(5%)", subTotal * 0.05);
-                taxes.put("QST(9.975%)", subTotal * 0.09975);
+                taxes.put("GST", gst);
+                BigDecimal qc = subTotal.multiply(new BigDecimal(0.09975));
+                qc = qc.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("QST", qc);
                 break;
             case "SK":
-                taxes.put("GST(5%)", subTotal * 0.05);
-                taxes.put("PST(5%)", subTotal * 0.05);
+                taxes.put("GST", gst);
+                BigDecimal sk = subTotal.multiply(new BigDecimal(0.05));
+                sk = sk.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("PST", sk);
                 break;
             case "YK":
-                taxes.put("GST(5%)", subTotal * 0.05);
+                taxes.put("GST", gst);
                 break;
             default:
                 logger.error("Unknown Province " + province);
@@ -99,8 +121,10 @@ public abstract class AbstractAddressRule extends AbstractRule implements Rule {
         return taxes;
     }
 
-    public static double calculateShipping(String province, double subTotal) {
-        return 30 + subTotal * 0.05;
+    public static BigDecimal calculateShipping(String province, BigDecimal subTotal) {
+        BigDecimal b = subTotal.multiply(new BigDecimal(0.05));
+        b = b.setScale(2, RoundingMode.HALF_UP);
+        return b.add(new BigDecimal(30.00));
     }
 
 }

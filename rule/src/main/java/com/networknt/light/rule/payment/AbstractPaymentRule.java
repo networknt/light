@@ -50,16 +50,14 @@ public abstract class AbstractPaymentRule extends AbstractRule implements Rule {
         try {
             graph.begin();
             Vertex user = graph.getVertexByKey("User.userId", data.remove("createUserId"));
-            List<String> addMenuItems = (List<String>)data.remove("addMenuItems");
-            OrientVertex menuItem = graph.addVertex("class:MenuItem", data);
-            if(addMenuItems != null && addMenuItems.size() > 0) {
-                // find vertex for each menuItem id and create edge to it.
-                for(String menuItemId: addMenuItems) {
-                    Vertex childMenuItem = graph.getVertexByKey("MenuItem.menuItemId", menuItemId);
-                    menuItem.addEdge("Own", childMenuItem);
-                }
+            Vertex order = graph.getVertexByKey("Order.orderId", data.get("orderId"));
+            if(order != null) {
+                order.setProperty("paymentStatus", 1);  // update payment status to paid.
+                Map<String, Object> transaction = (Map<String, Object>)data.get("transaction");
+                order.setProperty("nonce", transaction.get("nonce"));
+                //order.setProperty
             }
-            user.addEdge("Create", menuItem);
+            user.addEdge("Update", order);
             graph.commit();
         } catch (Exception e) {
             logger.error("Exception:", e);
@@ -69,6 +67,4 @@ public abstract class AbstractPaymentRule extends AbstractRule implements Rule {
             graph.shutdown();
         }
     }
-
-
 }

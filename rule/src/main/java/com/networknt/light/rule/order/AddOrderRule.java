@@ -34,40 +34,40 @@ public class AddOrderRule extends AbstractOrderRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         List<Map<String, Object>> items = (List<Map<String, Object>>)data.get("items");
-        double subTotal = 0.0;
+        BigDecimal subTotal = new BigDecimal(0.00);
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             for(Map<String, Object> item: items) {
                 Vertex product = DbService.getVertexByRid(graph, (String)item.get("rid"));
                 String sku = (String)item.get("sku");
-                int qty = (int)item.get("qty");
-                double price = 0.0;
+                BigDecimal qty = new BigDecimal(item.get("qty").toString());
+                BigDecimal price = new BigDecimal(0.00);
                 List<Map<String, Object>> variants = product.getProperty("variants");
                 for(Map<String, Object> variant : variants) {
                     if(sku.equals(variant.get("sku"))) {
-                        price = (double)variant.get("price");
+                        price = new BigDecimal(variant.get("price").toString());
                         item.put("price", price);
                         break;
                     }
                 }
-                subTotal = subTotal + price * qty;
+                subTotal = subTotal.add(price.multiply(qty));
             }
 
-            Vertex u = DbService.getVertexByRid(graph, (String) user.get("rid"));
+            Vertex u = DbService.getVertexByRid(graph, (String) user.get("@rid"));
             Map<String, Object> shippingAddress = u.getProperty("shippingAddress");
             String province = (String)shippingAddress.get("province");
 
             // now calculate the shipping cost based on the subTotal for now
-            double shipping = AbstractAddressRule.calculateShipping(province, subTotal);
+            BigDecimal shipping = AbstractAddressRule.calculateShipping(province, subTotal);
 
             // not calculate the tax based on shipping address.
-            Map<String, Double> taxes = AbstractAddressRule.calculateTax(province, subTotal + shipping);
-            double tax = 0.0;
-            for(double d : taxes.values()) {
-                tax += d;
+            Map<String, BigDecimal> taxes = AbstractAddressRule.calculateTax(province, subTotal.add(shipping));
+            BigDecimal tax = new BigDecimal(0.00);
+            for(BigDecimal b : taxes.values()) {
+                tax = tax.add(b);
             }
 
-            double total = subTotal + shipping + tax;
+            BigDecimal total = subTotal.add(shipping).add(tax);
 
             Map eventMap = getEventMap(inputMap);
             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
@@ -75,7 +75,8 @@ public class AddOrderRule extends AbstractOrderRule implements Rule {
             eventData.putAll(data);
 
             // add orderId here
-            eventData.put("orderId", DbService.incrementCounter("orderId"));
+            int orderId = DbService.incrementCounter("orderId");
+            eventData.put("orderId", orderId);
             eventData.put("subTotal", subTotal);
             eventData.put("shipping", shipping);
             eventData.put("tax", tax);
@@ -83,7 +84,7 @@ public class AddOrderRule extends AbstractOrderRule implements Rule {
             eventData.put("total", total);
             eventData.put("createDate", new java.util.Date());
             eventData.put("createUserId", user.get("userId"));
-            inputMap.put("result", "{\"total\":"  + total + "}");
+            inputMap.put("result", "{\"orderId\":" + orderId + ", \"total\":"  + total + "}");
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;

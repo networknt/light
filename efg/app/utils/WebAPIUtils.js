@@ -313,11 +313,34 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            //console.log('addOrder done', data);
+            console.log('addOrder done', data);
             ServerActionCreators.receiveAddOrder(data, null);
         }).fail(function(error) {
             //console.log('addOrder error', error);
             ServerActionCreators.receiveAddOrder(null, error);
+        });
+    },
+
+    addTransaction: function(transaction, orderId) {
+        var addTransaction = {
+            category: 'payment',
+            name: 'addTransaction',
+            readOnly: false,
+            data: {
+                transaction: transaction,
+                orderId: orderId
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(addTransaction),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.receiveAddTransaction(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.receiveAddTransaction(null, error);
         });
     }
 

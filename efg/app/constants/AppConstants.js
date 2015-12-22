@@ -72,6 +72,8 @@ module.exports = {
         // Payment
         GET_CLIENT_TOKEN: null,
         RECEIVE_CLIENT_TOKEN: null,
+        ADD_TRANSACTION: null,
+        RECEIVE_ADD_TRANSACTION: null,
 
         // Order
         ADD_ORDER: null,

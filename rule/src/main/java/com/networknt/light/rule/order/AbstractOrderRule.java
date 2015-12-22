@@ -33,7 +33,7 @@ public abstract class AbstractOrderRule extends AbstractRule implements Rule {
             graph.begin();
             Vertex user = graph.getVertexByKey("User.userId", data.remove("createUserId"));
             OrientVertex order = graph.addVertex("class:Order", data);
-            user.addEdge("Order", order);
+            user.addEdge("Create", order);
             graph.commit();
         } catch (Exception e) {
             logger.error("Exception:", e);

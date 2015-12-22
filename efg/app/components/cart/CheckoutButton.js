@@ -158,8 +158,7 @@ var CheckoutButton = React.createClass({
                 contents =  <Payment cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
                                      title = {this.state.title} close = {this.close} onPlaceOrder = {this.onPlaceOrder} />
             } else {
-                contents =  <CheckoutDone cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal}
-                                          title = {this.state.title} close = {this.close} />
+                contents =  <CheckoutDone title = {this.state.title} close = {this.close} />
             }
         } else {
             contents =  <div className="checkoutButtonLogin">

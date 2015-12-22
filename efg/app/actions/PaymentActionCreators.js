@@ -11,6 +11,13 @@ module.exports = {
             type: ActionTypes.GET_CLIENT_TOKEN
         });
         WebAPIUtils.getClientToken();
+    },
+
+    addTransaction: function(payment, orderId) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.ADD_TRANSACTION
+        });
+        WebAPIUtils.addTransaction(payment, orderId);
     }
 
 };

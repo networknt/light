@@ -6,6 +6,7 @@ var ReactPropTypes = React.PropTypes;
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 var PaymentStore = require('../../stores/PaymentStore');
+var OrderStore = require('../../stores/OrderStore');
 var PaymentActionCreators = require('../../actions/PaymentActionCreators');
 var DropIn = require('braintree-react').DropIn;
 var braintree = require('braintree-web');
@@ -27,10 +28,9 @@ var Payment = React.createClass({
     },
 
     onPaymentMethodReceived: function (payload) {
-        console.log(payload);
-
-        // Now that you have a nonce, send it to your
-        // server to create a payment method or a transaction
+        //console.log(payload);
+        PaymentActionCreators.addTransaction(payload, OrderStore.getOrderId());
+        this.props.onPlaceOrder();
     },
 
     componentDidMount: function() {
@@ -50,11 +50,11 @@ var Payment = React.createClass({
     },
 
     render: function() {
-
         var body;
         if(this.state.loading) {
             body = "";
         } else {
+            let submitValue = 'Buy for $' + OrderStore.getTotal().toFixed(2);
             body = (
                 <form action="/transactions" method="POST">
                     <DropIn
@@ -64,7 +64,7 @@ var Payment = React.createClass({
                         onError={this.onError}
                         onPaymentMethodReceived={this.onPaymentMethodReceived}
                         />
-                    <input type="submit" value="Buy for $14" />
+                    <input type="submit" value={submitValue} />
                 </form>
             )
         }

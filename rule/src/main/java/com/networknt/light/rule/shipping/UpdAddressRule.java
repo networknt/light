@@ -8,6 +8,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,13 +49,13 @@ public class UpdAddressRule extends AbstractAddressRule implements Rule {
                 eventData.put("updateDate", new java.util.Date());
 
                 // now return the shipping cost and tax according to the address.
-                double cartTotal = ((Number)data.get("cartTotal")).doubleValue();
+                BigDecimal cartTotal = new BigDecimal(data.get("cartTotal").toString());
                 resultMap = new HashMap<String, Object>();
                 Map<String, Object> shippingAddress = (Map<String, Object>)data.get("shippingAddress");
-                double shipping = AbstractAddressRule.calculateShipping((String) shippingAddress.get("province"), cartTotal);
+                BigDecimal shipping = AbstractAddressRule.calculateShipping((String) shippingAddress.get("province"), cartTotal);
                 resultMap.put("shipping", shipping);
                 // calculate taxes
-                Map<String, Double> taxes = calculateTax((String)shippingAddress.get("province"), cartTotal + shipping);
+                Map<String, BigDecimal> taxes = calculateTax((String)shippingAddress.get("province"), cartTotal.add(shipping));
                 resultMap.put("taxes", taxes);
             } else {
                 error = "User with rid " + rid + " cannot be found.";
