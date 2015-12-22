@@ -3,6 +3,7 @@ package com.networknt.light.rule.payment;
 import com.braintreegateway.Result;
 import com.braintreegateway.Transaction;
 import com.braintreegateway.TransactionRequest;
+import com.braintreegateway.ValidationError;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.shipping.AbstractAddressRule;
 import com.networknt.light.server.DbService;
@@ -39,8 +40,8 @@ public class AddTransactionRule extends AbstractPaymentRule implements Rule {
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String)data.get("host");
         Integer orderId = (Integer)data.get("orderId");
-        Map<String, Object> transaction = (Map<String, Object>)data.get("transaction");
-        String nonce = (String)transaction.get("nonce");
+        Map<String, Object> tran = (Map<String, Object>)data.get("transaction");
+        String nonce = (String)tran.get("nonce");
         BigDecimal total = null;
         String error = null;
 
@@ -53,20 +54,46 @@ public class AddTransactionRule extends AbstractPaymentRule implements Rule {
                 total = order.getProperty("total");
                 TransactionRequest request = new TransactionRequest()
                         .amount(total)
-                        .paymentMethodNonce(nonce);
+                        .paymentMethodNonce(nonce)
+                        .options()
+                        .submitForSettlement(true)
+                        .done();
                 Result<Transaction> result = gatewayMap.get(host).transaction().sale(request);
-                // TODO how to check if result is OK? Not not OK, cancel the order?
-
-                // prepare for update order payment status
-                Map eventMap = getEventMap(inputMap);
-                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                inputMap.put("eventMap", eventMap);
-                eventData.putAll(data);
-                eventData.put("createDate", new java.util.Date());
-                eventData.put("createUserId", user.get("userId"));
-                // return the order to ui in order to render the summary page.
-                String json = order.getRecord().toJSON();
-                inputMap.put("result", json);
+                if (result.isSuccess()) {
+                    Transaction transaction = result.getTarget();
+                    System.out.println("Success!: " + transaction.getId());
+                    // prepare for update order payment status
+                    Map eventMap = getEventMap(inputMap);
+                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                    inputMap.put("eventMap", eventMap);
+                    eventData.putAll(data);
+                    eventData.put("transactionId", transaction.getId());
+                    eventData.put("createDate", new java.util.Date());
+                    eventData.put("createUserId", user.get("userId"));
+                    // return the order to ui in order to render the summary page.
+                    String json = order.getRecord().toJSON();
+                    inputMap.put("result", json);
+                } else if (result.getTransaction() != null) {
+                    Transaction transaction = result.getTransaction();
+                    error = "Error processing transaction. Status: " + transaction.getStatus() +
+                            " Code: " + transaction.getProcessorResponseCode() +
+                            " Text: " + transaction.getProcessorResponseText();
+                    inputMap.put("responseCode", 400);
+                    System.out.println("Error processing transaction:");
+                    System.out.println("  Status: " + transaction.getStatus());
+                    System.out.println("  Code: " + transaction.getProcessorResponseCode());
+                    System.out.println("  Text: " + transaction.getProcessorResponseText());
+                } else {
+                    inputMap.put("responseCode", 400);
+                    for (ValidationError validationError : result.getErrors().getAllDeepValidationErrors()) {
+                        error = error + "Attribute: " + validationError.getAttribute() +
+                                " Code: " + validationError.getCode() +
+                                " Message: " + validationError.getMessage() + "\n";
+                        System.out.println("Attribute: " + validationError.getAttribute());
+                        System.out.println("  Code: " + validationError.getCode());
+                        System.out.println("  Message: " + validationError.getMessage());
+                    }
+                }
 
                 // TODO send an email with order info to the customer here. Assuming payment status is paid here.
 

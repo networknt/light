@@ -28,25 +28,34 @@ var Payment = React.createClass({
     },
 
     onPaymentMethodReceived: function (payload) {
-        //console.log(payload);
+        console.log(payload);
         PaymentActionCreators.addTransaction(payload, OrderStore.getOrderId());
-        this.props.onPlaceOrder();
+        //this.props.onPlaceOrder();
     },
 
     componentDidMount: function() {
         //console.log('Payment:componentDidMount is called');
-        PaymentStore.addChangeListener(this._onChange);
+        PaymentStore.addChangeListener(this._onChangePaymentStore);
+        OrderStore.addChangeListener(this._onChangeOrderStore);
         PaymentActionCreators.getClientToken();
     },
 
     componentWillUnmount: function() {
-        PaymentStore.removeChangeListener(this._onChange);
+        PaymentStore.removeChangeListener(this._onChangePaymentStore);
+        OrderStore.addChangeListener(this._onChangeOrderStore);
     },
 
-    _onChange: function() {
+    _onChangePaymentStore: function() {
         this.setState({
             loading: false
         })
+    },
+
+    _onChangeOrderStore: function() {
+        console.log('OrderStore is changed', OrderStore.getOrder());
+        if(OrderStore.getOrder()) {
+            this.props.onPlaceOrder();
+        }
     },
 
     render: function() {
