@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * Created by steve on 13/12/15.
- * This rule will validate the shipping address again the address schema and calling event
+ * This rule will validate the shipping address against the address schema and calling event
  * rule to update user profile with the updated shippingAddress. It returns the calculated
  * shipping cost and tax according to the input.
  *
