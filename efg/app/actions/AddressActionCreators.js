@@ -17,12 +17,12 @@ module.exports = {
         WebAPIUtils.updShippingAddress(data);
     },
 
-    updatePaymentAddress: function(user) {
+    confirmShippingAddress: function(data) {
         AppDispatcher.dispatch({
-            type: ActionTypes.UPDATE_PAYMENT_ADDRESS,
-            user: user
+            type: ActionTypes.CONFIRM_SHIPPING_ADDRESS_REQUEST,
+            data: data
         });
-        WebAPIUtils.updUserProfile(user);
+        WebAPIUtils.cnfShippingAddress(data);
     }
 
 };

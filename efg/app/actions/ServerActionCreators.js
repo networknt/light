@@ -80,6 +80,14 @@ module.exports = {
         });
     },
 
+    CnfShippingAddressRes: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.CONFIRM_SHIPPING_ADDRESS_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     receiveForm: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_FORM,

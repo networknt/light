@@ -55,6 +55,13 @@ var CheckoutButton = React.createClass({
     },
 
     onConfirmShippingAddress: function() {
+        var data = {};
+
+        data.shippingAddress = this.state.shippingAddress;
+        data.cartTotal = this.state.cartTotal;
+        data.cartItems = this.state.cartItems;
+
+        AddressActionCreators.confirmShippingAddress(data);
 
         this.setState({
             screen: 'shippingTax',

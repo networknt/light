@@ -254,6 +254,26 @@ module.exports = {
         });
     },
 
+    cnfShippingAddress: function(data) {
+        var cnfAddress = {
+            category: 'shipping',
+            name: 'cnfdAddress',
+            readOnly: true,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(cnfAddress),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.CnfShippingAddressRes(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.CnfShippingAddressRes(null, error);
+        });
+    },
+
     getForm: function(formId) {
         var getForm = {
             category: 'form',

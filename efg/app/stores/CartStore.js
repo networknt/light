@@ -144,6 +144,14 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
 
             CartStore.emitChange();
             break;
+
+        case ActionTypes.CONFIRM_SHIPPING_ADDRESS_RESPONSE:
+            console.log('shippingAddress confirm res ', payload.json);
+            _shipping = payload.json.shipping;
+            _taxes = payload.json.taxes;
+            CartStore.emitChange();
+            break;
+
         case ActionTypes.RECEIVE_CLIENT_TOKEN:
             _clientToken = payload.json.clientToken;
             CartStore.emitChange();
