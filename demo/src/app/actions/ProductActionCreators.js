@@ -18,6 +18,7 @@ module.exports = {
             variantIndex: variant.variantIndex
         });
     },
+
     /*
     removeOneFromInventory: function(product) {
         AppDispatcher.dispatch({
@@ -36,13 +37,14 @@ module.exports = {
     },
     */
 
-    loadCatalog: function() {
+    getCatalogTree: function() {
         AppDispatcher.dispatch({
-            type: ActionTypes.LOAD_CATALOG
+            type: ActionTypes.GET_CATALOG_TREE
         });
-        WebAPIUtils.loadCatalog();
+        WebAPIUtils.getCatalogTree();
     },
 
+    /*
     selectCatalog: function(node, selected, onCategorySelect) {
         //console.log('ProductActionCreators is called' || node || selected || onCategorySelect);
         AppDispatcher.dispatch({
@@ -54,6 +56,21 @@ module.exports = {
         });
 
         WebAPIUtils.loadProducts(node.props.catalog['@rid']);
+    },
+    */
+
+    getCatalogProduct: function(rid) {
+        /*
+        AppDispatcher.dispatch({
+            type: ActionTypes.SELECT_CATALOG,
+            rid: node.props.catalog['@rid'],
+            node: node,
+            selected: selected,
+            onCategorySelect: onCategorySelect
+        });
+        */
+        WebAPIUtils.getCatalogProduct(rid);
     }
+
 
 };

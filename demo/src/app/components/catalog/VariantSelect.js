@@ -5,8 +5,8 @@ var React = require('react');
 var ProductActionCreator = require('../../actions/ProductActionCreators');
 var ReactPropTypes = React.PropTypes;
 
-var {Input} = require('react-bootstrap');
-
+import DropDownMenu from 'material-ui/lib/DropDownMenu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
 
 var VariantSelect = React.createClass({
 
@@ -15,20 +15,28 @@ var VariantSelect = React.createClass({
         index: React.PropTypes.number.isRequired
     },
 
+    getInitialState: function() {
+        return {
+            value: 0
+        };
+    },
+
     render: function() {
-        var options = this.props.variants.map(function(variant, index) {
-            return <option key={index} value={index}>{variant.type} ${variant.price.toFixed(2)}</option>;
+        var menuItems = this.props.variants.map(function(variant, index) {
+            return <MenuItem key={index} value={index} primaryText={variant.type + ' $' + variant.price.toFixed(2)}/>;
         });
         return (
-            <Input type="select" onChange={this._setProductVariant} className="variantSelect">
-                {options}
-            </Input>
+            <DropDownMenu value={this.state.value} onChange={this._setProductVariant}>
+                {menuItems}
+            </DropDownMenu>
         );
     },
 
-    _setProductVariant: function(e) {
+    _setProductVariant: function(e, variantIndex, value) {
+        this.setState({
+            value: variantIndex
+        });
         var index = this.props.index;
-        var variantIndex = Number(e.target.value);
         ProductActionCreator.setProductVariant({index, variantIndex});
     }
 

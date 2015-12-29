@@ -1,0 +1,12 @@
+.header-cart-num-items {
+  background-color: red !important;
+  position: relative;
+  top: -10px;
+  left: -5px;
+  .hidden {
+    display: none;
+  }
+}
+.header-cart-text {
+  padding-left: 3px;
+}

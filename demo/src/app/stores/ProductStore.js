@@ -133,7 +133,7 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             //ProductStore.emitChange();
             break;
 
-        case ActionTypes.RECEIVE_PRODUCTS:
+        case ActionTypes.GET_CATALOG_PRODUCT_RESPONSE:
             _products = payload.json.products? payload.json.products :[];
             _products.forEach(_productsMixin);
             _ancestors = payload.json.ancestors;

@@ -16,7 +16,7 @@ import Logout from './components/logout';
 import Blog from './components/blog';
 import News from './components/news';
 import Forum from './components/forum';
-import Catalog from './components/catalog';
+import Catalog from './components/catalog/Catalog';
 import Admin from './components/admin';
 import User from './components/user';
 

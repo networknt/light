@@ -157,7 +157,7 @@ module.exports = {
             });
     },
 
-    loadCatalog: function() {
+    getCatalogTree: function() {
         var getCatalogTree = {
             category: 'catalog',
             name: 'getCatalogTree',
@@ -174,14 +174,14 @@ module.exports = {
             data:  { cmd: encodeURIComponent(JSON.stringify(getCatalogTree))}
         }).done(function(data) {
             //console.log('catalog', data);
-            ServerActionCreators.receiveCatalog(data, null);
+            ServerActionCreators.getCatalogTreeResponse(data, null);
         }).fail(function(error) {
             //console.log('error', error);
-            ServerActionCreators.receiveCatalog(null, error);
+            ServerActionCreators.getCatalogTreeResponse(null, error);
         });
     },
 
-    loadProducts: function(rid) {
+    getCatalogProduct: function(rid) {
         var getCatalogProduct = {
             category: 'catalog',
             name: 'getCatalogProduct',
@@ -191,19 +191,18 @@ module.exports = {
                 pageNo: 1,
                 '@rid': rid
             }
-        }
-        //console.log('WebAPIUtils getCatalogProduct is called');
+        };
         $.ajax({
             type: 'GET',
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getCatalogProduct))}
         }).done(function(data) {
             //console.log('product', data);
-            ServerActionCreators.receiveProducts(data, null);
+            ServerActionCreators.getCatalogProductResponse(data, null);
 
         }).fail(function(error) {
             //console.log('error', error);
-            ServerActionCreators.receiveProducts(null, error);
+            ServerActionCreators.getCatalogProductResponse(null, error);
         });
     },
 

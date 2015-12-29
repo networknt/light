@@ -48,17 +48,17 @@ module.exports = {
         });
     },
 
-    receiveCatalog: function(json, error) {
+    getCatalogTree: function(json, error) {
         AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_CATALOG,
+            type: ActionTypes.GET_CATALOG_TREE_RESPONSE,
             json: json,
             error: error
         });
     },
 
-    receiveProducts: function(json, error) {
+    getCatalogProductResponse: function(json, error) {
         AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_PRODUCTS,
+            type: ActionTypes.GET_CATALOG_PRODUCT_RESPONSE,
             json: json,
             error: error
         });

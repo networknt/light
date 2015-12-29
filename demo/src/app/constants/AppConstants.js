@@ -46,8 +46,9 @@ module.exports = {
         RECEIVE_CREATED_BLOG: null,
 
         // Commerce
-        RECEIVE_CATALOG: null,
-        RECEIVE_PRODUCTS: null,
+        GET_CATALOG_TREE: null,
+        GET_CATALOG_TREE_RESPONSE: null,
+        GET_CATALOG_PRODUCT_RESPONSE: null,
         ADD_PRODUCT_TO_CART: null,
         SET_PRODUCT_VARIANT: null, // set product variation
         SET_QTY: null,
@@ -55,7 +56,6 @@ module.exports = {
         SET_PRODUCT_INVENTORY: null,
         REMOVE_ONE_FROM_INVENTORY: null,
         TOGGLE_CART: null, // Open/close cart
-        LOAD_CATALOG: null,
         SELECT_CATALOG: null,
         LOAD_PRODUCTS: null,
         RECEIVE_USER: null,

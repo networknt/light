@@ -4,16 +4,6 @@
 'use strict';
 
 var React = require('react');
-var Router = require('react-router')
-    , RouteHandler = Router.RouteHandler
-    , Route = Router.Route;
-
-var ReactBootstrap = require('react-bootstrap');
-var Button = require('react-bootstrap').Button;
-
-var ReactRouterBootstrap = require('react-router-bootstrap')
-    , ButtonLink = ReactRouterBootstrap.ButtonLink
-
 var Product = require('./Product');
 var Ancestor = require('./Ancestor');
 
@@ -45,10 +35,7 @@ var ProductList = React.createClass({
             </div>
         )
     },
-    contextTypes: {
-        router: React.PropTypes.func.isRequired
-    }
 
-})
+});
 
 module.exports = ProductList;

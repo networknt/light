@@ -11,6 +11,9 @@ import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme';
 import Colors from 'material-ui/lib/styles/colors';
 import { History } from 'react-router'
 import AuthStore from '../stores/AuthStore';
+import CartStore from '../stores/CartStore';
+import TreeNode from './TreeNode';
+import ProductActionCreators from '../actions/ProductActionCreators';
 
 // Define menu items for LeftNav
 let menuItems = [
@@ -30,7 +33,7 @@ const Main = React.createClass({
     propTypes: {
         children: React.PropTypes.node,
         history: React.PropTypes.object,
-        location: React.PropTypes.object,
+        location: React.PropTypes.object
     },
 
     childContextTypes : {
@@ -42,7 +45,61 @@ const Main = React.createClass({
         return {
             leftNavOpen: false,
             muiTheme: muiTheme,
-            isLoggedIn: AuthStore.isLoggedIn
+            isLoggedIn: AuthStore.isLoggedIn,
+            cartItemCount: 0,
+            category: [
+                {
+                    "@rid": "#43:0",
+                    "host": "example",
+                    "description": "Computer Component",
+                    "categoryId": "computer",
+                    "createDate": "2015-09-25T02:32:54.765",
+                    "out_Own": [
+                        {
+                            "@rid": "#43:1",
+                            "host": "example",
+                            "description": "Computer Case",
+                            "categoryId": "case",
+                            "createDate": "2015-09-25T02:33:25.915",
+                            "in_Own": [
+                                "#43:0"
+                            ],
+                            "out_Own": [
+                                {
+                                    "@rid": "#43:3",
+                                    "host": "example",
+                                    "description": "Desktop Case",
+                                    "categoryId": "desktopCase",
+                                    "createDate": "2015-09-25T02:34:11.850",
+                                    "in_Own": [
+                                        "#43:1"
+                                    ]
+                                },
+                                {
+                                    "@rid": "#43:4",
+                                    "host": "example",
+                                    "description": "Server Case",
+                                    "categoryId": "serverCase",
+                                    "createDate": "2015-09-25T02:34:29.776",
+                                    "in_Own": [
+                                        "#43:1"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "@rid": "#43:2",
+                            "host": "example",
+                            "description": "Hard Drive",
+                            "categoryId": "hardDrive",
+                            "createDate": "2015-09-25T02:33:49.007",
+                            "in_Own": [
+                                "#43:0"
+                            ]
+                        }
+                    ]
+                }
+            ]
         };
     },
 
@@ -50,6 +107,7 @@ const Main = React.createClass({
         let newMuiTheme = this.state.muiTheme;
         newMuiTheme.inkBar.backgroundColor = Colors.yellow200;
         AuthStore.addChangeListener(this._userLoginChange);
+        CartStore.addChangeListener(this._cartItemChange);
         this.setState({
             muiTheme: newMuiTheme
         });
@@ -57,6 +115,7 @@ const Main = React.createClass({
 
     componentWillUnmount: function() {
         AuthStore.removeChangeListener(this._userLoginChange);
+        CartStore.removeChangeListener(this._cartItemChange);
     },
 
     getChildContext() {
@@ -72,8 +131,23 @@ const Main = React.createClass({
         })
     },
 
+    _cartItemChange: function() {
+        this.setState({
+            cartItemCount: CartStore.getCartItemsCount()
+        })
+    },
+
     handleLeftNavToggle() {
         this.setState({leftNavOpen: !this.state.leftNavOpen});
+    },
+
+    onCategorySelect(node) {
+        //console.log('onCategorySelect', node.props.category['@rid'] + ' ' + node.props.category.categoryId);
+        // based on the current route, select the entities from actions.
+        if(this.props.location.pathname === 'catalog') {
+            ProductActionCreators.getCatalogProduct(node.props.category['@rid']);
+        }
+        //ProductActionCreators.selectCatalog(node, this.state.selected, this.props.onCategorySelect);
     },
 
     handleItemTouchTap(event, item) {
@@ -84,13 +158,17 @@ const Main = React.createClass({
     },
 
     render() {
+        var menuButton = (
+            <IconButton iconClassName="material-icons">more_vert</IconButton>
+        );
+
         var userButton = (
             <IconButton iconClassName="material-icons" iconStyle={{color: this.state.isLoggedIn? 'black': 'lightgray'}}>person</IconButton>
         );
 
         var shoppingCartButton = (
             <Badge
-                badgeContent={10}
+                badgeContent={this.state.cartItemCount}
                 parmary={true}
                 badgeStyle={{top: 32, right: 16}}
                 >
@@ -114,16 +192,9 @@ const Main = React.createClass({
                           onItemTouchTap={this.handleItemTouchTap}>
                     {loginMenuItems}
                 </IconMenu>
-            </div>
-        );
-
-        //console.log('history', this.props.history);
-        //console.log('location', this.props.location);
-        //console.log('children', this.props.children);
-        return (
-            <div id="page_container">
-                <LeftNav open={this.state.leftNavOpen} docked={false} onRequestChange={leftNavOpen => this.setState({leftNavOpen})}>
-                    <Menu onItemTouchTap={this.handleItemTouchTap}>
+                <IconMenu iconButtonElement={menuButton}
+                          openDirection="bottom-left"
+                          onItemTouchTap={this.handleItemTouchTap}>
                     {menuItems.map((item, index) => {
                         return (
                             <MenuItem
@@ -133,7 +204,25 @@ const Main = React.createClass({
                                 />
                         );
                     })}
-                    </Menu>
+                </IconMenu>
+            </div>
+        );
+
+        //console.log('history', this.props.history);
+        //console.log('location', this.props.location);
+        //console.log('children', this.props.children);
+        return (
+            <div id="page_container">
+                <LeftNav open={this.state.leftNavOpen} docked={false} onRequestChange={leftNavOpen => this.setState({leftNavOpen})}>
+                    <div>
+                        <ul className="category-tree">
+                            {this.state.category.map(function(item) {
+                                return <TreeNode key={item.categoryId}
+                                                 category={item}
+                                                 onCategorySelect={this.onCategorySelect}/>;
+                            }.bind(this))}
+                        </ul>
+                    </div>
                 </LeftNav>
                 <header>
                     <AppBar title='Edible Forest Garden' onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0}/>
