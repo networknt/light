@@ -72,6 +72,7 @@
         <httpclient.version>4.5.1</httpclient.version>
         <httpasyncclient.version>4.1</httpasyncclient.version>
         <braintree.version>2.53.0</braintree.version>
+        <commons-codec.version>1.10</commons-codec.version>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
         <buildTimestamp>${maven.build.timestamp}</buildTimestamp>
 
@@ -436,6 +437,11 @@
                 <groupId>com.braintreepayments.gateway</groupId>
                 <artifactId>braintree-java</artifactId>
                 <version>${braintree.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
             </dependency>
 
             <dependency>

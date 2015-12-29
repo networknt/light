@@ -55,6 +55,10 @@
             <groupId>net.engio</groupId>
             <artifactId>mbassador</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>
