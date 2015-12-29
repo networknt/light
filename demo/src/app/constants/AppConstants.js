@@ -63,6 +63,7 @@ module.exports = {
         // Form
         GET_FORM: null,
         RECEIVE_FORM: null,
+        SUBMIT_FORM_RESPONSE: null,
 
         // Address
         UPDATE_SHIPPING_ADDRESS: null,

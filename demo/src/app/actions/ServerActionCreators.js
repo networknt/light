@@ -121,7 +121,14 @@ module.exports = {
             json: json,
             error: error
         });
-    }
+    },
 
+    submitFormRes: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.SUBMIT_FORM_RESPONSE,
+            json: json,
+            error: error
+        });
+    }
 };
 

@@ -14,6 +14,5 @@
  * limitations under the License.
  */
 
-import { Dispatcher } from 'flux';
-
-export default new Dispatcher();
+var Dispatcher = require('flux').Dispatcher;
+module.exports = new Dispatcher();

@@ -362,6 +362,21 @@ module.exports = {
         }).fail(function(error) {
             ServerActionCreators.receiveAddTransaction(null, error);
         });
+    },
+
+    submitForm: function(action) {
+        console.log('WebAPIUtils submitForm is called', action);
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(action),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.submitFormRes(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.submitFormRes(null, error);
+        });
     }
 
 };

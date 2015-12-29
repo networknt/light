@@ -22,7 +22,10 @@ module.exports = {
             type: ActionTypes.RECEIVE_FORM,
             json: json
         });
-    }
+    },
 
+    submitFormReq: function(json) {
+        WebAPIUtils.submitForm(json);
+    }
 };
 

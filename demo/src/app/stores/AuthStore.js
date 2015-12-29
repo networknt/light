@@ -110,14 +110,11 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                     localStorage.setItem('refreshToken', _refreshToken);
                 }
                 _rid = payload.json.rid;
-                console.log('_rid = ', _rid);
+                //console.log('_rid = ', _rid);
                 // handle shippingAddress and paymentAddress
-                console.log('LOGIN_RESPONSE', payload.json.shippingAddress);
+                //console.log('LOGIN_RESPONSE', payload.json.shippingAddress);
                 if(payload.json.shippingAddress) {
                     _shippingAddress = payload.json.shippingAddress;
-                }
-                if(payload.json.paymentAddress) {
-                    _paymentAddress = payload.json.paymentAddress;
                 }
 
                 // Redirect to the attempted url if the login page was redirected upon 401 and 403 error.

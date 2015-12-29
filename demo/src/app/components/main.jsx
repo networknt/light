@@ -10,6 +10,7 @@ import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme';
 import Colors from 'material-ui/lib/styles/colors';
 import { History } from 'react-router'
+import AuthStore from '../stores/AuthStore';
 
 // Define menu items for LeftNav
 let menuItems = [
@@ -40,22 +41,35 @@ const Main = React.createClass({
         let muiTheme = ThemeManager.getMuiTheme(LightRawTheme);
         return {
             leftNavOpen: false,
-            muiTheme: muiTheme
+            muiTheme: muiTheme,
+            isLoggedIn: AuthStore.isLoggedIn
         };
     },
 
     componentWillMount() {
         let newMuiTheme = this.state.muiTheme;
         newMuiTheme.inkBar.backgroundColor = Colors.yellow200;
+        AuthStore.addChangeListener(this._userLoginChange);
         this.setState({
             muiTheme: newMuiTheme
         });
+    },
+
+    componentWillUnmount: function() {
+        AuthStore.removeChangeListener(this._userLoginChange);
     },
 
     getChildContext() {
         return {
             muiTheme: this.state.muiTheme
         };
+    },
+
+    _userLoginChange: function() {
+        console.log("Main._userLoginChange", AuthStore.isLoggedIn());
+        this.setState({
+            isLoggedIn: AuthStore.isLoggedIn()
+        })
     },
 
     handleLeftNavToggle() {
@@ -71,7 +85,7 @@ const Main = React.createClass({
 
     render() {
         var userButton = (
-            <IconButton iconClassName="material-icons">person</IconButton>
+            <IconButton iconClassName="material-icons" iconStyle={{color: this.state.isLoggedIn? 'black': 'lightgray'}}>person</IconButton>
         );
 
         var shoppingCartButton = (
@@ -86,7 +100,7 @@ const Main = React.createClass({
 
         var loginMenuItems = [];
         if (this.state.isLoggedIn) {
-            loginMenuItems.push(<MenuItem value='logout' primaryText='Sign out' />)
+            loginMenuItems.push(<MenuItem key='logout' value='logout' primaryText='Sign out' />)
         } else {
             loginMenuItems.push(<MenuItem key='login' value='login' primaryText='Log in' />);
             loginMenuItems.push(<MenuItem key='signup' value='signup' primaryText='Sign up' />);
@@ -108,7 +122,7 @@ const Main = React.createClass({
         //console.log('children', this.props.children);
         return (
             <div id="page_container">
-                <LeftNav open={this.state.leftNavOpen} docked={false}>
+                <LeftNav open={this.state.leftNavOpen} docked={false} onRequestChange={leftNavOpen => this.setState({leftNavOpen})}>
                     <Menu onItemTouchTap={this.handleItemTouchTap}>
                     {menuItems.map((item, index) => {
                         return (
