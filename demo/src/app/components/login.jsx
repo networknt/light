@@ -32,8 +32,8 @@ let Login = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        console.log('Form._onModelChange:', key);
-        console.log('Form._onModelChange:', val);
+        //console.log('Form._onModelChange:', key);
+        //console.log('Form._onModelChange:', val);
         this.setState({user: utils.selectOrSet(key, this.state.user, val)});
     },
 
@@ -43,9 +43,9 @@ let Login = React.createClass({
         if(schema) {
             let form = FormStore.getForm(id).form;
             let action = FormStore.getForm(id).action;
-            console.log('schema = ', schema);
-            console.log('form = ', form);
-            console.log('action = ', action);
+            //console.log('schema = ', schema);
+            //console.log('form = ', form);
+            //console.log('action = ', action);
             this.setState({
                 schema: schema,
                 form: form,
@@ -62,7 +62,7 @@ let Login = React.createClass({
     },
 
     render: function() {
-        console.log('Form: props', this.props);
+        //console.log('Form: props', this.props);
         if(this.state.schema) {
             const buttons = this.state.action.map((item, idx) => (
                 <RaisedButton key={idx} label={item.title} primary={true}

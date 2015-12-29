@@ -66,7 +66,7 @@ const Main = React.createClass({
     },
 
     _userLoginChange: function() {
-        console.log("Main._userLoginChange", AuthStore.isLoggedIn());
+        //console.log("Main._userLoginChange", AuthStore.isLoggedIn());
         this.setState({
             isLoggedIn: AuthStore.isLoggedIn()
         })
@@ -77,8 +77,8 @@ const Main = React.createClass({
     },
 
     handleItemTouchTap(event, item) {
-        console.log('event', event);
-        console.log('item', item);
+        //console.log('event', event);
+        //console.log('item', item);
         this.setState({leftNavOpen: false});
         this.props.history.push(item.props.value);
     },

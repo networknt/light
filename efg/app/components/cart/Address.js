@@ -9,7 +9,6 @@ var React = require('react');
 var FormStore = require('../../stores/FormStore');
 var FormActionCreators = require('../../actions/FormActionCreators');
 var { SchemaForm } = require('react-schema-form');
-require('react-select/less/default.less');
 
 
 var Address = React.createClass({
