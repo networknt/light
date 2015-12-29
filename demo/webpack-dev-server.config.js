@@ -24,14 +24,31 @@ const config = {
       path.resolve(__dirname, 'src/app/components/markdown'),
     ],
   },
+
   //Configuration for dev server
+  //devServer: {
+  //  contentBase: 'src/www',
+  //  devtool: 'eval',
+  //  hot: true,
+  // inline: true,
+  //  port: 3000,
+  //},
+
   devServer: {
+    proxy:       [{
+      // proxy all requests not containing ".hot-update.js"
+      // regex is still crappy because JS doesn't have negative lookbehind
+      path:   /\/api(.*)/,
+      // koa running on 3001 with koa-send and isomorphic react
+      target:  'http://example:8080'
+    }],
     contentBase: 'src/www',
-    devtool: 'eval',
     hot: true,
-    inline: true,
     port: 3000,
+    host: '0.0.0.0',
+    historyApiFallback: true
   },
+
   devtool: 'eval',
   //Output file config
   output: {
