@@ -43,7 +43,12 @@ var CheckoutButton = React.createClass({
     },
 
     handleCartTouchTap(event) {
-        this.setState({cartOpen: true});
+        if(AuthStore.isLoggedIn()) {
+            this.setState({cartOpen: true});
+        } else {
+            this.props.history.push('login');
+        }
+
     },
 
     open: function() {
@@ -137,46 +142,32 @@ var CheckoutButton = React.createClass({
 
 
     render: function() {
-        var buyButton;
-        if (this.state.cartItems.length > 0) {
-            buyButton = <RaisedButton label="Buy now" primary={true} onTouchTap={this.onShipping} />
-        }
-
         var actions = [];
         var contents;
-        if(AuthStore.isLoggedIn()) {
-            if(this.state.screen === 'cart') {
-                contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />
-                actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onShipping} />)
-                actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />)
-            } else if (this.state.screen === 'shippingAddress') {
-                contents =  <ShippingAddress shippingAddress={this.state.shippingAddress} onShippingAddressChange={this.onShippingAddressChange} />
-                actions.length = 0;
-                actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateShippingAddress} />);
-                if(AuthStore.getShippingAddress()) {
-                    actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmShippingAddress}/>);
-                }
-                actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
-            } else if (this.state.screen === 'shippingTax') {
-                contents =  <ShippingTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />
-                actions.length = 0;
-                actions.push(<RaisedButton label="Check out" primary={true} onTouchTap={this.onPayment} />);
-                actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
-            } else if (this.state.screen === 'payment') {
-                contents =  <Payment onPlaceOrder = {this.onPlaceOrder} />
-            } else {
-                contents =  <CheckoutDone />
-                actions.length = 0;
-                actions.push(<RaisedButton label="Close" primary={true} onTouchTap={this.handleCartClose} />);
+
+        if(this.state.screen === 'cart') {
+            contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />
+            actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onShipping} />)
+            actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />)
+        } else if (this.state.screen === 'shippingAddress') {
+            contents =  <ShippingAddress shippingAddress={this.state.shippingAddress} onShippingAddressChange={this.onShippingAddressChange} />
+            actions.length = 0;
+            actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateShippingAddress} />);
+            if(AuthStore.getShippingAddress()) {
+                actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmShippingAddress}/>);
             }
+            actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
+        } else if (this.state.screen === 'shippingTax') {
+            contents =  <ShippingTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />
+            actions.length = 0;
+            actions.push(<RaisedButton label="Check out" primary={true} onTouchTap={this.onPayment} />);
+            actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
+        } else if (this.state.screen === 'payment') {
+            contents =  <Payment onPlaceOrder = {this.onPlaceOrder} />
         } else {
-            console.log('CheckoutButton props', this.props);
-            /*
-            contents =  <div className="checkoutButtonLogin">
-                            <Modal.Title>Login required before checkout...</Modal.Title>
-                            <Login/>
-                        </div>
-            */
+            contents =  <CheckoutDone />
+            actions.length = 0;
+            actions.push(<RaisedButton label="Close" primary={true} onTouchTap={this.handleCartClose} />);
         }
 
         var cartHeaderIconClasses = classNames({

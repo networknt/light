@@ -22,7 +22,7 @@
                 "type": "string"
             },
             "rememberMe": {
-                "title": "Remember me",
+                "title": "Remember me for 30 days",
                 "type": "boolean",
                 "default": false
             }

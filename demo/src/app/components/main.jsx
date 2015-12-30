@@ -171,24 +171,6 @@ const Main = React.createClass({
             <IconButton iconClassName="material-icons" iconStyle={{color: this.state.isLoggedIn? 'black': 'lightgray'}}>person</IconButton>
         );
 
-        /*
-        var shoppingCartButton = (
-            <Badge
-                badgeContent={this.state.cartItemCount}
-                parmary={true}
-                badgeStyle={{top: 32, right: 16}}
-                >
-                <IconButton iconClassName="material-icons" onTouchTap={this.handleCartTouchTap}>shopping_cart</IconButton>
-            </Badge>
-        );
-        */
-        var shoppingCartButton = (
-            <span>
-                <IconButton iconClassName="material-icons" onTouchTap={this.handleCartTouchTap}>shopping_cart</IconButton>
-                <span>{this.state.cartItemsCount}</span>
-            </span>
-        );
-
         var loginMenuItems = [];
         if (this.state.isLoggedIn) {
             loginMenuItems.push(<MenuItem key='logout' value='logout' primaryText='Sign out' />)
@@ -199,7 +181,7 @@ const Main = React.createClass({
 
         var rightMenu = (
             <div>
-                <CheckoutButton/>
+                <CheckoutButton history={this.props.history} />
                 <IconMenu iconButtonElement={userButton}
                           openDirection="bottom-left"
                           onItemTouchTap={this.handleItemTouchTap}>
@@ -221,17 +203,6 @@ const Main = React.createClass({
             </div>
         );
 
-        var cartActions = [
-            <RaisedButton
-                label="Cancel"
-                secondary={true}
-                onTouchTap={this.handleCartClose} />,
-            <RaisedButton
-                label="Submit"
-                primary={true}
-                disabled={true}
-                onTouchTap={this.handleCartClose} />,
-        ];
         //console.log('history', this.props.history);
         //console.log('location', this.props.location);
         //console.log('children', this.props.children);
@@ -251,13 +222,6 @@ const Main = React.createClass({
                 <header>
                     <AppBar title='Edible Forest Garden' onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0}/>
                 </header>
-                <Dialog
-                    title="Dialog With Actions"
-                    actions={cartActions}
-                    modal={true}
-                    open={this.state.shoppingCartOpen}>
-                    Only actions can close this dialog.
-                </Dialog>
                 {this.props.children}
             </div>
         );
