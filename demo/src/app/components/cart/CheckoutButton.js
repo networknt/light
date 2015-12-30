@@ -132,12 +132,29 @@ var CheckoutButton = React.createClass({
         })
     },
 
+    _onCartStoreChange: function() {
+        //console.log('onChange is called', this.state.cartItems);
+        this.setState({
+            cartItems: CartStore.getAll(),
+            cartItemsCount: CartStore.getCartItemsCount(),
+            cartTotal: CartStore.getCartTotal()
+        })
+    },
+
+    _onAuthStoreChange: function() {
+        this.setState({
+            shippingAddress: AuthStore.getShippingAddress() || {}
+        })
+    },
+
     componentDidMount: function() {
-        CartStore.addChangeListener(this._onChange);
+        CartStore.addChangeListener(this._onCartStoreChange);
+        AuthStore.addChangeListener(this._onAuthStoreChange);
     },
 
     componentWillUnmount: function() {
-        CartStore.removeChangeListener(this._onChange);
+        CartStore.removeChangeListener(this._onCartStoreChange);
+        AuthStore.removeChangeListener(this._onAuthStoreChange);
     },
 
 
@@ -158,7 +175,7 @@ var CheckoutButton = React.createClass({
             }
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
         } else if (this.state.screen === 'shippingTax') {
-            contents =  <ShippingTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />
+            contents =  <ShippingTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
             actions.length = 0;
             actions.push(<RaisedButton label="Check out" primary={true} onTouchTap={this.onPayment} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
@@ -188,16 +205,8 @@ var CheckoutButton = React.createClass({
             </span>
         );
 
-    },
-
-    _onChange: function() {
-        //console.log('onChange is called', this.state.cartItems);
-        this.setState({
-            cartItems: CartStore.getAll(),
-            cartItemsCount: CartStore.getCartItemsCount(),
-            cartTotal: CartStore.getCartTotal()
-        })
     }
+
 
 });
 

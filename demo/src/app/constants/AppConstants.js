@@ -67,8 +67,8 @@ module.exports = {
 
         // Address
         UPDATE_SHIPPING_ADDRESS: null,
-        UPD_SHIPPING_ADDRESS_RESPONSE: null,
-        CONFIRM_SHIPPING_ADDRESS_REQUEST: null,
+        UPDATE_SHIPPING_ADDRESS_RESPONSE: null,
+        CONFIRM_SHIPPING_ADDRESS: null,
         CONFIRM_SHIPPING_ADDRESS_RESPONSE: null,
 
         // Payment

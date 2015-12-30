@@ -80,18 +80,18 @@ public class JwtUtil {
             roles.add("user");
             roles.add("admin");
             userMap.put("roles", roles);
-            jwt = getJwt(userMap);
+            jwt = getJwt(userMap, false);
             System.out.println("jwt = " + jwt);
         }
     }
 
 
-    public static String getJwt(Map<String, Object> userMap) throws InvalidKeyException, SignatureException {
-        JsonToken token = createToken(userMap);
+    public static String getJwt(Map<String, Object> userMap, Boolean rememberMe) throws InvalidKeyException, SignatureException {
+        JsonToken token = createToken(userMap, rememberMe);
         return token.serializeAndSign();
     }
 
-    public static JsonToken createToken(Map<String, Object> userMap) throws InvalidKeyException {
+    public static JsonToken createToken(Map<String, Object> userMap, Boolean rememberMe) throws InvalidKeyException {
         // Current time and signing algorithm
         HmacSHA256Signer signer = new HmacSHA256Signer((String)oauth2Config.get("issuer"),
             null, ((String)oauth2Config.get("signingKey")).getBytes());
@@ -101,7 +101,11 @@ public class JwtUtil {
         token.setAudience((String) oauth2Config.get("audience"));
         token.setParam("typ", (String)oauth2Config.get("typ"));
         token.setIssuedAt(Instant.now());
-        token.setExpiration(Instant.now().plusSeconds((Integer)oauth2Config.get("expireInSecond")));
+        if(rememberMe) {
+            token.setExpiration(Instant.now().plusSeconds((Integer)oauth2Config.get("rememberMeSecond")));
+        } else {
+            token.setExpiration(Instant.now().plusSeconds((Integer)oauth2Config.get("expireInSecond")));
+        }
         Map<String, Object> payload = token.getPayload();
         payload.put("user", userMap);
         return token;

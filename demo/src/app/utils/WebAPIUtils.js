@@ -230,14 +230,13 @@ module.exports = {
         });
     },
 
-    updShippingAddress: function(data) {
+    updateShippingAddress: function(data) {
         var updAddress = {
             category: 'shipping',
             name: 'updAddress',
             readOnly: false,
             data: data
         };
-        //console.log('WebAPIUtils updShippingAddress is called');
         $.ajax({
             type: 'POST',
             url: '/api/rs',
@@ -246,15 +245,15 @@ module.exports = {
             dataType: 'json'
         }).done(function(data) {
             //console.log('updShippingAddress done', data);
-            ServerActionCreators.receiveUpdShippingAddress(data, null);
+            ServerActionCreators.updateShippingAddressResponse(data, null);
         }).fail(function(error) {
             //console.log('updShippingAddress error', error);
-            ServerActionCreators.receiveUpdShippingAddress(null, error);
+            ServerActionCreators.updateShippingAddressResponse(null, error);
         });
     },
 
-    cnfShippingAddress: function(data) {
-        var cnfAddress = {
+    confirmShippingAddress: function(data) {
+        var confirmAddress = {
             category: 'shipping',
             name: 'cnfdAddress',
             readOnly: true,
@@ -263,13 +262,13 @@ module.exports = {
         $.ajax({
             type: 'POST',
             url: '/api/rs',
-            data: JSON.stringify(cnfAddress),
+            data: JSON.stringify(confirmAddress),
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            ServerActionCreators.CnfShippingAddressRes(data, null);
+            ServerActionCreators.confirmShippingAddressResponse(data, null);
         }).fail(function(error) {
-            ServerActionCreators.CnfShippingAddressRes(null, error);
+            ServerActionCreators.confirmShippingAddressResponse(null, error);
         });
     },
 

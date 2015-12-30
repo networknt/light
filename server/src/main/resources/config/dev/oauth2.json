@@ -3,5 +3,6 @@
   "signingKey" : "1293089278894893893",
   "audience" : "networknt.com",
   "typ": "networknt.com/auth/v1",
-  "expireInSecond": 60
+  "expireInSecond": 28800,
+  "rememberMeSecond": 2592000
 }

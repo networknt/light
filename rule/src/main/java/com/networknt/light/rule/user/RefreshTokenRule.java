@@ -53,7 +53,8 @@ public class RefreshTokenRule extends AbstractUserRule implements Rule {
                 if(user != null) {
                     Vertex credential = user.getProperty("credential");
                     if (checkRefreshToken(credential, clientId, refreshToken)) {
-                        String jwt = generateToken(user, clientId);
+                        // since here is using refresh token, it is always generate short term access token.
+                        String jwt = generateToken(user, clientId, false);
                         if (jwt != null) {
                             Map<String, String> tokens = new HashMap<String, String>();
                             tokens.put("accessToken", jwt);

@@ -1640,6 +1640,24 @@ public class InitDatabase {
                             "        return activation;\n" +
                             "    }\n" +
                             "\n" +
+                            "    protected String getActivationCode(String userId) throws Exception {\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        String code = null;\n" +
+                            "        try {\n" +
+                            "            Vertex activation = graph.getVertexByKey(\"Activation.userId\", userId);\n" +
+                            "            if(activation != null) {\n" +
+                            "                code = activation.getProperty(\"code\");\n" +
+                            "            }\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "        return code;\n" +
+                            "    }\n" +
+                            "\n" +
                             "    protected void delActivation(String userId, String code) throws Exception {\n" +
                             "        Vertex activation = null;\n" +
                             "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
@@ -1753,6 +1771,15 @@ public class InitDatabase {
                             "                String lastName = (String)data.get(\"lastName\");\n" +
                             "                if(lastName != null && !lastName.equals(user.getProperty(\"lastName\"))) {\n" +
                             "                    user.setProperty(\"lastName\", lastName);\n" +
+                            "                }\n" +
+                            "                // TODO update shipping address and payment address here.\n" +
+                            "                Map<String, Object> shippingAddress = (Map<String, Object>)data.get(\"shippingAddress\");\n" +
+                            "                if(shippingAddress != null) {\n" +
+                            "                    user.setProperty(\"shippingAddress\", shippingAddress);\n" +
+                            "                }\n" +
+                            "                Map<String, Object> paymentAddress = (Map<String, Object>)data.get(\"paymentAddress\");\n" +
+                            "                if(paymentAddress != null) {\n" +
+                            "                    user.setProperty(\"paymentAddress\", paymentAddress);\n" +
                             "                }\n" +
                             "                user.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
                             "            }\n" +
@@ -1994,13 +2021,13 @@ public class InitDatabase {
                             "        return matcher.matches();\n" +
                             "    }\n" +
                             "\n" +
-                            "    String generateToken(Vertex user, String clientId) throws Exception {\n" +
+                            "    String generateToken(Vertex user, String clientId, Boolean rememberMe) throws Exception {\n" +
                             "        Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();\n" +
                             "        jwtMap.put(\"@rid\", user.getId().toString());\n" +
                             "        jwtMap.put(\"userId\", user.getProperty(\"userId\"));\n" +
                             "        jwtMap.put(\"clientId\", clientId);\n" +
                             "        jwtMap.put(\"roles\", user.getProperty(\"roles\"));\n" +
-                            "        return JwtUtil.getJwt(jwtMap);\n" +
+                            "        return JwtUtil.getJwt(jwtMap, rememberMe);\n" +
                             "    }\n" +
                             "\n" +
                             "    boolean checkPassword(OrientGraph graph, Vertex user, String inputPassword) throws Exception {\n" +
@@ -2043,6 +2070,7 @@ public class InitDatabase {
                             "import com.tinkerpop.blueprints.Vertex;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraph;\n" +
                             "import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;\n" +
+                            "import com.tinkerpop.blueprints.impls.orient.OrientVertex;\n" +
                             "\n" +
                             "import java.util.HashMap;\n" +
                             "import java.util.Map;\n" +
@@ -2060,6 +2088,7 @@ public class InitDatabase {
                             "        String userIdEmail = (String) data.get(\"userIdEmail\");\n" +
                             "        String inputPassword = (String) data.get(\"password\");\n" +
                             "        Boolean rememberMe = (Boolean)data.get(\"rememberMe\");\n" +
+                            "        if(rememberMe == null) rememberMe = false;\n" +
                             "        String clientId = (String)data.get(\"clientId\");\n" +
                             "        String error = null;\n" +
                             "        // check if clientId is passed in.\n" +
@@ -2069,22 +2098,29 @@ public class InitDatabase {
                             "        } else {\n" +
                             "            OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
                             "            try {\n" +
-                            "                Vertex user = null;\n" +
+                            "                OrientVertex user = null;\n" +
                             "                if(isEmail(userIdEmail)) {\n" +
-                            "                    user = getUserByEmail(graph, userIdEmail);\n" +
+                            "                    user = (OrientVertex)getUserByEmail(graph, userIdEmail);\n" +
                             "                } else {\n" +
-                            "                    user = getUserByUserId(graph, userIdEmail);\n" +
+                            "                    user = (OrientVertex)getUserByUserId(graph, userIdEmail);\n" +
                             "                }\n" +
                             "                if(user != null) {\n" +
                             "                    if(checkPassword(graph, user, inputPassword)) {\n" +
-                            "                        String jwt = generateToken(user, clientId);\n" +
+                            "                        String jwt = generateToken(user, clientId, rememberMe);\n" +
                             "                        if(jwt != null) {\n" +
                             "                            Map eventMap = getEventMap(inputMap);\n" +
                             "                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get(\"data\");\n" +
                             "                            inputMap.put(\"eventMap\", eventMap);\n" +
-                            "                            Map<String, String> tokens = new HashMap<String, String>();\n" +
+                            "                            Map<String, Object> tokens = new HashMap<String, Object>();\n" +
                             "                            tokens.put(\"accessToken\", jwt);\n" +
-                            "                            if(rememberMe != null && rememberMe) {\n" +
+                            "                            if(user.getProperty(\"shippingAddress\") != null) {\n" +
+                            "                                tokens.put(\"shippingAddress\", user.getProperty(\"shippingAddress\"));\n" +
+                            "                            }\n" +
+                            "                            if(user.getProperty(\"paymentAddress\") != null) {\n" +
+                            "                                tokens.put(\"paymentAddress\", user.getProperty(\"paymentAddress\"));\n" +
+                            "                            }\n" +
+                            "                            tokens.put(\"rid\", user.getIdentity().toString());\n" +
+                            "                            if(rememberMe) {\n" +
                             "                                // generate refreshToken\n" +
                             "                                String refreshToken = HashUtil.generateUUID();\n" +
                             "                                tokens.put(\"refreshToken\", refreshToken);\n" +

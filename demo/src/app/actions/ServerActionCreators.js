@@ -72,15 +72,15 @@ module.exports = {
         });
     },
 
-    receiveUpdShippingAddress: function(json, error) {
+    updateShippingAddressResponse: function(json, error) {
         AppDispatcher.dispatch({
-            type: ActionTypes.UPD_SHIPPING_ADDRESS_RESPONSE,
+            type: ActionTypes.UPDATE_SHIPPING_ADDRESS_RESPONSE,
             json: json,
             error: error
         });
     },
 
-    CnfShippingAddressRes: function(json, error) {
+    confirmShippingAddressResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.CONFIRM_SHIPPING_ADDRESS_RESPONSE,
             json: json,

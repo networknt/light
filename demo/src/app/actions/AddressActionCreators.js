@@ -14,15 +14,15 @@ module.exports = {
             type: ActionTypes.UPDATE_SHIPPING_ADDRESS,
             data: data
         });
-        WebAPIUtils.updShippingAddress(data);
+        WebAPIUtils.updateShippingAddress(data);
     },
 
     confirmShippingAddress: function(data) {
         AppDispatcher.dispatch({
-            type: ActionTypes.CONFIRM_SHIPPING_ADDRESS_REQUEST,
+            type: ActionTypes.CONFIRM_SHIPPING_ADDRESS,
             data: data
         });
-        WebAPIUtils.cnfShippingAddress(data);
+        WebAPIUtils.confirmShippingAddress(data);
     }
 
 };

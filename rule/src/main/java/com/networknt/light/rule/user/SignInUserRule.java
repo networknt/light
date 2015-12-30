@@ -41,6 +41,7 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
         String userIdEmail = (String) data.get("userIdEmail");
         String inputPassword = (String) data.get("password");
         Boolean rememberMe = (Boolean)data.get("rememberMe");
+        if(rememberMe == null) rememberMe = false;
         String clientId = (String)data.get("clientId");
         String error = null;
         // check if clientId is passed in.
@@ -58,7 +59,7 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
                 }
                 if(user != null) {
                     if(checkPassword(graph, user, inputPassword)) {
-                        String jwt = generateToken(user, clientId);
+                        String jwt = generateToken(user, clientId, rememberMe);
                         if(jwt != null) {
                             Map eventMap = getEventMap(inputMap);
                             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
@@ -72,7 +73,7 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
                                 tokens.put("paymentAddress", user.getProperty("paymentAddress"));
                             }
                             tokens.put("rid", user.getIdentity().toString());
-                            if(rememberMe != null && rememberMe) {
+                            if(rememberMe) {
                                 // generate refreshToken
                                 String refreshToken = HashUtil.generateUUID();
                                 tokens.put("refreshToken", refreshToken);

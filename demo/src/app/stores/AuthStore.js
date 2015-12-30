@@ -111,8 +111,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                 }
                 _rid = payload.json.rid;
                 //console.log('_rid = ', _rid);
-                // handle shippingAddress and paymentAddress
-                //console.log('LOGIN_RESPONSE', payload.json.shippingAddress);
+                console.log('AuthStore.LOGIN_RESPONSE shippingAddress', payload.json.shippingAddress);
                 if(payload.json.shippingAddress) {
                     _shippingAddress = payload.json.shippingAddress;
                 }
@@ -168,7 +167,11 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             }
             AuthStore.emitChange();
             break;
-
+        case ActionTypes.UPDATE_SHIPPING_ADDRESS:
+            _shippingAddress = payload.data;
+            console.log('AuthStore UPDATE_SHIPPING_ADDRESS', _shippingAddress);
+            AuthStore.emitChange();
+            break;
         default:
     }
 
