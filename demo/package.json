@@ -19,6 +19,8 @@
     "android:setup-port": "adb reverse tcp:8081 tcp:8081"
   },
   "dependencies": {
+    "braintree-react": "^3.0.0",
+    "braintree-web": "^2.17.5",
     "flux": "^2.1.1",
     "history": "^1.13.1",
     "jquery": "^2.1.4",

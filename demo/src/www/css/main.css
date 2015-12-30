@@ -31,3 +31,18 @@ body {
   border: 2px solid #FF9800;
   background-color: #4CAF50;
 }
+
+.cart-badge {
+  position: relative;
+  top: -10px;
+  left: -15px;
+  padding: 1px 9px 2px;
+  font-size: 12.025px;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #ffffff;
+  background-color: #999999;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
