@@ -46,7 +46,7 @@ var BlogRow = React.createClass({
     _getPrimaryText: function(blogs) {
         return (
             <p>
-                {blogs.blogId}
+                {blogs.categoryId}
             </p>
         );
     }

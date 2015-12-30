@@ -16,12 +16,12 @@ module.exports = {
         WebAPIUtils.loadBlogs();
     },
 
-    loadBlog: function(blogId) {
+    loadBlog: function(categoryId) {
         AppDispatcher.dispatch({
             type: ActionTypes.LOAD_BLOG,
-            blogId: blogId
+            categoryId: categoryId
         });
-        WebAPIUtils.loadBlog(blogId);
+        WebAPIUtils.loadBlog(categoryId);
     },
 
     receiveBlog: function(json) {

@@ -25,7 +25,7 @@
             },
             {
                 title: 'Catalog Id',
-                value: 'catalogId'
+                value: 'categoryId'
             },
             {
                 title: 'Description',
@@ -115,7 +115,7 @@
                         <tr>
                             <td></td>
                             <td><input ng-model="filter.host" type="text" /></td>
-                            <td><input ng-model="filter.catalogId" type="text" /></td>
+                            <td><input ng-model="filter.categoryId" type="text" /></td>
                             <td><input ng-model="filter.description" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
                             <td><input ng-model="filter.createDate" type="text" /></td>
@@ -125,7 +125,7 @@
                         <tr ng-repeat="catalog in catalogs | filter: filter | orderBy: sort.sortedBy">
                             <td><a href ng-click="delete(catalog)">Delete</a></td>
                             <td>{{catalog.host}}</td>
-                            <td><a href ng-click="update(catalog)">{{catalog.catalogId}}</a></td>
+                            <td><a href ng-click="update(catalog)">{{catalog.categoryId}}</a></td>
                             <td>{{catalog.description}}</td>
                             <td>{{catalog.createUserId}}</td>
                             <td>{{catalog.createDate}}</td>

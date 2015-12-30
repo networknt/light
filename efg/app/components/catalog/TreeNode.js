@@ -35,12 +35,12 @@ var TreeNode = React.createClass({
             <li ref="node" className={classes}
                 onClick={this.onChildDisplayToggle}>
                 <a onClick={this.onCategorySelect}
-                   data-id={this.props.catalog.catalogId}>
-                    {this.props.catalog.catalogId}
+                   data-id={this.props.catalog.categoryId}>
+                    {this.props.catalog.categoryId}
                 </a>
                 <ul>
                     {this.state.out_Own.map(function(child) {
-                        return <TreeNode key={child.catalogId}
+                        return <TreeNode key={child.categoryId}
                                          catalog={child}
                                          onCategorySelect={this.props.onCategorySelect}/>;
                     }.bind(this))}

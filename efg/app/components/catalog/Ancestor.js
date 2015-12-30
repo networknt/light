@@ -9,7 +9,7 @@ var Ancestor = React.createClass({
     render: function() {
         return (
             <div>
-                {this.props.ancestor.catalogId}
+                {this.props.ancestor.categoryId}
             </div>
         );
     }

@@ -21,7 +21,7 @@
     ],
     "properties": {
       "in_HasProduct": {
-        "title": "CatalogId",
+        "title": "categoryId",
         "type": "array",
         "maxItems": 1,
         "format": "strapselectdynamic"

@@ -9,7 +9,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "newsId": "OmniChannel",
+      "categoryId": "OmniChannel",
       "desc": "Application, architecture and experience",
       "createDate": "2015-01-11T19:07:24.333"
     },
@@ -27,7 +27,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "newsId": "Light Framework",
+      "categoryId": "Light Framework",
       "desc": "Techniques, strategies and system design",
       "createDate": "2015-01-11T19:08:03.479"
     },
@@ -45,7 +45,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "newsId": "JSON Token",
+      "categoryId": "JSON Token",
       "desc": "Updated google json token for JWT generation",
       "createDate": "2015-01-11T20:16:10.236"
     },
@@ -63,7 +63,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "newsId": "Light Rule Engine",
+      "categoryId": "Light Rule Engine",
       "desc": "A Java based rule engine that supports unit test and hot deployment",
       "createDate": "2015-01-11T20:16:47.103"
     },
@@ -82,7 +82,7 @@
       "host": "www.networknt.com",
       "parent": "Light Framework",
       "createUserId": "stevehu",
-      "newsId": "View",
+      "categoryId": "View",
       "desc": "Smallest rendering unit that consists of web components",
       "createDate": "2015-01-11T20:27:05.132"
     },
@@ -101,7 +101,7 @@
       "parent": "Light Framework",
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "newsId": "Application",
+      "categoryId": "Application",
       "desc": "Consists of multiple views with routing relationship to perform certain function",
       "createDate": "2015-01-11T20:27:31.283"
     },
@@ -120,7 +120,7 @@
       "host": "www.networknt.com",
       "parent": "Light Framework",
       "createUserId": "stevehu",
-      "newsId": "Component",
+      "categoryId": "Component",
       "desc": "Web Component that is implemented with AngularJS directive",
       "createDate": "2015-01-11T20:26:34.488"
     },
@@ -138,7 +138,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "blogId": "Light Framework",
+      "categoryId": "Light Framework",
       "desc": "Techniques, strategies and system design",
       "createDate": "2015-01-11T19:49:42.600"
     },
@@ -156,7 +156,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "blogId": "JSON Token",
+      "categoryId": "JSON Token",
       "desc": "Updated google json token to generate JWT",
       "createDate": "2015-01-11T20:13:00.375"
     },
@@ -174,7 +174,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "blogId": "Light Rule Engine",
+      "categoryId": "Light Rule Engine",
       "desc": "A Java based rule engine that supports unit test and hot deployment",
       "createDate": "2015-01-11T20:14:25.826"
     },
@@ -193,7 +193,7 @@
       "host": "www.networknt.com",
       "parent": "Light Framework",
       "createUserId": "stevehu",
-      "blogId": "Component",
+      "categoryId": "Component",
       "desc": "Web Component that is implemented with AngularJS directive",
       "createDate": "2015-01-11T20:28:19.921"
     },
@@ -212,7 +212,7 @@
       "host": "www.networknt.com",
       "parent": "Light Framework",
       "createUserId": "stevehu",
-      "blogId": "View",
+      "categoryId": "View",
       "desc": "Smallest rendering unit that consists of web components",
       "createDate": "2015-01-11T20:28:44.574"
     },
@@ -231,7 +231,7 @@
       "host": "www.networknt.com",
       "parent": "Light Framework",
       "createUserId": "stevehu",
-      "blogId": "Application",
+      "categoryId": "Application",
       "desc": "Consists of multiple views with routing relationship to perform certain function",
       "createDate": "2015-01-11T20:29:14.109"
     },
@@ -249,7 +249,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "forumId": "JSON Token",
+      "categoryId": "JSON Token",
       "desc": "Updated google json token for JWT generation",
       "createDate": "2015-01-11T20:17:52.952"
     },
@@ -267,7 +267,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "forumId": "Light Rule Engine",
+      "categoryId": "Light Rule Engine",
       "desc": "A Java based rule engine that supports unit test and hot deployment",
       "createDate": "2015-01-11T20:18:45.837"
     },
@@ -285,7 +285,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "forumId": "Light Framework",
+      "categoryId": "Light Framework",
       "desc": "Techniques, strategies and system design",
       "createDate": "2015-01-11T20:19:37.641"
     },
@@ -303,7 +303,7 @@
     "data": {
       "host": "www.networknt.com",
       "createUserId": "stevehu",
-      "forumId": "OmniChannel",
+      "categoryId": "OmniChannel",
       "desc": "Application, architecture and experience",
       "createDate": "2015-01-11T20:21:03.260"
     },
@@ -322,7 +322,7 @@
       "host": "www.networknt.com",
       "parent": "Light Framework",
       "createUserId": "stevehu",
-      "forumId": "Component",
+      "categoryId": "Component",
       "desc": "Web Component that is implemented with AngularJS directive",
       "createDate": "2015-01-11T20:22:12.122"
     },
@@ -341,7 +341,7 @@
       "host": "www.networknt.com",
       "parent": "Light Framework",
       "createUserId": "stevehu",
-      "forumId": "View",
+      "categoryId": "View",
       "desc": "Smallest rendering unit that consists of web components",
       "createDate": "2015-01-11T20:23:14.991"
     },
@@ -360,7 +360,7 @@
       "host": "www.networknt.com",
       "parent": "Light Framework",
       "createUserId": "stevehu",
-      "forumId": "Application",
+      "categoryId": "Application",
       "desc": "Consists of multiple views with routing relationship to perform certain function",
       "createDate": "2015-01-11T20:25:15.731"
     },

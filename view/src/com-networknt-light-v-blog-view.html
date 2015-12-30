@@ -52,8 +52,8 @@ angular.module('lightApp').controller('com.networknt.light.BlogViewCtrl', ['$sco
 
     $scope.post = function () {
         modelDataService.setModelData(null); // reset the modelDataService variable.
-        //$location.path("/form/com.networknt.light.blog.post.add/" + $scope.blogId);
-        $location.path("/page/com-networknt-light-v-blog-post-editor/" + $scope.blogId);
+        //$location.path("/form/com.networknt.light.blog.post.add/" + $scope.categoryId);
+        $location.path("/page/com-networknt-light-v-blog-post-editor/" + $scope.categoryId);
     };
 
     $scope.goToBlogHome = function () {
@@ -79,7 +79,7 @@ angular.module('lightApp').controller('com.networknt.light.BlogViewCtrl', ['$sco
         <div class="col-xs-6 col-sm-6 col-md-6 column text-left">
             <ol class="breadcrumb" style="background-color:white; padding-left:0px;">
                 <li><a href ng-click="goToBlogHome()" style="text-decoration:none;">Blogs</a></li>
-                <li class="active">{{blog.blogId}}</li>
+                <li class="active">{{blog.categoryId}}</li>
             </ol>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6 column text-right">

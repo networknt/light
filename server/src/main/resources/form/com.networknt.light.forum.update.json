@@ -14,11 +14,11 @@
     "type": "object",
     "title": "Forum",
     "required": [
-      "forumId",
+      "categoryId",
       "description"
     ],
     "properties": {
-      "forumId": {
+      "categoryId": {
         "title": "Forum Id",
         "type": "string"
       },
@@ -40,7 +40,7 @@
     }
   },
   "form": [
-    "forumId",
+    "categoryId",
     "description",
     {
       "key": "in_Own",

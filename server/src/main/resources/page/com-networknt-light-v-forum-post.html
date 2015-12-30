@@ -11,7 +11,7 @@
         $scope.forums = [];
 
         $scope.fetchResult = function () {
-            $scope.getForumPost.data.forumId = modelDataService.getModelData();
+            $scope.getForumPost.data.categoryId = modelDataService.getModelData();
             modelDataService.setModelData(null); // reset the modelDataService variable.
             $http.post('api/rs', $scope.getForumPost)
                     .success(function (result, status, headers, config) {
@@ -22,7 +22,7 @@
         $scope.fetchResult();
 
         $scope.post = function () {
-            $location.path("/form/com.networknt.light.forum.post.add/" + $scope.getForumPost.data.forumId);
+            $location.path("/form/com.networknt.light.forum.post.add/" + $scope.getForumPost.data.categoryId);
         };
 
         $scope.view = function (post) {

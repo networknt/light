@@ -87,7 +87,7 @@ var Catalog = React.createClass({
                             <Panel collapsible expanded={this.state.categoryTreeOpen}>
                                 <ul className="category-tree">
                                     {this.state.catalog.map(function(category) {
-                                        return <TreeNode key={category.catalogId}
+                                        return <TreeNode key={category.categoryId}
                                                          catalog={category}
                                                          onCategorySelect={this.onSelect}/>;
                                     }.bind(this))}

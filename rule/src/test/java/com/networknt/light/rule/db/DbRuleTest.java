@@ -109,6 +109,21 @@ public class DbRuleTest extends TestCase {
                 assertTrue(ruleResult);
             }
 
+            // execute commands by remove Test class to clean up first.
+            {
+                jsonMap = mapper.readValue(delSchema,
+                        new TypeReference<HashMap<String, Object>>() {
+                        });
+                jsonMap.put("payload", ownerToken.getPayload());
+                ExecSchemaCmdRule rule = new ExecSchemaCmdRule();
+                ruleResult = rule.execute(jsonMap);
+                assertTrue(ruleResult);
+                Map<String, Object> eventMap = (Map<String, Object>) jsonMap.get("eventMap");
+                ExecSchemaCmdEvRule evRule = new ExecSchemaCmdEvRule();
+                ruleResult = evRule.execute(eventMap);
+                //assertTrue(ruleResult);
+            }
+
             // execute commands to add Test class, property and index
             {
                 jsonMap = mapper.readValue(addSchema,

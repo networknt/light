@@ -54,7 +54,7 @@ var BlogItem = React.createClass({
         return (
             <li className="blog">
                 <div className="blog__title">
-                    <Link to="blog" params={ {blogId: this.props.blog.id} }>
+                    <Link to="blog" params={ {categoryId: this.props.blog.id} }>
             {this.props.blog.label}
                     </Link>
                 </div>

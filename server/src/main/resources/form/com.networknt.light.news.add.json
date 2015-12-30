@@ -14,11 +14,11 @@
     "type": "object",
     "title": "News",
     "required": [
-      "newsId",
+      "categoryId",
       "description"
     ],
     "properties": {
-      "newsId": {
+      "categoryId": {
         "title": "News Id",
         "type": "string"
       },
@@ -40,7 +40,7 @@
     }
   },
   "form": [
-    "newsId",
+    "categoryId",
     "description",
     {
       "key": "in_Own",

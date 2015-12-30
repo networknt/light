@@ -25,7 +25,7 @@
             },
             {
                 title: 'Blog Id',
-                value: 'blogId'
+                value: 'categoryId'
             },
             {
                 title: 'Description',
@@ -115,7 +115,7 @@
                         <tr>
                             <td></td>
                             <td><input ng-model="filter.host" type="text" /></td>
-                            <td><input ng-model="filter.blogId" type="text" /></td>
+                            <td><input ng-model="filter.categoryId" type="text" /></td>
                             <td><input ng-model="filter.description" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
                             <td><input ng-model="filter.createDate" type="text" /></td>
@@ -125,7 +125,7 @@
                         <tr ng-repeat="blog in blogs | filter: filter | orderBy: sort.sortedBy">
                             <td><a href ng-click="delete(blog)">Delete</a></td>
                             <td>{{blog.host}}</td>
-                            <td><a href ng-click="update(blog)">{{blog.blogId}}</a></td>
+                            <td><a href ng-click="update(blog)">{{blog.categoryId}}</a></td>
                             <td>{{blog.description}}</td>
                             <td>{{blog.createUserId}}</td>
                             <td>{{blog.createDate}}</td>

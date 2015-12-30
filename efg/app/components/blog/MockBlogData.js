@@ -5,7 +5,7 @@ module.exports = {
                 "@rid":"#33:12",
                 "host":"example",
                 "description":"New and improved??",
-                "blogId":"The new blog ID",
+                "categoryId":"The new blog ID",
                 "createDate":"2015-05-22T00:22:37.607",
                 "$$hashKey":"object:241"
             },
@@ -13,7 +13,7 @@ module.exports = {
                 "@rid":"#33:1",
                 "host":"example",
                 "description":"sdgasdgag",
-                "blogId":"asdga",
+                "categoryId":"asdga",
                 "createDate":"2015-05-02T12:52:20.121",
                 "out_HasPost":["#36:9","#36:10","#36:11"],
                 "out_Own":[
@@ -21,7 +21,7 @@ module.exports = {
                         "@rid":"#33:8",
                         "host":"example",
                         "description":"fgjdfgjdj",
-                        "blogId":"hdfgjd",
+                        "categoryId":"hdfgjd",
                         "createDate":"2015-05-02T15:57:28.789",
                         "in_Own":["#33:1"],
                         "out_Own":[
@@ -29,7 +29,7 @@ module.exports = {
                                 "@rid":"#33:9",
                                 "host":"example",
                                 "description":"dfhsdfhsdf",
-                                "blogId":"dgsdfhs",
+                                "categoryId":"dgsdfhs",
                                 "createDate":"2015-05-02T19:15:53.034",
                                 "in_Own":["#33:8"],
                                 "out_Own":[
@@ -37,7 +37,7 @@ module.exports = {
                                         "@rid":"#33:11",
                                         "host":"example",
                                         "description":"asdgasdg",
-                                        "blogId":"sdfhsdfhs",
+                                        "categoryId":"sdfhsdfhs",
                                         "createDate":"2015-05-02T21:22:25.813",
                                         "in_Own":["#33:9"]
                                     }
@@ -47,7 +47,7 @@ module.exports = {
                                 "@rid":"#33:10",
                                 "host":"example",
                                 "description":"dgasdgasdg",
-                                "blogId":"asdsdfhgasdg",
+                                "categoryId":"asdsdfhgasdg",
                                 "createDate":"2015-05-02T21:19:58.117",
                                 "in_Own":["#33:8"]
                             }
@@ -56,7 +56,7 @@ module.exports = {
                             "@rid":"#33:1",
                             "host":"example",
                             "description":"sdgasdgag",
-                            "blogId":"asdga",
+                            "categoryId":"asdga",
                             "createDate":"2015-05-02T12:52:20.121",
                             "out_HasPost":["#36:9","#36:10","#36:11"]
                         }
@@ -67,28 +67,28 @@ module.exports = {
                 "@rid":"#33:2",
                 "host":"example",
                 "description":"asdgasdg",
-                "blogId":"asdgasdg",
+                "categoryId":"asdgasdg",
                 "createDate":"2015-05-02T12:52:23.067",
                 "$$hashKey":"object:243"
             },{
                 "@rid":"#33:3",
                 "host":"example",
                 "description":"sdgasdga",
-                "blogId":"asdgasdga",
+                "categoryId":"asdgasdga",
                 "createDate":"2015-05-02T12:52:25.675",
                 "$$hashKey":"object:244"
             },{
                 "@rid":"#33:7",
                 "host":"example",
                 "description":"dfgjdfgjdj",
-                "blogId":"dfgjdfgjdfgj",
+                "categoryId":"dfgjdfgjdfgj",
                 "createDate":"2015-05-02T12:52:43.251",
                 "$$hashKey":"object:245"
             },{
                 "@rid":"#33:5",
                 "host":"example",
                 "description":"jfdgdfjhdfgjh",
-                "blogId":"dfgjdsdfsdfh",
+                "categoryId":"dfgjdsdfsdfh",
                 "createDate":"2015-05-02T12:52:36.714",
                 "$$hashKey":"object:246"
             }
@@ -146,7 +146,7 @@ module.exports = {
                 "@rid":"#33:12",
                 "host":"example",
                 "description":"New and improved??",
-                "blogId":"The new blog ID",
+                "categoryId":"The new blog ID",
                 "createDate":"2015-05-22T00:22:37.607",
                 "$$hashKey":"object:241"
             },
@@ -154,7 +154,7 @@ module.exports = {
                 "@rid":"#33:1",
                 "host":"example",
                 "description":"sdgasdgag",
-                "blogId":"asdga",
+                "categoryId":"asdga",
                 "createDate":"2015-05-02T12:52:20.121",
                 "out_HasPost":["#36:9","#36:10","#36:11"],
                 "out_Own":[
@@ -162,7 +162,7 @@ module.exports = {
                         "@rid":"#33:8",
                         "host":"example",
                         "description":"fgjdfgjdj",
-                        "blogId":"hdfgjd",
+                        "categoryId":"hdfgjd",
                         "createDate":"2015-05-02T15:57:28.789",
                         "in_Own":["#33:1"],
                         "out_Own":[
@@ -170,7 +170,7 @@ module.exports = {
                                 "@rid":"#33:9",
                                 "host":"example",
                                 "description":"dfhsdfhsdf",
-                                "blogId":"dgsdfhs",
+                                "categoryId":"dgsdfhs",
                                 "createDate":"2015-05-02T19:15:53.034",
                                 "in_Own":["#33:8"],
                                 "out_Own":[
@@ -178,7 +178,7 @@ module.exports = {
                                         "@rid":"#33:11",
                                         "host":"example",
                                         "description":"asdgasdg",
-                                        "blogId":"sdfhsdfhs",
+                                        "categoryId":"sdfhsdfhs",
                                         "createDate":"2015-05-02T21:22:25.813",
                                         "in_Own":["#33:9"]
                                     }
@@ -188,7 +188,7 @@ module.exports = {
                                 "@rid":"#33:10",
                                 "host":"example",
                                 "description":"dgasdgasdg",
-                                "blogId":"asdsdfhgasdg",
+                                "categoryId":"asdsdfhgasdg",
                                 "createDate":"2015-05-02T21:19:58.117",
                                 "in_Own":["#33:8"]
                             }
@@ -197,7 +197,7 @@ module.exports = {
                             "@rid":"#33:1",
                             "host":"example",
                             "description":"sdgasdgag",
-                            "blogId":"asdga",
+                            "categoryId":"asdga",
                             "createDate":"2015-05-02T12:52:20.121",
                             "out_HasPost":["#36:9","#36:10","#36:11"]
                         }
@@ -208,28 +208,28 @@ module.exports = {
                 "@rid":"#33:2",
                 "host":"example",
                 "description":"asdgasdg",
-                "blogId":"asdgasdg",
+                "categoryId":"asdgasdg",
                 "createDate":"2015-05-02T12:52:23.067",
                 "$$hashKey":"object:243"
             },{
                 "@rid":"#33:3",
                 "host":"example",
                 "description":"sdgasdga",
-                "blogId":"asdgasdga",
+                "categoryId":"asdgasdga",
                 "createDate":"2015-05-02T12:52:25.675",
                 "$$hashKey":"object:244"
             },{
                 "@rid":"#33:7",
                 "host":"example",
                 "description":"dfgjdfgjdj",
-                "blogId":"dfgjdfgjdfgj",
+                "categoryId":"dfgjdfgjdfgj",
                 "createDate":"2015-05-02T12:52:43.251",
                 "$$hashKey":"object:245"
             },{
                 "@rid":"#33:5",
                 "host":"example",
                 "description":"jfdgdfjhdfgjh",
-                "blogId":"dfgjdsdfsdfh",
+                "categoryId":"dfgjdsdfsdfh",
                 "createDate":"2015-05-02T12:52:36.714",
                 "$$hashKey":"object:246"
             }

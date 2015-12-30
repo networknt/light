@@ -25,10 +25,10 @@
             // Otherwise it will be overwritten with null.
             console.log('modelData', modelDataService.getModelData());
             if ($scope.getForumPost.data.id == null) {
-                if (modelData != null && modelData.forumId == null) {
+                if (modelData != null && modelData.categoryId == null) {
                     $scope.getForumPost.data.id = modelData;
                 } else {
-                    $scope.getForumPost.data.id = modelDataService.getModelData().forumId;
+                    $scope.getForumPost.data.id = modelDataService.getModelData().categoryId;
                 }
             }
             console.log('posting with:', $scope.getForumPost);
@@ -60,7 +60,7 @@
 
         $scope.view = function(post) {
             modelDataService.setModelData({
-                forumId: $scope.getForumPost.data.id,
+                categoryId: $scope.getForumPost.data.id,
                 post: post
             });
             $location.path("/page/com-networknt-light-v-forum-post-view");

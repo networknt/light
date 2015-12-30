@@ -38,10 +38,10 @@
 
         $scope.treeFilter = $filter('uiTreeFilter');
 
-        $scope.supportedFields = ['forumId', 'description'];
+        $scope.supportedFields = ['categoryId', 'description'];
 
-        $scope.gotoForum = function (forumId) {
-            modelDataService.setModelData(forumId);
+        $scope.gotoForum = function (categoryId) {
+            modelDataService.setModelData(categoryId);
             $location.path("/page/com-networknt-light-v-forum-post");
         }
 
@@ -63,7 +63,7 @@
                        ng-click="toggle(this)"><span class="glyphicon"
                                                      ng-class="{'glyphicon glyphicon-plus': collapsed, 'glyphicon glyphicon-minus': !collapsed}"></span></a>
                     <!--{{node.id | highlight:pattern | trust}}-->
-                    <a href ng-click="gotoForum(node.forumId)" ng-bind-html="node.forumId | highlight:pattern | trust"></a>
+                    <a href ng-click="gotoForum(node.categoryId)" ng-bind-html="node.categoryId | highlight:pattern | trust"></a>
                     <small ng-bind-html="node.description | highlight:pattern | trust"></small>
                 </div>
                 <ol ui-tree-nodes="" ng-model="node.out_Own" ng-class="{hidden: collapsed}">

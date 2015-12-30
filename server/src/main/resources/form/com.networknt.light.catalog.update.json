@@ -14,11 +14,11 @@
     "type": "object",
     "title": "Catalog",
     "required": [
-      "catalogId",
+      "categoryId",
       "description"
     ],
     "properties": {
-      "catalogId": {
+      "categoryId": {
         "title": "Catalog Id",
         "type": "string"
       },
@@ -40,7 +40,7 @@
     }
   },
   "form": [
-    "catalogId",
+    "categoryId",
     "description",
     {
       "key": "in_Own",

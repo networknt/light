@@ -14,11 +14,11 @@
     "type": "object",
     "title": "Blog",
     "required": [
-      "blogId",
+      "categoryId",
       "description"
     ],
     "properties": {
-      "blogId": {
+      "categoryId": {
         "title": "Blog Id",
         "type": "string"
       },
@@ -40,7 +40,7 @@
     }
   },
   "form": [
-    "blogId",
+    "categoryId",
     "description",
     {
       "key": "in_Own",
