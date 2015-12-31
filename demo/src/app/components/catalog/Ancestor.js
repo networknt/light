@@ -8,9 +8,7 @@ var Ancestor = React.createClass({
 
     render: function() {
         return (
-            <div>
-                {this.props.ancestor.categoryId}
-            </div>
+            <span>{this.props.ancestor.categoryId + '/'}</span>
         );
     }
 });
