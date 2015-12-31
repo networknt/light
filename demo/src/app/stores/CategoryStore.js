@@ -6,60 +6,8 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _category = [
-    {
-        "@rid": "#43:0",
-        "host": "example",
-        "description": "Computer Component",
-        "categoryId": "computer",
-        "createDate": "2015-09-25T02:32:54.765",
-        "out_Own": [
-            {
-                "@rid": "#43:1",
-                "host": "example",
-                "description": "Computer Case",
-                "categoryId": "case",
-                "createDate": "2015-09-25T02:33:25.915",
-                "in_Own": [
-                    "#43:0"
-                ],
-                "out_Own": [
-                    {
-                        "@rid": "#43:3",
-                        "host": "example",
-                        "description": "Desktop Case",
-                        "categoryId": "desktopCase",
-                        "createDate": "2015-09-25T02:34:11.850",
-                        "in_Own": [
-                            "#43:1"
-                        ]
-                    },
-                    {
-                        "@rid": "#43:4",
-                        "host": "example",
-                        "description": "Server Case",
-                        "categoryId": "serverCase",
-                        "createDate": "2015-09-25T02:34:29.776",
-                        "in_Own": [
-                            "#43:1"
-                        ]
-                    }
-                ]
-            },
-            {
-                "@rid": "#43:2",
-                "host": "example",
-                "description": "Hard Drive",
-                "categoryId": "hardDrive",
-                "createDate": "2015-09-25T02:33:49.007",
-                "in_Own": [
-                    "#43:0"
-                ]
-            }
-        ]
-    }
-];
-
+var _category = [];
+var _selected;
 var _errors = [];
 
 
@@ -81,6 +29,10 @@ var CategoryStore = assign({}, EventEmitter.prototype, {
         return _category;
     },
 
+    getSelected: function() {
+        return _selected;
+    },
+
     getErrors: function() {
         return _errors;
     }
@@ -90,13 +42,15 @@ var CategoryStore = assign({}, EventEmitter.prototype, {
 CategoryStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.GET_CATEGORY_TREE_RESPONSE:
-            //console.log('FormStore RECEIVE_FORM', payload.json);
-            //console.log('FormStore RECEIVE_FORM', payload.json.formId);
-            //console.log('FormStore RECEIVE_FORM', _forms);
+        case ActionTypes.GET_CATALOG_TREE_RESPONSE:
+        case ActionTypes.GET_BLOG_TREE_RESPONSE:
+        case ActionTypes.GET_NEWS_TREE_RESPONSE:
+        case ActionTypes.GET_FORUM_TREE_RESPONSE:
             _category = payload.json;
+            _selected = _category[0]['@rid'];
             CategoryStore.emitChange();
             break;
+
     }
     return true;
 });

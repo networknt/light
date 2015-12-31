@@ -48,7 +48,7 @@ module.exports = {
         });
     },
 
-    getCatalogTree: function(json, error) {
+    getCatalogTreeResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_CATALOG_TREE_RESPONSE,
             json: json,

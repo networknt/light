@@ -38,6 +38,7 @@ module.exports = {
         REDIRECT: null,
 
         // Blog
+        GET_BLOG_TREE_RESPONSE: null,
         LOAD_BLOGS: null,
         RECEIVE_BLOGS: null,
         LOAD_BLOG: null,
@@ -45,7 +46,13 @@ module.exports = {
         CREATE_BLOG: null,
         RECEIVE_CREATED_BLOG: null,
 
-        // Commerce
+        // News
+        GET_NEWS_TREE_RESPONSE: null,
+
+        // Forum
+        GET_FORUM_TREE_RESPONSE: null,
+
+        // Catalog
         GET_CATALOG_TREE: null,
         GET_CATALOG_TREE_RESPONSE: null,
         GET_CATALOG_PRODUCT_RESPONSE: null,

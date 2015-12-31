@@ -13,15 +13,9 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 var _ = require('lodash');
 
-var _selected = null;
-var _node = null;
-var _onCategorySelect = null;
-
 var _products = [];
 var _ancestors = [];
 var _allowUpdate = false;
-var _catalog = [];
-var _selectedCatalog = null;
 var _offset = 0;
 
 
@@ -124,12 +118,9 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             ProductStore.emitChange();
             break;
 
-        case ActionTypes.RECEIVE_CATALOG:
-            _catalog = payload.json;
-            //console.log('ProductStore _catalog = ', _catalog);
-            _selectedCatalog = _catalog[0]['@rid'];
-            //console.log('ProductStore _selectedCatalog', _selectedCatalog);
-            WebAPIUtils.loadProducts(_selectedCatalog);
+        case ActionTypes.GET_CATALOG_TREE_RESPONSE:
+            console.log('ProductStore GET_CATALOG_TREE_RESPONSE = ', payload.json);
+            WebAPIUtils.getCatalogProduct(payload.json[0]['@rid']);
             //ProductStore.emitChange();
             break;
 
@@ -142,20 +133,6 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             //console.log('ProductStore _ancestors = ', _ancestors);
             //console.log('ProductStore _allowUpdate = ', _allowUpdate);
             ProductStore.emitChange();
-            break;
-
-        case ActionTypes.SELECT_CATALOG:
-            _selectedCatalog = payload.rid;
-            _selected = payload.selected;
-            _node = payload.node;
-            _onCategorySelect = payload.onCategorySelect;
-
-            //console.log('ProductStore.SELECT_CATALOG _selectedCatalog', _selectedCatalog);
-            //console.log('ProductStore.SELECT_CATALOG _selected', _selected);
-            //console.log('ProductStore.SELECT_CATALOG _node', _node);
-            //console.log('ProductStore.SELECT_CATALOG _onCategorySelect', _onCategorySelect);
-            //Wait until products is updated from db.
-            //ProductStore.emitChange();
             break;
 
         default:

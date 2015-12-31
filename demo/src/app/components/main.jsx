@@ -14,9 +14,11 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import { History } from 'react-router'
 import AuthStore from '../stores/AuthStore';
 import CartStore from '../stores/CartStore';
+import CategoryStore from '../stores/CategoryStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
 import ProductActionCreators from '../actions/ProductActionCreators';
+import CircularProgress from 'material-ui/lib/circular-progress';
 
 // Define menu items for LeftNav
 let menuItems = [
@@ -51,59 +53,7 @@ const Main = React.createClass({
             muiTheme: muiTheme,
             isLoggedIn: AuthStore.isLoggedIn,
             cartItemCount: 0,
-            category: [
-                {
-                    "@rid": "#43:0",
-                    "host": "example",
-                    "description": "Computer Component",
-                    "categoryId": "computer",
-                    "createDate": "2015-09-25T02:32:54.765",
-                    "out_Own": [
-                        {
-                            "@rid": "#43:1",
-                            "host": "example",
-                            "description": "Computer Case",
-                            "categoryId": "case",
-                            "createDate": "2015-09-25T02:33:25.915",
-                            "in_Own": [
-                                "#43:0"
-                            ],
-                            "out_Own": [
-                                {
-                                    "@rid": "#43:3",
-                                    "host": "example",
-                                    "description": "Desktop Case",
-                                    "categoryId": "desktopCase",
-                                    "createDate": "2015-09-25T02:34:11.850",
-                                    "in_Own": [
-                                        "#43:1"
-                                    ]
-                                },
-                                {
-                                    "@rid": "#43:4",
-                                    "host": "example",
-                                    "description": "Server Case",
-                                    "categoryId": "serverCase",
-                                    "createDate": "2015-09-25T02:34:29.776",
-                                    "in_Own": [
-                                        "#43:1"
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "@rid": "#43:2",
-                            "host": "example",
-                            "description": "Hard Drive",
-                            "categoryId": "hardDrive",
-                            "createDate": "2015-09-25T02:33:49.007",
-                            "in_Own": [
-                                "#43:0"
-                            ]
-                        }
-                    ]
-                }
-            ]
+            category: []
         };
     },
 
@@ -112,6 +62,7 @@ const Main = React.createClass({
         newMuiTheme.inkBar.backgroundColor = Colors.yellow200;
         AuthStore.addChangeListener(this._userLoginChange);
         CartStore.addChangeListener(this._cartItemChange);
+        CategoryStore.addChangeListener(this._categoryChange);
         this.setState({
             muiTheme: newMuiTheme
         });
@@ -120,6 +71,7 @@ const Main = React.createClass({
     componentWillUnmount: function() {
         AuthStore.removeChangeListener(this._userLoginChange);
         CartStore.removeChangeListener(this._cartItemChange);
+        CategoryStore.removeChangeListener(this._categoryChange);
     },
 
     getChildContext() {
@@ -141,6 +93,12 @@ const Main = React.createClass({
         })
     },
 
+    _categoryChange: function() {
+        this.setState({
+            category: CategoryStore.getCategory()
+        })
+    },
+
     handleLeftNavToggle() {
         this.setState({leftNavOpen: !this.state.leftNavOpen});
     },
@@ -148,16 +106,23 @@ const Main = React.createClass({
     onCategorySelect(node) {
         //console.log('onCategorySelect', node.props.category['@rid'] + ' ' + node.props.category.categoryId);
         // based on the current route, select the entities from actions.
-        if(this.props.location.pathname === 'catalog') {
-            ProductActionCreators.getCatalogProduct(node.props.category['@rid']);
+        switch(this.props.location.pathname) {
+            case 'catalog':
+                ProductActionCreators.getCatalogProduct(node.props.category['@rid']);
+                break;
+            case 'blog':
+                break;
+            case 'forum':
+                break;
+            case 'news':
+                break;
         }
         //ProductActionCreators.selectCatalog(node, this.state.selected, this.props.onCategorySelect);
     },
 
     handleItemTouchTap(event, item) {
-        //console.log('event', event);
-        //console.log('item', item);
-        this.setState({leftNavOpen: false});
+        // clear category as context has switched. waiting for the new category to be loaded.
+        this.setState({leftNavOpen: false, category: []});
         this.props.history.push(item.props.value);
     },
 
@@ -203,12 +168,13 @@ const Main = React.createClass({
             </div>
         );
 
-        //console.log('history', this.props.history);
-        //console.log('location', this.props.location);
-        //console.log('children', this.props.children);
-        return (
-            <div id="page_container">
-                <LeftNav open={this.state.leftNavOpen} docked={false} onRequestChange={leftNavOpen => this.setState({leftNavOpen})}>
+        var leftNavContent;
+        switch(this.props.location.pathname) {
+            case 'blog':
+            case 'news':
+            case 'forum':
+            case 'catalog':
+                leftNavContent = this.state.category.length > 0 ? (
                     <div>
                         <ul className="category-tree">
                             {this.state.category.map(function(item) {
@@ -218,6 +184,26 @@ const Main = React.createClass({
                             }.bind(this))}
                         </ul>
                     </div>
+                ) : (<CircularProgress mode="indeterminate"/>);
+                break;
+            case 'admin':
+                leftNavContent = (<div>Not implemented yet</div>);
+                break;
+            case 'user':
+                leftNavContent = (<div>Not implemented yet</div>);
+                break;
+            default:
+                leftNavContent = (<div>No Context Nav</div>);
+        }
+
+
+        //console.log('history', this.props.history);
+        //console.log('location', this.props.location);
+        //console.log('children', this.props.children);
+        return (
+            <div id="page_container">
+                <LeftNav open={this.state.leftNavOpen} docked={false} onRequestChange={leftNavOpen => this.setState({leftNavOpen})}>
+                    {leftNavContent}
                 </LeftNav>
                 <header>
                     <AppBar title='Edible Forest Garden' onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0}/>

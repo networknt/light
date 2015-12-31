@@ -161,10 +161,7 @@ module.exports = {
         var getCatalogTree = {
             category: 'catalog',
             name: 'getCatalogTree',
-            readOnly: true,
-            data: {
-                host: AppConstants.host
-            }
+            readOnly: true
         };
 
         //console.log('WebAPIUtils loadCatalog is called', getCatalogTree);
