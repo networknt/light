@@ -75,7 +75,6 @@ var CheckoutButton = React.createClass({
         data.cartItems = this.state.cartItems;
 
         AddressActionCreators.confirmShippingAddress(data);
-
         this.setState({
             screen: 'shippingTax',
             title: 'Shipping and Tax'
@@ -83,16 +82,12 @@ var CheckoutButton = React.createClass({
     },
 
     onUpdateShippingAddress: function() {
-        // call API to update
-        //console.log('onUpdateShippingAddress', this.state.shippingAddress);
-        //console.log('onUpdateShippingAddress cartItems', this.state.cartItems);
         var data = {};
 
         data.shippingAddress = this.state.shippingAddress;
         data.cartTotal = this.state.cartTotal;
         data.cartItems = this.state.cartItems;
 
-        //console.log('onUpdateShippingAddres data = ', data);
         AddressActionCreators.updateShippingAddress(data);
         this.setState({
             screen: 'shippingTax',

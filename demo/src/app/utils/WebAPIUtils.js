@@ -252,7 +252,7 @@ module.exports = {
     confirmShippingAddress: function(data) {
         var confirmAddress = {
             category: 'shipping',
-            name: 'cnfdAddress',
+            name: 'cnfAddress',
             readOnly: true,
             data: data
         };
