@@ -42,6 +42,11 @@ var CheckoutButton = React.createClass({
         this.setState({ cartOpen: false, screen: 'cart', title: 'Cart'});
     },
 
+    handleCartReset: function() {
+        CartActionCreators.reset();
+        this.setState({ cartOpen: false, screen: 'cart', title: 'Cart'});
+    },
+
     handleCartTouchTap(event) {
         if(AuthStore.isLoggedIn()) {
             this.setState({cartOpen: true});
@@ -184,7 +189,7 @@ var CheckoutButton = React.createClass({
         } else {
             contents =  <CheckoutDone />
             actions.length = 0;
-            actions.push(<RaisedButton label="Close" primary={true} onTouchTap={this.handleCartClose} />);
+            actions.push(<RaisedButton label="Close" primary={true} onTouchTap={this.handleCartReset} />);
         }
 
         var cartHeaderIconClasses = classNames({

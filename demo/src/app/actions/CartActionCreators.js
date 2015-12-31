@@ -33,6 +33,12 @@ module.exports = {
         });
     },
 
+    reset: function () {
+        AppDispatcher.dispatch({
+            type: ActionTypes.RESET_CART_ITEM,
+        });
+    },
+
     toggleCart: function(isOpen) {
         AppDispatcher.dispatch({
             type: ActionTypes.TOGGLE_CART

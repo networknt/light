@@ -157,6 +157,11 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
             CartStore.emitChange();
             break;
 
+        case ActionTypes.RESET_CART_ITEM:
+            _cartItems.length = 0;
+            CartStore.emitChange();
+            break;
+
         default:
             return true;
 
