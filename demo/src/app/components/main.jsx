@@ -18,6 +18,7 @@ import CategoryStore from '../stores/CategoryStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
 import ProductActionCreators from '../actions/ProductActionCreators';
+import AuthActionCreators from '../actions/AuthActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 // Define menu items for LeftNav
@@ -63,6 +64,7 @@ const Main = React.createClass({
         AuthStore.addChangeListener(this._userLoginChange);
         CartStore.addChangeListener(this._cartItemChange);
         CategoryStore.addChangeListener(this._categoryChange);
+        AuthActionCreators.init();
         this.setState({
             muiTheme: newMuiTheme
         });
