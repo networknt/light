@@ -107,6 +107,15 @@ const Main = React.createClass({
 
     onCategorySelect(node) {
         //console.log('onCategorySelect', node.props.category['@rid'] + ' ' + node.props.category.categoryId);
+        // set the select state for the selected category
+        if (this.state.selected && this.state.selected.isMounted()) {
+            this.state.selected.setState({selected: false});
+        }
+        this.setState({selected: node});
+        node.setState({selected: true});
+        if (this.props.onCategorySelect) {
+            this.props.onCategorySelect(node);
+        }
         // based on the current route, select the entities from actions.
         switch(this.props.location.pathname) {
             case 'catalog':
