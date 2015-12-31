@@ -39,8 +39,11 @@ module.exports = {
 
         // Blog
         GET_BLOG_TREE_RESPONSE: null,
+        GET_BLOG_POST_RESPONSE: null,
+        GET_BLOG: null,
+        GET_BLOG_RESPONSE: null,
+
         LOAD_BLOGS: null,
-        RECEIVE_BLOGS: null,
         LOAD_BLOG: null,
         RECEIVE_BLOG: null,
         CREATE_BLOG: null,

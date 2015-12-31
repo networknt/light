@@ -108,36 +108,67 @@ module.exports = {
         });
     },
 
-    loadBlogs: function() {
-        var getBlogs = {
-            category: 'demo',
-            name: 'getDropdown',
+    getBlogTree: function() {
+        let getBlogTree = {
+            category: 'blog',
+            name: 'getBlogTree',
             readOnly: true
-        }
-        //console.log('WebAPIUtils logBlogs is called');
+        };
         $.ajax({
             type: 'GET',
             url: '/api/rs',
-            data:  { cmd: encodeURIComponent(JSON.stringify(getBlogs))}
+            data:  { cmd: encodeURIComponent(JSON.stringify(getBlogTree))}
         }).done(function(data) {
             //console.log('done', data);
-            ServerActionCreators.receiveBlogs(data, null);
+            ServerActionCreators.getBlogTreeResponse(data, null);
 
         }).fail(function(error) {
             //console.log('error', error);
-            ServerActionCreators.receiveBlogs(null, error);
+            ServerActionCreators.getBlogTreeResponse(null, error);
         });
     },
 
-    loadBlog: function(categoryId) {
-        request.get(APIEndpoints.STORIES + '/' + storyId)
-            .set('Accept', 'application/json')
-            .end(function(error, res){
-                if (res) {
-                    var json = JSON.parse(res.text);
-                    ServerActionCreators.receiveBlog(json);
-                }
-            });
+    getBlogPost: function(rid) {
+        let getBlogPost = {
+            category: 'blog',
+            name: 'getBlogPost',
+            readOnly: true,
+            data: {
+                pageSize: 10,
+                pageNo: 1,
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getBlogPost))}
+        }).done(function(data) {
+            //console.log('product', data);
+            ServerActionCreators.getBlogPostResponse(data, null);
+
+        }).fail(function(error) {
+            //console.log('error', error);
+            ServerActionCreators.getBlogPostResponse(null, error);
+        });
+    },
+
+    getBlog: function() {
+        let getBlog = {
+            category: 'blog',
+            name: 'getBlog',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getBlog))}
+        }).done(function(data) {
+            ServerActionCreators.getBlogResponse(data, null);
+
+        }).fail(function(error) {
+            ServerActionCreators.getBlogResponse(null, error);
+        });
     },
 
     createBlog: function(title, body) {
@@ -157,14 +188,32 @@ module.exports = {
             });
     },
 
+    delBlog: function(blog) {
+        let delBlog = {
+            category : 'blog',
+            name : 'delBlog',
+            readOnly: false,
+            data: blog
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(delBlog),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delBlogResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.delBlogResponse(null, error);
+        });
+    },
+
     getCatalogTree: function() {
         var getCatalogTree = {
             category: 'catalog',
             name: 'getCatalogTree',
             readOnly: true
         };
-
-        //console.log('WebAPIUtils loadCatalog is called', getCatalogTree);
         $.ajax({
             type: 'GET',
             url: '/api/rs',

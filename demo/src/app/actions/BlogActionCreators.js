@@ -9,19 +9,16 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    loadBlogs: function() {
-        AppDispatcher.dispatch({
-            type: ActionTypes.LOAD_BLOGS
-        });
-        WebAPIUtils.loadBlogs();
+    getBlogTree: function() {
+        WebAPIUtils.getBlogTree();
     },
 
-    loadBlog: function(categoryId) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.LOAD_BLOG,
-            categoryId: categoryId
-        });
-        WebAPIUtils.loadBlog(categoryId);
+    getBlog: function() {
+        WebAPIUtils.getBlog();
+    },
+
+    delBlog: function(blog) {
+        WebAPIUtils.delBlog(blog);
     },
 
     receiveBlog: function(json) {

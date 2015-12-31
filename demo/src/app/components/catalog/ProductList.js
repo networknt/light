@@ -5,7 +5,7 @@
 
 var React = require('react');
 var Product = require('./Product');
-var Ancestor = require('./Ancestor');
+var Ancestor = require('../Ancestor');
 
 function getProduct(product, index) {
     return (
@@ -34,7 +34,7 @@ var ProductList = React.createClass({
                 </div>
             </div>
         )
-    },
+    }
 
 });
 

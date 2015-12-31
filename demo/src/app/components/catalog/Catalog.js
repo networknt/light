@@ -17,8 +17,7 @@ var Catalog = React.createClass({
         return {
             products: [],
             ancestors: [],
-            allowUpdate: false,
-            categoryTreeOpen: true
+            allowUpdate: false
         };
     },
 

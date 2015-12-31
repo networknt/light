@@ -16,14 +16,6 @@ module.exports = {
         });
     },
 
-    receiveBlogs: function(json, error) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_BLOGS,
-            json: json,
-            error: error
-        });
-    },
-
     receiveMenu: function(json, error) {
         //console.log('ServerActionCreators receiveMenu', json);
         AppDispatcher.dispatch({
@@ -33,10 +25,36 @@ module.exports = {
         });
     },
 
-    receiveStory: function(json) {
+    getBlogTreeResponse: function(json, error) {
         AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_STORY,
-            json: json
+            type: ActionTypes.GET_BLOG_TREE_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getBlogPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_BLOG_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getBlogResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_BLOG_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    // TODO create a toaster component to display the result.
+    delBlogResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.DEL_BLOG_RESPONSE,
+            json: json,
+            error: error
         });
     },
 

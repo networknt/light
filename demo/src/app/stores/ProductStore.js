@@ -66,10 +66,6 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         return _catalog;
     },
 
-    getSelectedCatalog: function() {
-        return _selectedCatalog;
-    },
-
     getAncestors: function() {
         return _ancestors;
     },
@@ -80,18 +76,6 @@ var ProductStore = assign({}, EventEmitter.prototype, {
 
     getOffset: function() {
         return _offset;
-    },
-
-    getSelected: function() {
-        return _selected;
-    },
-
-    getNode: function() {
-        return _node;
-    },
-
-    getOnCategorySelect: function() {
-        return _onCategorySelect;
     }
 
 });

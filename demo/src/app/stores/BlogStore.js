@@ -1,56 +1,66 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
-var BlogConstants = require('../constants/BlogConstants');
-var _ = require('underscore');
+var ActionTypes = AppConstants.ActionTypes;
+var WebAPIUtils = require('../utils/WebAPIUtils.js');
 
-var _blogs = [];
+var CHANGE_EVENT = 'change';
+
 var _blogPosts = [];
-var _post = {};
+var _blogs = [];
+var _ancestors = [];
+var _allowUpdate = false;
 
 var BlogStore = _.extend({}, EventEmitter.prototype, {
-    getBlogs: function() {
-        return _blogs;
+
+    emitChange: function() {
+        this.emit(CHANGE_EVENT);
     },
+
+    addChangeListener: function(callback) {
+        this.on(CHANGE_EVENT, callback);
+    },
+
+    removeChangeListener: function(callback) {
+        this.removeListener(CHANGE_EVENT, callback);
+    },
+
 
     getBlogPosts: function() {
         return _blogPosts;
     },
 
-    getPost: function() {
-        return _post;
+    getBlogs: function () {
+        return _blogs;
     },
 
-    emitChange: function() {
-        this.emit(BlogConstants.ChangeEvents.BLOG_CHANGE_EVENT);
+    getAncestors: function() {
+        return _ancestors;
     },
 
-    addChangeListener: function(callback) {
-        this.on(BlogConstants.ChangeEvents.BLOG_CHANGE_EVENT, callback);
-    },
-
-    removeChangeListener: function(callback) {
-        this.removeListener(BlogConstants.ChangeEvents.BLOG_CHANGE_EVENT, callback);
+    getAllowUpdate: function() {
+        return _allowUpdate;
     }
 
 });
 
 AppDispatcher.register(function(payload) {
-    //console.log("BlogStore payload:", payload);
-    if (payload == null) return;
-    if (payload.type === BlogConstants.ActionTypes.BLOGS_RESPONSE) {
-        //console.log("BlogStore received BLOGS:", payload.json);
-        _blogs = payload.json;
-        BlogStore.emitChange();
-    } else if (payload.type === BlogConstants.ActionTypes.BLOG_POSTS_RESPONSE) {
-        //console.log("BlogStore received BLOG_POSTS:", payload.json);
-        _blogPosts = payload.json;
-        BlogStore.emitChange();
-    } else if (payload.type === BlogConstants.ActionTypes.BLOG_POST_RESPONSE) {
-        //console.log("BlogStore received BLOG_POST:", payload.json);
-        _post = payload.json;
-        BlogStore.emitChange();
+    console.log("BlogStore payload:", payload);
+
+    var type = payload.type;
+    switch(type) {
+        case ActionTypes.GET_BLOG_TREE_RESPONSE:
+            WebAPIUtils.getBlogPost(payload.json[0]['@rid']);
+            //ProductStore.emitChange();
+            break;
+
+        case ActionTypes.GET_BLOG_RESPONSE:
+            _blogs = payload.json;
+            BlogStore.emitChange();
+            break;
+
     }
+
     return true;
 });
 

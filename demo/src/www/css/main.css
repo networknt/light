@@ -26,12 +26,6 @@ body {
   line-height: 24px;
 }
 
-/* Used in our inline-styles.jsx as an example */
-.muidocs-checkbox-example {
-  border: 2px solid #FF9800;
-  background-color: #4CAF50;
-}
-
 /* used in the badge of shopping cart to display item count */
 .cart-badge {
   position: relative;
@@ -92,4 +86,38 @@ body {
   border: 1px solid black;
   content: "";
   cursor: default;
+}
+
+/* used in blog app */
+.blogRoot {
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  font-family: Roboto;
+}
+
+.blogLeftColumn {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+  min-width: 70%;
+}
+
+.blogRightColumn {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  padding-left: 20px;
+  padding-top: 10px;
+}
+
+@media (max-width: 64em) {
+  .blogRightColumn {
+    display: none;
+  }
+  .blogLeftColumn {
+    max-width: 100%;
+  }
 }

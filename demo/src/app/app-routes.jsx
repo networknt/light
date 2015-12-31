@@ -13,11 +13,13 @@ import Contact from './components/contact';
 import Signup from './components/signup';
 import Login from './components/login';
 import Logout from './components/logout';
-import Blog from './components/blog';
+import Blog from './components/blog/Blog';
 import News from './components/news';
 import Forum from './components/forum';
 import Catalog from './components/catalog/Catalog';
-import Admin from './components/admin';
+import Admin from './components/admin/AdminMenu';
+import BlogAdminHome from './components/admin/blog/BlogAdminHome';
+
 import User from './components/user';
 
 
@@ -43,6 +45,7 @@ const AppRoutes = (
     <Route path='forum' component={Forum} />
     <Route path='catalog' component={Catalog} />
     <Route path='admin' component={Admin} />
+    <Route path='admin/blogAdmin' component={BlogAdminHome} />
     <Route path='user' component={User} />
   </Route>
 );
