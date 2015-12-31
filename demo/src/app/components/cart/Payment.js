@@ -26,7 +26,7 @@ var Payment = React.createClass({
     },
 
     onPaymentMethodReceived: function (payload) {
-        console.log(payload);
+        //console.log(payload);
         PaymentActionCreators.addTransaction(payload, OrderStore.getOrderId());
         //this.props.onPlaceOrder();
     },
@@ -50,7 +50,7 @@ var Payment = React.createClass({
     },
 
     _onChangeOrderStore: function() {
-        console.log('OrderStore is changed', OrderStore.getOrder());
+        //console.log('OrderStore is changed', OrderStore.getOrder());
         if(OrderStore.getOrder()) {
             this.props.onPlaceOrder();
         }

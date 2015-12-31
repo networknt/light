@@ -47,13 +47,13 @@ OrderStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.RECEIVE_ADD_ORDER:
-            console.log('OrderStore RECEIVE_ADD_ORDER total = ', payload.json.total);
+            //console.log('OrderStore RECEIVE_ADD_ORDER total = ', payload.json.total);
             _total = payload.json.total;
             _orderId = payload.json.orderId;
             OrderStore.emitChange();
             break;
         case ActionTypes.RECEIVE_ADD_TRANSACTION:
-            console.log('OrderStore RECEIVE_ADD_TRANSACTION order = ', payload.json)
+            //console.log('OrderStore RECEIVE_ADD_TRANSACTION order = ', payload.json)
             _order = payload.json;
             OrderStore.emitChange();
             break;

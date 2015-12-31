@@ -57,8 +57,8 @@ let Form = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        console.log('Form._onModelChange:', key);
-        console.log('Form._onModelChange:', val);
+        //console.log('Form._onModelChange:', key);
+        //console.log('Form._onModelChange:', val);
         //this.setState({shippingAddress: utils.selectOrSet(key, this.state.shippingAddress, val)});
     },
 
@@ -68,9 +68,9 @@ let Form = React.createClass({
         if(schema) {
             let form = FormStore.getForm(this.props.id).form;
             let action = FormStore.getForm(this.props.id).action;
-            console.log('schema = ', schema);
-            console.log('form = ', form);
-            console.log('action = ', action);
+            //console.log('schema = ', schema);
+            //console.log('form = ', form);
+            //console.log('action = ', action);
             this.setState({
                 schema: schema,
                 form: form,
@@ -80,7 +80,7 @@ let Form = React.createClass({
     },
 
     render: function() {
-        console.log('Form: props', this.props);
+        //console.log('Form: props', this.props);
         if(this.state.schema) {
             const buttons = this.state.action.map((item, idx) => (
                <RaisedButton label={item.title} primary={true} onTouchTap = {(e) => (WebAPIUtils.submitForm(this.state.action))} />

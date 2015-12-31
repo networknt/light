@@ -106,7 +106,7 @@ module.exports = {
     },
 
     receiveAddOrder: function(json, error) {
-        console.log('ServerActionCreator receiveAddOrder is callled', json);
+        //console.log('ServerActionCreator receiveAddOrder is callled', json);
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_ADD_ORDER,
             json: json,
@@ -115,7 +115,7 @@ module.exports = {
     },
 
     receiveAddTransaction: function(json, error) {
-        console.log('ServerActionCreator receiveAddTransaction is callled', json);
+        //console.log('ServerActionCreator receiveAddTransaction is callled', json);
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_ADD_TRANSACTION,
             json: json,

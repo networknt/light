@@ -32,7 +32,7 @@ var Catalog = React.createClass({
     },
 
     _onProductChange: function() {
-        console.log('_onProductChange is called');
+        //console.log('_onProductChange is called');
         this.setState({
             ancestors: ProductStore.getAncestors(),
             allowUpdate: ProductStore.getAllowUpdate(),

@@ -119,7 +119,7 @@ ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
             break;
 
         case ActionTypes.GET_CATALOG_TREE_RESPONSE:
-            console.log('ProductStore GET_CATALOG_TREE_RESPONSE = ', payload.json);
+            //console.log('ProductStore GET_CATALOG_TREE_RESPONSE = ', payload.json);
             WebAPIUtils.getCatalogProduct(payload.json[0]['@rid']);
             //ProductStore.emitChange();
             break;

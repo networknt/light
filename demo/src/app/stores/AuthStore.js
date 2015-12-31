@@ -111,7 +111,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                 }
                 _rid = payload.json.rid;
                 //console.log('_rid = ', _rid);
-                console.log('AuthStore.LOGIN_RESPONSE shippingAddress', payload.json.shippingAddress);
+                //console.log('AuthStore.LOGIN_RESPONSE shippingAddress', payload.json.shippingAddress);
                 if(payload.json.shippingAddress) {
                     _shippingAddress = payload.json.shippingAddress;
                 }
@@ -126,13 +126,13 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             AuthStore.emitChange();
             break;
         case ActionTypes.REFRESH:
-            console.log('refreshed access token is saved');
+            //console.log('refreshed access token is saved');
             _accessToken = payload.accessToken;
             localStorage.setItem('accessToken', _accessToken);
             break;
 
         case ActionTypes.LOGOUT:
-            console.log('logout  action type in AuthStore');
+            //console.log('logout  action type in AuthStore');
             _isLoggedIn = false;
             _accessToken = null;
             localStorage.removeItem('accessToken');
@@ -147,7 +147,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
         case ActionTypes.INIT:
             var accessToken = localStorage.getItem('accessToken');
             if(accessToken) {
-                console.log('there is an accessToken', accessToken);
+                //console.log('there is an accessToken', accessToken);
                 _isLoggedIn = true;
                 _accessToken = accessToken;
                 var jwt = jwtDecode(_accessToken);
@@ -160,7 +160,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                     _refreshToken = refreshToken;
                 }
             } else {
-                console.log('there is no accessToken');
+                //console.log('there is no accessToken');
                 _isLoggedIn = false;
                 _accessToken = null;
                 _currentUser = { userId: '', roles: ['anonymous']};
@@ -169,7 +169,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             break;
         case ActionTypes.UPDATE_SHIPPING_ADDRESS:
             _shippingAddress = payload.data;
-            console.log('AuthStore UPDATE_SHIPPING_ADDRESS', _shippingAddress);
+            //console.log('AuthStore UPDATE_SHIPPING_ADDRESS', _shippingAddress);
             AuthStore.emitChange();
             break;
         default:
