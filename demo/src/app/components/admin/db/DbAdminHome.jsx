@@ -3,15 +3,15 @@ import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
 let menuItems = [
-    { route: 'admin/blogAdmin', text: 'Blog Admin' },
-    { route: 'admin/newsAdmin', text: 'News Admin' },
-    { route: 'admin/forumAdmin', text: 'Forum Admin' },
-    { route: 'admin/catalogAdmin', text: 'Catalog Admin' },
-    { route: 'admin/dbAdmin', text: 'Db Admin' },
-    { route: 'admin/userAdmin', text: 'User Admin' }
+    { route: 'admin/dbAdmin/exportDatabase', text: 'Export Database' },
+    { route: 'admin/dbAdmin/execSchemaCommand', text: 'Execute Schema Command' },
+    { route: 'admin/dbAdmin/execUpdateCommand', text: 'Execute Update Command' },
+    { route: 'admin/dbAdmin/execQueryCommand', text: 'Execute Query Command' },
+    { route: 'admin/dbAdmin/downloadEvent', text: 'Download Event' },
+    { route: 'admin/dbAdmin/replayEvent', text: 'Replay Event' }
 ];
 
-class AdminMenu extends React.Component {
+class DbAdminHome extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,8 +19,7 @@ class AdminMenu extends React.Component {
     }
 
     _onItemTouchTap(event, item) {
-        console.log('AdminMenu props', this.props);
-        console.log('AdminMenu._onItemTouchTap', item.props.value);
+        console.log('DbAdminHome props', this.props);
         this.props.history.push(item.props.value);
     }
 
@@ -41,4 +40,4 @@ class AdminMenu extends React.Component {
     }
 }
 
-export default AdminMenu;
+export default DbAdminHome;

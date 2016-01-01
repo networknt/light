@@ -421,6 +421,20 @@ module.exports = {
         }).fail(function(error) {
             ServerActionCreators.submitFormRes(null, error);
         });
+    },
+
+    execQueryCmd: function(action) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(action),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.execQueryCmdResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.execQueryCmdResponse(null, error);
+        });
     }
 
 };

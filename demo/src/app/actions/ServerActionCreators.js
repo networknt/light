@@ -147,6 +147,16 @@ module.exports = {
             json: json,
             error: error
         });
+    },
+
+    execQueryCmdResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.EXEC_QUERY_CMD_RESPONSE,
+            json: json,
+            error: error
+        });
     }
+
+
 };
 

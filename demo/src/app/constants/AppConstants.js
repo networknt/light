@@ -90,7 +90,10 @@ module.exports = {
 
         // Order
         ADD_ORDER: null,
-        RECEIVE_ADD_ORDER: null
+        RECEIVE_ADD_ORDER: null,
+
+        // Db
+        EXEC_QUERY_CMD_RESPONSE: null
 
     }),
 

@@ -19,7 +19,13 @@ import Forum from './components/forum';
 import Catalog from './components/catalog/Catalog';
 import Admin from './components/admin/AdminMenu';
 import BlogAdminHome from './components/admin/blog/BlogAdminHome';
-
+import DbAdminHome from './components/admin/db/DbAdminHome';
+import ExecQueryCommand from './components/admin/db/ExecQueryCommand';
+import ExportDatabase from './components/admin/db/ExportDatabase';
+import ExecSchemaCommand from './components/admin/db/ExecSchemaCommand';
+import ExecUpdateCommand from './components/admin/db/ExecUpdateCommand';
+import DownloadEvent from './components/admin/db/DownloadEvent';
+import ReplayEvent from './components/admin/db/ReplayEvent';
 import User from './components/user';
 
 
@@ -46,6 +52,13 @@ const AppRoutes = (
     <Route path='catalog' component={Catalog} />
     <Route path='admin' component={Admin} />
     <Route path='admin/blogAdmin' component={BlogAdminHome} />
+    <Route path='admin/dbAdmin' component={DbAdminHome} />
+    <Route path='admin/dbAdmin/exportDatabase' component={ExportDatabase} />
+    <Route path='admin/dbAdmin/execSchemaCommand' component={ExecSchemaCommand} />
+    <Route path='admin/dbAdmin/execUpdateCommand' component={ExecUpdateCommand} />
+    <Route path='admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
+    <Route path='admin/dbAdmin/downloadEvent' component={DownloadEvent} />
+    <Route path='admin/dbAdmin/replayEvent' component={ReplayEvent} />
     <Route path='user' component={User} />
   </Route>
 );
