@@ -5,6 +5,8 @@ var BlogActionCreators = require('../../actions/BlogActionCreators');
 var classNames = require('classnames');
 import Paper from 'material-ui/lib/paper';
 import Markdown from '../Markdown';
+import RaisedButton from 'material-ui/lib/raised-button';
+
 
 var Blog = React.createClass({
     displayName: 'Blog',
@@ -38,14 +40,20 @@ var Blog = React.createClass({
 
     _routeToPost: function(index) {
         console.log('_routeToPost', this.props.params.blogRid, index, this.props.history);
-        this.props.history.push('/blog/' + this.props.params.blogRid + '/' + index);
+        this.props.history.push('/blog/post' + this.props.params.blogRid + '/' + index);
+    },
+
+    _onAddPost: function () {
+        console.log("_onAddPost is called");
+        this.props.history.push('/blogPostAdd/' + this.props.params.blogRid);
     },
 
     render: function() {
+        let addButton = this.state.allowPost? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
         return (
             <div>
                 <div className="blogHeader">
-                    <h2>Blogs</h2>
+                    <h2>Blogs{addButton}</h2>
                 </div>
                 <div className="blogRoot">
                     <div className="blogLeftColumn">

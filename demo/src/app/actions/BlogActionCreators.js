@@ -17,6 +17,11 @@ module.exports = {
         WebAPIUtils.getBlogPost(rid);
     },
 
+    addPost: function(action) {
+        WebAPIUtils.addPost(action);
+    },
+
+
     delBlog: function(blog) {
         WebAPIUtils.delBlog(blog);
     },
@@ -28,14 +33,6 @@ module.exports = {
         });
     },
 
-    createBlog: function(title, body) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.CREATE_BLOG,
-            title: title,
-            body: body
-        });
-        WebAPIUtils.createBlog(title, body);
-    },
 
     receiveCreatedBlog: function(json, errors) {
         AppDispatcher.dispatch({

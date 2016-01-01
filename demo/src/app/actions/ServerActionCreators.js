@@ -58,6 +58,15 @@ module.exports = {
         });
     },
 
+    // TODO create a toaster component to display the result.
+    addPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.ADD_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     receiveCreatedStory: function(json, errors) {
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_CREATED_STORY,

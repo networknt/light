@@ -53,24 +53,23 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     public boolean addPost(String bfnType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        String parentId = (String) data.get("parentId");
-        String parentRid = null;
+        String parentRid = (String) data.remove("parentRid");
         String host = (String) data.get("host");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OrientVertex parent = getBranchByHostId(graph, bfnType, host, parentId);
+            Vertex parent = DbService.getVertexByRid(graph, parentRid);
             if(parent == null) {
-                error = "Id " + parentId + " doesn't exist on host " + host;
+                error = "Rid " + parentRid + " doesn't exist on host " + host;
                 inputMap.put("responseCode", 400);
             } else {
-                parentRid = parent.getId().toString();
                 Map<String, Object> user = (Map<String, Object>)payload.get("user");
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.putAll((Map<String, Object>) inputMap.get("data"));
+                eventData.put("parentId", parent.getProperty("categoryId"));
                 eventData.put("postId", HashUtil.generateUUID());
                 eventData.put("createDate", new Date());
                 eventData.put("createUserId", user.get("userId"));

@@ -42,6 +42,7 @@ module.exports = {
         GET_BLOG_POST_RESPONSE: null,
         GET_BLOG: null,
         GET_BLOG_RESPONSE: null,
+        ADD_POST_RESPONSE: null,
 
         LOAD_BLOGS: null,
         LOAD_BLOG: null,

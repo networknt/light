@@ -171,21 +171,22 @@ module.exports = {
         });
     },
 
-    createBlog: function(title, body) {
-        request.post(APIEndpoints.STORIES)
-            .set('Accept', 'application/json')
-            .send({ blog: { title: title, body: body } })
-            .end(function(error, res){
-                if (res) {
-                    if (res.error) {
-                        var errorMsgs = _getErrors(res);
-                        ServerActionCreators.receiveCreatedBlog(null, errorMsgs);
-                    } else {
-                        var json = JSON.parse(res.text);
-                        ServerActionCreators.receiveCreatedBlog(json, null);
-                    }
-                }
-            });
+    /**
+     * This method will be used by blog, forum and news.
+      * @param action
+     */
+    addPost: function(action) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(action),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.addPostResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.addPostResponse(null, error);
+        });
     },
 
     delBlog: function(blog) {

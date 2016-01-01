@@ -1,0 +1,66 @@
+{
+  "formId": "com.networknt.light.blog.post.update",
+  "version": 1,
+  "action": [
+    {
+      "category": "blog",
+      "name": "updPost",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-blog-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Blog Post Update",
+    "required": [
+      "parentRid",
+      "postId",
+      "title",
+      "summary",
+      "content"
+    ],
+    "properties": {
+      "parentRid": {
+        "title": "Parent Rid",
+        "type": "string",
+        "readonly": true
+      },
+      "postId": {
+        "title": "Post Id",
+        "type": "string",
+        "readonly": true
+      },
+      "title": {
+        "title": "Title",
+        "type": "string"
+      },
+      "source": {
+        "title": "Source",
+        "type": "string"
+      },
+      "summary": {
+        "title": "Summary",
+        "type": "string"
+      },
+      "content": {
+        "title": "Content",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    "parentRid",
+    "postId",
+    "title",
+    "source",
+    {
+      "key": "summary",
+      "type": "textarea"
+    },
+    {
+      "key": "content",
+      "type": "textarea"
+    }
+  ]
+}
