@@ -18,6 +18,7 @@ import CategoryStore from '../stores/CategoryStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
 import ProductActionCreators from '../actions/ProductActionCreators';
+import BlogActionCreators from '../actions/BlogActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
@@ -122,6 +123,7 @@ const Main = React.createClass({
                 ProductActionCreators.getCatalogProduct(node.props.category['@rid']);
                 break;
             case 'blog':
+                BlogActionCreators.getBlogPost(node.props.category['@rid']);
                 break;
             case 'forum':
                 break;

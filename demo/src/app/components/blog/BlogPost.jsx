@@ -7,6 +7,7 @@ var CartActionCreator = require('../../actions/CartActionCreators');
 
 import AppConstants from '../../constants/AppConstants';
 import Paper from 'material-ui/lib/paper';
+import Markdown from '../Markdown';
 
 var BlogPost = React.createClass({
     displayName: 'BlogPost',
@@ -20,19 +21,14 @@ var BlogPost = React.createClass({
     },
 
     render: function() {
-        let date = new Date(this.props.blogPost.createDate);
         let boundClick = this._routeToPost.bind(this, this.props.blogPost.rid);
         return (
             <span>
                 <Paper className="blogPostPaper">
                     <div className="blogPost">
-                        <h2>
-                            <strong className="strongDate">{AppConstants.monthNames[date.getMonth()]} {date.getDay()},</strong> <span className="year">{date.getFullYear()}</span>
-                        </h2>
-                        <h1 className="title"><a onClick={boundClick}>{this.props.blogPost.title}</a></h1>
-                        <p className="content">
-                            {this.props.blogPost.content}
-                        </p>
+                        <h2 className="title"><a onClick={boundClick}>{this.props.blogPost.title}</a></h2>
+                        <span>Submitted by {this.props.blogPost.createUserId} on {this.props.blogPost.createDate}</span>
+                        <Markdown text={this.props.blogPost.summary} />
                     </div>
                 </Paper>
                 <hr />

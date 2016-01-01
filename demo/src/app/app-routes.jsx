@@ -47,6 +47,7 @@ const AppRoutes = (
     <Route path='login' component={Login} />
     <Route path='logout' component={Logout} />
     <Route path='blog' component={Blog} />
+
     <Route path='news' component={News} />
     <Route path='forum' component={Forum} />
     <Route path='catalog' component={Catalog} />

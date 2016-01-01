@@ -483,7 +483,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     protected String getBfnPostDb(String rid, String sortedBy) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, postId, title, content, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId " +
+        String sql = "select @rid, postId, title, summary, content, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId " +
                 "from (traverse out_Own, out_HasPost from ?) where @class = 'Post' order by " + sortedBy + " desc";
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {

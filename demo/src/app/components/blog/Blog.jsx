@@ -10,38 +10,11 @@ var Blog = React.createClass({
 
     getInitialState: function() {
         return {
-            blogPosts: [
-                {
-                    "createUserId":"stevehu",
-                    "postId":"GT3ZmMIxTxiE8WzGudooQA",
-                    "createRid":"#14:0",
-                    "rid":"#36:11",
-                    "title":"TEst",
-                    "content":"This is the post - Edited -5/21/2015",
-                    "parentId":"asdga",
-                    "createDate":"2015-05-02T14:20:13.512"
-                },{
-                    "createUserId":"stevehu",
-                    "postId":"uGRKOudDR4e3EGwrNYi6cQ",
-                    "createRid":"#14:0",
-                    "rid":"#36:10",
-                    "title":"jdfgjdfgjd",
-                    "content":"fgjdfgj",
-                    "parentId":"asdga",
-                    "createDate":"2015-05-02T12:57:12.315"
-                },{
-                    "createUserId":"stevehu",
-                    "postId":"FY4pUJ1CSzSURhihDlLg5g",
-                    "createRid":"#14:0",
-                    "rid":"#36:9",
-                    "title":"sdfhsdfhsdf",
-                    "content":"hsdfhsdfhsdf",
-                    "parentId":"asdga",
-                    "createDate":"2015-05-02T12:55:51.351"
-                }
-            ],
+            blogPosts: [],
             ancestors: [],
-            allowUpdate: false
+            allowPost: false,
+            total: 0
+
         };
     },
 
@@ -57,8 +30,9 @@ var Blog = React.createClass({
     _onBlogChange: function() {
         this.setState({
             ancestors: BlogStore.getAncestors(),
-            allowUpdate: BlogStore.getAllowUpdate(),
-            blogPosts: BlogStore.getBlogPosts()
+            allowPost: BlogStore.getAllowPost(),
+            blogPosts: BlogStore.getBlogPosts(),
+            total: BlogStore.getTotal
         });
     },
 

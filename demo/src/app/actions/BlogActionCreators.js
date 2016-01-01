@@ -13,8 +13,8 @@ module.exports = {
         WebAPIUtils.getBlogTree();
     },
 
-    getBlog: function() {
-        WebAPIUtils.getBlog();
+    getBlogPost: function(rid) {
+        WebAPIUtils.getBlogPost(rid);
     },
 
     delBlog: function(blog) {

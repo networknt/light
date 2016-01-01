@@ -669,7 +669,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
             List<ODocument> docs = graph.getRawGraph().command(query).execute(host);
             if(docs.size() > 0) {
-                json = OJSONWriter.listToJSON(docs, "rid,fetchPlan:[*]in_Create:-2 [*]out_Create:-2 [*]in_Update:-2 [*]out_Update:-2 [*]out_Own:-1");
+                json = OJSONWriter.listToJSON(docs, "rid,fetchPlan:[*]in_Create:-2 [*]out_Create:-2 [*]in_Update:-2 [*]out_Update:-2 [*]in_HasPost:-2 [*]out_HasPost:-2 [*]out_Own:5");
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
