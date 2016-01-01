@@ -1,9 +1,10 @@
 var React = require('react');
-var BlogPostList = require('./BlogPostList');
 var WebAPIUtils = require('../../utils/WebAPIUtils');
 var BlogStore = require('../../stores/BlogStore');
 var BlogActionCreators = require('../../actions/BlogActionCreators');
 var classNames = require('classnames');
+import Paper from 'material-ui/lib/paper';
+import Markdown from '../Markdown';
 
 var Blog = React.createClass({
     displayName: 'Blog',
@@ -14,13 +15,12 @@ var Blog = React.createClass({
             ancestors: [],
             allowPost: false,
             total: 0
-
         };
     },
 
     componentWillMount: function() {
         BlogStore.addChangeListener(this._onBlogChange);
-        BlogActionCreators.getBlogTree();
+        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid);
     },
 
     componentWillUnmount: function() {
@@ -36,6 +36,11 @@ var Blog = React.createClass({
         });
     },
 
+    _routeToPost: function(index) {
+        console.log('_routeToPost', this.props.params.blogRid, index, this.props.history);
+        this.props.history.push('/blog/' + this.props.params.blogRid + '/' + index);
+    },
+
     render: function() {
         return (
             <div>
@@ -44,7 +49,23 @@ var Blog = React.createClass({
                 </div>
                 <div className="blogRoot">
                     <div className="blogLeftColumn">
-                        <BlogPostList blogPosts={this.state.blogPosts} ancestors={this.state.ancestors} allowUpdate={this.state.allowUpdate}/>
+                        {
+                            this.state.blogPosts.map(function(post, index) {
+                                var boundClick = this._routeToPost.bind(this, index);
+                                return (
+                                    <span key={index}>
+                                        <Paper className="blogPostPaper">
+                                            <div className="blogPost">
+                                                <h2 className="title"><a onClick={boundClick}>{post.title}</a></h2>
+                                                <span>Submitted by {post.createUserId} on {post.createDate}</span>
+                                                <Markdown text={post.summary} />
+                                            </div>
+                                        </Paper>
+                                        <hr />
+                                    </span>
+                                );
+                            }, this)
+                        }
                     </div>
                     <div className="blogRightColumn">
                         <div className="blogInfo">
@@ -61,3 +82,10 @@ var Blog = React.createClass({
 });
 
 module.exports = Blog;
+
+/*
+ <BlogPostList blogRid={this.props.params.blogRid} blogPosts={this.state.blogPosts} ancestors={this.state.ancestors} allowUpdate={this.state.allowUpdate}/>
+
+
+
+ */

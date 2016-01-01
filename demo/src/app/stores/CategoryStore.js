@@ -29,10 +29,6 @@ var CategoryStore = assign({}, EventEmitter.prototype, {
         return _category;
     },
 
-    getSelected: function() {
-        return _selected;
-    },
-
     getErrors: function() {
         return _errors;
     }
@@ -47,7 +43,6 @@ CategoryStore.dispatchToken = AppDispatcher.register(function(payload) {
         case ActionTypes.GET_NEWS_TREE_RESPONSE:
         case ActionTypes.GET_FORUM_TREE_RESPONSE:
             _category = payload.json;
-            _selected = _category[0]['@rid'];
             CategoryStore.emitChange();
             break;
 

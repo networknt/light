@@ -13,7 +13,9 @@ import Contact from './components/contact';
 import Signup from './components/signup';
 import Login from './components/login';
 import Logout from './components/logout';
+import BlogCategory from './components/blog/BlogCategory';
 import Blog from './components/blog/Blog';
+import BlogPost from './components/blog/BlogPost';
 import News from './components/news';
 import Forum from './components/forum';
 import Catalog from './components/catalog/Catalog';
@@ -40,27 +42,28 @@ import User from './components/user';
  */
 const AppRoutes = (
   <Route path="/" component={Main}>
-    <Route path="home" component={Home} />
-    <Route path="about" component={About} />
-    <Route path="contact" component={Contact} />
-    <Route path='signup' component={Signup} />
-    <Route path='login' component={Login} />
-    <Route path='logout' component={Logout} />
-    <Route path='blog' component={Blog} />
-
-    <Route path='news' component={News} />
-    <Route path='forum' component={Forum} />
-    <Route path='catalog' component={Catalog} />
-    <Route path='admin' component={Admin} />
-    <Route path='admin/blogAdmin' component={BlogAdminHome} />
-    <Route path='admin/dbAdmin' component={DbAdminHome} />
-    <Route path='admin/dbAdmin/exportDatabase' component={ExportDatabase} />
-    <Route path='admin/dbAdmin/execSchemaCommand' component={ExecSchemaCommand} />
-    <Route path='admin/dbAdmin/execUpdateCommand' component={ExecUpdateCommand} />
-    <Route path='admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
-    <Route path='admin/dbAdmin/downloadEvent' component={DownloadEvent} />
-    <Route path='admin/dbAdmin/replayEvent' component={ReplayEvent} />
-    <Route path='user' component={User} />
+    <Route path="/home" component={Home} />
+    <Route path="/about" component={About} />
+    <Route path="/contact" component={Contact} />
+    <Route path='/signup' component={Signup} />
+    <Route path='/login' component={Login} />
+    <Route path='/logout' component={Logout} />
+    <Route path='/blog' component={BlogCategory} />
+    <Route path='/blog/:blogRid' component={Blog} />
+    <Route path='/blog/:blogRid/:index' component={BlogPost} />
+    <Route path='/news' component={News} />
+    <Route path='/forum' component={Forum} />
+    <Route path='/catalog' component={Catalog} />
+    <Route path='/admin' component={Admin} />
+    <Route path='/admin/blogAdmin' component={BlogAdminHome} />
+    <Route path='/admin/dbAdmin' component={DbAdminHome} />
+    <Route path='/admin/dbAdmin/exportDatabase' component={ExportDatabase} />
+    <Route path='/admin/dbAdmin/execSchemaCommand' component={ExecSchemaCommand} />
+    <Route path='/admin/dbAdmin/execUpdateCommand' component={ExecUpdateCommand} />
+    <Route path='/admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
+    <Route path='/admin/dbAdmin/downloadEvent' component={DownloadEvent} />
+    <Route path='/admin/dbAdmin/replayEvent' component={ReplayEvent} />
+    <Route path='/user' component={User} />
   </Route>
 );
 

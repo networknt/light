@@ -10,6 +10,7 @@ var _blogPosts = [];
 var _ancestors = [];
 var _total = 0;
 var _allowPost = false;
+var _post = {};
 
 var BlogStore = _.extend({}, EventEmitter.prototype, {
 
@@ -40,6 +41,10 @@ var BlogStore = _.extend({}, EventEmitter.prototype, {
 
     getTotal: function() {
         return _total;
+    },
+
+    getPost: function() {
+        return _post;
     }
 
 });
@@ -49,11 +54,12 @@ AppDispatcher.register(function(payload) {
 
     var type = payload.type;
     switch(type) {
+        /*
         case ActionTypes.GET_BLOG_TREE_RESPONSE:
             WebAPIUtils.getBlogPost(payload.json[0]['@rid']);
             //ProductStore.emitChange();
             break;
-
+        */
         case ActionTypes.GET_BLOG_POST_RESPONSE:
             _blogPosts = payload.json.posts;
             _total = payload.json.total;

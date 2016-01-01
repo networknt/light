@@ -3,12 +3,12 @@ import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
 let menuItems = [
-    { route: 'admin/dbAdmin/exportDatabase', text: 'Export Database' },
-    { route: 'admin/dbAdmin/execSchemaCommand', text: 'Execute Schema Command' },
-    { route: 'admin/dbAdmin/execUpdateCommand', text: 'Execute Update Command' },
-    { route: 'admin/dbAdmin/execQueryCommand', text: 'Execute Query Command' },
-    { route: 'admin/dbAdmin/downloadEvent', text: 'Download Event' },
-    { route: 'admin/dbAdmin/replayEvent', text: 'Replay Event' }
+    { route: '/admin/dbAdmin/exportDatabase', text: 'Export Database' },
+    { route: '/admin/dbAdmin/execSchemaCommand', text: 'Execute Schema Command' },
+    { route: '/admin/dbAdmin/execUpdateCommand', text: 'Execute Update Command' },
+    { route: '/admin/dbAdmin/execQueryCommand', text: 'Execute Query Command' },
+    { route: '/admin/dbAdmin/downloadEvent', text: 'Download Event' },
+    { route: '/admin/dbAdmin/replayEvent', text: 'Replay Event' }
 ];
 
 class DbAdminHome extends React.Component {

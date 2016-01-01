@@ -25,14 +25,14 @@ import CircularProgress from 'material-ui/lib/circular-progress';
 // Define menu items for LeftNav
 let menuItems = [
     { route: '/', text: 'Home' },
-    { route: 'blog', text: 'Blog' },
-    { route: 'news', text: 'News' },
-    { route: 'forum', text: 'Forum' },
-    { route: 'catalog', text: 'Catalog' },
-    { route: 'admin', text: 'Admin' },
-    { route: 'user', text: 'User' },
-    { route: 'about', text: 'About' },
-    { route: 'contact', text: 'Contact' }
+    { route: '/blog', text: 'Blog' },
+    { route: '/news', text: 'News' },
+    { route: '/forum', text: 'Forum' },
+    { route: '/catalog', text: 'Catalog' },
+    { route: '/admin', text: 'Admin' },
+    { route: '/user', text: 'User' },
+    { route: '/about', text: 'About' },
+    { route: '/contact', text: 'Contact' }
 ];
 
 const Main = React.createClass({
@@ -99,7 +99,14 @@ const Main = React.createClass({
     _categoryChange: function() {
         this.setState({
             category: CategoryStore.getCategory()
-        })
+        });
+        // create a fake node to trigger the first node loading for the category
+        let node = {};
+        let props = {};
+        props.category = this.state.category[0];
+        node.props = props;
+        node.fake = true;
+        this.onCategorySelect(node);
     },
 
     handleLeftNavToggle() {
@@ -107,30 +114,45 @@ const Main = React.createClass({
     },
 
     onCategorySelect(node) {
-        //console.log('onCategorySelect', node.props.category['@rid'] + ' ' + node.props.category.categoryId);
+        console.log('onCategorySelect', node);
         // set the select state for the selected category
-        if (this.state.selected && this.state.selected.isMounted()) {
-            this.state.selected.setState({selected: false});
-        }
-        this.setState({selected: node});
-        node.setState({selected: true});
-        if (this.props.onCategorySelect) {
-            this.props.onCategorySelect(node);
+        if(node.fake) {
+
+        } else {
+            if (this.state.selected && this.state.selected.isMounted()) {
+                this.state.selected.setState({selected: false});
+            }
+            this.setState({selected: node});
+            node.setState({selected: true});
+            if (this.props.onCategorySelect) {
+                this.props.onCategorySelect(node);
+            }
         }
         // based on the current route, select the entities from actions.
-        switch(this.props.location.pathname) {
+        console.log('onCategorySelect mainPath', this.getFirstPath(this.props.location.pathname));
+        switch(this.getFirstPath(this.props.location.pathname)) {
             case 'catalog':
                 ProductActionCreators.getCatalogProduct(node.props.category['@rid']);
                 break;
             case 'blog':
-                BlogActionCreators.getBlogPost(node.props.category['@rid']);
+                // route to Blog with a specific categoryId in the path
+                let rid = node.props.category['@rid'].substring(1);
+                this.props.history.push('/blog/' + rid);
+                console.log('pushed to ', 'blog/' + rid);
+                // if the current location is blog/:blogRid and has different blogRid then the component won't
+                // be mount again and there is no way for the component to reload the blogPost. Work around here.
+                let secondPath = this.getSecondPath(this.props.location.pathname);
+                console.log('before workaround', this.props.location.pathname, secondPath, rid);
+                if(secondPath != null && secondPath != rid) {
+                    console.log('The main window has the same route, force to reload blogPost...');
+                    BlogActionCreators.getBlogPost(node.props.category['@rid']);
+                }
                 break;
             case 'forum':
                 break;
             case 'news':
                 break;
         }
-        //ProductActionCreators.selectCatalog(node, this.state.selected, this.props.onCategorySelect);
     },
 
     handleItemTouchTap(event, item) {
@@ -139,6 +161,20 @@ const Main = React.createClass({
         this.props.history.push(item.props.value);
     },
 
+    getFirstPath(path) {
+        let url = path.split('/');
+        console.log('url', url);
+        return url[1];
+    },
+
+    getSecondPath(path) {
+        let url = path.split('/');
+        if(url.length > 2) {
+            return url[2];
+        } else {
+            return null;
+        }
+    },
 
     render() {
         var menuButton = (
@@ -182,7 +218,8 @@ const Main = React.createClass({
         );
 
         var leftNavContent;
-        switch(this.props.location.pathname) {
+        console.log('Main.render pahtnaeme', this.getFirstPath(this.props.location.pathname));
+        switch(this.getFirstPath(this.props.location.pathname)) {
             case 'blog':
             case 'news':
             case 'forum':
@@ -211,7 +248,7 @@ const Main = React.createClass({
 
 
         //console.log('history', this.props.history);
-        //console.log('location', this.props.location);
+        console.log('location', this.props.location);
         //console.log('children', this.props.children);
         return (
             <div id="page_container">
