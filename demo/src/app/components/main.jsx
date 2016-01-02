@@ -96,6 +96,10 @@ const Main = React.createClass({
         })
     },
 
+    _onTitleTouchTap: function() {
+        this.props.history.push('/');
+    },
+
     _categoryChange: function() {
         this.setState({
             category: CategoryStore.getCategory()
@@ -256,7 +260,7 @@ const Main = React.createClass({
                     {leftNavContent}
                 </LeftNav>
                 <header>
-                    <AppBar title='Edible Forest Garden' onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0}/>
+                    <AppBar title='Edible Forest Garden' onTitleTouchTap={this._onTitleTouchTap} onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0}/>
                 </header>
                 {this.props.children}
             </div>
