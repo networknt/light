@@ -14,7 +14,6 @@
     "type": "object",
     "title": "Blog Post Update",
     "required": [
-      "parentRid",
       "postId",
       "title",
       "summary",

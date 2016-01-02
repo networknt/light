@@ -21,9 +21,12 @@ module.exports = {
         WebAPIUtils.addPost(action);
     },
 
+    updPost: function(action) {
+        WebAPIUtils.updPost(action);
+    },
 
-    delBlog: function(blog) {
-        WebAPIUtils.delBlog(blog);
+    delPost: function(rid) {
+        WebAPIUtils.delPost(rid);
     },
 
     receiveBlog: function(json) {

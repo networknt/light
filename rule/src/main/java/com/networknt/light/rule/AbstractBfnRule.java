@@ -232,7 +232,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     public boolean updPost(String bfnType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        String rid = (String) data.get("@rid");
+        String rid = (String) data.get("rid");
         String host = (String) data.get("host");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");

@@ -50,9 +50,9 @@ module.exports = {
     },
 
     // TODO create a toaster component to display the result.
-    delBlogResponse: function(json, error) {
+    delPostResponse: function(json, error) {
         AppDispatcher.dispatch({
-            type: ActionTypes.DEL_BLOG_RESPONSE,
+            type: ActionTypes.DEL_POST_RESPONSE,
             json: json,
             error: error
         });
@@ -62,6 +62,15 @@ module.exports = {
     addPostResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.ADD_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    // TODO create a toaster component to display the result.
+    updPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPD_POST_RESPONSE,
             json: json,
             error: error
         });

@@ -189,23 +189,44 @@ module.exports = {
         });
     },
 
-    delBlog: function(blog) {
-        let delBlog = {
-            category : 'blog',
-            name : 'delBlog',
-            readOnly: false,
-            data: blog
-        };
+    /**
+     * This method will be used by blog, forum and news.
+     * @param action
+     */
+    updPost: function(action) {
         $.ajax({
             type: 'POST',
             url: '/api/rs',
-            data: JSON.stringify(delBlog),
+            data: JSON.stringify(action),
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            ServerActionCreators.delBlogResponse(data, null);
+            ServerActionCreators.updPostResponse(data, null);
         }).fail(function(error) {
-            ServerActionCreators.delBlogResponse(null, error);
+            ServerActionCreators.updPostResponse(null, error);
+        });
+    },
+
+    delPost: function(rid) {
+        let delPost = {
+            category : 'blog',
+            name : 'delPost',
+            readOnly: false,
+        };
+        let data = {};
+        data['@rid'] = rid;
+        delPost.data = data;
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(delPost),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delPostResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.delPostResponse(null, error);
         });
     },
 

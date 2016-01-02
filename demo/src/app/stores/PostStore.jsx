@@ -37,6 +37,8 @@ PostStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.ADD_POST_RESPONSE:
+        case ActionTypes.UPD_POST_RESPONSE:
+        case ActionTypes.DEL_POST_RESPONSE:
             _result = payload.json;
             _errors = payload.error;
             PostStore.emitChange();
