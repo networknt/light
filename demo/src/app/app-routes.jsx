@@ -6,7 +6,7 @@ import {
 } from 'react-router';
 
 // Here we define all our material-ui ReactComponents.
-import Main from './components/main';
+import Main from './components/Main';
 import Home from './components/home';
 import About from './components/about';
 import Contact from './components/contact';

@@ -247,7 +247,7 @@ const Main = React.createClass({
                 leftNavContent = (<div>Not implemented yet</div>);
                 break;
             default:
-                leftNavContent = (<div>No Context Nav</div>);
+                leftNavContent = (<div>No Context Navigation</div>);
         }
 
 

@@ -37,7 +37,11 @@ const Markdown = React.createClass({
       smartLists: true,
       smartypants: false,
       highlight: function(code, lang) {
-        return require('highlight.js').highlight(lang, code).value;
+        if(lang) {
+          return require('highlight.js').highlight(lang, code).value;
+        } else {
+          return code;
+        }
       },
     });
   },
