@@ -33,7 +33,7 @@
     "react-addons-perf": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-router": "^1.0.2",
-    "react-schema-form": "^0.1.6",
+    "react-schema-form": "^0.1.8",
     "react-tap-event-plugin": "^0.2.1"
   },
   "devDependencies": {

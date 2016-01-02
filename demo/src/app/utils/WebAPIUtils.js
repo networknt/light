@@ -458,6 +458,20 @@ module.exports = {
         }).fail(function(error) {
             ServerActionCreators.execQueryCmdResponse(null, error);
         });
+    },
+
+    downloadEvent: function(action) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(action),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.downloadEventResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.downloadEventResponse(null, error);
+        });
     }
 
 };

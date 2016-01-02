@@ -9,8 +9,12 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    execQueryCmd: function(data) {
-        WebAPIUtils.execQueryCmd(data);
+    execQueryCmd: function(action) {
+        WebAPIUtils.execQueryCmd(action);
+    },
+
+    downloadEvent: function(action) {
+        WebAPIUtils.downloadEvent(action);
     }
 
 };

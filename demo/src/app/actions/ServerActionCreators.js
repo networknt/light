@@ -173,8 +173,15 @@ module.exports = {
             json: json,
             error: error
         });
-    }
+    },
 
+    downloadEventResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.DOWNLOAD_EVENT_RESPONSE,
+            json: json,
+            error: error
+        });
+    }
 
 };
 

@@ -96,7 +96,8 @@ module.exports = {
         RECEIVE_ADD_ORDER: null,
 
         // Db
-        EXEC_QUERY_CMD_RESPONSE: null
+        EXEC_QUERY_CMD_RESPONSE: null,
+        DOWNLOAD_EVENT_RESPONSE: null
 
     }),
 

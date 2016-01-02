@@ -12,31 +12,22 @@
         "title": "Download Events",
         "required": ["createDateFrom"],
         "properties": {
+            "name": {
+                "title": "Event Name",
+                "type": "string"
+            },
             "createDateFrom": {
                 "title": "Event From Date",
-                "type": "object",
-                "format": "datetimepicker"
+                "type": "date"
             },
             "createDateTo": {
                 "title": "Event To Date",
-                "type": "object",
-                "format": "datetimepicker"
+                "type": "date"
             }
         }
     },
     "form": [
-        {
-            "key": "createDateFrom",
-            "options": {
-                "autoclose": 1
-            }
-        },
-        {
-            "key": "createDateTo",
-            "options": {
-                "autoclose": 1
-            }
-        }
+        "*"
     ]
 }
 
