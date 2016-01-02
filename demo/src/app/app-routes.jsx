@@ -50,8 +50,8 @@ const AppRoutes = (
     <Route path='/signup' component={Signup} />
     <Route path='/login' component={Login} />
     <Route path='/logout' component={Logout} />
-    <Route path='/blogPostAdd/:blogRid' component={BlogPostAdd} />
-    <Route path='/blogPostUpdate/:index' component={BlogPostUpdate} />
+    <Route path='/blog/postAdd/:blogRid' component={BlogPostAdd} />
+    <Route path='/blog/postUpdate/:index' component={BlogPostUpdate} />
     <Route path='/blog' component={BlogCategory} />
     <Route path='/blog/:blogRid' component={Blog} />
     <Route path='/blog/:blogRid/:index' component={BlogPost} />

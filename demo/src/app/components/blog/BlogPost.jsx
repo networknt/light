@@ -39,14 +39,14 @@ var BlogPost = React.createClass({
     },
 
     _onPostChange: function() {
-        console.log('BlogPostUpdate._onPostChange', PostStore.getResult(), PostStore.getErrors());
+        console.log('BlogPost._onPostChange', PostStore.getResult(), PostStore.getErrors());
         // TODO display toaster
 
     },
 
     _onUpdatePost: function () {
         console.log("_onUpdatePost is called");
-        this.props.history.push('/blogPostUpdate/' + this.props.params.index);
+        this.props.history.push('/blog/postUpdate/' + this.props.params.index);
     },
 
     _onDeletePost: function () {

@@ -45,7 +45,7 @@ var Blog = React.createClass({
 
     _onAddPost: function () {
         console.log("_onAddPost is called");
-        this.props.history.push('/blogPostAdd/' + this.props.params.blogRid);
+        this.props.history.push('/blog/postAdd/' + this.props.params.blogRid);
     },
 
     render: function() {
