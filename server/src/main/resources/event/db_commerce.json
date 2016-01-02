@@ -1,0 +1,74 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "script": "CREATE CLASS Catalog extends V;\nCREATE PROPERTY Catalog.host STRING;\nCREATE PROPERTY Catalog.categoryId STRING;\nCREATE PROPERTY Catalog.description STRING;\nCREATE PROPERTY Catalog.attributes EMBEDDEDMAP;\nCREATE PROPERTY Catalog.createDate DATETIME;\nCREATE PROPERTY Catalog.updateDate DATETIME;\nCREATE INDEX catalogHostIdIdx ON Catalog(host, categoryId) UNIQUE;\nCREATE INDEX Catalog.updateDate ON Catalog(updateDate) NOTUNIQUE;\n\nCREATE CLASS Product extends V;\nCREATE PROPERTY Product.productId STRING;\nCREATE PROPERTY Product.name STRING;\nCREATE PROPERTY Product.host STRING;\nCREATE PROPERTY Product.description STRING;\nCREATE PROPERTY Product.attributes EMBEDDEDMAP;\nCREATE PROPERTY Product.variants EMBEDDEDLIST;\nCREATE PROPERTY Product.createDate DATETIME;\nCREATE PROPERTY Product.updateDate DATETIME;\nCREATE INDEX Product.productId ON Product(productId) UNIQUE;\nCREATE INDEX Product.host ON Product(host) NOTUNIQUE;\nCREATE INDEX Product.name ON Product(name) NOTUNIQUE;\n\nCREATE CLASS HasProduct extends E;\n\nCREATE CLASS Carrier extends V;\nCREATE PROPERTY Carrier.name STRING;\nCREATE PROPERTY Carrier.host STRING;\nCREATE PROPERTY Carrier.description STRING;\nCREATE PROPERTY Carrier.attributes EMBEDDEDMAP;\nCREATE PROPERTY Carrier.createDate DATETIME;\nCREATE PROPERTY Carrier.updateDate DATETIME;\nCREATE INDEX Carrier.host ON Carrier(host) NOTUNIQUE;\nCREATE INDEX Carrier.name ON Carrier(name) UNIQUE;\n\n\n\n\ncreate vertex Role set roleId = 'catalogAdmin', description = 'Catalog Admin'\ncreate vertex Role set roleId = 'productAdmin', description = 'Product Admin'\n",
+      "createDate": "2015-09-25T01:43:59.142"
+    },
+    "name": "execSchemaCmd",
+    "category": "db",
+    "createDate": "2015-09-25T01:43:59.142",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:2",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10003,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "script": "let catalogAdmin = create vertex MenuItem set menuItemId = 'catalogAdmin', label = 'Catalog Admin', path = '/page/com-networknt-light-v-catalog-admin-home'\nlet productAdmin = create vertex MenuItem set menuItemId = 'productAdmin', label = 'Product Admin', path = '/page/com-networknt-light-v-product-admin-home'\nlet catalog = create vertex MenuItem set menuItemId = 'catalog', label = 'Catalog', path = '/page/com-networknt-light-v-catalog-home', left = true, roles = 'anonymous, user'\nlet cart = create vertex MenuItem set menuItemId = 'cart', label = 'Cart', path = '/page/com-networknt-light-v-cart-home', left = false, roles = 'anonymous, user'\nlet admin = select from MenuItem where menuItemId = 'admin'\ncreate edge Own from $admin to $catalogAdmin\ncreate edge Own from $admin to $productAdmin\n\nlet networknt = select from Menu where host = 'www.networknt.com'\ncreate edge Own from $networknt to $catalog\ncreate edge Own from $networknt to $cart\n\nlet edibleforestgarden = select from Menu where host = 'www.edibleforestgarden.ca'\ncreate edge Own from $edibleforestgarden to $catalog\ncreate edge Own from $edibleforestgarden to $cart\n\nlet example = select from Menu where host = 'example'\ncreate edge Own from $example to $catalog\ncreate edge Own from $example to $cart\n",
+      "createDate": "2015-09-24T02:25:11.607"
+    },
+    "name": "execUpdateCmd",
+    "category": "db",
+    "createDate": "2015-09-24T02:25:11.607",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:1489",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 11490,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "script": "CREATE CLASS Order extends V;\nCREATE PROPERTY Order.orderId LONG;\nCREATE PROPERTY Order.paymentStatus INTEGER;\nALTER PROPERTY Order.paymentStatus DEFAULT 0;\nCREATE PROPERTY Order.fulfillmentStatus INTEGER;\nALTER PROPERTY Order.fulfillmentStatus DEFAULT 0;\nCREATE PROPERTY Order.host STRING;\nCREATE PROPERTY Order.subTotal DECIMAL;\nCREATE PROPERTY Order.shipping DECIMAL;\nCREATE PROPERTY Order.tax DECIMAL;\nCREATE PROPERTY Order.total DECIMAL;\nCREATE PROPERTY Order.items EMBEDDEDLIST;\nCREATE PROPERTY Order.createDate DATETIME;\nCREATE PROPERTY Order.updateDate DATETIME;\nCREATE INDEX Order.host ON Order(host) NOTUNIQUE;\nCREATE INDEX Order.orderId ON Order(orderId) UNIQUE;\n",
+      "createDate": "2015-12-20T16:04:27.203"
+    },
+    "name": "execSchemaCmd",
+    "category": "db",
+    "createDate": "2015-12-20T16:04:27.203",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:1487",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 11488,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "script": "create vertex Counter set name = 'orderId', value = 10000\n",
+      "createDate": "2015-12-20T15:45:40.107"
+    },
+    "name": "execUpdateCmd",
+    "category": "db",
+    "createDate": "2015-12-20T15:45:40.107",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

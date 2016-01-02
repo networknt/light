@@ -1,0 +1,268 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:5",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10006,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "dqGTGzAcSAOYWujmWmnGLA",
+      "name": "HP",
+      "host": "example",
+      "description": "HP Computer",
+      "variants": [
+        {
+          "sku": "1001",
+          "price": 1290,
+          "type": "Desktop",
+          "image": "1.png",
+          "inventory": 12,
+          "weight": 22,
+          "height": 20,
+          "width": 6,
+          "length": 14
+        },
+        {
+          "sku": "1002",
+          "price": 890,
+          "type": "Laptop",
+          "image": "2.png",
+          "inventory": 3,
+          "weight": 5.8,
+          "height": 2,
+          "width": 15,
+          "length": 8
+        }
+      ],
+      "in_HasProduct": [
+        "computer"
+      ],
+      "createDate": "2015-09-25T02:02:53.507"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:02:53.507",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:7",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10008,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "5E_MKOQdR3qENvnNwG-T-g",
+      "name": "IBM Computer",
+      "host": "example",
+      "description": "IBM Computer is the best in the world",
+      "variants": [
+        {
+          "sku": "2001",
+          "price": 1390,
+          "type": "Desktop",
+          "image": "3.png",
+          "inventory": 2,
+          "weight": 33,
+          "height": 12,
+          "width": 22,
+          "length": 19
+        }
+      ],
+      "in_HasProduct": [
+        "computer"
+      ],
+      "createDate": "2015-09-25T02:04:39.210"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:04:39.210",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:8",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10009,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "x3EQMrqTSWaslqdvBvs6gg",
+      "name": "Acer",
+      "host": "example",
+      "description": "Acer Case has most reasonable price",
+      "variants": [
+        {
+          "sku": "3001",
+          "price": 120,
+          "type": "Desktop",
+          "image": "4.png",
+          "inventory": 22,
+          "weight": 11,
+          "height": 12,
+          "width": 29,
+          "length": 12
+        }
+      ],
+      "in_HasProduct": [
+        "case"
+      ],
+      "createDate": "2015-09-25T02:06:13.597"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:06:13.597",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:9",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10010,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "8mrI0DmoSCGMcdlX1E2zRQ",
+      "name": "Dell",
+      "host": "example",
+      "description": "Dell Desktop Case",
+      "variants": [
+        {
+          "sku": "4001",
+          "price": 100,
+          "type": "Black",
+          "image": "5.png",
+          "inventory": 11,
+          "weight": 29,
+          "height": 12,
+          "width": 14,
+          "length": 9
+        },
+        {
+          "sku": "4002",
+          "price": 100,
+          "type": "White",
+          "image": "6.png",
+          "inventory": 22,
+          "weight": 12,
+          "height": 12,
+          "width": 23,
+          "length": 4
+        }
+      ],
+      "in_HasProduct": [
+        "desktopCase"
+      ],
+      "createDate": "2015-09-25T02:08:25.150"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:08:25.150",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:10",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10011,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "dp48Gjz9SligBuKo-LqEAg",
+      "name": "Sun",
+      "host": "example",
+      "description": "Sun Server Case",
+      "variants": [
+        {
+          "sku": "5001",
+          "price": 234,
+          "type": "USB",
+          "image": "7.png",
+          "inventory": 1,
+          "weight": 129,
+          "height": 22,
+          "width": 11,
+          "length": 8
+        },
+        {
+          "sku": "5002",
+          "price": 883,
+          "type": "SCSI",
+          "image": "8.png",
+          "inventory": 23,
+          "weight": 299,
+          "height": 19,
+          "width": 34,
+          "length": 8
+        }
+      ],
+      "in_HasProduct": [
+        "serverCase"
+      ],
+      "createDate": "2015-09-25T02:10:37.631"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:10:37.631",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:11",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10012,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "pu9Hn3vLSgmcfdECwJsHig",
+      "name": "Seagate",
+      "host": "example",
+      "description": "Seagate Drive",
+      "variants": [
+        {
+          "sku": "6001",
+          "price": 123,
+          "type": "Disk",
+          "image": "8.png",
+          "inventory": 11,
+          "weight": 1.3,
+          "height": 1.5,
+          "width": 12,
+          "length": 10
+        },
+        {
+          "sku": "6002",
+          "price": 345,
+          "type": "SSD",
+          "image": "9.png",
+          "inventory": 11,
+          "weight": 6,
+          "height": 9,
+          "width": 6,
+          "length": 6
+        }
+      ],
+      "in_HasProduct": [
+        "hardDrive"
+      ],
+      "createDate": "2015-09-25T02:12:15.688"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2015-09-25T02:12:15.688",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

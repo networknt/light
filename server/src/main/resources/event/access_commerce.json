@@ -1,0 +1,59 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:115",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10116,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-05-02T12:17:06.274",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.catalog.GetCatalogProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-05-02T12:17:06.274",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:430",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10432,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-08-18T02:13:29.430",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.catalog.GetCatalogTreeRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-08-18T02:13:29.430",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:74",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10075,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-04-30T01:23:26.644",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.catalog.GetCatalogProductRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-04-30T01:23:26.643",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "replay": true,
+  "event": [
+    {
+      "description": "This file contains all the rule classes including core, cms and commerce. Should be split to three files before production.",
+      "location": "event/rule.json"
+    },
+    {
+      "description": "This file contains all the access configuration for the core rules",
+      "location": "event/access_core.json"
+    },
+    {
+      "description": "This file contains all the access configuration for the cms rules",
+      "location": "event/access_cms.json"
+    },
+    {
+      "description": "This file contains all the access configuration for the commerce rules",
+      "location": "event/access_commerce.json"
+    },
+    {
+      "description": "This file contains all the cors configuration for the core rules",
+      "location": "event/cors_core.json"
+    },
+    {
+      "description": "This file contains all the forms including core, cms and commerce. Should be split to three files before production.",
+      "location": "event/form.json"
+    },
+    {
+      "description": "This file contains all the rule classes including core, cms and commerce. Should be split to three files before production.",
+      "location": "event/db_cms.json"
+    },
+    {
+      "description": "This file contains all the rule classes including core, cms and commerce. Should be split to three files before production.",
+      "location": "event/db_commerce.json"
+    },
+    {
+      "description": "This file contains exmaple site catalog data for commerce",
+      "location": "event/example/catalog.json"
+    },
+    {
+      "description": "This file contains example site product data for commerce",
+      "location": "event/example/product.json"
+    },
+    {
+      "description": "This file contains example site blog category data for cms",
+      "location": "event/example/blog.json"
+    },
+    {
+      "description": "This file contains example site blog post data for cms",
+      "location": "event/example/blog_post.json"
+    }
+  ]
+}

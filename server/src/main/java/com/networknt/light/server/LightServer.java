@@ -155,42 +155,54 @@ public class LightServer {
     }
 
     /**
-     * This replay is to initialize database when the db is newly created. It load rules, forms and pages
-     * and certain setup that need to make the applications working. To replay the entire event schema,
-     * you have to call it from the Db Admin interface.
+     * This replay is to initialize database when the db is newly created. The initDatabase class will create
+     * necessary entities in database to bootstrap the application. And then when the application starts the
+     * first time, it will load all the events specified in this section to replay them in order to init db.
+     * These file can be additional application db, rules, forms and data. There is another place to replay
+     * events which is in dbAdmin/replay event. That can be used once system is up and running ready.
+     *
+     * This method will only be called when database is newly created. And it will check replay is true to
+     * replay the events in the files specified in replayevent.json in config folder.
+     *
+     * In case replay is false in the replayevent.json, nothing additional will be replayed and the database
+     * is clean in order to create object from admin or other section of the application and those events
+     * can be downloaded from dbAdmin to populate replay event files.
      *
      */
     static private void replayEvent() {
+        Map<String, Object> config = ServiceLocator.getInstance().getConfig("replayevent");
+        if((Boolean)config.get("replay") == true) {
+            logger.info("Replay is true for db initialization. Loading event files...");
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            List<Map<String, String>> entries = (List)config.get("event");
+            for(Map<String, String> entry: entries) {
+                StringBuilder sb = new StringBuilder();
+                String location = entry.get("location");
+                InputStream is = classloader.getResourceAsStream(location);
+                try (Scanner scanner = new Scanner(is)) {
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        sb.append(line).append("\n");
+                    }
+                    scanner.close();
 
-        // need to replay from a file instead if the file exist. Otherwise, load from db and replay.
-        // in this case, we need to recreate db.
+                    ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
+                    if(sb.length() > 0) {
+                        // if you want to generate the initdb.json from your dev env, then you should make this
+                        // file as empty in server resources folder and load all objects again.
+                        List<Map<String, Object>> events = mapper.readValue(sb.toString(),
+                                new TypeReference<List<HashMap<String, Object>>>() {});
 
-        StringBuilder sb = new StringBuilder("");
-
-        //Get file from resources folder
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("initdb.json");
-        try (Scanner scanner = new Scanner(is)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                sb.append(line).append("\n");
-            }
-            scanner.close();
-
-            ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
-            if(sb.length() > 0) {
-                // if you want to generate the initdb.json from your dev env, then you should make this
-                // file as empty in server resources folder and load all objects again.
-                List<Map<String, Object>> events = mapper.readValue(sb.toString(),
-                        new TypeReference<List<HashMap<String, Object>>>() {});
-
-                // replay event one by one.
-                for(Map<String, Object> event: events) {
-                    RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);
+                        // replay event one by one.
+                        for(Map<String, Object> event: events) {
+                            RuleEngine.getInstance().executeRule(Util.getEventRuleId(event), event);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Exception:", e);
                 }
+                logger.debug("Events are loaded from " + location);
             }
-        } catch (Exception e) {
-            logger.error("Exception:", e);
         }
     }
 }

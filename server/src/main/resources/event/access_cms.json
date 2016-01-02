@@ -1,0 +1,999 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:1",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10002,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:17:46.904",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "blogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.DelPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:17:46.904",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:2",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10003,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:19:45.318",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "blogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.GetBlogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:19:45.318",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:20:14.342",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "blogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.GetBlogDropdownRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:20:14.342",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:4",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10005,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:20:38.877",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "blogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.UpdBlogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:20:38.877",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:5",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10006,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:21:09.419",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.blog.GetBlogTreeRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:21:09.419",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:6",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10007,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:21:49.981",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "blogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.DelBlogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:21:49.981",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:7",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10008,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:22:23.094",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "blogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.UpdPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:22:23.094",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:8",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10009,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:23:01.865",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.DownBlogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:23:01.865",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:9",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10010,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:23:28.991",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "blogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.AddBlogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:23:28.991",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:10",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10011,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:23:50.462",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.blog.GetBlogPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:23:50.462",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:11",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10012,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:24:23.800",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.UpBlogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:24:23.800",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:12",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10013,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:24:51.566",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "blogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.blog.AddPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:24:51.566",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:13",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10014,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:26:04.200",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.comment.UpdCommentRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:26:04.200",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:14",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10015,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:26:52.795",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.comment.GetCommentTreeRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:26:52.795",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:15",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10016,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:27:22.486",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.comment.GetCommentRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:27:22.486",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:16",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10017,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:27:49.967",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.comment.AddCommentRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:27:49.967",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:17",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10018,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:28:06.775",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.comment.DelCommentRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:28:06.775",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:18",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10019,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:29:07.209",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "forumAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.DelPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:29:07.209",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:19",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10020,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:30:33.285",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "forumAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.UpdPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:30:33.285",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:20",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10021,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:31:07.710",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "forumAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.GetForumRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:31:07.710",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:21",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10022,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:31:25.889",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "forumAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.AddForumRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:31:25.889",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:22",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10023,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:31:40.873",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.DownForumRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:31:40.873",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:23",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10024,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:32:03.119",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "forumAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.DelForumRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:32:03.119",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:24",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10025,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:32:17.627",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.UpForumRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:32:17.627",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:25",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10026,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:32:33.669",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "forumAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.UpdForumRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:32:33.669",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:26",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10027,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:32:59.568",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.AddPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:32:59.568",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:27",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10028,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:33:30.550",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.forum.GetForumTreeRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:33:30.549",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:28",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10029,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:33:55.299",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.forum.GetForumPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:33:55.299",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:29",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10030,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:34:14.303",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "forumAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.forum.GetForumDropdownRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:34:14.303",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:30",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10031,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:35:24.977",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "newsAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.DelPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:35:24.977",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:31",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10032,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:35:41.693",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "newsAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.DelNewsRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:35:41.693",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:32",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10033,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:35:53.800",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.news.GetNewsTreeRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:35:53.800",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:33",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10034,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:36:18.055",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.DownNewsRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:36:18.055",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:34",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10035,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:36:49.046",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "newsAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.GetNewsDropdownRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:36:49.046",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:35",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10036,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:37:08.599",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "newsAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.GetNewsRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:37:08.599",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:36",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10037,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:37:39.773",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "newsAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.UpdPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:37:39.773",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:37",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10038,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:38:08.271",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "newsAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.AddNewsRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:38:08.271",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:38",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10039,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:38:28.113",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.news.GetNewsPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:38:28.113",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:39",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10040,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:39:03.091",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "newsAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.AddPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:39:03.091",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:40",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10041,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:39:40.940",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.UpNewsRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:39:40.940",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:41",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10042,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:39:53.638",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner",
+        "newsAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.news.UpdNewsRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:39:53.638",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:42",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10043,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:40:21.176",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.post.DownPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:40:21.176",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:43",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10044,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:40:44.375",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "admin",
+        "owner"
+      ],
+      "ruleClass": "com.networknt.light.rule.post.GetPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:40:44.375",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:44",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10045,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2015-04-28T10:41:41.049",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.post.UpPostRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2015-04-28T10:41:41.049",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

@@ -1,0 +1,4759 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:295",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10296,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.common.command",
+      "schema": {
+        "type": "object",
+        "title": "Command",
+        "required": [
+          "name",
+          "data"
+        ],
+        "properties": {
+          "host": {
+            "title": "Host",
+            "type": "string",
+            "enum": [
+              "www.networknt.com",
+              "injector"
+            ]
+          },
+          "app": {
+            "title": "App",
+            "type": "string",
+            "enum": [
+              "main",
+              "forum",
+              "blog",
+              "shopping"
+            ]
+          },
+          "category": {
+            "title": "Category",
+            "type": "string",
+            "enum": [
+              "user",
+              "form"
+            ]
+          },
+          "readOnly": {
+            "title": "ReadOnly",
+            "type": "boolean",
+            "default": false
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "enum": [
+              "getForm",
+              "addForm",
+              "delForm",
+              "updForm",
+              "getFormList"
+            ]
+          },
+          "data": {
+            "title": "Data",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "host",
+        "app",
+        "category",
+        "readOnly",
+        "name",
+        {
+          "key": "data",
+          "type": "textarea"
+        },
+        {
+          "type": "submit",
+          "style": "btn-info",
+          "title": "Submit"
+        }
+      ],
+      "action": [
+        {
+          "category": "common",
+          "name": "command",
+          "readOnly": false,
+          "title": "Submit"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.667"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.667",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:296",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10297,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.page.update",
+      "schema": {
+        "type": "object",
+        "title": "Page",
+        "required": [
+          "pageId",
+          "content"
+        ],
+        "properties": {
+          "pageId": {
+            "title": "Page Id",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "pageId",
+        {
+          "key": "content",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "html"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "page",
+          "name": "updPage",
+          "readOnly": false,
+          "title": "Submit"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.675"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.675",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:297",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10298,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.demo.strapselect_d",
+      "schema": {
+        "type": "object",
+        "title": "Demo Strape Select",
+        "required": [
+          "strapSingleSelectStatic",
+          "strapMultipleSelectStatic",
+          "strapSingleSelectDynamic",
+          "strapMultipleSelectDynamic",
+          "strapSingleSelectPopulated",
+          "strapMultipleSelectPopulated"
+        ],
+        "properties": {
+          "strapSingleSelectStatic": {
+            "title": "Strap Single Select Static(Dropdown items from controller)",
+            "type": "string",
+            "format": "strapselect",
+            "items": [
+              {
+                "value": "value1",
+                "label": "label1"
+              },
+              {
+                "value": "value2",
+                "label": "label2"
+              },
+              {
+                "value": "value3",
+                "label": "label3"
+              }
+            ]
+          },
+          "strapMultipleSelectStatic": {
+            "title": "Strap Multiple Select Static(Dropdown items from controller)",
+            "type": "array",
+            "format": "strapselect",
+            "items": [
+              {
+                "value": "value1",
+                "label": "label1"
+              },
+              {
+                "value": "value2",
+                "label": "label2"
+              },
+              {
+                "value": "value3",
+                "label": "long very very long label3"
+              }
+            ]
+          },
+          "strapSingleSelectDynamic": {
+            "title": "Strap Single Select Dynamic(Dropdown items loaded from remote)",
+            "type": "string",
+            "format": "strapselectdynamic"
+          },
+          "strapMultipleSelectDynamic": {
+            "title": "Strap Multiple Select Dynamic(Dropdown items loaded from remote)",
+            "type": "array",
+            "format": "strapselectdynamic"
+          },
+          "strapSingleSelectPopulated": {
+            "title": "Strap Single Select Populated(Dropdown populated on server)",
+            "type": "string",
+            "format": "strapselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "client",
+                  "name": "getClientDropdown"
+                }
+              }
+            ]
+          },
+          "strapMultipleSelectPopulated": {
+            "title": "Strap Multiple Select Populated(Dropdown populated on server)",
+            "type": "array",
+            "format": "strapselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "client",
+                  "name": "getClientDropdown"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "strapSingleSelectStatic"
+        },
+        {
+          "key": "strapMultipleSelectStatic"
+        },
+        {
+          "key": "strapSingleSelectDynamic",
+          "options": {
+            "category": "demo",
+            "name": "getDropdown"
+          }
+        },
+        {
+          "key": "strapMultipleSelectDynamic",
+          "options": {
+            "category": "demo",
+            "name": "getDropdown"
+          }
+        },
+        {
+          "key": "strapSingleSelectPopulated"
+        },
+        {
+          "key": "strapMultipleSelectPopulated"
+        }
+      ],
+      "action": [
+        {
+          "category": "demo",
+          "name": "selectDemo",
+          "readOnly": false,
+          "title": "Submit"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.705"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.705",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:298",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10299,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.product.add",
+      "schema": {
+        "type": "object",
+        "title": "Product",
+        "required": [
+          "in_HasProduct",
+          "name",
+          "description",
+          "variants"
+        ],
+        "properties": {
+          "in_HasProduct": {
+            "title": "categoryId",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "variants": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "title": "SKU",
+                  "type": "string"
+                },
+                "price": {
+                  "title": "Price",
+                  "type": "number"
+                },
+                "type": {
+                  "title": "Type",
+                  "type": "string"
+                },
+                "image": {
+                  "title": "Image",
+                  "type": "string"
+                },
+                "inventory": {
+                  "title": "Inventory",
+                  "type": "number"
+                },
+                "weight": {
+                  "title": "Weight",
+                  "type": "number"
+                },
+                "height": {
+                  "title": "Height",
+                  "type": "number"
+                },
+                "width": {
+                  "title": "Width",
+                  "type": "number"
+                },
+                "length": {
+                  "title": "Length",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "price",
+                "type",
+                "image",
+                "inventory",
+                "weight",
+                "height",
+                "width",
+                "length"
+              ]
+            }
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "in_HasProduct",
+          "options": {
+            "category": "catalog",
+            "name": "getCatalogDropdown"
+          }
+        },
+        "name",
+        "description",
+        {
+          "key": "variants",
+          "add": "New",
+          "style": {
+            "add": "btn-success"
+          },
+          "items": [
+            "variants[].sku",
+            "variants[].price",
+            "variants[].type",
+            "variants[].image",
+            "variants[].inventory",
+            "variants[].weight",
+            "variants[].height",
+            "variants[].width",
+            "variants[].length"
+          ]
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "addProduct",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-product-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.718"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.718",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:299",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10300,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.product.update",
+      "schema": {
+        "type": "object",
+        "title": "Product",
+        "required": [
+          "in_HasProduct",
+          "productId",
+          "name",
+          "description",
+          "variants"
+        ],
+        "properties": {
+          "in_HasProduct": {
+            "title": "categoryId",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "productId": {
+            "title": "Product Id",
+            "type": "string",
+            "readonly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "variants": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "title": "SKU",
+                  "type": "string"
+                },
+                "price": {
+                  "title": "Price",
+                  "type": "number"
+                },
+                "type": {
+                  "title": "Type",
+                  "type": "string"
+                },
+                "image": {
+                  "title": "Image",
+                  "type": "string"
+                },
+                "inventory": {
+                  "title": "Inventory",
+                  "type": "number"
+                },
+                "weight": {
+                  "title": "Weight",
+                  "type": "number"
+                },
+                "height": {
+                  "title": "Height",
+                  "type": "number"
+                },
+                "width": {
+                  "title": "Width",
+                  "type": "number"
+                },
+                "length": {
+                  "title": "Length",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "price",
+                "type",
+                "image",
+                "inventory",
+                "weight",
+                "height",
+                "width",
+                "length"
+              ]
+            }
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "in_HasProduct",
+          "options": {
+            "category": "catalog",
+            "name": "getCatalogDropdown"
+          }
+        },
+        "productId",
+        "name",
+        "description",
+        {
+          "key": "variants",
+          "add": "New",
+          "style": {
+            "add": "btn-success"
+          },
+          "items": [
+            "variants[].sku",
+            "variants[].price",
+            "variants[].type",
+            "variants[].image",
+            "variants[].inventory",
+            "variants[].weight",
+            "variants[].height",
+            "variants[].width",
+            "variants[].length"
+          ]
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "updProduct",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-product-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.730"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.730",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:300",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10301,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.user.role.update_d",
+      "schema": {
+        "type": "object",
+        "title": "Update Role",
+        "properties": {
+          "roles": {
+            "title": "Roles",
+            "type": "array",
+            "format": "uiselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "role",
+                  "name": "getRoleDropdown"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "roles"
+      ],
+      "action": [
+        {
+          "category": "user",
+          "name": "updRole",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-user-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.737"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.737",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:301",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10302,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.news.update",
+      "schema": {
+        "type": "object",
+        "title": "News",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "News Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "options": {
+            "category": "news",
+            "name": "getNewsDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "news",
+            "name": "getNewsDropdown"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "news",
+          "name": "updNews",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-news-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.745"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.745",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:302",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10303,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.db.execSchemaCommand",
+      "schema": {
+        "type": "object",
+        "title": "Execute Command",
+        "required": [
+          "script"
+        ],
+        "properties": {
+          "script": {
+            "title": "Script",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "script",
+          "type": "ace",
+          "style": {
+            "height": "500px"
+          },
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "sql"
+          },
+          "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+        }
+      ],
+      "action": [
+        {
+          "category": "db",
+          "name": "execSchemaCmd",
+          "readOnly": false,
+          "title": "Execute",
+          "success": "/page/com-networknt-light-v-db-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.752"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.752",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:303",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10304,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.rule.add",
+      "schema": {
+        "type": "object",
+        "title": "Rule",
+        "required": [
+          "ruleClass",
+          "sourceCode"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string"
+          },
+          "sourceCode": {
+            "title": "Source Code",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        {
+          "key": "sourceCode",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "java"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "rule",
+          "name": "addRule",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.761"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.761",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:304",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10305,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.db.downloadEvent",
+      "schema": {
+        "type": "object",
+        "title": "Download Events",
+        "required": [
+          "createDateFrom"
+        ],
+        "properties": {
+          "createDateFrom": {
+            "title": "Event From Date",
+            "type": "object",
+            "format": "datetimepicker"
+          },
+          "createDateTo": {
+            "title": "Event To Date",
+            "type": "object",
+            "format": "datetimepicker"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "createDateFrom",
+          "options": {
+            "autoclose": 1
+          }
+        },
+        {
+          "key": "createDateTo",
+          "options": {
+            "autoclose": 1
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "db",
+          "name": "downloadEvent",
+          "readOnly": true,
+          "title": "Download Events"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.768"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.768",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:305",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10306,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.demo.uiselect_d",
+      "schema": {
+        "type": "object",
+        "title": "Demo UiSelect",
+        "required": [
+          "uiSingleSelectStatic",
+          "uiMultipleSelectStatic",
+          "uiSingleSelectDynamic",
+          "uiMultipleSelectDynamic",
+          "uiSingleSelectPopulated",
+          "uiMultipleSelectPopulated"
+        ],
+        "properties": {
+          "uiSingleSelectStatic": {
+            "title": "Ui Single Select Static(Dropdown items from controller)",
+            "type": "string",
+            "format": "uiselect",
+            "description": "Only single item is allowd",
+            "items": [
+              {
+                "value": "value1",
+                "label": "label1"
+              },
+              {
+                "value": "value2",
+                "label": "label2"
+              },
+              {
+                "value": "value3",
+                "label": "label3"
+              }
+            ]
+          },
+          "uiMultipleSelectStatic": {
+            "title": "Ui Multiple Select Static(Dropdown items from controller)",
+            "type": "array",
+            "format": "uiselect",
+            "items": [
+              {
+                "value": "value1",
+                "label": "label1"
+              },
+              {
+                "value": "value2",
+                "label": "label2"
+              },
+              {
+                "value": "value3",
+                "label": "long very very long label3"
+              }
+            ]
+          },
+          "uiSingleSelectDynamic": {
+            "title": "Ui Single Select Dynamic(Dropdown items loaded from remote)",
+            "type": "string",
+            "format": "uiselect"
+          },
+          "uiMultipleSelectDynamic": {
+            "title": "Ui Multiple Select Dynamic(Dropdown items loaded from remote)",
+            "type": "array",
+            "format": "uiselect"
+          },
+          "uiSingleSelectPopulated": {
+            "title": "Ui Single Select Populated(Dropdown populated on server)",
+            "type": "string",
+            "format": "uiselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "client",
+                  "name": "getClientDropdown"
+                }
+              }
+            ]
+          },
+          "uiMultipleSelectPopulated": {
+            "title": "UI Multiple Select Populated(Dropdown populated on server)",
+            "type": "array",
+            "format": "uiselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "client",
+                  "name": "getClientDropdown"
+                }
+              }
+            ]
+          },
+          "descriptions": {
+            "title": "Multi Select with descriptions and without Search on the description field.",
+            "type": "array",
+            "format": "uiselect",
+            "description": "Multi single items are allowed",
+            "minItems": 1,
+            "maxItems": 4,
+            "items": [
+              {
+                "value": "label1",
+                "label": "label1",
+                "description": "a long description to provide context that is not useful for search"
+              },
+              {
+                "value": "label2",
+                "label": "label2",
+                "description": "a different long description to provide context that is not useful for search"
+              },
+              {
+                "value": "label3",
+                "label": "label3",
+                "description": "a further long description to provide context that is not useful for search"
+              },
+              {
+                "value": "label4",
+                "label": "label4",
+                "description": "another long description to provide context that is not useful for search"
+              },
+              {
+                "value": "label5",
+                "label": "label5",
+                "description": "yet another long description to provide context that is not useful for search"
+              }
+            ]
+          },
+          "descriptions_search": {
+            "title": "Multi Select with search on descriptions",
+            "type": "array",
+            "format": "uiselect",
+            "description": "Multi single items arre allowed, search on description",
+            "minItems": 1,
+            "items": [
+              {
+                "group": "North America",
+                "value": "us",
+                "label": "Canada",
+                "description": ""
+              },
+              {
+                "group": "North America",
+                "value": "cn",
+                "label": "USA",
+                "description": "US, USA, United States of America"
+              },
+              {
+                "group": "Europe",
+                "value": "gb",
+                "label": "UK",
+                "description": "United Kingdom, Great Britain, GB"
+              },
+              {
+                "group": "Europe",
+                "value": "nl",
+                "label": "Holland",
+                "description": "Netherlands, NL, Nederland, Pays-Bas"
+              }
+            ]
+          },
+          "tagging": {
+            "title": "Tagging",
+            "type": "array",
+            "format": "uiselect",
+            "description": "Hit enter or comma to create a new item in the dropdown",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": [
+              {
+                "value": "one",
+                "label": "label1"
+              },
+              {
+                "value": "two",
+                "label": "label2"
+              },
+              {
+                "value": "three",
+                "label": "label3"
+              },
+              {
+                "value": "four",
+                "label": "label4"
+              },
+              {
+                "value": "five",
+                "label": "label5"
+              }
+            ]
+          },
+          "grouping": {
+            "title": "Multi Select with grouping",
+            "type": "array",
+            "format": "uiselect",
+            "description": "Can be empty",
+            "minItems": 0,
+            "items": [
+              {
+                "group": "North America",
+                "value": "us",
+                "label": "Canada"
+              },
+              {
+                "group": "North America",
+                "value": "cn",
+                "label": "USA"
+              },
+              {
+                "group": "Europe",
+                "value": "gb",
+                "label": "UK"
+              },
+              {
+                "group": "Europe",
+                "value": "nl",
+                "label": "Holland"
+              }
+            ]
+          },
+          "grouping_and_tagging": {
+            "title": "Grouping with Tagging",
+            "type": "array",
+            "format": "uiselect",
+            "description": "Hit enter or comma to create a new item in the dropdown",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": [
+              {
+                "group": "North America",
+                "value": "us",
+                "label": "Canada"
+              },
+              {
+                "group": "North America",
+                "value": "cn",
+                "label": "USA"
+              },
+              {
+                "group": "Europe",
+                "value": "gb",
+                "label": "UK"
+              },
+              {
+                "group": "Europe",
+                "value": "nl",
+                "label": "Holland"
+              }
+            ]
+          },
+          "single_grouping_and_tagging": {
+            "title": "Single Select with Grouping with Tagging",
+            "type": "string",
+            "format": "uiselect",
+            "description": "Hit enter or comma to create a new item in the dropdown",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": [
+              {
+                "group": "North America",
+                "value": "us",
+                "label": "Canada"
+              },
+              {
+                "group": "North America",
+                "value": "cn",
+                "label": "USA"
+              },
+              {
+                "group": "Europe",
+                "value": "gb",
+                "label": "UK"
+              },
+              {
+                "group": "Europe",
+                "value": "nl",
+                "label": "Holland"
+              }
+            ]
+          },
+          "single_tagging": {
+            "title": "Tagging",
+            "type": "string",
+            "format": "uiselect",
+            "description": "Hit enter or comma to create a new item in the dropdown",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": [
+              {
+                "value": "one",
+                "label": "label1"
+              },
+              {
+                "value": "two",
+                "label": "label2"
+              },
+              {
+                "value": "three",
+                "label": "label3"
+              },
+              {
+                "value": "four",
+                "label": "label4"
+              },
+              {
+                "value": "five",
+                "label": "label5"
+              }
+            ]
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "uiSingleSelectStatic",
+          "options": {
+            "uiClass": "short"
+          }
+        },
+        {
+          "key": "uiMultipleSelectStatic"
+        },
+        {
+          "key": "uiSingleSelectDynamic",
+          "options": {
+            "http_get": {
+              "url": "http://www.networknt.com/api/rs?cmd={\"category\": \"demo\", \"name\": \"getDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "uiMultipleSelectDynamic",
+          "options": {
+            "http_post": {
+              "url": "http://www.networknt.com/api/rs",
+              "parameter": {
+                "category": "demo",
+                "name": "getDropdown",
+                "readOnly": true
+              }
+            }
+          }
+        },
+        {
+          "key": "uiSingleSelectPopulated"
+        },
+        {
+          "key": "uiMultipleSelectPopulated"
+        },
+        "descriptions",
+        {
+          "key": "descriptions_search",
+          "options": {
+            "searchDescriptions": true
+          }
+        },
+        {
+          "key": "tagging",
+          "options": {
+            "tagging": "$scope.tagFunction",
+            "taggingLabel": "(adding new)",
+            "taggingTokens": "ENTER|,"
+          }
+        },
+        {
+          "key": "grouping",
+          "options": {
+            "groupBy": "group"
+          }
+        },
+        {
+          "key": "grouping_and_tagging",
+          "options": {
+            "groupBy": "group",
+            "tagging": "$scope.tagFunction",
+            "taggingLabel": "(adding new)",
+            "taggingTokens": "ENTER|,"
+          }
+        },
+        {
+          "key": "single_grouping_and_tagging",
+          "options": {
+            "groupBy": "group",
+            "tagging": "$scope.tagFunction",
+            "taggingLabel": "(adding new)",
+            "taggingTokens": "ENTER|,"
+          }
+        },
+        {
+          "key": "single_tagging",
+          "options": {
+            "tagging": "$scope.tagFunction",
+            "taggingLabel": "(adding new)",
+            "taggingTokens": "ENTER|,"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "demo",
+          "name": "uiSelectDemo",
+          "readOnly": false,
+          "title": "Submit"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.775"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.775",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:306",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10307,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.feeds",
+      "schema": {
+        "type": "object",
+        "required": [
+          "environment",
+          "feeds"
+        ],
+        "title": "Feeds",
+        "properties": {
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "enum": [
+              "LOCAL",
+              "IDT5N",
+              "SIT1N",
+              "SIT2N",
+              "SIT3N",
+              "UAT1N",
+              "UAT2N"
+            ]
+          },
+          "feeds": {
+            "type": "string",
+            "title": "Feeds"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "environment",
+        {
+          "key": "feeds",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "json"
+          }
+        }
+      ],
+      "action": [
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "injAllFeed",
+          "readOnly": false,
+          "title": "Inject"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.794"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.794",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:307",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10308,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.forum.post.update",
+      "schema": {
+        "type": "object",
+        "title": "Post",
+        "required": [
+          "title",
+          "content"
+        ],
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "string",
+            "readonly": "true"
+          },
+          "@rid": {
+            "title": "RID",
+            "type": "string",
+            "readonly": "true"
+          },
+          "title": {
+            "title": "Title [Mandatory, 12 to 90 characters]",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags [Maximum 5 tags]",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "type": "fieldset",
+          "title": "Post",
+          "items": [
+            {
+              "type": "tabs",
+              "tabs": [
+                {
+                  "title": "Edit Content",
+                  "items": [
+                    {
+                      "title": "ID",
+                      "readonly": true,
+                      "schema": {
+                        "title": "ID",
+                        "type": "string",
+                        "readonly": "true"
+                      },
+                      "ngModelOptions": {
+                        "updateOnDefault": true
+                      },
+                      "key": [
+                        "id"
+                      ],
+                      "type": "text"
+                    },
+                    {
+                      "title": "RID",
+                      "readonly": true,
+                      "schema": {
+                        "title": "id",
+                        "type": "string"
+                      },
+                      "ngModelOptions": {
+                        "updateOnDefault": true
+                      },
+                      "key": [
+                        "@rid"
+                      ],
+                      "type": "text"
+                    },
+                    {
+                      "title": "Title [Mandatory, 12 to 90 characters]",
+                      "required": true,
+                      "schema": {
+                        "title": "Title [Mandatory, 12 to 90 characters]",
+                        "type": "string"
+                      },
+                      "ngModelOptions": {
+                        "updateOnDefault": true
+                      },
+                      "key": [
+                        "title"
+                      ],
+                      "type": "text",
+                      "onChange": "updSubjectLength(modelValue)",
+                      "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                    },
+                    {
+                      "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+                      "required": true,
+                      "schema": {
+                        "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+                        "type": "string"
+                      },
+                      "ngModelOptions": {},
+                      "key": [
+                        "content"
+                      ],
+                      "type": "ace",
+                      "style": {
+                        "height": "500px"
+                      },
+                      "aceOptions": {
+                        "theme": "eclipse",
+                        "mode": "markdown"
+                      },
+                      "onChange": "updContentLength(modelValue)",
+                      "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                    },
+                    {
+                      "title": "Tags [Maximum 5 tags]",
+                      "schema": {
+                        "title": "Tags [Maximum 5 tags]",
+                        "type": "string"
+                      },
+                      "ngModelOptions": {
+                        "updateOnDefault": true
+                      },
+                      "key": [
+                        "tags"
+                      ],
+                      "type": "textarea",
+                      "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                    }
+                  ]
+                },
+                {
+                  "title": "Preview",
+                  "items": [
+                    {
+                      "type": "help",
+                      "helpvalue": "<br><h4>Content</h4><br>"
+                    },
+                    {
+                      "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+                      "required": true,
+                      "schema": {
+                        "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+                        "type": "string"
+                      },
+                      "ngModelOptions": {},
+                      "key": [
+                        "content"
+                      ],
+                      "type": "marked"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "action": [
+        {
+          "category": "forum",
+          "name": "updPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-forum-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.808"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.808",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:308",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10309,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.rule.import",
+      "schema": {
+        "type": "object",
+        "title": "Import Rule File",
+        "required": [
+          "ruleClass",
+          "sourceCode"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string"
+          },
+          "sourceCode": {
+            "title": "Rule Source Code",
+            "type": "string",
+            "format": "file-reader"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "sourceCode"
+      ],
+      "action": [
+        {
+          "category": "rule",
+          "name": "impRule",
+          "readOnly": false,
+          "title": "Import Rule",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.822"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.822",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:309",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10310,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.forum.update",
+      "schema": {
+        "type": "object",
+        "title": "Forum",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Forum Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "options": {
+            "category": "forum",
+            "name": "getForumDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "forum",
+            "name": "getForumDropdown"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "forum",
+          "name": "updForum",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-forum-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.834"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.834",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:310",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10311,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.role.add",
+      "schema": {
+        "type": "object",
+        "title": "Role",
+        "required": [
+          "roleId",
+          "desc"
+        ],
+        "properties": {
+          "roleId": {
+            "title": "Role Id",
+            "type": "string"
+          },
+          "desc": {
+            "title": "Description",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "roleId",
+        "desc"
+      ],
+      "action": [
+        {
+          "category": "role",
+          "name": "addRole",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-role-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.844"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.844",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:311",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10312,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.update",
+      "schema": {
+        "type": "object",
+        "title": "Blog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Blog Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "options": {
+            "category": "blog",
+            "name": "getBlogDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "blog",
+            "name": "getBlogDropdown"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "updBlog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-blog-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.851"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.851",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:312",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10313,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.transform.request.add_d",
+      "schema": {
+        "type": "object",
+        "title": "Add Request Transform Rule",
+        "required": [
+          "ruleClass",
+          "sequence",
+          "transformRule"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "number"
+          },
+          "transformRule": {
+            "title": "Transform Rule",
+            "type": "string",
+            "format": "uiselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "rule",
+                  "name": "getRuleDropdown"
+                }
+              }
+            ]
+          },
+          "transformData": {
+            "title": "Transform Data",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "sequence",
+        "transformRule",
+        {
+          "key": "transformData",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "json"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "transform",
+          "name": "addTransformRequest",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.860"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.860",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:313",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10314,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.db.execQueryCommand",
+      "schema": {
+        "type": "object",
+        "title": "Execute Command",
+        "required": [
+          "script"
+        ],
+        "properties": {
+          "script": {
+            "title": "Script",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "script",
+          "type": "ace",
+          "style": {
+            "height": "500px"
+          },
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "sql"
+          },
+          "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+        }
+      ],
+      "action": [
+        {
+          "category": "db",
+          "name": "execQueryCmd",
+          "readOnly": true,
+          "title": "Execute",
+          "success": "/page/com-networknt-light-v-db-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.867"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.867",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:314",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10315,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.role.update",
+      "schema": {
+        "type": "object",
+        "title": "Role",
+        "required": [
+          "desc"
+        ],
+        "properties": {
+          "desc": {
+            "title": "Description",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "desc"
+      ],
+      "action": [
+        {
+          "category": "role",
+          "name": "updRole",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-role-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.882"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.882",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:315",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10316,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.news.add",
+      "schema": {
+        "type": "object",
+        "title": "News",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "News Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "options": {
+            "category": "news",
+            "name": "getNewsDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "news",
+            "name": "getNewsDropdown"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "news",
+          "name": "addNews",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-news-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.891"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.891",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:316",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10317,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.forum.add",
+      "schema": {
+        "type": "object",
+        "title": "Forum",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Forum Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "options": {
+            "category": "forum",
+            "name": "getForumDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "forum",
+            "name": "getForumDropdown"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "forum",
+          "name": "addForum",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-forum-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.913"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.913",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:317",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10318,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.user.change.password",
+      "schema": {
+        "type": "object",
+        "required": [
+          "password",
+          "password_confirm"
+        ],
+        "title": "Change Password",
+        "properties": {
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "passwordConfirm": {
+            "title": "Password Confirmation",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "password",
+          "type": "password"
+        },
+        {
+          "key": "passwordConfirm",
+          "type": "password"
+        }
+      ],
+      "action": [
+        {
+          "category": "user",
+          "name": "updPassword",
+          "readOnly": false,
+          "title": "Change Password"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.918"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.918",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:318",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10319,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.user.address",
+      "schema": {
+        "type": "object",
+        "required": [
+          "firstName",
+          "lastName",
+          "address",
+          "city",
+          "province",
+          "postalCode",
+          "country",
+          "phone"
+        ],
+        "title": "Address",
+        "properties": {
+          "firstName": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "lastName": {
+            "title": "Last Name",
+            "type": "string"
+          },
+          "apartmentSuiteNumber": {
+            "title": "Apartment/Suite Number",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "city": {
+            "title": "City",
+            "type": "string",
+            "description": "Please enter full city name"
+          },
+          "province": {
+            "title": "Province",
+            "type": "string",
+            "enum": [
+              "AB",
+              "BC",
+              "MB",
+              "NB",
+              "NF",
+              "NS",
+              "NT",
+              "NU",
+              "ON",
+              "PE",
+              "QC",
+              "SK",
+              "YK"
+            ]
+          },
+          "postalCode": {
+            "title": "Postal Code",
+            "type": "string"
+          },
+          "country": {
+            "title": "Country",
+            "type": "string",
+            "enum": [
+              "Canada"
+            ]
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string",
+            "description": "Please include area code"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "*"
+      ],
+      "action": [
+        {
+          "category": "user",
+          "name": "addAddress",
+          "readOnly": false,
+          "title": "New"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.937"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.937",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:319",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10320,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.forum.post.add",
+      "schema": {
+        "type": "object",
+        "title": "Post",
+        "required": [
+          "title",
+          "content"
+        ],
+        "properties": {
+          "title": {
+            "title": "Title [Mandatory, 12 to 90 characters]",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content [MarkDown Syntax, 24 to 20480 characters. Drag right bottom to enlarge]",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags [Maximum 5 tags]",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "type": "fieldset",
+          "title": "Post",
+          "items": [
+            {
+              "type": "tabs",
+              "tabs": [
+                {
+                  "title": "Edit Content",
+                  "items": [
+                    {
+                      "key": "title",
+                      "onChange": "updSubjectLength(modelValue)",
+                      "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                    },
+                    {
+                      "key": "content",
+                      "type": "ace",
+                      "style": {
+                        "height": "500px"
+                      },
+                      "aceOptions": {
+                        "theme": "eclipse",
+                        "mode": "markdown"
+                      },
+                      "onChange": "updContentLength(modelValue)",
+                      "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                    },
+                    {
+                      "key": "tags",
+                      "type": "textarea",
+                      "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+                    }
+                  ]
+                },
+                {
+                  "title": "Preview",
+                  "items": [
+                    {
+                      "type": "help",
+                      "helpvalue": "<br><h4>Content</h4><br>"
+                    },
+                    {
+                      "key": "content",
+                      "type": "marked"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "action": [
+        {
+          "category": "forum",
+          "name": "addPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-forum-post"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.947"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.947",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:320",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10321,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.page.add",
+      "schema": {
+        "type": "object",
+        "title": "Page",
+        "required": [
+          "pageId",
+          "content"
+        ],
+        "properties": {
+          "pageId": {
+            "title": "Page Id",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "pageId",
+        {
+          "key": "content",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "html"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "page",
+          "name": "addPage",
+          "readOnly": false,
+          "title": "Submit"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.953"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.953",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:321",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10322,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.db.replayEvent",
+      "schema": {
+        "type": "object",
+        "title": "Upload Event File",
+        "required": [
+          "content"
+        ],
+        "properties": {
+          "content": {
+            "title": "Event Content",
+            "type": "string",
+            "format": "file-reader"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "content"
+      ],
+      "action": [
+        {
+          "category": "db",
+          "name": "replayEvent",
+          "readOnly": true,
+          "title": "Replay Event",
+          "success": "/page/com-networknt-light-v-db-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.963"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.963",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:322",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10323,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.rule.cors.update",
+      "schema": {
+        "type": "object",
+        "title": "Cors Update",
+        "required": [
+          "ruleClass",
+          "enableCors"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "enableCors": {
+            "title": "Enable CORS?",
+            "type": "boolean"
+          },
+          "corsHosts": {
+            "title": "Allowed Hosts",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "enableCors",
+        "corsHosts"
+      ],
+      "action": [
+        {
+          "category": "rule",
+          "name": "updCors",
+          "readOnly": false,
+          "title": "Update",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.970"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.970",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:323",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10324,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.form.import",
+      "schema": {
+        "type": "object",
+        "title": "Import Form File",
+        "required": [
+          "content"
+        ],
+        "properties": {
+          "content": {
+            "title": "Form Content",
+            "type": "string",
+            "format": "file-reader"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "content"
+      ],
+      "action": [
+        {
+          "category": "form",
+          "name": "impForm",
+          "readOnly": false,
+          "title": "Import Form",
+          "success": "/page/com-networknt-light-v-form-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.974"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.974",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:324",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10325,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.page.import",
+      "schema": {
+        "type": "object",
+        "title": "Import Page File",
+        "required": [
+          "pageId",
+          "content"
+        ],
+        "properties": {
+          "pageId": {
+            "title": "Page Id",
+            "type": "string"
+          },
+          "content": {
+            "title": "Page Content",
+            "type": "string",
+            "format": "file-reader"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "pageId",
+        "content"
+      ],
+      "action": [
+        {
+          "category": "page",
+          "name": "impPage",
+          "readOnly": false,
+          "title": "Import Page",
+          "success": "/page/com-networknt-light-v-page-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.984"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.984",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:325",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10326,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.host.add",
+      "schema": {
+        "type": "object",
+        "title": "Host",
+        "required": [
+          "id",
+          "base",
+          "transferMinSize"
+        ],
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "base": {
+            "title": "Base",
+            "type": "string"
+          },
+          "transferMinSize": {
+            "title": "Transfer Min Size",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "id",
+        "base",
+        "transferMinSize"
+      ],
+      "action": [
+        {
+          "category": "host",
+          "name": "addHost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-host-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.991"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.991",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:326",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10327,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.access.upd_d",
+      "schema": {
+        "type": "object",
+        "title": "Update Access Control",
+        "required": [
+          "accessLevel"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "accessLevel": {
+            "title": "Access Level",
+            "type": "string",
+            "format": "uiselect",
+            "items": [
+              {
+                "value": "A",
+                "label": "Authorized to anyone"
+              },
+              {
+                "value": "N",
+                "label": "Not Accessible"
+              },
+              {
+                "value": "C",
+                "label": "Client Based"
+              },
+              {
+                "value": "R",
+                "label": "Role Based"
+              },
+              {
+                "value": "U",
+                "label": "User Based"
+              },
+              {
+                "value": "CR",
+                "label": "Client and Role Based"
+              },
+              {
+                "value": "CU",
+                "label": "Client and User Based"
+              },
+              {
+                "value": "RU",
+                "label": "Role and User Based"
+              },
+              {
+                "value": "CRU",
+                "label": "Client, Role and User Based"
+              }
+            ]
+          },
+          "clients": {
+            "title": "Clients",
+            "type": "array",
+            "format": "strapselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "client",
+                  "name": "getClientDropdown"
+                }
+              }
+            ]
+          },
+          "roles": {
+            "title": "Roles",
+            "type": "array",
+            "format": "strapselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "role",
+                  "name": "getRoleDropdown"
+                }
+              }
+            ]
+          },
+          "users": {
+            "title": "Users [Separate by comma if multiple]",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "accessLevel",
+        "clients",
+        "roles",
+        {
+          "key": "users",
+          "type": "textarea"
+        }
+      ],
+      "action": [
+        {
+          "category": "access",
+          "name": "updAccess",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-access-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:32.999"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:32.999",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:327",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10328,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.rule.subscriber.update",
+      "schema": {
+        "type": "object",
+        "title": "Subscriber Update",
+        "required": [
+          "ruleClass",
+          "isSubscriber"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "isPublisher": {
+            "title": "Subscribe Event?",
+            "type": "boolean"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "isSubscriber"
+      ],
+      "action": [
+        {
+          "category": "rule",
+          "name": "updSubscriber",
+          "readOnly": false,
+          "title": "Update",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.016"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.016",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:328",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10329,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.host.update",
+      "schema": {
+        "type": "object",
+        "title": "Host",
+        "required": [
+          "base",
+          "transferMinSize"
+        ],
+        "properties": {
+          "base": {
+            "title": "Base",
+            "type": "string"
+          },
+          "transferMinSize": {
+            "title": "Transfer Min Size",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "base",
+        "transferMinSize"
+      ],
+      "action": [
+        {
+          "category": "host",
+          "name": "updHost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-host-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.026"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.026",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:329",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10330,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.menu.addMenuItem",
+      "schema": {
+        "type": "object",
+        "title": "Menu Item",
+        "required": [
+          "menuItemId",
+          "label"
+        ],
+        "properties": {
+          "menuItemId": {
+            "title": "Menu Item Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "host": {
+            "title": "Host",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "tpl": {
+            "title": "Template",
+            "type": "string"
+          },
+          "ctrl": {
+            "title": "Controller",
+            "type": "string"
+          },
+          "left": {
+            "title": "Position Left",
+            "type": "boolean"
+          },
+          "roles": {
+            "title": "Roles",
+            "type": "array",
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "type": "array",
+            "title": "Menu Items",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "menuItemId",
+        "label",
+        "host",
+        "path",
+        "tpl",
+        "ctrl",
+        "left",
+        {
+          "key": "roles",
+          "options": {
+            "category": "role",
+            "name": "getRoleDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "menu",
+            "name": "getMenuItemMap"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "menu",
+          "name": "addMenuItem",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-menu-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.035"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.035",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:330",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10331,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.rule.schema.update",
+      "schema": {
+        "type": "object",
+        "title": "Validation Schema Update",
+        "required": [
+          "ruleClass"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "schema": {
+            "title": "Validation Schema",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        {
+          "key": "schema",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "json"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "rule",
+          "name": "updSchema",
+          "readOnly": false,
+          "title": "Update",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.045"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.045",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:331",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10332,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.rule.etag.update",
+      "schema": {
+        "type": "object",
+        "title": "Etag Flag Update",
+        "required": [
+          "ruleClass",
+          "enableEtag"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "enableEtag": {
+            "title": "Enable Etag?",
+            "type": "boolean"
+          },
+          "cacheControl": {
+            "title": "Cache Control Header",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "enableEtag",
+        "cacheControl"
+      ],
+      "action": [
+        {
+          "category": "rule",
+          "name": "updEtag",
+          "readOnly": false,
+          "title": "Update",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.051"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.051",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:332",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10333,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.user.signin",
+      "schema": {
+        "type": "object",
+        "title": "Sign In",
+        "required": [
+          "userIdEmail",
+          "password"
+        ],
+        "properties": {
+          "userIdEmail": {
+            "title": "UserId or Email",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "rememberMe": {
+            "title": "Remember me for 30 days",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "userIdEmail",
+        {
+          "key": "password",
+          "type": "password"
+        },
+        "rememberMe"
+      ],
+      "action": [
+        {
+          "category": "user",
+          "name": "signInUser",
+          "readOnly": false,
+          "title": "Sign In",
+          "success": "/page/com-networknt-light-v-user-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.057"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.057",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:333",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10334,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.db.execUpdateCommand",
+      "schema": {
+        "type": "object",
+        "title": "Execute Command",
+        "required": [
+          "script"
+        ],
+        "properties": {
+          "script": {
+            "title": "Script",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "script",
+          "type": "ace",
+          "style": {
+            "height": "500px"
+          },
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "sql"
+          },
+          "feedback": "{'glyphicon': true, 'glyphicon-ok': hasSuccess(), 'glyphicon-star': !hasSuccess() }"
+        }
+      ],
+      "action": [
+        {
+          "category": "db",
+          "name": "execUpdateCmd",
+          "readOnly": false,
+          "title": "Execute",
+          "success": "/page/com-networknt-light-v-db-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.069"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.069",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:334",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10335,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.update",
+      "schema": {
+        "type": "object",
+        "title": "Catalog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Catalog Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "options": {
+            "category": "catalog",
+            "name": "getCatalogDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "catalog",
+            "name": "getCatalogDropdown"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "updCatalog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-catalog-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.082"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.082",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:335",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10336,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.menu.addMenu",
+      "schema": {
+        "type": "object",
+        "title": "Menu",
+        "required": [
+          "host"
+        ],
+        "properties": {
+          "host": {
+            "title": "Host that the menu is added to",
+            "type": "string"
+          },
+          "out_Own": {
+            "type": "array",
+            "title": "Menu Items",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "host",
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "menu",
+            "name": "getMenuItemMap"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "menu",
+          "name": "addMenu",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-menu-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.088"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.088",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:336",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10337,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.add",
+      "schema": {
+        "type": "object",
+        "title": "Blog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Blog Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "options": {
+            "category": "blog",
+            "name": "getBlogDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "blog",
+            "name": "getBlogDropdown"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "addBlog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-blog-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.101"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.101",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:337",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10338,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.config.update",
+      "schema": {
+        "type": "object",
+        "required": [
+          "host",
+          "app"
+        ],
+        "title": "Configuration",
+        "properties": {
+          "host": {
+            "type": "string",
+            "title": "Host",
+            "enum": [
+              "injector",
+              "www.networknt.com",
+              "www.edibleforestgarden.ca"
+            ]
+          },
+          "app": {
+            "type": "string",
+            "title": "Application",
+            "enum": [
+              "main",
+              "blog"
+            ]
+          },
+          "blogCacheSize": {
+            "type": "number",
+            "title": "Blog Cache Size (number of blogs cached for the entire server. max 9999)",
+            "maxLength": 4
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "host",
+        "app",
+        "blogCacheSize"
+      ],
+      "action": [
+        {
+          "category": "config",
+          "name": "updConfig",
+          "readOnly": false,
+          "title": "Update"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.114"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.114",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:338",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10339,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.transform.request.update_d",
+      "schema": {
+        "type": "object",
+        "title": "Update Request Transform Rule",
+        "required": [
+          "ruleClass",
+          "sequence",
+          "transformRule"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "number",
+            "readonly": true
+          },
+          "transformRule": {
+            "title": "Transform Rule",
+            "type": "string",
+            "format": "uiselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "rule",
+                  "name": "getRuleDropdown"
+                }
+              }
+            ]
+          },
+          "transformData": {
+            "title": "Transform Data",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "sequence",
+        "transformRule",
+        {
+          "key": "transformData",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "json"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "transform",
+          "name": "updTransformRequest",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.121"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.121",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:339",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10340,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.class.feed",
+      "schema": {
+        "type": "object",
+        "required": [
+          "environment",
+          "messageNumber",
+          "hppInd",
+          "centreCode"
+        ],
+        "title": "class",
+        "properties": {
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "enum": [
+              "LOCAL",
+              "IDT5N",
+              "SIT1N",
+              "SIT2N",
+              "SIT3N",
+              "UAT1N",
+              "UAT2N"
+            ]
+          },
+          "requestId": {
+            "type": "number",
+            "title": "Request Id",
+            "maxLength": 10
+          },
+          "messageNumber": {
+            "type": "string",
+            "title": "Message Number",
+            "enum": [
+              "E0500",
+              "E0450",
+              "E0220",
+              "E0130",
+              "E0110",
+              "E0014",
+              "E0012",
+              "E0010",
+              "A0120",
+              "A0090"
+            ]
+          },
+          "loanNumber": {
+            "type": "string",
+            "title": "Loan Number",
+            "maxLength": 10
+          },
+          "pid": {
+            "type": "string",
+            "title": "PID",
+            "enum": [
+              "263",
+              "701",
+              "702",
+              "703",
+              "704",
+              "705",
+              "706",
+              "798",
+              "799",
+              "233",
+              "237",
+              "262",
+              "265",
+              "232",
+              "257",
+              "248",
+              "238",
+              "900",
+              "910",
+              "999",
+              "259",
+              "131",
+              "600",
+              "601",
+              "602",
+              "603",
+              "697",
+              "698",
+              "699",
+              "141",
+              "142",
+              "152",
+              "232",
+              "257",
+              "800",
+              "899"
+            ]
+          },
+          "hppInd": {
+            "type": "string",
+            "title": "HPP Indicator",
+            "enum": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ]
+          },
+          "loanCategroy": {
+            "title": "Loan Category",
+            "type": "string",
+            "enum": [
+              "CMHC",
+              "COL1",
+              "COL2",
+              "COL3",
+              "ANEW",
+              "ANUT",
+              "AUSE",
+              "AUUT",
+              "MCYC",
+              "MOHO",
+              "TCCN",
+              "TCCU",
+              "GPIN",
+              "GPIV"
+            ],
+            "default": "CHMC"
+          },
+          "debtConsolidation": {
+            "title": "Debt Consolidation",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "incomeVerification": {
+            "title": "Income Verification",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "liabilityType": {
+            "title": "Liability Type",
+            "type": "string",
+            "enum": [
+              "701",
+              "700",
+              "602",
+              "603",
+              "601",
+              "600",
+              "302",
+              "301",
+              "300",
+              "BSC",
+              "CLN",
+              "PLC",
+              "MTG",
+              "REN",
+              "DC0"
+            ]
+          },
+          "plcPurposeCode": {
+            "title": "Plc PurposeCode",
+            "type": "string",
+            "enum": [
+              "000",
+              "001",
+              "002",
+              "003",
+              "004",
+              "005",
+              "006",
+              "009"
+            ]
+          },
+          "fullLiabilityIndicator": {
+            "title": "Full Liability Indicator",
+            "type": "string",
+            "enum": [
+              "1",
+              "4"
+            ]
+          },
+          "solicitorName": {
+            "title": "Solicitor Name",
+            "type": "string",
+            "maxLength": 25
+          },
+          "propertyProvCode": {
+            "title": "Property Prov Code",
+            "type": "string",
+            "enum": [
+              "QC",
+              "NS",
+              "NU",
+              "MB",
+              "BC",
+              "PE",
+              "NT",
+              "YT",
+              "ON",
+              "SK",
+              "AB",
+              "NB"
+            ],
+            "default": "ON"
+          },
+          "centreCode": {
+            "title": "Centre Code",
+            "type": "string",
+            "enum": [
+              "TO",
+              "VA",
+              "CA",
+              "TB",
+              "REBO",
+              "Bank@Work",
+              "WP",
+              "HL",
+              "Training",
+              "MT",
+              "RISK"
+            ],
+            "default": "TO"
+          },
+          "processingDate": {
+            "title": "Processing Date",
+            "type": "string",
+            "format": "date"
+          },
+          "reportDate": {
+            "title": "Report Date",
+            "type": "string",
+            "format": "date"
+          },
+          "customerName": {
+            "title": "Customer Name",
+            "type": "string",
+            "maxLength": 250,
+            "default": "New Injector"
+          },
+          "postNumber": {
+            "title": "Post Number",
+            "type": "string",
+            "maxLength": 3,
+            "default": "123"
+          },
+          "transit": {
+            "title": "Transit",
+            "type": "string",
+            "maxLength": 5,
+            "default": "00001"
+          },
+          "cid": {
+            "title": "CID",
+            "type": "string",
+            "maxLength": 3,
+            "default": "100"
+          },
+          "fundsDisbursed": {
+            "title": "Funds Disbursed",
+            "type": "number",
+            "default": 1000
+          },
+          "relationship": {
+            "title": "Relationship",
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "default": "1"
+          },
+          "marketingSourceCode": {
+            "title": "Marketing Source Code",
+            "type": "string",
+            "enum": [
+              "DWPV",
+              "PBCY",
+              "BFIN",
+              "BFCE",
+              "BDLG",
+              "OFFN",
+              "BLAK",
+              "EQLH",
+              "OFFB",
+              "NEW2",
+              "FCBC",
+              "JJ99",
+              "AHBL",
+              "CASE",
+              "NRES",
+              "BTOB",
+              "GENL",
+              "ABL1",
+              "RP22",
+              "RP99",
+              "EQL1"
+            ],
+            "default": "RP99"
+          },
+          "provinceCode": {
+            "title": "Province Code",
+            "type": "string",
+            "enum": [
+              "QC",
+              "NS",
+              "NU",
+              "MB",
+              "BC",
+              "PE",
+              "NT",
+              "YT",
+              "ON",
+              "SK",
+              "AB",
+              "NB"
+            ],
+            "default": "ON"
+          },
+          "newConstructionInd": {
+            "title": "New Construction Ind",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "processTypeCd": {
+            "title": "Process Type",
+            "type": "string"
+          },
+          "processSubtypeCd": {
+            "title": "Process Sub Type",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags[Maximum 5 tags separated by ,]",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "type": "help",
+          "helpvalue": "<h4>Class Feed Example</h4>"
+        },
+        "environment",
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for injection rules</h4>"
+        },
+        "messageNumber",
+        "hppInd",
+        {
+          "type": "conditional",
+          "condition": "modelData.hppInd==='0'",
+          "items": [
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0012' || modelData.messageNumber === 'E0014'",
+              "items": [
+                "pid"
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0010'",
+              "items": [
+                "pid",
+                {
+                  "key": "debtConsolidation",
+                  "type": "radiobuttons"
+                },
+                "loanCategroy"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "condition": "modelData.hppInd !== '0'",
+          "items": [
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0012'",
+              "items": [
+                "plcPurposeCode",
+                "fullLiabilityIndicator",
+                "solicitorName",
+                "propertyProvCode"
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber === 'E0014'",
+              "items": [
+                "plcPurposeCode",
+                "solicitorName",
+                "propertyProvCode"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for epi mappings</h4>"
+        },
+        "loanNumber",
+        "customerName",
+        "postNumber",
+        "transit",
+        "cid",
+        "fundsDisbursed",
+        "relationship",
+        "marketingSourceCode",
+        {
+          "key": "incomeVerification",
+          "type": "radios",
+          "titleMap": {
+            "Y": "Income Verification is requried.",
+            "N": "Income Verification is not required."
+          }
+        },
+        "centreCode",
+        "provinceCode",
+        "newConstructionInd",
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for feed storage and retrieval only</h4>"
+        },
+        "processTypeCd",
+        "processSubtypeCd",
+        {
+          "key": "tags",
+          "type": "textarea"
+        }
+      ],
+      "action": [
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "injClassFeed",
+          "readOnly": false,
+          "title": "Inject",
+          "success": "/"
+        },
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "updFeedMeta",
+          "readOnly": false,
+          "title": "Update Meta",
+          "success": "/"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.138"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.138",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:340",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10341,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.rule.update",
+      "schema": {
+        "type": "object",
+        "title": "Rule",
+        "required": [
+          "sourceCode"
+        ],
+        "properties": {
+          "sourceCode": {
+            "title": "Source Code",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "sourceCode",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "java"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "rule",
+          "name": "updRule",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.151"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.151",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:341",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10342,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.add",
+      "schema": {
+        "type": "object",
+        "title": "Catalog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Catalog Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1,
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "options": {
+            "category": "catalog",
+            "name": "getCatalogDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "catalog",
+            "name": "getCatalogDropdown"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "addCatalog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-catalog-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.160"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.160",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:342",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10343,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.user.update.profile",
+      "schema": {
+        "type": "object",
+        "title": "Update Profile",
+        "properties": {
+          "firstName": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "lastName": {
+            "title": "Last Name",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "firstName",
+        "lastName"
+      ],
+      "action": [
+        {
+          "category": "user",
+          "name": "updProfile",
+          "readOnly": false,
+          "title": "Update"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.172"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.172",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:343",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10344,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.db.exportDb",
+      "schema": {
+        "type": "object",
+        "title": "Export",
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "title": "Path for export file",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "path"
+      ],
+      "action": [
+        {
+          "category": "db",
+          "name": "expDb",
+          "readOnly": true,
+          "title": "Export",
+          "success": "/page/com-networknt-light-v-db-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.185"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.185",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:344",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10345,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.user.signup",
+      "schema": {
+        "type": "object",
+        "required": [
+          "userId",
+          "email",
+          "password",
+          "passwordConfirm"
+        ],
+        "title": "Sign Up",
+        "properties": {
+          "userId": {
+            "title": "User Id",
+            "type": "string",
+            "description": "User Id can be used to log in."
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "description": "Email can be used to log in."
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "passwordConfirm": {
+            "title": "Password Confirmation",
+            "type": "string"
+          },
+          "firstName": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "lastName": {
+            "title": "Last Name",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "userId",
+        {
+          "key": "email",
+          "type": "email"
+        },
+        {
+          "key": "password",
+          "type": "password"
+        },
+        {
+          "key": "passwordConfirm",
+          "type": "password"
+        },
+        "firstName",
+        "lastName"
+      ],
+      "action": [
+        {
+          "category": "user",
+          "name": "signUpUser",
+          "readOnly": false,
+          "title": "Register"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.189"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.189",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:345",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10346,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.transform.response.add_d",
+      "schema": {
+        "type": "object",
+        "title": "Add Response Transform Rule",
+        "required": [
+          "ruleClass",
+          "sequence",
+          "transformRule"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "number"
+          },
+          "transformRule": {
+            "title": "Transform Rule",
+            "type": "string",
+            "format": "uiselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "rule",
+                  "name": "getRuleDropdown"
+                }
+              }
+            ]
+          },
+          "transformData": {
+            "title": "Transform Data",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "sequence",
+        "transformRule",
+        {
+          "key": "transformData",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "json"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "transform",
+          "name": "addTransformResponse",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.196"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.196",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:346",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10347,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.menu.updateMenu",
+      "schema": {
+        "type": "object",
+        "title": "Menu",
+        "required": [
+          "host"
+        ],
+        "properties": {
+          "host": {
+            "title": "Host that the menu is added to",
+            "type": "string"
+          },
+          "out_Own": {
+            "type": "array",
+            "title": "Menu Items",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "host",
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "menu",
+            "name": "getMenuItemMap"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "menu",
+          "name": "updMenu",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-menu-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.203"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.203",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:347",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10348,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.transform.response.update_d",
+      "schema": {
+        "type": "object",
+        "title": "Update Response Transform Rule",
+        "required": [
+          "ruleClass",
+          "sequence",
+          "transformRule"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "number",
+            "readonly": true
+          },
+          "transformRule": {
+            "title": "Transform Rule",
+            "type": "string",
+            "format": "uiselect",
+            "items": [
+              {
+                "label": "dynamic",
+                "value": {
+                  "category": "rule",
+                  "name": "getRuleDropdown"
+                }
+              }
+            ]
+          },
+          "transformData": {
+            "title": "Transform Data",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "sequence",
+        "transformRule",
+        {
+          "key": "transformData",
+          "type": "ace",
+          "aceOptions": {
+            "theme": "eclipse",
+            "mode": "json"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "transform",
+          "name": "updTransformResponse",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.211"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.211",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:348",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10349,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.menu.updateMenuItem",
+      "schema": {
+        "type": "object",
+        "title": "Menu Item",
+        "required": [
+          "label"
+        ],
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "host": {
+            "title": "Host",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "tpl": {
+            "title": "Template",
+            "type": "string"
+          },
+          "ctrl": {
+            "title": "Controller",
+            "type": "string"
+          },
+          "left": {
+            "title": "Position Left",
+            "type": "boolean"
+          },
+          "roles": {
+            "title": "Roles",
+            "type": "array",
+            "format": "strapselectdynamic"
+          },
+          "out_Own": {
+            "type": "array",
+            "title": "Menu Items",
+            "format": "strapselectdynamic"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "label",
+        "host",
+        "path",
+        "tpl",
+        "ctrl",
+        "left",
+        {
+          "key": "roles",
+          "options": {
+            "category": "role",
+            "name": "getRoleDropdown"
+          }
+        },
+        {
+          "key": "out_Own",
+          "options": {
+            "category": "menu",
+            "name": "getMenuItemMap"
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "menu",
+          "name": "updMenuItem",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/page/com-networknt-light-v-menu-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.220"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.220",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:349",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10350,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.rule.publisher.update",
+      "schema": {
+        "type": "object",
+        "title": "Publisher Update",
+        "required": [
+          "ruleClass",
+          "isPublisher"
+        ],
+        "properties": {
+          "ruleClass": {
+            "title": "Rule Class",
+            "type": "string",
+            "readonly": true
+          },
+          "isPublisher": {
+            "title": "Publish Event?",
+            "type": "boolean"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "ruleClass",
+        "isPublisher"
+      ],
+      "action": [
+        {
+          "category": "rule",
+          "name": "updPublisher",
+          "readOnly": false,
+          "title": "Update",
+          "success": "/page/com-networknt-light-v-rule-admin-home"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.226"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.226",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:350",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10351,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.user.profile",
+      "schema": {
+        "type": "object",
+        "required": [],
+        "title": "Sign Up",
+        "properties": {
+          "userId": {
+            "title": "User Id",
+            "type": "string",
+            "description": "User Id can be used to log in.",
+            "readonly": true
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "description": "Email can be used to log in.",
+            "readonly": true
+          },
+          "firstName": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "lastName": {
+            "title": "Last Name",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "userId",
+        {
+          "key": "email",
+          "type": "email"
+        },
+        "firstName",
+        "lastName"
+      ],
+      "action": [
+        {
+          "category": "user",
+          "name": "updProfile",
+          "readOnly": false,
+          "title": "Update"
+        }
+      ],
+      "createDate": "2015-12-30T20:07:33.231"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2015-12-30T20:07:33.231",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]
