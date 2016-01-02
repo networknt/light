@@ -118,7 +118,7 @@ const Main = React.createClass({
     },
 
     onCategorySelect(node) {
-        console.log('onCategorySelect', node);
+        //console.log('onCategorySelect', node);
         // set the select state for the selected category
         if(node.fake) {
 
@@ -133,7 +133,7 @@ const Main = React.createClass({
             }
         }
         // based on the current route, select the entities from actions.
-        console.log('onCategorySelect mainPath', this.getFirstPath(this.props.location.pathname));
+        //console.log('onCategorySelect mainPath', this.getFirstPath(this.props.location.pathname));
         switch(this.getFirstPath(this.props.location.pathname)) {
             case 'catalog':
                 ProductActionCreators.getCatalogProduct(node.props.category['@rid']);
@@ -142,13 +142,13 @@ const Main = React.createClass({
                 // route to Blog with a specific categoryId in the path
                 let rid = node.props.category['@rid'].substring(1);
                 this.props.history.push('/blog/' + rid);
-                console.log('pushed to ', 'blog/' + rid);
+                //console.log('pushed to ', 'blog/' + rid);
                 // if the current location is blog/:blogRid and has different blogRid then the component won't
                 // be mount again and there is no way for the component to reload the blogPost. Work around here.
                 let secondPath = this.getSecondPath(this.props.location.pathname);
-                console.log('before workaround', this.props.location.pathname, secondPath, rid);
+                //console.log('before workaround', this.props.location.pathname, secondPath, rid);
                 if(secondPath != null && secondPath != rid) {
-                    console.log('The main window has the same route, force to reload blogPost...');
+                    //console.log('The main window has the same route, force to reload blogPost...');
                     BlogActionCreators.getBlogPost(node.props.category['@rid']);
                 }
                 break;
@@ -167,7 +167,7 @@ const Main = React.createClass({
 
     getFirstPath(path) {
         let url = path.split('/');
-        console.log('url', url);
+        //console.log('url', url);
         return url[1];
     },
 
@@ -222,7 +222,7 @@ const Main = React.createClass({
         );
 
         var leftNavContent;
-        console.log('Main.render pahtnaeme', this.getFirstPath(this.props.location.pathname));
+        //console.log('Main.render pahtnaeme', this.getFirstPath(this.props.location.pathname));
         switch(this.getFirstPath(this.props.location.pathname)) {
             case 'blog':
             case 'news':
@@ -252,7 +252,7 @@ const Main = React.createClass({
 
 
         //console.log('history', this.props.history);
-        console.log('location', this.props.location);
+        //console.log('location', this.props.location);
         //console.log('children', this.props.children);
         return (
             <div id="page_container">

@@ -6,6 +6,11 @@ var classNames = require('classnames');
 import Paper from 'material-ui/lib/paper';
 import Markdown from '../Markdown';
 import RaisedButton from 'material-ui/lib/raised-button';
+require('rc-pagination/assets/index.css');
+import Pagination from 'rc-pagination';
+import Locale from 'rc-pagination/lib/locale/en_US';
+require('rc-select/assets/index.css');
+import Select from 'rc-select';
 
 
 var Blog = React.createClass({
@@ -16,13 +21,15 @@ var Blog = React.createClass({
             blogPosts: [],
             ancestors: [],
             allowPost: false,
-            total: 0
+            total: 0,
+            pageSize: 10,
+            pageNo: 1
         };
     },
 
     componentWillMount: function() {
         BlogStore.addChangeListener(this._onBlogChange);
-        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid);
+        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, this.state.pageNo, this.state.pageSize);
     },
 
     componentWillUnmount: function() {
@@ -34,12 +41,12 @@ var Blog = React.createClass({
             ancestors: BlogStore.getAncestors(),
             allowPost: BlogStore.getAllowPost(),
             blogPosts: BlogStore.getBlogPosts(),
-            total: BlogStore.getTotal
+            total: BlogStore.getTotal()
         });
     },
 
     _routeToPost: function(index) {
-        console.log('_routeToPost', this.props.params.blogRid, index, this.props.history);
+        //console.log('_routeToPost', this.props.params.blogRid, index, this.props.history);
         this.props.history.push('/blog/post' + this.props.params.blogRid + '/' + index);
     },
 
@@ -48,7 +55,25 @@ var Blog = React.createClass({
         this.props.history.push('/blog/postAdd/' + this.props.params.blogRid);
     },
 
+    _onPageNoChange: function (key) {
+        console.log("_onPageNoChange is called", key);
+        this.setState({
+            pageNo: key
+        });
+        // use key instead of this.state.pageNo as setState is async.
+        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, key, this.state.pageSize);
+    },
+
+    _onPageSizeChange: function (current, pageSize) {
+        console.log("_onPageSizeChange is called", current, pageSize);
+        this.setState({
+            pageSize: pageSize
+        });
+        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, this.state.pageNo, pageSize);
+    },
+
     render: function() {
+        //console.log('total', this.state.total);
         let addButton = this.state.allowPost? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
         return (
             <div>
@@ -74,6 +99,7 @@ var Blog = React.createClass({
                                 );
                             }, this)
                         }
+                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                     </div>
                     <div className="blogRightColumn">
                         <div className="blogInfo">

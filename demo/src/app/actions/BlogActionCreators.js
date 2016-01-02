@@ -13,8 +13,8 @@ module.exports = {
         WebAPIUtils.getBlogTree();
     },
 
-    getBlogPost: function(rid) {
-        WebAPIUtils.getBlogPost(rid);
+    getBlogPost: function(rid, pageNo, pageSize) {
+        WebAPIUtils.getBlogPost(rid, pageNo, pageSize);
     },
 
     addPost: function(action) {

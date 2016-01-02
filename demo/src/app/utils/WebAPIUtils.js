@@ -128,17 +128,18 @@ module.exports = {
         });
     },
 
-    getBlogPost: function(rid) {
+    getBlogPost: function(rid, pageNo, pageSize) {
         let getBlogPost = {
             category: 'blog',
             name: 'getBlogPost',
             readOnly: true,
             data: {
-                pageSize: 10,
-                pageNo: 1,
+                pageSize: pageSize,
+                pageNo: pageNo,
                 '@rid': rid
             }
         };
+        //console.log('WebAPIUtils.getBlogPost', getBlogPost);
         $.ajax({
             type: 'GET',
             url: '/api/rs',
