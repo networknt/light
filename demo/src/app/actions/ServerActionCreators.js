@@ -159,7 +159,7 @@ module.exports = {
         });
     },
 
-    submitFormRes: function(json, error) {
+    submitFormResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.SUBMIT_FORM_RESPONSE,
             json: json,

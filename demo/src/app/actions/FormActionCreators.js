@@ -24,8 +24,8 @@ module.exports = {
         });
     },
 
-    submitFormReq: function(json) {
-        WebAPIUtils.submitForm(json);
+    submitForm: function(action) {
+        WebAPIUtils.submitForm(action);
     }
 };
 

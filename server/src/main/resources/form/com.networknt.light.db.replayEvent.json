@@ -10,18 +10,21 @@
     }],
     "schema": {
         "type": "object",
-        "title": "Upload Event File",
+        "title": "Replay Event Form",
         "required": ["content"],
         "properties": {
             "content": {
                 "title": "Event Content",
-                "type": "string",
-                "format": "file-reader"
+                "type": "string"
             }
         }
     },
     "form": [
-        "content"
+        {
+            "key": "content",
+            "type": "textarea",
+            "rows": 40
+        }
     ]
 }
 

@@ -3,12 +3,12 @@ import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 
 let menuItems = [
-    { route: 'admin/blogAdmin', text: 'Blog Admin' },
-    { route: 'admin/newsAdmin', text: 'News Admin' },
-    { route: 'admin/forumAdmin', text: 'Forum Admin' },
-    { route: 'admin/catalogAdmin', text: 'Catalog Admin' },
-    { route: 'admin/dbAdmin', text: 'Db Admin' },
-    { route: 'admin/userAdmin', text: 'User Admin' }
+    { route: '/admin/blogAdmin', text: 'Blog Admin' },
+    { route: '/admin/newsAdmin', text: 'News Admin' },
+    { route: '/admin/forumAdmin', text: 'Forum Admin' },
+    { route: '/admin/catalogAdmin', text: 'Catalog Admin' },
+    { route: '/admin/dbAdmin', text: 'Db Admin' },
+    { route: '/admin/userAdmin', text: 'User Admin' }
 ];
 
 class AdminMenu extends React.Component {

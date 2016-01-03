@@ -440,9 +440,9 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            ServerActionCreators.submitFormRes(data, null);
+            ServerActionCreators.submitFormResponse(data, null);
         }).fail(function(error) {
-            ServerActionCreators.submitFormRes(null, error);
+            ServerActionCreators.submitFormResponse(null, error);
         });
     },
 

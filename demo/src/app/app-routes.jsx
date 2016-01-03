@@ -13,6 +13,7 @@ import Contact from './components/contact';
 import Signup from './components/signup';
 import Login from './components/login';
 import Logout from './components/logout';
+import Form from './components/Form';
 import BlogCategory from './components/blog/BlogCategory';
 import Blog from './components/blog/Blog';
 import BlogPost from './components/blog/BlogPost';
@@ -26,10 +27,7 @@ import BlogAdminHome from './components/admin/blog/BlogAdminHome';
 import DbAdminHome from './components/admin/db/DbAdminHome';
 import ExecQueryCommand from './components/admin/db/ExecQueryCommand';
 import ExportDatabase from './components/admin/db/ExportDatabase';
-import ExecSchemaCommand from './components/admin/db/ExecSchemaCommand';
-import ExecUpdateCommand from './components/admin/db/ExecUpdateCommand';
 import DownloadEvent from './components/admin/db/DownloadEvent';
-import ReplayEvent from './components/admin/db/ReplayEvent';
 import User from './components/user';
 
 
@@ -50,6 +48,7 @@ const AppRoutes = (
     <Route path='/signup' component={Signup} />
     <Route path='/login' component={Login} />
     <Route path='/logout' component={Logout} />
+    <Route path='/:root/form/:formId' component={Form} />
     <Route path='/blog/postAdd/:blogRid' component={BlogPostAdd} />
     <Route path='/blog/postUpdate/:index' component={BlogPostUpdate} />
     <Route path='/blog' component={BlogCategory} />
@@ -62,11 +61,8 @@ const AppRoutes = (
     <Route path='/admin/blogAdmin' component={BlogAdminHome} />
     <Route path='/admin/dbAdmin' component={DbAdminHome} />
     <Route path='/admin/dbAdmin/exportDatabase' component={ExportDatabase} />
-    <Route path='/admin/dbAdmin/execSchemaCommand' component={ExecSchemaCommand} />
-    <Route path='/admin/dbAdmin/execUpdateCommand' component={ExecUpdateCommand} />
     <Route path='/admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
     <Route path='/admin/dbAdmin/downloadEvent' component={DownloadEvent} />
-    <Route path='/admin/dbAdmin/replayEvent' component={ReplayEvent} />
     <Route path='/user' component={User} />
   </Route>
 );

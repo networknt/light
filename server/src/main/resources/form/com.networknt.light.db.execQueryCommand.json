@@ -22,7 +22,8 @@
   "form": [
     {
       "key": "script",
-      "type": "textarea"
+      "type": "textarea",
+      "rows": 10
     }
   ]
 }
