@@ -1,7 +1,7 @@
 var React = require('react');
 var WebAPIUtils = require('../../utils/WebAPIUtils');
-var BlogStore = require('../../stores/BlogStore');
-var BlogActionCreators = require('../../actions/BlogActionCreators');
+var NewsStore = require('../../stores/NewsStore');
+var NewsActionCreators = require('../../actions/NewsActionCreators');
 var classNames = require('classnames');
 import Paper from 'material-ui/lib/paper';
 import Markdown from '../Markdown';
@@ -13,8 +13,8 @@ require('rc-select/assets/index.css');
 import Select from 'rc-select';
 
 
-var Blog = React.createClass({
-    displayName: 'Blog',
+var News = React.createClass({
+    displayName: 'News',
 
     getInitialState: function() {
         return {
@@ -28,20 +28,20 @@ var Blog = React.createClass({
     },
 
     componentWillMount: function() {
-        BlogStore.addChangeListener(this._onBlogChange);
-        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, this.state.pageNo, this.state.pageSize);
+        NewsStore.addChangeListener(this._onNewsChange);
+        NewsActionCreators.getNewsPost("#" + this.props.params.blogRid, this.state.pageNo, this.state.pageSize);
     },
 
     componentWillUnmount: function() {
-        BlogStore.removeChangeListener(this._onBlogChange);
+        NewsStore.removeChangeListener(this._onNewsChange);
     },
 
-    _onBlogChange: function() {
+    _onNewsChange: function() {
         this.setState({
-            ancestors: BlogStore.getAncestors(),
-            allowPost: BlogStore.getAllowPost(),
-            blogPosts: BlogStore.getBlogPosts(),
-            total: BlogStore.getTotal()
+            ancestors: NewsStore.getAncestors(),
+            allowPost: NewsStore.getAllowPost(),
+            blogPosts: NewsStore.getNewsPosts(),
+            total: NewsStore.getTotal()
         });
     },
 
@@ -61,7 +61,7 @@ var Blog = React.createClass({
             pageNo: key
         });
         // use key instead of this.state.pageNo as setState is async.
-        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, key, this.state.pageSize);
+        NewsActionCreators.getNewsPost("#" + this.props.params.blogRid, key, this.state.pageSize);
     },
 
     _onPageSizeChange: function (current, pageSize) {
@@ -69,7 +69,7 @@ var Blog = React.createClass({
         this.setState({
             pageSize: pageSize
         });
-        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, this.state.pageNo, pageSize);
+        NewsActionCreators.getNewsPost("#" + this.props.params.blogRid, this.state.pageNo, pageSize);
     },
 
     render: function() {
@@ -78,7 +78,7 @@ var Blog = React.createClass({
         return (
             <div>
                 <div className="blogHeader">
-                    <h2>Blogs{addButton}</h2>
+                    <h2>News{addButton}</h2>
                 </div>
                 <div className="blogRoot">
                     <div className="leftColumn">
@@ -103,7 +103,7 @@ var Blog = React.createClass({
                     </div>
                     <div className="rightColumn">
                         <div className="blogInfo">
-                            <h1>Blog Information</h1>
+                            <h1>News Information</h1>
                             <p>In this section, you will see some information and references pertaining to the opened blog.</p>
                             <p>Also, having the screen width be less then 64em will hide it, leaving reading room for mobile users only concerned with reading post content on the go.</p>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci alias cum, cumque cupiditate ea eum itaque, minus molestias necessitatibus nihil pariatur perspiciatis quam quas quod rem repellat, sint voluptate.</p>
@@ -115,11 +115,4 @@ var Blog = React.createClass({
     }
 });
 
-module.exports = Blog;
-
-/*
- <BlogPostList blogRid={this.props.params.blogRid} blogPosts={this.state.blogPosts} ancestors={this.state.ancestors} allowUpdate={this.state.allowUpdate}/>
-
-
-
- */
+module.exports = News;

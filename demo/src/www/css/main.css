@@ -25,6 +25,32 @@ body {
   font-size: 15px;
   line-height: 24px;
 }
+/* used for generic layout for the entire site. lefe column is always showing up and the right column will be hidden on small screen */
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+  min-width: 70%;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  padding-left: 20px;
+  padding-top: 10px;
+}
+
+@media (max-width: 64em) {
+  .rightColumn {
+    display: none;
+  }
+  .leftColumn {
+    max-width: 100%;
+  }
+}
+
 
 /* used in the badge of shopping cart to display item count */
 .cart-badge {
@@ -97,27 +123,3 @@ body {
   font-family: Roboto;
 }
 
-.blogLeftColumn {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 2;
-  min-width: 70%;
-}
-
-.blogRightColumn {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  height: 100%;
-  padding-left: 20px;
-  padding-top: 10px;
-}
-
-@media (max-width: 64em) {
-  .blogRightColumn {
-    display: none;
-  }
-  .blogLeftColumn {
-    max-width: 100%;
-  }
-}

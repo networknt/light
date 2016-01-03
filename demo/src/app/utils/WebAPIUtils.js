@@ -128,6 +128,26 @@ module.exports = {
         });
     },
 
+    getNewsTree: function() {
+        let getNewsTree = {
+            category: 'news',
+            name: 'getNewsTree',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getNewsTree))}
+        }).done(function(data) {
+            //console.log('done', data);
+            ServerActionCreators.getNewsTreeResponse(data, null);
+
+        }).fail(function(error) {
+            //console.log('error', error);
+            ServerActionCreators.getNewsTreeResponse(null, error);
+        });
+    },
+
     getBlogPost: function(rid, pageNo, pageSize) {
         let getBlogPost = {
             category: 'blog',
@@ -151,6 +171,29 @@ module.exports = {
         }).fail(function(error) {
             //console.log('error', error);
             ServerActionCreators.getBlogPostResponse(null, error);
+        });
+    },
+
+    getNewsPost: function(rid, pageNo, pageSize) {
+        let getNewsPost = {
+            category: 'news',
+            name: 'getNewsPost',
+            readOnly: true,
+            data: {
+                pageSize: pageSize,
+                pageNo: pageNo,
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getNewsPost))}
+        }).done(function(data) {
+            ServerActionCreators.getNewsPostResponse(data, null);
+
+        }).fail(function(error) {
+            ServerActionCreators.getNewsPostResponse(null, error);
         });
     },
 
@@ -208,6 +251,10 @@ module.exports = {
         });
     },
 
+    /**
+     * This method will be used by blog, forum and news.
+     * @param rid
+     */
     delPost: function(rid) {
         let delPost = {
             category : 'blog',
