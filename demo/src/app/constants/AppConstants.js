@@ -54,6 +54,7 @@ module.exports = {
 
         // News
         GET_NEWS_TREE_RESPONSE: null,
+        GET_NEWS_POST_RESPONSE: null,
 
         // Forum
         GET_FORUM_TREE_RESPONSE: null,

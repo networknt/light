@@ -18,7 +18,7 @@ var Blog = React.createClass({
 
     getInitialState: function() {
         return {
-            blogPosts: [],
+            posts: [],
             ancestors: [],
             allowPost: false,
             total: 0,
@@ -29,7 +29,7 @@ var Blog = React.createClass({
 
     componentWillMount: function() {
         BlogStore.addChangeListener(this._onBlogChange);
-        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, this.state.pageNo, this.state.pageSize);
+        BlogActionCreators.getBlogPost("#" + this.props.params.categoryRid, this.state.pageNo, this.state.pageSize);
     },
 
     componentWillUnmount: function() {
@@ -40,19 +40,19 @@ var Blog = React.createClass({
         this.setState({
             ancestors: BlogStore.getAncestors(),
             allowPost: BlogStore.getAllowPost(),
-            blogPosts: BlogStore.getBlogPosts(),
+            posts: BlogStore.getPosts(),
             total: BlogStore.getTotal()
         });
     },
 
     _routeToPost: function(index) {
-        //console.log('_routeToPost', this.props.params.blogRid, index, this.props.history);
-        this.props.history.push('/blog/post' + this.props.params.blogRid + '/' + index);
+        //console.log('_routeToPost', this.props.params.categoryRid, index, this.props.history);
+        this.props.history.push('/blog/post' + this.props.params.categoryRid + '/' + index);
     },
 
     _onAddPost: function () {
         console.log("_onAddPost is called");
-        this.props.history.push('/blog/postAdd/' + this.props.params.blogRid);
+        this.props.history.push('/blog/postAdd/' + this.props.params.categoryRid);
     },
 
     _onPageNoChange: function (key) {
@@ -61,7 +61,7 @@ var Blog = React.createClass({
             pageNo: key
         });
         // use key instead of this.state.pageNo as setState is async.
-        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, key, this.state.pageSize);
+        BlogActionCreators.getBlogPost("#" + this.props.params.categoryRid, key, this.state.pageSize);
     },
 
     _onPageSizeChange: function (current, pageSize) {
@@ -69,7 +69,7 @@ var Blog = React.createClass({
         this.setState({
             pageSize: pageSize
         });
-        BlogActionCreators.getBlogPost("#" + this.props.params.blogRid, this.state.pageNo, pageSize);
+        BlogActionCreators.getBlogPost("#" + this.props.params.categoryRid, this.state.pageNo, pageSize);
     },
 
     render: function() {
@@ -83,7 +83,7 @@ var Blog = React.createClass({
                 <div className="blogRoot">
                     <div className="leftColumn">
                         {
-                            this.state.blogPosts.map(function(post, index) {
+                            this.state.posts.map(function(post, index) {
                                 var boundClick = this._routeToPost.bind(this, index);
                                 return (
                                     <span key={index}>
@@ -116,10 +116,3 @@ var Blog = React.createClass({
 });
 
 module.exports = Blog;
-
-/*
- <BlogPostList blogRid={this.props.params.blogRid} blogPosts={this.state.blogPosts} ancestors={this.state.ancestors} allowUpdate={this.state.allowUpdate}/>
-
-
-
- */

@@ -18,7 +18,7 @@ var News = React.createClass({
 
     getInitialState: function() {
         return {
-            blogPosts: [],
+            posts: [],
             ancestors: [],
             allowPost: false,
             total: 0,
@@ -29,7 +29,7 @@ var News = React.createClass({
 
     componentWillMount: function() {
         NewsStore.addChangeListener(this._onNewsChange);
-        NewsActionCreators.getNewsPost("#" + this.props.params.blogRid, this.state.pageNo, this.state.pageSize);
+        NewsActionCreators.getNewsPost("#" + this.props.params.categoryRid, this.state.pageNo, this.state.pageSize);
     },
 
     componentWillUnmount: function() {
@@ -40,19 +40,18 @@ var News = React.createClass({
         this.setState({
             ancestors: NewsStore.getAncestors(),
             allowPost: NewsStore.getAllowPost(),
-            blogPosts: NewsStore.getNewsPosts(),
+            posts: NewsStore.getPosts(),
             total: NewsStore.getTotal()
         });
     },
 
     _routeToPost: function(index) {
-        //console.log('_routeToPost', this.props.params.blogRid, index, this.props.history);
-        this.props.history.push('/blog/post' + this.props.params.blogRid + '/' + index);
+        this.props.history.push('/news/post' + this.props.params.categoryRid + '/' + index);
     },
 
     _onAddPost: function () {
         console.log("_onAddPost is called");
-        this.props.history.push('/blog/postAdd/' + this.props.params.blogRid);
+        this.props.history.push('/news/postAdd/' + this.props.params.categoryRid);
     },
 
     _onPageNoChange: function (key) {
@@ -61,7 +60,7 @@ var News = React.createClass({
             pageNo: key
         });
         // use key instead of this.state.pageNo as setState is async.
-        NewsActionCreators.getNewsPost("#" + this.props.params.blogRid, key, this.state.pageSize);
+        NewsActionCreators.getNewsPost("#" + this.props.params.categoryRid, key, this.state.pageSize);
     },
 
     _onPageSizeChange: function (current, pageSize) {
@@ -69,7 +68,7 @@ var News = React.createClass({
         this.setState({
             pageSize: pageSize
         });
-        NewsActionCreators.getNewsPost("#" + this.props.params.blogRid, this.state.pageNo, pageSize);
+        NewsActionCreators.getNewsPost("#" + this.props.params.categoryRid, this.state.pageNo, pageSize);
     },
 
     render: function() {
@@ -83,7 +82,7 @@ var News = React.createClass({
                 <div className="blogRoot">
                     <div className="leftColumn">
                         {
-                            this.state.blogPosts.map(function(post, index) {
+                            this.state.posts.map(function(post, index) {
                                 var boundClick = this._routeToPost.bind(this, index);
                                 return (
                                     <span key={index}>

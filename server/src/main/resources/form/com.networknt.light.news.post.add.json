@@ -1,0 +1,59 @@
+{
+  "formId": "com.networknt.light.news.post.add",
+  "version": 1,
+  "action": [
+    {
+      "category": "news",
+      "name": "addPost",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-blog-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "News Post",
+    "required": [
+      "parentRid",
+      "title",
+      "summary",
+      "content"
+    ],
+    "properties": {
+      "parentRid": {
+        "title": "Parent Rid",
+        "type": "string",
+        "readonly": true
+      },
+      "title": {
+        "title": "Title",
+        "type": "string"
+      },
+      "source": {
+        "title": "Source",
+        "type": "string"
+      },
+      "summary": {
+        "title": "Summary",
+        "type": "string"
+      },
+      "content": {
+        "title": "Content",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    "parentRid",
+    "title",
+    "source",
+    {
+      "key": "summary",
+      "type": "textarea"
+    },
+    {
+      "key": "content",
+      "type": "textarea"
+    }
+  ]
+}

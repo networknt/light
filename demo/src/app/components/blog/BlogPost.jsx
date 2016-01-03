@@ -30,10 +30,10 @@ var BlogPost = React.createClass({
     },
 
     componentDidMount: function() {
-        //console.log('BlogPost blogPosts', BlogStore.getBlogPosts());
+        //console.log('BlogPost blogPosts', BlogStore.getPosts());
         //console.log('BlogPost index ', this.props.params.index);
         this.setState({
-            post: BlogStore.getBlogPosts()[this.props.params.index],
+            post: BlogStore.getPosts()[this.props.params.index],
             allowPost: BlogStore.getAllowPost()
         })
     },

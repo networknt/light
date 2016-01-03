@@ -6,7 +6,7 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 
 var CHANGE_EVENT = 'change';
 
-var _blogPosts = [];
+var _posts = [];
 var _ancestors = [];
 var _total = 0;
 var _allowPost = false;
@@ -27,8 +27,8 @@ var NewsStore = _.extend({}, EventEmitter.prototype, {
     },
 
 
-    getNewsPosts: function() {
-        return _blogPosts;
+    getPosts: function() {
+        return _posts;
     },
 
     getAncestors: function() {
@@ -50,8 +50,6 @@ var NewsStore = _.extend({}, EventEmitter.prototype, {
 });
 
 AppDispatcher.register(function(payload) {
-    console.log("NewsStore payload:", payload);
-
     var type = payload.type;
     switch(type) {
         /*
@@ -61,9 +59,13 @@ AppDispatcher.register(function(payload) {
          break;
          */
         case ActionTypes.GET_NEWS_POST_RESPONSE:
-            _blogPosts = payload.json.posts;
             _total = payload.json.total;
-            _allowPost = payload.json.allowPost
+            _allowPost = payload.json.allowPost;
+            if(_total == 0) {
+                _posts = [];
+            } else {
+                _posts = payload.json.posts;
+            }
             NewsStore.emitChange();
             break;
 

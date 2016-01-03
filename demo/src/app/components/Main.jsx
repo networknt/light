@@ -19,6 +19,7 @@ import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
 import ProductActionCreators from '../actions/ProductActionCreators';
 import BlogActionCreators from '../actions/BlogActionCreators';
+import NewsActionCreators from '../actions/NewsActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
@@ -34,6 +35,9 @@ let menuItems = [
     { route: '/about', text: 'About' },
     { route: '/contact', text: 'Contact' }
 ];
+
+const defaultPageNo = 1;
+const defaultPageSize = 10;
 
 const Main = React.createClass({
 
@@ -140,21 +144,32 @@ const Main = React.createClass({
                 break;
             case 'blog':
                 // route to Blog with a specific categoryId in the path
-                let rid = node.props.category['@rid'].substring(1);
-                this.props.history.push('/blog/' + rid);
+                let blogRid = node.props.category['@rid'].substring(1);
+                this.props.history.push('/blog/' + blogRid);
                 //console.log('pushed to ', 'blog/' + rid);
                 // if the current location is blog/:blogRid and has different blogRid then the component won't
                 // be mount again and there is no way for the component to reload the blogPost. Work around here.
-                let secondPath = this.getSecondPath(this.props.location.pathname);
+                let blogSecondPath = this.getSecondPath(this.props.location.pathname);
                 //console.log('before workaround', this.props.location.pathname, secondPath, rid);
-                if(secondPath != null && secondPath != rid) {
+                if(blogSecondPath != null && blogSecondPath != blogRid) {
                     //console.log('The main window has the same route, force to reload blogPost...');
-                    BlogActionCreators.getBlogPost(node.props.category['@rid']);
+                    BlogActionCreators.getBlogPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
                 }
                 break;
             case 'forum':
                 break;
             case 'news':
+                // route to Blog with a specific categoryId in the path
+                let newsRid = node.props.category['@rid'].substring(1);
+                this.props.history.push('/news/' + newsRid);
+                // if the current location is blog/:blogRid and has different blogRid then the component won't
+                // be mount again and there is no way for the component to reload the blogPost. Work around here.
+                let newsSecondPath = this.getSecondPath(this.props.location.pathname);
+                //console.log('before workaround', this.props.location.pathname, secondPath, rid);
+                if(newsSecondPath != null && newsSecondPath != newsRid) {
+                    //console.log('The main window has the same route, force to reload blogPost...');
+                    NewsActionCreators.getNewsPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
+                }
                 break;
         }
     },

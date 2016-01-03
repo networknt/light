@@ -9,7 +9,7 @@ import NewsActionCreators from '../../actions/NewsActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
 
-const id = 'com.networknt.light.blog.post.update';
+const id = 'com.networknt.light.news.post.update';
 
 var NewsPostUpdate = React.createClass({
 
@@ -38,12 +38,12 @@ var NewsPostUpdate = React.createClass({
         let schema = FormStore.getForm(id).schema;
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
-        console.log('onFormChange', this.props.params.index, NewsStore.getNewsPosts()[this.props.params.index]);
+        console.log('onFormChange', this.props.params.index, NewsStore.getPosts()[this.props.params.index]);
         this.setState({
             schema: schema,
             form: form,
             action: action,
-            model: NewsStore.getNewsPosts()[this.props.params.index]
+            model: NewsStore.getPosts()[this.props.params.index]
         });
     },
 

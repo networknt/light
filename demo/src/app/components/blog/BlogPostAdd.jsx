@@ -42,7 +42,7 @@ var BlogPostAdd = React.createClass({
             schema: schema,
             form: form,
             action: action,
-            model: {parentRid: '#' + this.props.params.blogRid}
+            model: {parentRid: '#' + this.props.params.categoryRid}
         });
     },
 

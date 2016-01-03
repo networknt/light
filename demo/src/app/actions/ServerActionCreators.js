@@ -33,9 +33,25 @@ module.exports = {
         });
     },
 
+    getNewsTreeResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_NEWS_TREE_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     getBlogPostResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_BLOG_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getNewsPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_NEWS_POST_RESPONSE,
             json: json,
             error: error
         });

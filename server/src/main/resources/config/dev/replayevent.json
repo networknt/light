@@ -48,6 +48,10 @@
     {
       "description": "This file contains example site blog post data for cms",
       "location": "event/example/blog_post.json"
+    },
+    {
+      "description": "This file contains example site news category data for cms",
+      "location": "event/example/news.json"
     }
   ]
 }

@@ -8,7 +8,7 @@ import NewsActionCreators from '../../actions/NewsActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
 
-const id = 'com.networknt.light.blog.post.add';
+const id = 'com.networknt.light.news.post.add';
 
 var NewsPostAdd = React.createClass({
 
@@ -42,7 +42,7 @@ var NewsPostAdd = React.createClass({
             schema: schema,
             form: form,
             action: action,
-            model: {parentRid: '#' + this.props.params.blogRid}
+            model: {parentRid: '#' + this.props.params.categoryRid}
         });
     },
 

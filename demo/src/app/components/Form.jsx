@@ -5,6 +5,7 @@ import FormActionCreators from '../actions/FormActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import RaisedButton from 'material-ui/lib/raised-button';
 import WebAPIUtils from '../utils/WebAPIUtils';
+import utils from 'react-schema-form/lib/utils';
 
 /*
 class Form extends React.Component {
@@ -79,14 +80,15 @@ let Form = React.createClass({
     render: function() {
         //console.log('Form: props', this.props);
         if(this.state.schema) {
-            const buttons = this.state.action.map((item, idx) => (
-               <RaisedButton key={idx} label={item.title} primary={true} onTouchTap = {(e) => (WebAPIUtils.submitForm(this.state.action))} />
-            ));
-
+            var actions = [];
+            {this.state.action.map((item, index) => {
+                let boundTouchTap = this._onTouchTap.bind(this, item);
+                actions.push(<RaisedButton key={index} label={item.title} primary={true} onTouchTap={boundTouchTap} />)
+            })}
             return (
                 <div>
                     <SchemaForm schema={this.state.schema} form={this.state.form} model={this.props.model} onModelChange={this._onModelChange} />
-                    {buttons}
+                    {actions}
                 </div>
             )
         } else {

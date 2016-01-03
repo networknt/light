@@ -33,7 +33,7 @@ var NewsPost = React.createClass({
         //console.log('NewsPost blogPosts', NewsStore.getNewsPosts());
         //console.log('NewsPost index ', this.props.params.index);
         this.setState({
-            post: NewsStore.getNewsPosts()[this.props.params.index],
+            post: NewsStore.getPosts()[this.props.params.index],
             allowPost: NewsStore.getAllowPost()
         })
     },

@@ -34,6 +34,8 @@ import java.util.Map;
  * Replay event file to create or recreate aggregation. This rule does update db but
  * there is no EvRule available. This is a very special rule or endpoint.
  *
+ * Remember, the update has been done long ago and this is just replaying them again to rebuilt database.
+ *
  * AccessLevel R [owner, admin, dbAdmin]
  *
  * Current AccessLevel R [owner] TODO access control for host

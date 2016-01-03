@@ -58,13 +58,13 @@ const AppRoutes = (
     <Route path='/:root/form/:formId' component={Form} />
 
     <Route path='/blog' component={BlogCategory} />
-    <Route path='/blog/postAdd/:blogRid' component={BlogPostAdd} />
+    <Route path='/blog/postAdd/:categoryRid' component={BlogPostAdd} />
     <Route path='/blog/postUpdate/:index' component={BlogPostUpdate} />
-    <Route path='/blog/:blogRid' component={Blog} />
-    <Route path='/blog/:blogRid/:index' component={BlogPost} />
+    <Route path='/blog/:categoryRid' component={Blog} />
+    <Route path='/blog/:categoryRid/:index' component={BlogPost} />
 
     <Route path='/news' component={NewsCategory} />
-    <Route path='/news/postAdd/:newsRid' component={NewsPostAdd} />
+    <Route path='/news/postAdd/:categoryRid' component={NewsPostAdd} />
     <Route path='/news/postUpdate/:index' component={NewsPostUpdate} />
     <Route path='/news/:categoryRid' component={News} />
     <Route path='/news/:categoryRid/:index' component={NewsPost} />

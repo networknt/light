@@ -1,0 +1,71 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:121",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10122,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "example",
+      "description": "All news about permaculture",
+      "createUserId": "stevehu",
+      "categoryId": "Permaculture",
+      "createDate": "2015-05-03T01:03:24.217"
+    },
+    "name": "addNews",
+    "category": "news",
+    "createDate": "2015-05-03T01:03:24.217",
+    "ipAddress": "127.0.0.1",
+    "categoryId": "X-I7HMWqTcGGbG9LmJAtXg",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:122",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10123,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "example",
+      "description": "All news about edible forest gardens",
+      "createUserId": "stevehu",
+      "in_Own": [
+        "Permaculture"
+      ],
+      "categoryId": "EdibleForestGardens",
+      "createDate": "2015-05-03T01:03:39.835"
+    },
+    "name": "addNews",
+    "category": "news",
+    "createDate": "2015-05-03T01:03:39.835",
+    "ipAddress": "127.0.0.1",
+    "categoryId": "xbrmqBmDSZ2DFIFAepWVpA",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:123",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10124,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "example",
+      "description": "All news about my edible forest garden",
+      "createUserId": "stevehu",
+      "in_Own": [
+        "EdibleForestGardens"
+      ],
+      "categoryId": "MyEdibleForestGarden",
+      "createDate": "2015-05-03T01:03:53.532"
+    },
+    "name": "addNews",
+    "category": "news",
+    "createDate": "2015-05-03T01:03:53.532",
+    "ipAddress": "127.0.0.1",
+    "categoryId": "B67WQ2yGSL2qe4YUXoWMAA",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]
