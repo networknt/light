@@ -14,7 +14,9 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import { History } from 'react-router'
 import AuthStore from '../stores/AuthStore';
 import CartStore from '../stores/CartStore';
-import CategoryStore from '../stores/CategoryStore';
+import NewsCategoryStore from '../stores/NewsCategoryStore';
+import BlogCategoryStore from '../stores/BlogCategoryStore';
+import CatalogCategoryStore from '../stores/CatalogCategoryStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
 import ProductActionCreators from '../actions/ProductActionCreators';
@@ -59,7 +61,10 @@ const Main = React.createClass({
             muiTheme: muiTheme,
             isLoggedIn: AuthStore.isLoggedIn,
             cartItemCount: 0,
-            category: []
+            blogCategory: [],
+            newsCategory: [],
+            forumCategory: [],
+            catalogCategory: []
         };
     },
 
@@ -68,7 +73,9 @@ const Main = React.createClass({
         newMuiTheme.inkBar.backgroundColor = Colors.yellow200;
         AuthStore.addChangeListener(this._userLoginChange);
         CartStore.addChangeListener(this._cartItemChange);
-        CategoryStore.addChangeListener(this._categoryChange);
+        BlogCategoryStore.addChangeListener(this._blogCategoryChange);
+        NewsCategoryStore.addChangeListener(this._newsCategoryChange);
+        CatalogCategoryStore.addChangeListener(this._catalogCategoryChange);
         AuthActionCreators.init();
         this.setState({
             muiTheme: newMuiTheme
@@ -78,7 +85,9 @@ const Main = React.createClass({
     componentWillUnmount: function() {
         AuthStore.removeChangeListener(this._userLoginChange);
         CartStore.removeChangeListener(this._cartItemChange);
-        CategoryStore.removeChangeListener(this._categoryChange);
+        BlogCategoryStore.removeChangeListener(this._blogCategoryChange);
+        NewsCategoryStore.removeChangeListener(this._newsCategoryChange);
+        CatalogCategoryStore.removeChangeListener(this._catalogCategoryChange);
     },
 
     getChildContext() {
@@ -104,25 +113,51 @@ const Main = React.createClass({
         this.props.history.push('/');
     },
 
-    _categoryChange: function() {
+    _blogCategoryChange: function() {
         this.setState({
-            category: CategoryStore.getCategory()
+            blogCategory: BlogCategoryStore.getCategory()
         });
         // create a fake node to trigger the first node loading for the category
         let node = {};
         let props = {};
-        props.category = this.state.category[0];
+        props.category = BlogCategoryStore.getCategory()[0];
         node.props = props;
         node.fake = true;
-        this.onCategorySelect(node);
+        this.onBlogCategorySelect(node);
+    },
+
+    _newsCategoryChange: function() {
+        this.setState({
+            newsCategory: NewsCategoryStore.getCategory()
+        });
+        // create a fake node to trigger the first node loading for the category
+        let node = {};
+        let props = {};
+        props.category = NewsCategoryStore.getCategory()[0];
+        node.props = props;
+        node.fake = true;
+        this.onNewsCategorySelect(node);
+    },
+
+    _catalogCategoryChange: function() {
+        console.log('Main._catalogCategoryChange', CatalogCategoryStore.getCategory());
+        this.setState({
+            catalogCategory: CatalogCategoryStore.getCategory()
+        });
+        // create a fake node to trigger the first node loading for the category
+        let node = {};
+        let props = {};
+        props.category = CatalogCategoryStore.getCategory()[0];
+        node.props = props;
+        node.fake = true;
+        this.onCatalogCategorySelect(node);
     },
 
     handleLeftNavToggle() {
         this.setState({leftNavOpen: !this.state.leftNavOpen});
     },
 
-    onCategorySelect(node) {
-        //console.log('onCategorySelect', node);
+    onBlogCategorySelect(node) {
         // set the select state for the selected category
         if(node.fake) {
 
@@ -132,45 +167,74 @@ const Main = React.createClass({
             }
             this.setState({selected: node});
             node.setState({selected: true});
-            if (this.props.onCategorySelect) {
-                this.props.onCategorySelect(node);
+            if (this.props.onBlogCategorySelect) {
+                this.props.onBlogCategorySelect(node);
             }
         }
-        // based on the current route, select the entities from actions.
-        //console.log('onCategorySelect mainPath', this.getFirstPath(this.props.location.pathname));
-        switch(this.getFirstPath(this.props.location.pathname)) {
-            case 'catalog':
-                ProductActionCreators.getCatalogProduct(node.props.category['@rid']);
-                break;
-            case 'blog':
-                // route to Blog with a specific categoryId in the path
-                let blogRid = node.props.category['@rid'].substring(1);
-                this.props.history.push('/blog/' + blogRid);
-                //console.log('pushed to ', 'blog/' + rid);
-                // if the current location is blog/:blogRid and has different blogRid then the component won't
-                // be mount again and there is no way for the component to reload the blogPost. Work around here.
-                let blogSecondPath = this.getSecondPath(this.props.location.pathname);
-                //console.log('before workaround', this.props.location.pathname, secondPath, rid);
-                if(blogSecondPath != null && blogSecondPath != blogRid) {
-                    //console.log('The main window has the same route, force to reload blogPost...');
-                    BlogActionCreators.getBlogPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
-                }
-                break;
-            case 'forum':
-                break;
-            case 'news':
-                // route to Blog with a specific categoryId in the path
-                let newsRid = node.props.category['@rid'].substring(1);
-                this.props.history.push('/news/' + newsRid);
-                // if the current location is blog/:blogRid and has different blogRid then the component won't
-                // be mount again and there is no way for the component to reload the blogPost. Work around here.
-                let newsSecondPath = this.getSecondPath(this.props.location.pathname);
-                //console.log('before workaround', this.props.location.pathname, secondPath, rid);
-                if(newsSecondPath != null && newsSecondPath != newsRid) {
-                    //console.log('The main window has the same route, force to reload blogPost...');
-                    NewsActionCreators.getNewsPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
-                }
-                break;
+        // route to Blog with a specific categoryId in the path
+        let categoryRid = node.props.category['@rid'].substring(1);
+        this.props.history.push('/blog/' + categoryRid);
+        // if the current location is blog/:blogRid and has different blogRid then the component won't
+        // be mount again and there is no way for the component to reload the blogPost. Work around here.
+        let secondPath = this.getSecondPath(this.props.location.pathname);
+        //console.log('before workaround', this.props.location.pathname, secondPath, rid);
+        if(secondPath != null && secondPath != categoryRid) {
+            //console.log('The main window has the same route, force to reload blogPost...');
+            BlogActionCreators.getBlogPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
+        }
+    },
+
+    onNewsCategorySelect(node) {
+        // set the select state for the selected category
+        if(node.fake) {
+
+        } else {
+            if (this.state.selected && this.state.selected.isMounted()) {
+                this.state.selected.setState({selected: false});
+            }
+            this.setState({selected: node});
+            node.setState({selected: true});
+            if (this.props.onNewsCategorySelect) {
+                this.props.onNewsCategorySelect(node);
+            }
+        }
+        // route to News with a specific categoryId in the path
+        let categoryRid = node.props.category['@rid'].substring(1);
+        this.props.history.push('/news/' + categoryRid);
+        // if the current location is blog/:blogRid and has different blogRid then the component won't
+        // be mount again and there is no way for the component to reload the blogPost. Work around here.
+        let secondPath = this.getSecondPath(this.props.location.pathname);
+        //console.log('before workaround', this.props.location.pathname, secondPath, rid);
+        if(secondPath != null && secondPath != categoryRid) {
+            //console.log('The main window has the same route, force to reload blogPost...');
+            NewsActionCreators.getNewsPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
+        }
+    },
+
+    onCatalogCategorySelect(node) {
+        // set the select state for the selected category
+        if(node.fake) {
+
+        } else {
+            if (this.state.selected && this.state.selected.isMounted()) {
+                this.state.selected.setState({selected: false});
+            }
+            this.setState({selected: node});
+            node.setState({selected: true});
+            if (this.props.onCatalogCategorySelect) {
+                this.props.onCatalogCategorySelect(node);
+            }
+        }
+        // route to News with a specific categoryId in the path
+        let categoryRid = node.props.category['@rid'].substring(1);
+        this.props.history.push('/catalog/' + categoryRid);
+        // if the current location is blog/:blogRid and has different blogRid then the component won't
+        // be mount again and there is no way for the component to reload the blogPost. Work around here.
+        let secondPath = this.getSecondPath(this.props.location.pathname);
+        //console.log('before workaround', this.props.location.pathname, secondPath, rid);
+        if(secondPath != null && secondPath != categoryRid) {
+            //console.log('The main window has the same route, force to reload blogPost...');
+            ProductActionCreators.getCatalogProduct(node.props.category['@rid'], defaultPageNo, defaultPageSize);
         }
     },
 
@@ -240,16 +304,41 @@ const Main = React.createClass({
         //console.log('Main.render pahtnaeme', this.getFirstPath(this.props.location.pathname));
         switch(this.getFirstPath(this.props.location.pathname)) {
             case 'blog':
-            case 'news':
-            case 'forum':
-            case 'catalog':
-                leftNavContent = this.state.category.length > 0 ? (
+                leftNavContent = this.state.blogCategory.length > 0 ? (
                     <div>
                         <ul className="category-tree">
-                            {this.state.category.map(function(item) {
+                            {this.state.blogCategory.map(function(item) {
                                 return <TreeNode key={item.categoryId}
                                                  category={item}
-                                                 onCategorySelect={this.onCategorySelect}/>;
+                                                 onCategorySelect={this.onBlogCategorySelect}/>;
+                            }.bind(this))}
+                        </ul>
+                    </div>
+                ) : (<CircularProgress mode="indeterminate"/>);
+                break;
+            case 'news':
+                leftNavContent = this.state.newsCategory.length > 0 ? (
+                    <div>
+                        <ul className="category-tree">
+                            {this.state.newsCategory.map(function(item) {
+                                return <TreeNode key={item.categoryId}
+                                                 category={item}
+                                                 onCategorySelect={this.onNewsCategorySelect}/>;
+                            }.bind(this))}
+                        </ul>
+                    </div>
+                ) : (<CircularProgress mode="indeterminate"/>);
+                break;
+            case 'forum':
+                break;
+            case 'catalog':
+                leftNavContent = this.state.catalogCategory.length > 0 ? (
+                    <div>
+                        <ul className="category-tree">
+                            {this.state.catalogCategory.map(function(item) {
+                                return <TreeNode key={item.categoryId}
+                                                 category={item}
+                                                 onCategorySelect={this.onCatalogCategorySelect}/>;
                             }.bind(this))}
                         </ul>
                     </div>

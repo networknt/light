@@ -46,7 +46,7 @@ var News = React.createClass({
     },
 
     _routeToPost: function(index) {
-        this.props.history.push('/news/post' + this.props.params.categoryRid + '/' + index);
+        this.props.history.push('/news/' + this.props.params.categoryRid + '/' + index);
     },
 
     _onAddPost: function () {

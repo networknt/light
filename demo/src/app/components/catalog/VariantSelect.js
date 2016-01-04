@@ -22,6 +22,7 @@ var VariantSelect = React.createClass({
     },
 
     render: function() {
+        console.log('VariantSelect props', this.props);
         var menuItems = this.props.variants.map(function(variant, index) {
             return <MenuItem key={index} value={index} primaryText={variant.type + ' $' + variant.price.toFixed(2)}/>;
         });
@@ -33,6 +34,7 @@ var VariantSelect = React.createClass({
     },
 
     _setProductVariant: function(e, variantIndex, value) {
+        console.log('VariantSelect._setProductVariant', variantIndex, value);
         this.setState({
             value: variantIndex
         });

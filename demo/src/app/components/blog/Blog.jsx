@@ -47,7 +47,7 @@ var Blog = React.createClass({
 
     _routeToPost: function(index) {
         //console.log('_routeToPost', this.props.params.categoryRid, index, this.props.history);
-        this.props.history.push('/blog/post' + this.props.params.categoryRid + '/' + index);
+        this.props.history.push('/blog/' + this.props.params.categoryRid + '/' + index);
     },
 
     _onAddPost: function () {

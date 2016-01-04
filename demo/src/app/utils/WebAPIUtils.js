@@ -289,10 +289,8 @@ module.exports = {
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getCatalogTree))}
         }).done(function(data) {
-            //console.log('catalog', data);
             ServerActionCreators.getCatalogTreeResponse(data, null);
         }).fail(function(error) {
-            //console.log('error', error);
             ServerActionCreators.getCatalogTreeResponse(null, error);
         });
     },

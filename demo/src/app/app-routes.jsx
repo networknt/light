@@ -27,8 +27,13 @@ import NewsPost from './components/news/NewsPost';
 import NewsPostAdd from './components/news/NewsPostAdd';
 import NewsPostUpdate from './components/news/NewsPostUpdate';
 
-import Forum from './components/forum';
+import CatalogCategory from './components/catalog/CatalogCategory';
+import CatalogProductAdd from './components/catalog/CatalogProductAdd';
+import CatalogProductUpdate from './components/catalog/CatalogProductUpdate';
 import Catalog from './components/catalog/Catalog';
+import CatalogProduct from './components/catalog/CatalogProduct';
+
+import Forum from './components/forum';
 import Admin from './components/admin/AdminMenu';
 import BlogAdminHome from './components/admin/blog/BlogAdminHome';
 import DbAdminHome from './components/admin/db/DbAdminHome';
@@ -70,7 +75,13 @@ const AppRoutes = (
     <Route path='/news/:categoryRid/:index' component={NewsPost} />
 
     <Route path='/forum' component={Forum} />
-    <Route path='/catalog' component={Catalog} />
+
+    <Route path='/catalog' component={CatalogCategory} />
+    <Route path='/catalog/postAdd/:categoryRid' component={CatalogProductAdd} />
+    <Route path='/catalog/postUpdate/:index' component={CatalogProductUpdate} />
+    <Route path='/catalog/:categoryRid' component={Catalog} />
+    <Route path='/catalog/:categoryRid/:index' component={CatalogProduct} />
+
     <Route path='/admin' component={Admin} />
     <Route path='/admin/blogAdmin' component={BlogAdminHome} />
     <Route path='/admin/dbAdmin' component={DbAdminHome} />

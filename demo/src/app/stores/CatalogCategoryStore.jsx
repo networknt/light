@@ -7,11 +7,10 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _category = [];
-var _selected;
 var _errors = [];
 
 
-var CategoryStore = assign({}, EventEmitter.prototype, {
+var CatalogCategoryStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -35,19 +34,15 @@ var CategoryStore = assign({}, EventEmitter.prototype, {
 
 });
 
-CategoryStore.dispatchToken = AppDispatcher.register(function(payload) {
+CatalogCategoryStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.GET_CATALOG_TREE_RESPONSE:
-        case ActionTypes.GET_BLOG_TREE_RESPONSE:
-        case ActionTypes.GET_NEWS_TREE_RESPONSE:
-        case ActionTypes.GET_FORUM_TREE_RESPONSE:
             _category = payload.json;
-            CategoryStore.emitChange();
+            CatalogCategoryStore.emitChange();
             break;
-
     }
     return true;
 });
 
-module.exports = CategoryStore;
+module.exports = CatalogCategoryStore;

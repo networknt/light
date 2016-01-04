@@ -6,10 +6,11 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _result;
-var _errors;
+var _category = [];
+var _errors = [];
 
-var ProductStore = assign({}, EventEmitter.prototype, {
+
+var BlogCategoryStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -23,8 +24,8 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getResult: function() {
-        return _result;
+    getCategory: function() {
+        return _category;
     },
 
     getErrors: function() {
@@ -33,19 +34,15 @@ var ProductStore = assign({}, EventEmitter.prototype, {
 
 });
 
-ProductStore.dispatchToken = AppDispatcher.register(function(payload) {
+BlogCategoryStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.ADD_PRODUCT_RESPONSE:
-        case ActionTypes.UPD_PRODUCT_RESPONSE:
-        case ActionTypes.DEL_PRODUCT_RESPONSE:
-            _result = payload.json;
-            _errors = payload.error;
-            ProductStore.emitChange();
+        case ActionTypes.GET_BLOG_TREE_RESPONSE:
+            _category = payload.json;
+            BlogCategoryStore.emitChange();
             break;
     }
-
     return true;
 });
 
-module.exports = ProductStore;
+module.exports = BlogCategoryStore;
