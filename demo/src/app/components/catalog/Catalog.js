@@ -59,7 +59,7 @@ var Catalog = React.createClass({
     },
 
     _onAddCart: function(index) {
-        console.log('_onAddCart', index);
+        //console.log('_onAddCart', index);
         var product = this.state.products[index];
         CartActionCreators.addToCart(product);
     },
@@ -98,7 +98,7 @@ var Catalog = React.createClass({
                             this.state.products.map(function(product, index) {
                                 var boundClick = this._routeToProduct.bind(this, index);
                                 var boundAddCart = this._onAddCart.bind(this, index);
-                                console.log("Catalog.render", product);
+                                //console.log("Catalog.render", product);
                                 var variants = product.variants;
                                 var i = product.variantIndex;
                                 var inventory = variants[i].inventory;

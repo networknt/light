@@ -30,6 +30,7 @@ var CatalogProduct = React.createClass({
     },
 
     componentDidMount: function() {
+        console.log('CatalogProduct.componentDidMount', CatalogStore.getProducts(), this.props.params.index);
         this.setState({
             product: CatalogStore.getProducts()[this.props.params.index],
             allowUpdate: CatalogStore.getAllowUpdate()
@@ -52,6 +53,8 @@ var CatalogProduct = React.createClass({
     },
 
     render: function() {
+        console.log('CatalogProduct.render', this.state.product);
+
         let updateButton = this.state.allowUpdate? <RaisedButton label="Update Product" primary={true} onTouchTap={this._onUpdateProduct} /> : '';
         let deleteButton = this.state.allowUpdate? <RaisedButton label="Delete Product" primary={true} onTouchTap={this._onDeleteProduct} /> : '';
         return (

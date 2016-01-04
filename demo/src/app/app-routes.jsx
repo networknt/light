@@ -77,8 +77,8 @@ const AppRoutes = (
     <Route path='/forum' component={Forum} />
 
     <Route path='/catalog' component={CatalogCategory} />
-    <Route path='/catalog/postAdd/:categoryRid' component={CatalogProductAdd} />
-    <Route path='/catalog/postUpdate/:index' component={CatalogProductUpdate} />
+    <Route path='/catalog/productAdd/:categoryRid' component={CatalogProductAdd} />
+    <Route path='/catalog/productUpdate/:index' component={CatalogProductUpdate} />
     <Route path='/catalog/:categoryRid' component={Catalog} />
     <Route path='/catalog/:categoryRid/:index' component={CatalogProduct} />
 
