@@ -1,0 +1,46 @@
+{
+  "formId": "com.networknt.light.catalog.product.add",
+  "version": 1,
+  "action": [
+    {
+      "category": "catalog",
+      "name": "addProduct",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-blog-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Catalog Product",
+    "required": [
+      "parentRid",
+      "name",
+      "description"
+    ],
+    "properties": {
+      "parentRid": {
+        "title": "Parent Rid",
+        "type": "string",
+        "readonly": true
+      },
+      "title": {
+        "title": "Name",
+        "type": "string"
+      },
+      "description": {
+        "title": "Description",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    "parentRid",
+    "name",
+    {
+      "key": "description",
+      "type": "textarea",
+      "rows": 20
+    }
+  ]
+}

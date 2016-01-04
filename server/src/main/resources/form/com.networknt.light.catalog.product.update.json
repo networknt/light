@@ -1,0 +1,53 @@
+{
+  "formId": "com.networknt.light.catalog.product.update",
+  "version": 1,
+  "action": [
+    {
+      "category": "catalog",
+      "name": "updProduct",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/page/com-networknt-light-v-blog-admin-home"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Catalog Product Update",
+    "required": [
+      "productId",
+      "title",
+      "summary",
+      "content"
+    ],
+    "properties": {
+      "parentRid": {
+        "title": "Parent Rid",
+        "type": "string",
+        "readonly": true
+      },
+      "productId": {
+        "title": "Product Id",
+        "type": "string",
+        "readonly": true
+      },
+      "name": {
+        "title": "Name",
+        "type": "string"
+      },
+      "description": {
+        "title": "Description",
+        "type": "string"
+      }
+    }
+  },
+  "form": [
+    "parentRid",
+    "productId",
+    "name",
+    {
+      "key": "description",
+      "type": "textarea",
+      "rows": 20
+    }
+  ]
+}

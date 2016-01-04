@@ -116,6 +116,30 @@ module.exports = {
         });
     },
 
+    delProductResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.DEL_PRODUCT_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    addProductResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.ADD_PRODUCT_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    updProductResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPD_PRODUCT_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     receiveUser: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_USER,

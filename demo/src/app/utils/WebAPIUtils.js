@@ -320,6 +320,57 @@ module.exports = {
         });
     },
 
+    addProduct: function(action) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(action),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.addProductResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.addProductResponse(null, error);
+        });
+    },
+
+    updProduct: function(action) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(action),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.updProductResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.updProductResponse(null, error);
+        });
+    },
+
+    delProduct: function(rid) {
+        let delPost = {
+            category : 'blog',
+            name : 'delPost',
+            readOnly: false,
+        };
+        let data = {};
+        data['@rid'] = rid;
+        delPost.data = data;
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(delPost),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delProductResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.delProductResponse(null, error);
+        });
+    },
+
     getUser: function(userId) {
         var getUser = {
             category: 'user',
