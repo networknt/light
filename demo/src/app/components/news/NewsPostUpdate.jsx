@@ -1,11 +1,14 @@
 import React from 'react';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import RaisedButton from 'material-ui/lib/raised-button';
+import Tabs from 'material-ui/lib/tabs/tabs';
+import Tab from 'material-ui/lib/tabs/tab';
 import FormStore from '../../stores/FormStore';
 import PostStore from '../../stores/PostStore';
 import NewsStore from '../../stores/NewsStore';
 import FormActionCreators from '../../actions/FormActionCreators';
 import NewsActionCreators from '../../actions/NewsActionCreators';
+import Markdown from '../Markdown';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
 
@@ -74,6 +77,15 @@ var NewsPostUpdate = React.createClass({
                 <div>
                     <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} />
                     {actions}
+                    <Tabs initialSelectedIndex={1}>
+                        <Tab label="Summary">
+                            <Markdown text={this.state.model.summary} />
+                        </Tab>
+                        <Tab label="Content">
+                            <Markdown text={this.state.model.content} />
+                        </Tab>
+                    </Tabs>
+
                 </div>
             )
         } else {
