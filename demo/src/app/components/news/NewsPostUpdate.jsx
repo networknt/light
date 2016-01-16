@@ -11,6 +11,7 @@ import NewsActionCreators from '../../actions/NewsActionCreators';
 import Markdown from '../Markdown';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
+import CommonUtils from '../../utils/CommonUtils';
 
 const id = 'com.networknt.light.news.post.update';
 
@@ -41,12 +42,12 @@ var NewsPostUpdate = React.createClass({
         let schema = FormStore.getForm(id).schema;
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
-        console.log('onFormChange', this.props.params.index, NewsStore.getPosts()[this.props.params.index]);
+        //console.log('NewsPostUpdate.onFormChange', this.props.params.postId, CommonUtils.findPost(NewsStore.getPosts(), this.props.params.postId));
         this.setState({
             schema: schema,
             form: form,
             action: action,
-            model: NewsStore.getPosts()[this.props.params.index]
+            model: CommonUtils.findPost(NewsStore.getPosts(), this.props.params.postId)
         });
     },
 

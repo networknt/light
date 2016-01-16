@@ -9,6 +9,7 @@ import Markdown from '../Markdown';
 import NewsActionCreators from '../../actions/NewsActionCreators';
 import NewsStore from '../../stores/NewsStore';
 import PostStore from '../../stores/PostStore';
+import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
 
 var NewsPost = React.createClass({
@@ -33,7 +34,7 @@ var NewsPost = React.createClass({
         //console.log('NewsPost blogPosts', NewsStore.getNewsPosts());
         //console.log('NewsPost index ', this.props.params.index);
         this.setState({
-            post: NewsStore.getPosts()[this.props.params.index],
+            post: CommonUtils.findPost(NewsStore.getPosts(), this.props.params.postId),
             allowPost: NewsStore.getAllowPost()
         })
     },
@@ -46,7 +47,7 @@ var NewsPost = React.createClass({
 
     _onUpdatePost: function () {
         console.log("_onUpdatePost is called");
-        this.props.history.push('/blog/postUpdate/' + this.props.params.index);
+        this.props.history.push('/news/postUpdate/' + this.props.params.postId);
     },
 
     _onDeletePost: function () {

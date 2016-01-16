@@ -24,6 +24,7 @@ import BlogActionCreators from '../actions/BlogActionCreators';
 import NewsActionCreators from '../actions/NewsActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
+import CommonUtils from '../utils/CommonUtils';
 
 // Define menu items for LeftNav
 let menuItems = [
@@ -120,6 +121,7 @@ const Main = React.createClass({
         // create a fake node to trigger the first node loading for the category
         let node = {};
         let props = {};
+        //console.log('blogCategory', JSON.stringify(BlogCategoryStore.getCategory(), undefined, 2));
         props.category = BlogCategoryStore.getCategory()[0];
         node.props = props;
         node.fake = true;
@@ -172,13 +174,13 @@ const Main = React.createClass({
             }
         }
         // route to Blog with a specific categoryId in the path
-        let categoryRid = node.props.category['@rid'].substring(1);
-        this.props.history.push('/blog/' + categoryRid);
-        // if the current location is blog/:blogRid and has different blogRid then the component won't
+        let categoryId = node.props.category.categoryId;
+        this.props.history.push('/blog/' + categoryId);
+        // if the current location is blog/:categoryId and has different categoryId then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
         //console.log('before workaround', this.props.location.pathname, secondPath, rid);
-        if(secondPath != null && secondPath != categoryRid) {
+        if(secondPath != null && secondPath != categoryId) {
             //console.log('The main window has the same route, force to reload blogPost...');
             BlogActionCreators.getBlogPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
         }
@@ -199,13 +201,13 @@ const Main = React.createClass({
             }
         }
         // route to News with a specific categoryId in the path
-        let categoryRid = node.props.category['@rid'].substring(1);
-        this.props.history.push('/news/' + categoryRid);
+        let categoryId = node.props.category.categoryId;
+        this.props.history.push('/news/' + categoryId);
         // if the current location is blog/:blogRid and has different blogRid then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
         //console.log('before workaround', this.props.location.pathname, secondPath, rid);
-        if(secondPath != null && secondPath != categoryRid) {
+        if(secondPath != null && secondPath != categoryId) {
             //console.log('The main window has the same route, force to reload blogPost...');
             NewsActionCreators.getNewsPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
         }
@@ -225,14 +227,14 @@ const Main = React.createClass({
                 this.props.onCatalogCategorySelect(node);
             }
         }
-        // route to News with a specific categoryId in the path
-        let categoryRid = node.props.category['@rid'].substring(1);
-        this.props.history.push('/catalog/' + categoryRid);
+        // route to Catalog with a specific categoryId in the path
+        let categoryId = node.props.category.categoryId;
+        this.props.history.push('/catalog/' + categoryId);
         // if the current location is blog/:blogRid and has different blogRid then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
         //console.log('before workaround', this.props.location.pathname, secondPath, rid);
-        if(secondPath != null && secondPath != categoryRid) {
+        if(secondPath != null && secondPath != categoryId) {
             //console.log('The main window has the same route, force to reload blogPost...');
             ProductActionCreators.getCatalogProduct(node.props.category['@rid'], defaultPageNo, defaultPageSize);
         }

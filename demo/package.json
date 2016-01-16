@@ -12,6 +12,7 @@
   "private": true,
   "scripts": {
     "start": "npm run browser:development",
+    "test": "jest",
     "browser:development": "webpack-dev-server --config webpack-dev-server.config.js --progress --colors --inline",
     "browser:build": "NODE_ENV=production webpack --config webpack-production.config.js --progress --colors --profile",
     "browser:prd": "NODE_ENV=production webpack-dev-server --config webpack-production.config.js --progress --colors --profile",
@@ -53,6 +54,7 @@
     "history": "1.13.x",
     "html-webpack-plugin": "^1.6.1",
     "intl": "^1.0.1",
+    "jest-cli": "^0.8.2",
     "marked": "^0.3.5",
     "raw-loader": "^0.5.1",
     "react": "^0.14.0",

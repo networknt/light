@@ -245,6 +245,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
+                eventData.put("host", data.get("host"));
                 eventData.put("postId", post.getProperty("postId"));
                 eventData.put("title", data.get("title"));
                 eventData.put("source", data.get("source"));
@@ -252,6 +253,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 eventData.put("content", data.get("content"));
                 eventData.put("updateDate", new Date());
                 eventData.put("updateUserId", user.get("userId"));
+                // it is possible for the post to switch parent.
+                eventData.put("parentId", data.get("parentId"));
                 // tags
                 Set<String> inputTags = data.get("tags") != null? new HashSet<String>(Arrays.asList(((String)data.get("tags")).split("\\s*,\\s*"))) : new HashSet<String>();
                 Set<String> storedTags = new HashSet<String>();
@@ -303,6 +306,12 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             graph.begin();
             Vertex updateUser = graph.getVertexByKey("User.userId", data.remove("updateUserId"));
             OrientVertex post = (OrientVertex)graph.getVertexByKey("Post.postId", data.get("postId"));
+            OrientVertex parent = getBranchByHostId(graph, bfnType, (String) data.get("host"), (String) data.get("parentId"));
+            if(parent != null) {
+
+                //parent.addEdge("HasPost", post);
+            }
+
             if(post != null) {
                 updateUser.addEdge("Update", post);
                 // fields

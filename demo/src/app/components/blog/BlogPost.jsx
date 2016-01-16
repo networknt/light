@@ -9,6 +9,7 @@ import Markdown from '../Markdown';
 import BlogActionCreators from '../../actions/BlogActionCreators';
 import BlogStore from '../../stores/BlogStore';
 import PostStore from '../../stores/PostStore';
+import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
 
 var BlogPost = React.createClass({
@@ -33,7 +34,7 @@ var BlogPost = React.createClass({
         //console.log('BlogPost blogPosts', BlogStore.getPosts());
         //console.log('BlogPost index ', this.props.params.index);
         this.setState({
-            post: BlogStore.getPosts()[this.props.params.index],
+            post: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId),
             allowPost: BlogStore.getAllowPost()
         })
     },
@@ -46,7 +47,7 @@ var BlogPost = React.createClass({
 
     _onUpdatePost: function () {
         console.log("_onUpdatePost is called");
-        this.props.history.push('/blog/postUpdate/' + this.props.params.index);
+        this.props.history.push('/blog/postUpdate/' + this.props.params.postId);
     },
 
     _onDeletePost: function () {

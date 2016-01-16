@@ -1,6 +1,7 @@
 var React = require('react');
 var WebAPIUtils = require('../../utils/WebAPIUtils');
 var NewsStore = require('../../stores/NewsStore');
+import NewsCategoryStore from '../../stores/NewsCategoryStore';
 var NewsActionCreators = require('../../actions/NewsActionCreators');
 var classNames = require('classnames');
 import Paper from 'material-ui/lib/paper';
@@ -11,6 +12,7 @@ import Pagination from 'rc-pagination';
 import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
+import CommonUtils from '../../utils/CommonUtils';
 
 
 var News = React.createClass({
@@ -29,11 +31,22 @@ var News = React.createClass({
 
     componentWillMount: function() {
         NewsStore.addChangeListener(this._onNewsChange);
-        NewsActionCreators.getNewsPost("#" + this.props.params.categoryRid, this.state.pageNo, this.state.pageSize);
+
+        NewsCategoryStore.addChangeListener(this._newsCategoryChange);
+
+        // need to make sure that category tree is loaded in case of bookmark.
+        if(NewsCategoryStore.getCategory().length === 0) {
+            NewsActionCreators.getNewsTree();
+        } else {
+            // lookup categoryRid from categoryId in params.
+            let category = CommonUtils.findCategory(NewsCategoryStore.getCategory(), this.props.params.categoryId);
+            NewsActionCreators.getNewsPost(category['@rid'], this.state.pageNo, this.state.pageSize);
+        }
     },
 
     componentWillUnmount: function() {
         NewsStore.removeChangeListener(this._onNewsChange);
+        NewsCategoryStore.removeChangeListener(this._newsCategoryChange);
     },
 
     _onNewsChange: function() {
@@ -45,30 +58,41 @@ var News = React.createClass({
         });
     },
 
-    _routeToPost: function(index) {
-        this.props.history.push('/news/' + this.props.params.categoryRid + '/' + index);
+    _newsCategoryChange: function() {
+        // The Main doesn't care about the post loading anymore. the loading action always starts here.
+        let rid = NewsCategoryStore.getCategory()[0]['@rid'];
+        if(this.props.params.categoryId) {
+            let category = CommonUtils.findCategory(NewsCategoryStore.getCategory(), this.props.params.categoryId);
+            rid = category['@rid'];
+        }
+        this.setState({rid: rid});
+        NewsActionCreators.getNewsPost(rid, this.state.pageNo, this.state.pageSize);
+    },
+
+    _routeToPost: function(postId) {
+        this.props.history.push('/news/' + this.props.params.categoryId + '/' + postId);
     },
 
     _onAddPost: function () {
-        console.log("_onAddPost is called");
-        this.props.history.push('/news/postAdd/' + this.props.params.categoryRid);
+        //console.log("_onAddPost is called");
+        this.props.history.push('/news/postAdd/' + this.props.params.categoryId);
     },
 
     _onPageNoChange: function (key) {
-        console.log("_onPageNoChange is called", key);
+        //console.log("_onPageNoChange is called", key);
         this.setState({
             pageNo: key
         });
         // use key instead of this.state.pageNo as setState is async.
-        NewsActionCreators.getNewsPost("#" + this.props.params.categoryRid, key, this.state.pageSize);
+        NewsActionCreators.getNewsPost(this.state.rid, key, this.state.pageSize);
     },
 
     _onPageSizeChange: function (current, pageSize) {
-        console.log("_onPageSizeChange is called", current, pageSize);
+        //console.log("_onPageSizeChange is called", current, pageSize);
         this.setState({
             pageSize: pageSize
         });
-        NewsActionCreators.getNewsPost("#" + this.props.params.categoryRid, this.state.pageNo, pageSize);
+        NewsActionCreators.getNewsPost(this.state.rid, this.state.pageNo, pageSize);
     },
 
     render: function() {
@@ -83,7 +107,7 @@ var News = React.createClass({
                     <div className="leftColumn">
                         {
                             this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, index);
+                                var boundClick = this._routeToPost.bind(this, post.postId);
                                 return (
                                     <span key={index}>
                                         <Paper className="blogPostPaper">

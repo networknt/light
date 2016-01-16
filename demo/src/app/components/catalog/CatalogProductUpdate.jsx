@@ -8,6 +8,7 @@ import FormActionCreators from '../../actions/FormActionCreators';
 import CatalogActionCreators from '../../actions/CatalogActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
+import CommonUtils from '../../utils/CommonUtils';
 
 const id = 'com.networknt.light.catalog.product.update';
 
@@ -43,7 +44,7 @@ var CatalogProductUpdate = React.createClass({
             schema: schema,
             form: form,
             action: action,
-            model: CatalogStore.getProducts()[this.props.params.index]
+            model: CommonUtils.findProduct(CatalogStore.getProducts(), this.props.params.productId)
         });
     },
 

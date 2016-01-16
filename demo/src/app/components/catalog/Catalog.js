@@ -20,6 +20,8 @@ import Pagination from 'rc-pagination';
 import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
+import CatalogCategoryStore from '../../stores/CatalogCategoryStore';
+import CommonUtils from '../../utils/CommonUtils';
 
 
 var Catalog = React.createClass({
@@ -38,11 +40,20 @@ var Catalog = React.createClass({
 
     componentWillMount: function() {
         CatalogStore.addChangeListener(this._onCatalogChange);
-        CatalogActionCreators.getCatalogProduct("#" + this.props.params.categoryRid, this.state.pageNo, this.state.pageSize);
+        CatalogCategoryStore.addChangeListener(this._catalogCategoryChange);
+
+        if(CatalogCategoryStore.getCategory().length === 0) {
+            CatalogActionCreators.getCatalogTree();
+        } else {
+            // lookup categoryRid from categoryId in params.
+            let category = CommonUtils.findCategory(CatalogCategoryStore.getCategory(), this.props.params.categoryId);
+            CatalogActionCreators.getCatalogProduct(category['@rid'], this.state.pageNo, this.state.pageSize);
+        }
     },
 
     componentWillUnmount: function() {
         CatalogStore.removeChangeListener(this._onCatalogChange);
+        CatalogCategoryStore.removeChangeListener(this._catalogCategoryChange);
     },
 
     _onCatalogChange: function() {
@@ -54,8 +65,19 @@ var Catalog = React.createClass({
         });
     },
 
-    _routeToProduct: function(index) {
-        this.props.history.push('/catalog/' + this.props.params.categoryRid + '/' + index);
+    _catalogCategoryChange: function() {
+        // The Main doesn't care about the post loading anymore. the loading action always starts here.
+        let rid = CatalogCategoryStore.getCategory()[0]['@rid'];
+        if(this.props.params.categoryId) {
+            let category = CommonUtils.findCategory(CatalogCategoryStore.getCategory(), this.props.params.categoryId);
+            rid = category['@rid'];
+        }
+        this.setState({rid: rid});
+        CatalogActionCreators.getCatalogProduct(rid, this.state.pageNo, this.state.pageSize);
+    },
+
+    _routeToProduct: function(productId) {
+        this.props.history.push('/catalog/' + this.props.params.categoryId + '/' + productId);
     },
 
     _onAddCart: function(index) {
@@ -65,7 +87,7 @@ var Catalog = React.createClass({
     },
 
     _onAddProduct: function () {
-        this.props.history.push('/catalog/productAdd/' + this.props.params.categoryRid);
+        this.props.history.push('/catalog/productAdd/' + this.props.params.categoryId);
     },
 
     _onPageNoChange: function (key) {
@@ -73,14 +95,14 @@ var Catalog = React.createClass({
             pageNo: key
         });
         // use key instead of this.state.pageNo as setState is async.
-        CatalogActionCreators.getCatalogProduct("#" + this.props.params.categoryRid, key, this.state.pageSize);
+        CatalogActionCreators.getCatalogProduct(this.state.rid, key, this.state.pageSize);
     },
 
     _onPageSizeChange: function (current, pageSize) {
         this.setState({
             pageSize: pageSize
         });
-        CatalogActionCreators.getCatalogProduct("#" + this.props.params.categoryRid, this.state.pageNo, pageSize);
+        CatalogActionCreators.getCatalogProduct(this.state.rid, this.state.pageNo, pageSize);
     },
 
     render: function() {
@@ -96,7 +118,7 @@ var Catalog = React.createClass({
                     <div className="leftColumn">
                         {
                             this.state.products.map(function(product, index) {
-                                var boundClick = this._routeToProduct.bind(this, index);
+                                var boundClick = this._routeToProduct.bind(this, product.productId);
                                 var boundAddCart = this._onAddCart.bind(this, index);
                                 //console.log("Catalog.render", product);
                                 var variants = product.variants;
@@ -150,59 +172,3 @@ var Catalog = React.createClass({
 });
 
 module.exports = Catalog;
-
-
-/*
-var React = require('react');
-var ProductList = require('./ProductList');
-//var TreePath = require('./TreePath');
-//var SearchForm = require('./SearchForm');
-var WebAPIUtils = require('../../utils/WebAPIUtils');
-var ProductStore = require('../../stores/ProductStore');
-var ProductActionCreators = require('../../actions/ProductActionCreators');
-var classNames = require('classnames');
-
-var Catalog = React.createClass({
-    displayName: 'Catalog',
-
-    getInitialState: function() {
-        return {
-            products: [],
-            ancestors: [],
-            allowUpdate: false
-        };
-    },
-
-    componentWillMount: function() {
-        ProductStore.addChangeListener(this._onProductChange);
-        ProductActionCreators.getCatalogTree();
-    },
-
-    componentWillUnmount: function() {
-        ProductStore.removeChangeListener(this._onProductChange);
-    },
-
-    _onProductChange: function() {
-        //console.log('_onProductChange is called');
-        this.setState({
-            ancestors: ProductStore.getAncestors(),
-            allowUpdate: ProductStore.getAllowUpdate(),
-            products: ProductStore.getProducts(),
-        });
-    },
-
-    render: function() {
-        return (
-            <div className="catalogView container">
-                <div className="row">
-                    <ProductList products={this.state.products} ancestors={this.state.ancestors} allowUpdate={this.state.allowUpdate}/>
-                </div>
-            </div>
-        );
-    }
-});
-
-module.exports = Catalog;
-*/
-
-

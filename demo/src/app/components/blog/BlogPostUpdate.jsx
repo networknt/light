@@ -11,6 +11,7 @@ import BlogActionCreators from '../../actions/BlogActionCreators';
 import Markdown from '../Markdown';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
+import CommonUtils from '../../utils/CommonUtils';
 
 const id = 'com.networknt.light.blog.post.update';
 
@@ -41,12 +42,12 @@ var BlogPostUpdate = React.createClass({
         let schema = FormStore.getForm(id).schema;
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
-        console.log('onFormChange', this.props.params.index, BlogStore.getPosts()[this.props.params.index]);
+        //console.log('onFormChange', this.props.params.postId, CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId));
         this.setState({
             schema: schema,
             form: form,
             action: action,
-            model: BlogStore.getPosts()[this.props.params.index]
+            model: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId)
         });
     },
 

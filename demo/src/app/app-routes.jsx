@@ -63,24 +63,24 @@ const AppRoutes = (
     <Route path='/:root/form/:formId' component={Form} />
 
     <Route path='/blog' component={BlogCategory} />
-    <Route path='/blog/postAdd/:categoryRid' component={BlogPostAdd} />
-    <Route path='/blog/postUpdate/:index' component={BlogPostUpdate} />
-    <Route path='/blog/:categoryRid' component={Blog} />
-    <Route path='/blog/:categoryRid/:index' component={BlogPost} />
+    <Route path='/blog/postAdd/:categoryId' component={BlogPostAdd} />
+    <Route path='/blog/postUpdate/:postId' component={BlogPostUpdate} />
+    <Route path='/blog/:categoryId' component={Blog} />
+    <Route path='/blog/:categoryId/:postId' component={BlogPost} />
 
     <Route path='/news' component={NewsCategory} />
-    <Route path='/news/postAdd/:categoryRid' component={NewsPostAdd} />
-    <Route path='/news/postUpdate/:index' component={NewsPostUpdate} />
-    <Route path='/news/:categoryRid' component={News} />
-    <Route path='/news/:categoryRid/:index' component={NewsPost} />
+    <Route path='/news/postAdd/:categoryId' component={NewsPostAdd} />
+    <Route path='/news/postUpdate/:postId' component={NewsPostUpdate} />
+    <Route path='/news/:categoryId' component={News} />
+    <Route path='/news/:categoryId/:postId' component={NewsPost} />
 
     <Route path='/forum' component={Forum} />
 
     <Route path='/catalog' component={CatalogCategory} />
-    <Route path='/catalog/productAdd/:categoryRid' component={CatalogProductAdd} />
-    <Route path='/catalog/productUpdate/:index' component={CatalogProductUpdate} />
-    <Route path='/catalog/:categoryRid' component={Catalog} />
-    <Route path='/catalog/:categoryRid/:index' component={CatalogProduct} />
+    <Route path='/catalog/productAdd/:categoryId' component={CatalogProductAdd} />
+    <Route path='/catalog/productUpdate/:productId' component={CatalogProductUpdate} />
+    <Route path='/catalog/:categoryId' component={Catalog} />
+    <Route path='/catalog/:categoryId/:productId' component={CatalogProduct} />
 
     <Route path='/admin' component={Admin} />
     <Route path='/admin/blogAdmin' component={BlogAdminHome} />

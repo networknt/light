@@ -10,6 +10,8 @@ var BlogCategory = React.createClass({
     displayName: 'BlogCategory',
 
     componentWillMount: function() {
+        // If this component is loaded, then category tree should be there but in the case of
+        // bookmark, category tree might be loaded in Blog.jsx in case it is routed directly.
         BlogActionCreators.getBlogTree();
     },
 

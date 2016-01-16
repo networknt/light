@@ -7,9 +7,11 @@ import FormStore from '../../stores/FormStore';
 import PostStore from '../../stores/PostStore.jsx';
 import FormActionCreators from '../../actions/FormActionCreators';
 import BlogActionCreators from '../../actions/BlogActionCreators';
+import BlogCategoryStore from '../../stores/BlogCategoryStore';
 import Markdown from '../Markdown';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
+import CommonUtils from '../../utils/CommonUtils';
 
 const id = 'com.networknt.light.blog.post.add';
 
@@ -40,12 +42,12 @@ var BlogPostAdd = React.createClass({
         let schema = FormStore.getForm(id).schema;
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
-
+        let category = CommonUtils.findCategory(BlogCategoryStore.getCategory(), this.props.params.categoryId);
         this.setState({
             schema: schema,
             form: form,
             action: action,
-            model: {parentRid: '#' + this.props.params.categoryRid}
+            model: {parentRid: category['@rid']}
         });
     },
 

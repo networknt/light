@@ -9,6 +9,7 @@ import Markdown from '../Markdown';
 import CatalogActionCreators from '../../actions/CatalogActionCreators';
 import CatalogStore from '../../stores/CatalogStore';
 import ProductStore from '../../stores/ProductStore';
+import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
 
 var CatalogProduct = React.createClass({
@@ -32,9 +33,9 @@ var CatalogProduct = React.createClass({
     componentDidMount: function() {
         console.log('CatalogProduct.componentDidMount', CatalogStore.getProducts(), this.props.params.index);
         this.setState({
-            product: CatalogStore.getProducts()[this.props.params.index],
+            product: CommonUtils.findProduct(CatalogStore.getProducts(), this.props.params.productId),
             allowUpdate: CatalogStore.getAllowUpdate()
-        })
+        });
     },
 
     _onProductChange: function() {
@@ -44,8 +45,8 @@ var CatalogProduct = React.createClass({
     },
 
     _onUpdateProduct: function () {
-        console.log("_onUpdateProduct is called");
-        this.props.history.push('/catalog/productUpdate/' + this.props.params.index);
+        //console.log("_onUpdateProduct is called");
+        this.props.history.push('/catalog/productUpdate/' + this.props.params.productId);
     },
 
     _onDeleteProduct: function () {
