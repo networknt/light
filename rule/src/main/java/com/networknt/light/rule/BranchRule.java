@@ -726,20 +726,14 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         String host = (String)data.get("host");
-        if(payload == null) {
-            inputMap.put("result", "Login is required");
-            inputMap.put("responseCode", 401);
-            return false;
+        String docs = getBranchDropdownDb(branchType, host);
+        if(docs != null) {
+            inputMap.put("result", docs);
+            return true;
         } else {
-            String docs = getBranchDropdownDb(branchType, host);
-            if(docs != null) {
-                inputMap.put("result", docs);
-                return true;
-            } else {
-                inputMap.put("result", "No document can be found");
-                inputMap.put("responseCode", 404);
-                return false;
-            }
+            inputMap.put("result", "No document can be found");
+            inputMap.put("responseCode", 404);
+            return false;
         }
     }
 
@@ -754,7 +748,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                 List<Map<String, String>> list = new ArrayList<Map<String, String>>();
                 for(ODocument doc: docs) {
                     Map<String, String> map = new HashMap<String, String>();
-                    map.put("label", (String)doc.field(branchType + "Id"));
+                    map.put("label", (String)doc.field("categoryId"));
                     map.put("value", doc.field("@rid").toString());
                     list.add(map);
                 }
