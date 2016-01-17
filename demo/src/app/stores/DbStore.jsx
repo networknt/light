@@ -38,9 +38,6 @@ DbStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
         case ActionTypes.EXEC_QUERY_CMD_RESPONSE:
         case ActionTypes.DOWNLOAD_EVENT_RESPONSE:
-            //console.log('FormStore RECEIVE_FORM', payload.json);
-            //console.log('FormStore RECEIVE_FORM', payload.json.formId);
-            //console.log('FormStore RECEIVE_FORM', _forms);
             _queryResult = payload.json;
             DbStore.emitChange();
             break;
