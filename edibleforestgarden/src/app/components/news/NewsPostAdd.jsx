@@ -4,20 +4,18 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import Tabs from 'material-ui/lib/tabs/tabs';
 import Tab from 'material-ui/lib/tabs/tab';
 import FormStore from '../../stores/FormStore';
-import PostStore from '../../stores/PostStore';
-import BlogStore from '../../stores/BlogStore';
+import PostStore from '../../stores/PostStore.jsx';
 import FormActionCreators from '../../actions/FormActionCreators';
-import BlogActionCreators from '../../actions/BlogActionCreators';
+import NewsActionCreators from '../../actions/NewsActionCreators';
+import NewsCategoryStore from '../../stores/NewsCategoryStore';
 import Markdown from '../Markdown';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
-import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
-require('rc-select/assets/index.css');
 import utils from 'react-schema-form/lib/utils';
 import CommonUtils from '../../utils/CommonUtils';
 
-const id = 'com.networknt.light.blog.post.update';
+const id = 'com.networknt.light.news.post.add';
 
-var BlogPostUpdate = React.createClass({
+var NewsPostAdd = React.createClass({
 
     getInitialState: function() {
         return {
@@ -44,17 +42,18 @@ var BlogPostUpdate = React.createClass({
         let schema = FormStore.getForm(id).schema;
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
-        //console.log('onFormChange', this.props.params.postId, CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId));
+        let category = CommonUtils.findCategory(NewsCategoryStore.getCategory(), this.props.params.categoryId);
+
         this.setState({
             schema: schema,
             form: form,
             action: action,
-            model: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId)
+            model: {parentRid: category['@rid']}
         });
     },
 
     _onPostChange: function() {
-        console.log('BlogPostUpdate._onPostChange', PostStore.getResult(), PostStore.getErrors());
+        console.log('NewsPostAdd._onPostChange', PostStore.getResult(), PostStore.getErrors());
         // TODO display toaster
 
     },
@@ -64,12 +63,12 @@ var BlogPostUpdate = React.createClass({
     },
 
     _onTouchTap: function(action) {
+        console.log('ExecQueryCommand._onTouchTap', action, this.state.model);
         action.data = this.state.model;
-        BlogActionCreators.updPost(action);
+        NewsActionCreators.addPost(action);
     },
 
     render: function() {
-        console.log('model', this.state.model);
         if(this.state.schema) {
             var actions = [];
             {this.state.action.map((item, index) => {
@@ -78,7 +77,7 @@ var BlogPostUpdate = React.createClass({
             })}
             return (
                 <div>
-                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
+                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} />
                     {actions}
                     <Tabs initialSelectedIndex={1}>
                         <Tab label="Summary">
@@ -88,6 +87,7 @@ var BlogPostUpdate = React.createClass({
                             <Markdown text={this.state.model.content} />
                         </Tab>
                     </Tabs>
+
                 </div>
             )
         } else {
@@ -96,4 +96,4 @@ var BlogPostUpdate = React.createClass({
     }
 });
 
-module.exports = BlogPostUpdate;
+module.exports = NewsPostAdd;

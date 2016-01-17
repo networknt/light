@@ -20,10 +20,9 @@
       "content"
     ],
     "properties": {
-      "parentRid": {
-        "title": "Parent Rid",
-        "type": "string",
-        "readonly": true
+      "parentId": {
+        "title": "Parent Id",
+        "type": "string"
       },
       "postId": {
         "title": "Post Id",
@@ -49,7 +48,16 @@
     }
   },
   "form": [
-    "parentRid",
+    {
+      "key": "parentId",
+      "type": "rc-select",
+      "multiple": false,
+      "action" : {
+        "get": {
+          "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+        }
+      }
+    },
     "postId",
     "title",
     "source",

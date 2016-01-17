@@ -1,8 +1,8 @@
 var React = require('react');
 var WebAPIUtils = require('../../utils/WebAPIUtils');
-var BlogStore = require('../../stores/BlogStore');
-import BlogCategoryStore from '../../stores/BlogCategoryStore';
-var BlogActionCreators = require('../../actions/BlogActionCreators');
+var NewsStore = require('../../stores/NewsStore');
+import NewsCategoryStore from '../../stores/NewsCategoryStore';
+var NewsActionCreators = require('../../actions/NewsActionCreators');
 var classNames = require('classnames');
 import Paper from 'material-ui/lib/paper';
 import Markdown from '../Markdown';
@@ -14,81 +14,68 @@ require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
 
-var Blog = React.createClass({
-    displayName: 'Blog',
+
+var News = React.createClass({
+    displayName: 'News',
 
     getInitialState: function() {
-        let rid = null;
-        if(BlogCategoryStore.getCategory().length  !== 0) {
-            rid = BlogCategoryStore.getCategory()[0]['@rid'];
-            if(this.props.params.categoryId) {
-                //console.log('Blog._blogCategoryChange', rid, this.props.params.categoryId, BlogCategoryStore.getCategory());
-                let category = CommonUtils.findCategory(BlogCategoryStore.getCategory(), this.props.params.categoryId);
-                //console.log('Blog._blogCategoryChange category', category);
-                rid = category['@rid'];
-            }
-        }
         return {
             posts: [],
             ancestors: [],
             allowPost: false,
             total: 0,
             pageSize: 10,
-            pageNo: 1,
-            rid: rid
+            pageNo: 1
         };
     },
 
     componentWillMount: function() {
-        BlogStore.addChangeListener(this._onBlogChange);
-        BlogCategoryStore.addChangeListener(this._blogCategoryChange);
+        NewsStore.addChangeListener(this._onNewsChange);
 
-        //console.log('Blog.componentWillMount', this.props.params.categoryId, BlogCategoryStore.getCategory());
+        NewsCategoryStore.addChangeListener(this._newsCategoryChange);
+
         // need to make sure that category tree is loaded in case of bookmark.
-        if(BlogCategoryStore.getCategory().length === 0) {
-            BlogActionCreators.getBlogTree();
+        if(NewsCategoryStore.getCategory().length === 0) {
+            NewsActionCreators.getNewsTree();
         } else {
             // lookup categoryRid from categoryId in params.
-            let category = CommonUtils.findCategory(BlogCategoryStore.getCategory(), this.props.params.categoryId);
-            //console.log('category', BlogCategoryStore.getCategory(), this.props.params.categoryId, category);
-            BlogActionCreators.getBlogPost(category['@rid'], this.state.pageNo, this.state.pageSize);
+            let category = CommonUtils.findCategory(NewsCategoryStore.getCategory(), this.props.params.categoryId);
+            NewsActionCreators.getNewsPost(category['@rid'], this.state.pageNo, this.state.pageSize);
         }
     },
 
     componentWillUnmount: function() {
-        BlogStore.removeChangeListener(this._onBlogChange);
-        BlogCategoryStore.removeChangeListener(this._blogCategoryChange);
+        NewsStore.removeChangeListener(this._onNewsChange);
+        NewsCategoryStore.removeChangeListener(this._newsCategoryChange);
     },
 
-    _onBlogChange: function() {
+    _onNewsChange: function() {
         this.setState({
-            ancestors: BlogStore.getAncestors(),
-            allowPost: BlogStore.getAllowPost(),
-            posts: BlogStore.getPosts(),
-            total: BlogStore.getTotal()
+            ancestors: NewsStore.getAncestors(),
+            allowPost: NewsStore.getAllowPost(),
+            posts: NewsStore.getPosts(),
+            total: NewsStore.getTotal()
         });
     },
 
-    _blogCategoryChange: function() {
+    _newsCategoryChange: function() {
         // The Main doesn't care about the post loading anymore. the loading action always starts here.
-        let rid = BlogCategoryStore.getCategory()[0]['@rid'];
+        let rid = NewsCategoryStore.getCategory()[0]['@rid'];
         if(this.props.params.categoryId) {
-            //console.log('Blog._blogCategoryChange', rid, this.props.params.categoryId, BlogCategoryStore.getCategory());
-            let category = CommonUtils.findCategory(BlogCategoryStore.getCategory(), this.props.params.categoryId);
-            //console.log('Blog._blogCategoryChange category', category);
+            let category = CommonUtils.findCategory(NewsCategoryStore.getCategory(), this.props.params.categoryId);
             rid = category['@rid'];
         }
         this.setState({rid: rid});
-        BlogActionCreators.getBlogPost(rid, this.state.pageNo, this.state.pageSize);
+        NewsActionCreators.getNewsPost(rid, this.state.pageNo, this.state.pageSize);
     },
 
     _routeToPost: function(postId) {
-        this.props.history.push('/blog/' + this.props.params.categoryId + '/' + postId);
+        this.props.history.push('/news/' + this.props.params.categoryId + '/' + postId);
     },
 
     _onAddPost: function () {
         //console.log("_onAddPost is called");
-        this.props.history.push('/blog/postAdd/' + this.props.params.categoryId);
+        this.props.history.push('/news/postAdd/' + this.props.params.categoryId);
     },
 
     _onPageNoChange: function (key) {
@@ -97,7 +84,7 @@ var Blog = React.createClass({
             pageNo: key
         });
         // use key instead of this.state.pageNo as setState is async.
-        BlogActionCreators.getBlogPost(this.state.rid, key, this.state.pageSize);
+        NewsActionCreators.getNewsPost(this.state.rid, key, this.state.pageSize);
     },
 
     _onPageSizeChange: function (current, pageSize) {
@@ -105,7 +92,7 @@ var Blog = React.createClass({
         this.setState({
             pageSize: pageSize
         });
-        BlogActionCreators.getBlogPost(this.state.rid, this.state.pageNo, pageSize);
+        NewsActionCreators.getNewsPost(this.state.rid, this.state.pageNo, pageSize);
     },
 
     render: function() {
@@ -114,7 +101,7 @@ var Blog = React.createClass({
         return (
             <div>
                 <div className="blogHeader">
-                    <h2>Blogs{addButton}</h2>
+                    <h2>News{addButton}</h2>
                 </div>
                 <div className="blogRoot">
                     <div className="leftColumn">
@@ -139,7 +126,7 @@ var Blog = React.createClass({
                     </div>
                     <div className="rightColumn">
                         <div className="blogInfo">
-                            <h1>Blog Information</h1>
+                            <h1>News Information</h1>
                             <p>In this section, you will see some information and references pertaining to the opened blog.</p>
                             <p>Also, having the screen width be less then 64em will hide it, leaving reading room for mobile users only concerned with reading post content on the go.</p>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci alias cum, cumque cupiditate ea eum itaque, minus molestias necessitatibus nihil pariatur perspiciatis quam quas quod rem repellat, sint voluptate.</p>
@@ -151,4 +138,4 @@ var Blog = React.createClass({
     }
 });
 
-module.exports = Blog;
+module.exports = News;
