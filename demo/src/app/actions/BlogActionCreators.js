@@ -17,6 +17,14 @@ module.exports = {
         WebAPIUtils.getBlogPost(rid, pageNo, pageSize);
     },
 
+    getRecentBlogPost: function(pageNo, pageSize) {
+        WebAPIUtils.getRecentBlogPost(pageNo, pageSize);
+    },
+
+    getBlog: function(host) {
+        WebAPIUtils.getBlog(host);
+    },
+
     addPost: function(action) {
         WebAPIUtils.addPost(action);
     },

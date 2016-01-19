@@ -7,8 +7,10 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 var CHANGE_EVENT = 'change';
 
 var _posts = [];
+var _recentPosts = [];
 var _ancestors = [];
 var _total = 0;
+var _recentPostTotal = 0;
 var _allowPost = false;
 var _post = {};
 
@@ -31,6 +33,10 @@ var BlogStore = _.extend({}, EventEmitter.prototype, {
         return _posts;
     },
 
+    getRecentPosts: function() {
+        return _recentPosts;
+    },
+
     getAncestors: function() {
         return _ancestors;
     },
@@ -41,6 +47,10 @@ var BlogStore = _.extend({}, EventEmitter.prototype, {
 
     getTotal: function() {
         return _total;
+    },
+
+    getRecentPostTotal: function() {
+        return _recentPostTotal;
     },
 
     getPost: function() {
@@ -67,6 +77,15 @@ AppDispatcher.register(function(payload) {
                 _posts = [];
             } else {
                 _posts = payload.json.posts;
+            }
+            BlogStore.emitChange();
+            break;
+        case ActionTypes.GET_RECENT_BLOG_POST_RESPONSE:
+            _recentPostTotal = payload.json.total;
+            if(_recentPostTotal == 0) {
+                _recentPosts = [];
+            } else {
+                _recentPosts = payload.json.posts;
             }
             BlogStore.emitChange();
             break;

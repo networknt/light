@@ -254,7 +254,24 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 eventData.put("updateDate", new Date());
                 eventData.put("updateUserId", user.get("userId"));
                 // it is possible for the post to switch parent.
-                eventData.put("parentId", data.get("parentId"));
+                String parentRid = (String)data.get("parentRid");
+                if(parentRid != null) {
+                    // if parentRid is not even selected, nothing to do with the parent edge.
+                    Vertex parent = DbService.getVertexByRid(graph, parentRid);
+                    boolean found = false;
+                    for(Edge e: post.getEdges(Direction.IN, "HasPost")) {
+                        Vertex edgeParent = e.getVertex(Direction.IN);
+                        if(edgeParent.equals(parent)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) {
+                        // replace parent here by passing parentId to the event rule.
+                        eventData.put("parentId", parent.getProperty("categoryId"));
+                    }
+                }
+
                 // tags
                 Set<String> inputTags = data.get("tags") != null? new HashSet<String>(Arrays.asList(((String)data.get("tags")).split("\\s*,\\s*"))) : new HashSet<String>();
                 Set<String> storedTags = new HashSet<String>();
@@ -306,11 +323,6 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             graph.begin();
             Vertex updateUser = graph.getVertexByKey("User.userId", data.remove("updateUserId"));
             OrientVertex post = (OrientVertex)graph.getVertexByKey("Post.postId", data.get("postId"));
-            OrientVertex parent = getBranchByHostId(graph, bfnType, (String) data.get("host"), (String) data.get("parentId"));
-            if(parent != null) {
-
-                //parent.addEdge("HasPost", post);
-            }
 
             if(post != null) {
                 updateUser.addEdge("Update", post);
@@ -337,6 +349,19 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 }
                 post.setProperty("updateDate", data.get("updateDate"));
 
+                // handle parent update
+                String parentId = (String)data.get("parentId");
+                if(parentId != null) {
+                    OrientVertex parent = getBranchByHostId(graph, bfnType, (String) data.get("host"), (String) data.get("parentId"));
+                    if(parent != null) {
+                        // remove the current edge and add a new one.
+                        for(Edge e : post.getEdges(Direction.IN, "HasPost")) {
+                            e.remove();
+                        }
+                        parent.addEdge("HasPost", post);
+                    }
+                }
+
                 // handle addTags and delTags
                 OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("tagHostIdIdx");
                 Set<String> addTags = (Set)data.get("addTags");
@@ -357,10 +382,21 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 Set<String> delTags = (Set)data.get("delTags");
                 if(delTags != null) {
                     for(String tagId: delTags) {
+                        /*
+                        OrientVertex branch = null;
+                        OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(branchType + "HostIdIdx");
+                        OCompositeKey key = new OCompositeKey(host, id);
+                        OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
+                        if (oid != null) {
+                            branch = graph.getVertex(oid.getRecord());
+                        }
+                        return branch;
+                        */
+
                         OCompositeKey key = new OCompositeKey(data.get("host"), tagId);
                         OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
                         if (oid != null) {
-                            OrientVertex tag = (OrientVertex) oid.getRecord();
+                            OrientVertex tag = graph.getVertex(oid.getRecord());
                             for (Edge edge : (Iterable<Edge>) post.getEdges(Direction.OUT, "HasTag")) {
                                 if(edge.getVertex(Direction.IN).equals(tag)) graph.removeEdge(edge);
                             }
@@ -508,4 +544,125 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         return json;
     }
 
+    /**
+     * Get recent post for blog/news/forum regardless category
+     *
+     * @param objects
+     * @return
+     * @throws Exception
+     */
+    public boolean getBfnRecentPost(String bfnType, Object ...objects) throws Exception {
+        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        String host = (String)data.get("host");
+        Integer pageSize = (Integer)data.get("pageSize");
+        Integer pageNo = (Integer)data.get("pageNo");
+        if(pageSize == null) {
+            inputMap.put("result", "pageSize is required");
+            inputMap.put("responseCode", 400);
+            return false;
+        }
+        if(pageNo == null) {
+            inputMap.put("result", "pageNo is required");
+            inputMap.put("responseCode", 400);
+            return false;
+        }
+        String sortDir = (String)data.get("sortDir");
+        String sortedBy = (String)data.get("sortedBy");
+        if(sortDir == null) {
+            sortDir = "desc";
+        }
+        if(sortedBy == null) {
+            sortedBy = "createDate";
+        }
+        // allowPost will always be false as it has to be posted in a category context.
+        boolean allowPost = false;
+
+        // Get the list from cache.
+        List<String> list = null;
+        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
+        if(listCache == null) {
+            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(1000)
+                    .build();
+            bfnMap.put("listCache", listCache);
+        } else {
+            list = (List<String>)listCache.get(bfnType);
+        }
+
+        ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
+        if(postCache == null) {
+            postCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(10000)
+                    .build();
+            bfnMap.put("postCache", postCache);
+        }
+
+        if(list == null) {
+            // get the list for db
+            list = new ArrayList<String>();
+            String json = getBfnRecentPostDb(host, bfnType, sortedBy, sortDir);
+            if(json != null) {
+                // convert json to list of maps.
+                List<Map<String, Object>> posts = mapper.readValue(json,
+                        new TypeReference<ArrayList<HashMap<String, Object>>>() {
+                        });
+                for(Map<String, Object> post: posts) {
+                    String postRid = (String)post.get("rid");
+                    list.add(postRid);
+                    post.remove("@rid");
+                    post.remove("@type");
+                    post.remove("@version");
+                    post.remove("@fieldTypes");
+                    postCache.put(postRid, post);
+                }
+            }
+            listCache.put(bfnType, list);
+        }
+        long total = list.size();
+        if(total > 0) {
+            List<Map<String, Object>> posts = new ArrayList<Map<String, Object>>();
+            for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
+                String postRid = list.get(i);
+                Map<String, Object> post = (Map<String, Object>)postCache.get(postRid);
+                posts.add(post);
+            }
+            Map<String, Object> result = new HashMap<String, Object>();
+            result.put("total", total);
+            result.put("posts", posts);
+            result.put("allowPost", allowPost);
+            inputMap.put("result", mapper.writeValueAsString(result));
+            return true;
+        } else {
+            // there is no post available. but still need to return allowPost
+            Map<String, Object> result = new HashMap<String, Object>();
+            result.put("total", 0);
+            result.put("allowPost", allowPost);
+            inputMap.put("result", mapper.writeValueAsString(result));
+            return true;
+        }
+    }
+
+    protected String getBfnRecentPostDb(String host, String bfnType, String sortedBy, String sortDir) {
+        String json = null;
+        // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
+        String sql = "select @rid, postId, title, summary, content, createDate, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, " +
+            "in_HasPost[0].@rid as parentRid, in_HasPost[0].categoryId as parentId " +
+            "from Post where host = ? and in_HasPost[0].@class = ? order by " + sortedBy + " " + sortDir;
+
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> posts = graph.getRawGraph().command(query).execute(host, bfnType);
+            if(posts.size() > 0) {
+                json = OJSONWriter.listToJSON(posts, null);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return json;
+    }
 }

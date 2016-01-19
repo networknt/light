@@ -20,8 +20,8 @@
       "content"
     ],
     "properties": {
-      "parentId": {
-        "title": "Parent Id",
+      "parentRid": {
+        "title": "Parent Rid",
         "type": "string"
       },
       "postId": {
@@ -44,12 +44,17 @@
       "content": {
         "title": "Content",
         "type": "string"
+      },
+      "tags": {
+        "title": "Tags",
+        "type": "array",
+        "maxItems": 10
       }
     }
   },
   "form": [
     {
-      "key": "parentId",
+      "key": "parentRid",
       "type": "rc-select",
       "multiple": false,
       "action" : {
@@ -68,6 +73,17 @@
     {
       "key": "content",
       "type": "textarea"
+    },
+    {
+      "key": "tags",
+      "type": "rc-select",
+      "tags": true,
+      "maxTagTextLength": 20,
+      "action": {
+        "get" : {
+          "url": "https://www.networknt.com/api/rs?cmd={\"category\": \"client\", \"name\": \"getClientDropdown\", \"readOnly\": true}"
+        }
+      }
     }
   ]
 }

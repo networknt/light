@@ -49,6 +49,22 @@ module.exports = {
         });
     },
 
+    getRecentBlogPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_RECENT_BLOG_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getRecentNewsPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_RECENT_NEWS_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     getNewsPostResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_NEWS_POST_RESPONSE,

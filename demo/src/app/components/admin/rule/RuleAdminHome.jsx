@@ -10,17 +10,17 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import Dialog from 'material-ui/lib/dialog';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
-import BlogAdminStore from '../../../stores/BlogAdminStore';
+import RuleAdminStore from '../../../stores/RuleAdminStore';
 import FormStore from '../../../stores/FormStore';
 import BlogActionCreators from '../../../actions/BlogActionCreators';
 import FormActionCreators from'../../../actions/FormActionCreators';
 
-var BlogAdminHome = React.createClass({
-    displayName: 'BlogAdminHome',
+var RuleAdminHome = React.createClass({
+    displayName: 'RuleAdminHome',
 
     getInitialState: function() {
         return {
-            blogs: [],
+            rules: [],
             formOpen: false,
             formTitle: null,
             formId: null,
@@ -29,19 +29,17 @@ var BlogAdminHome = React.createClass({
     },
 
     componentWillMount: function() {
-        BlogAdminStore.addChangeListener(this._onBlogChange);
+        RuleAdminStore.addChangeListener(this._onRuleChange);
         FormStore.addChangeListener(this._onFormChange);
-        BlogActionCreators.getBlog();
+        RuleActionCreators.getRule();
     },
 
     componentWillUnmount: function() {
-        BlogAdminStore.removeChangeListener(this._onBlogChange);
+        RuleAdminStore.removeChangeListener(this._onRuleChange);
         FormStore.removeChangeListener(this._onFormChange);
     },
 
     _onFormChange: function() {
-        console.log('BlogAdminHome._onFormChange', this.state.formId);
-        console.log('BlogAdminHome._onFormChange', FormStore.getForm(this.state.formId));
         let schema = FormStore.getForm(this.state.formId).schema;
         let form = FormStore.getForm(this.state.formId).form;
         let action = FormStore.getForm(this.state.formId).action;
@@ -52,9 +50,9 @@ var BlogAdminHome = React.createClass({
         });
     },
 
-    _onBlogChange: function() {
+    _onRuleChange: function() {
         this.setState({
-            blogs: BlogAdminStore.getBlogs()
+            rules: RuleAdminStore.getRules()
         });
     },
 
@@ -188,7 +186,7 @@ var BlogAdminHome = React.createClass({
     }
 });
 
-module.exports = BlogAdminHome;
+module.exports = RuleAdminHome;
 
 /*
  @class: "Blog"

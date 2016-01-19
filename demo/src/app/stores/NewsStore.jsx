@@ -7,8 +7,10 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 var CHANGE_EVENT = 'change';
 
 var _posts = [];
+var _recentPosts = [];
 var _ancestors = [];
 var _total = 0;
+var _recentPostTotal = 0;
 var _allowPost = false;
 var _post = {};
 
@@ -31,6 +33,10 @@ var NewsStore = _.extend({}, EventEmitter.prototype, {
         return _posts;
     },
 
+    getRecentPosts: function () {
+        return _recentPosts;
+    },
+
     getAncestors: function() {
         return _ancestors;
     },
@@ -43,6 +49,10 @@ var NewsStore = _.extend({}, EventEmitter.prototype, {
         return _total;
     },
 
+    getRecentPostTotal: function () {
+        return _recentPostTotal;
+    },
+
     getPost: function() {
         return _post;
     }
@@ -52,12 +62,6 @@ var NewsStore = _.extend({}, EventEmitter.prototype, {
 AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        /*
-         case ActionTypes.GET_NEWS_TREE_RESPONSE:
-         WebAPIUtils.getNewsPost(payload.json[0]['@rid']);
-         //ProductStore.emitChange();
-         break;
-         */
         case ActionTypes.GET_NEWS_POST_RESPONSE:
             _total = payload.json.total;
             _allowPost = payload.json.allowPost;
@@ -65,6 +69,15 @@ AppDispatcher.register(function(payload) {
                 _posts = [];
             } else {
                 _posts = payload.json.posts;
+            }
+            NewsStore.emitChange();
+            break;
+        case ActionTypes.GET_RECENT_NEWS_POST_RESPONSE:
+            _recentPostTotal = payload.json.total;
+            if(_recentPostTotal == 0) {
+                _recentPosts = [];
+            } else {
+                _recentPosts = payload.json.posts;
             }
             NewsStore.emitChange();
             break;

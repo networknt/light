@@ -20,18 +20,21 @@ import Blog from './components/blog/Blog';
 import BlogPost from './components/blog/BlogPost';
 import BlogPostAdd from './components/blog/BlogPostAdd';
 import BlogPostUpdate from './components/blog/BlogPostUpdate';
+import BlogRecentPost from './components/blog/BlogRecentPost';
 
 import NewsCategory from './components/news/NewsCategory';
 import News from './components/news/News';
 import NewsPost from './components/news/NewsPost';
 import NewsPostAdd from './components/news/NewsPostAdd';
 import NewsPostUpdate from './components/news/NewsPostUpdate';
+import NewsRecentPost from './components/news/NewsRecentPost';
 
 import CatalogCategory from './components/catalog/CatalogCategory';
 import CatalogProductAdd from './components/catalog/CatalogProductAdd';
 import CatalogProductUpdate from './components/catalog/CatalogProductUpdate';
 import Catalog from './components/catalog/Catalog';
 import CatalogProduct from './components/catalog/CatalogProduct';
+import RecentProduct from './components/catalog/RecentProduct';
 
 import Forum from './components/forum';
 import Admin from './components/admin/AdminMenu';
@@ -67,12 +70,14 @@ const AppRoutes = (
     <Route path='/blog/postUpdate/:postId' component={BlogPostUpdate} />
     <Route path='/blog/:categoryId' component={Blog} />
     <Route path='/blog/:categoryId/:postId' component={BlogPost} />
+    <Route path='/recentBlogPost' component={BlogRecentPost} />
 
     <Route path='/news' component={NewsCategory} />
     <Route path='/news/postAdd/:categoryId' component={NewsPostAdd} />
     <Route path='/news/postUpdate/:postId' component={NewsPostUpdate} />
     <Route path='/news/:categoryId' component={News} />
     <Route path='/news/:categoryId/:postId' component={NewsPost} />
+    <Route path='/recentNewsPost' component={NewsRecentPost} />
 
     <Route path='/forum' component={Forum} />
 
@@ -81,6 +86,8 @@ const AppRoutes = (
     <Route path='/catalog/productUpdate/:productId' component={CatalogProductUpdate} />
     <Route path='/catalog/:categoryId' component={Catalog} />
     <Route path='/catalog/:categoryId/:productId' component={CatalogProduct} />
+    <Route path='/recentProduct' component={RecentProduct} />
+
 
     <Route path='/admin' component={Admin} />
     <Route path='/admin/blogAdmin' component={BlogAdminHome} />

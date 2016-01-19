@@ -57,7 +57,7 @@
         <undertow.version>1.1.0.Beta6</undertow.version>
         <hazelcast.version>3.3</hazelcast.version>
         <mbassador.version>1.2.1</mbassador.version>
-        <orientdb.version>2.1.8</orientdb.version>
+        <orientdb.version>2.1.9</orientdb.version>
         <spring.version>4.2.2.RELEASE</spring.version>
         <concurrentlinkedhashmap.version>1.4.1</concurrentlinkedhashmap.version>
         <jna.version>4.0.0</jna.version>

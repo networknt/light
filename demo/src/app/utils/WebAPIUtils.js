@@ -148,6 +148,48 @@ module.exports = {
         });
     },
 
+    getRecentBlogPost: function(pageNo, pageSize) {
+        let getRecentBlogPost = {
+            category: 'blog',
+            name: 'getRecentPost',
+            readOnly: true,
+            data: {
+                pageSize: pageSize,
+                pageNo: pageNo
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getRecentBlogPost))}
+        }).done(function(data) {
+            ServerActionCreators.getRecentBlogPostResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.getRecentBlogPostResponse(null, error);
+        });
+    },
+
+    getRecentNewsPost: function(pageNo, pageSize) {
+        let getRecentNewsPost = {
+            category: 'news',
+            name: 'getRecentPost',
+            readOnly: true,
+            data: {
+                pageSize: pageSize,
+                pageNo: pageNo
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getRecentNewsPost))}
+        }).done(function(data) {
+            ServerActionCreators.getRecentNewsPostResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.getRecentNewsPostResponse(null, error);
+        });
+    },
+
     getBlogPost: function(rid, pageNo, pageSize) {
         let getBlogPost = {
             category: 'blog',
@@ -196,6 +238,7 @@ module.exports = {
             ServerActionCreators.getNewsPostResponse(null, error);
         });
     },
+
 
     getBlog: function() {
         let getBlog = {

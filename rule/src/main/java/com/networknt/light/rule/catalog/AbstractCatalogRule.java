@@ -681,4 +681,120 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         return json;
     }
 
+
+    public boolean getRecentProduct(Object ...objects) throws Exception {
+        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
+        String host = (String)data.get("host");
+        Integer pageSize = (Integer)data.get("pageSize");
+        Integer pageNo = (Integer)data.get("pageNo");
+        if(pageSize == null) {
+            inputMap.put("result", "pageSize is required");
+            inputMap.put("responseCode", 400);
+            return false;
+        }
+        if(pageNo == null) {
+            inputMap.put("result", "pageNo is required");
+            inputMap.put("responseCode", 400);
+            return false;
+        }
+        String sortDir = (String)data.get("sortDir");
+        String sortedBy = (String)data.get("sortedBy");
+        if(sortDir == null) {
+            sortDir = "desc";
+        }
+        if(sortedBy == null) {
+            sortedBy = "createDate";
+        }
+        // allowUpdate will be false always. In fact it is ignored.
+        boolean allowUpdate = false;
+
+        // Get the page from cache.
+        List<String> list = null;
+        Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage("branchMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)branchMap.get("listCache");
+        if(listCache == null) {
+            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(1000)
+                    .build();
+            branchMap.put("listCache", listCache);
+        } else {
+            list = (List<String>)listCache.get("product");
+        }
+
+        ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)branchMap.get("productCache");
+        if(productCache == null) {
+            productCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(1000)
+                    .build();
+            branchMap.put("productCache", productCache);
+        }
+
+        if(list == null) {
+            // get the list for db
+            list = new ArrayList<String>();
+            String json = getRecentProductDb(host, sortedBy, sortDir);
+            if(json != null) {
+                // convert json to list of maps.
+                List<Map<String, Object>> products = mapper.readValue(json,
+                        new TypeReference<ArrayList<HashMap<String, Object>>>() {
+                        });
+                for(Map<String, Object> product: products) {
+                    String productRid = (String)product.get("rid");
+                    list.add(productRid);
+                    product.remove("@rid");
+                    product.remove("@type");
+                    product.remove("@version");
+                    product.remove("@fieldTypes");
+                    productCache.put(productRid, product);
+                }
+            }
+            listCache.put("product", list);
+        }
+        long total = list.size();
+        if(total > 0) {
+            List<Map<String, Object>> products = new ArrayList<Map<String, Object>>();
+            for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
+                String productRid = list.get(i);
+                Map<String, Object> product = (Map<String, Object>)productCache.get(productRid);
+                products.add(product);
+            }
+            Map<String, Object> result = new HashMap<String, Object>();
+            result.put("total", total);
+            result.put("products", products);
+            result.put("allowUpdate", allowUpdate);
+            inputMap.put("result", mapper.writeValueAsString(result));
+            return true;
+        } else {
+            // there is no product available. but still need to return allowUpdate
+            Map<String, Object> result = new HashMap<String, Object>();
+            result.put("total", 0);
+            result.put("allowUpdate", allowUpdate);
+            inputMap.put("result", mapper.writeValueAsString(result));
+            return true;
+        }
+    }
+
+
+    protected String getRecentProductDb(String host, String sortedBy, String sortDir) {
+        String json = null;
+        // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
+        String sql = "select @rid as rid, productId, name, description, variants, createDate, " +
+            "in_HasProduct[0].@rid as parentRid, in_HasProduct[0].categoryId as parentId " +
+            "from Product where host = ? order by " + sortedBy + " " + sortDir;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> products = graph.getRawGraph().command(query).execute(host);
+            if(products.size() > 0) {
+                json = OJSONWriter.listToJSON(products, null);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return json;
+    }
+
 }
