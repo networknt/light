@@ -94,7 +94,7 @@ $.ajaxPrefilter(function(options, originalOptions, jqxhr) {
             AuthActionCreators.logout();
           }
         }
-        refreshReq.open('POST', 'http://example:8080/api/rs', true);
+        refreshReq.open('POST', '/api/rs', true);
         refreshReq.send(JSON.stringify(refreshToken));
       }
     } else {

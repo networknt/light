@@ -7,9 +7,8 @@ import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import RaisedButton from 'material-ui/lib/raised-button';
-import Dialog from 'material-ui/lib/dialog';
-import CircularProgress from 'material-ui/lib/circular-progress';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
+import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
 import BlogAdminStore from '../../../stores/BlogAdminStore';
 import FormStore from '../../../stores/FormStore';
 import BlogActionCreators from '../../../actions/BlogActionCreators';
@@ -21,35 +20,16 @@ var BlogAdminHome = React.createClass({
     getInitialState: function() {
         return {
             blogs: [],
-            formOpen: false,
-            formTitle: null,
-            formId: null,
-            model: {}
         };
     },
 
     componentWillMount: function() {
         BlogAdminStore.addChangeListener(this._onBlogChange);
-        FormStore.addChangeListener(this._onFormChange);
         BlogActionCreators.getBlog();
     },
 
     componentWillUnmount: function() {
         BlogAdminStore.removeChangeListener(this._onBlogChange);
-        FormStore.removeChangeListener(this._onFormChange);
-    },
-
-    _onFormChange: function() {
-        console.log('BlogAdminHome._onFormChange', this.state.formId);
-        console.log('BlogAdminHome._onFormChange', FormStore.getForm(this.state.formId));
-        let schema = FormStore.getForm(this.state.formId).schema;
-        let form = FormStore.getForm(this.state.formId).form;
-        let action = FormStore.getForm(this.state.formId).action;
-        this.setState({
-            schema: schema,
-            form: form,
-            action: action
-        });
     },
 
     _onBlogChange: function() {
@@ -66,59 +46,16 @@ var BlogAdminHome = React.createClass({
     _onUpdateBlog: function(blog) {
         console.log("_onUpdateBlog", blog);
         let formId = 'com.networknt.light.blog.update';
-        this.setState({
-            formId: formId,
-            formTitle: 'Update Blog',
-            formOpen: true
-        });
-        FormActionCreators.getForm(formId);
+        FormActionCreators.setFormModel(formId, blog);
+        this.props.history.push('/form/' + formId);
     },
 
     _onAddBlog: function() {
         let formId = 'com.networknt.light.blog.add';
-        this.setState({
-            formId: formId,
-            formTitle: 'Add Blog',
-            formOpen: true
-        });
-        FormActionCreators.getForm(formId);
-    },
-
-    _onFormClose: function() {
-        this.setState({
-            formOpen: false
-        })
-    },
-
-    _onModelChange: function() {
-
-    },
-
-    _onTouchTap: function (action) {
-        console.log('BlogAdminHome._onTouchTap', action);
-
+        this.props.history.push('/form/' + formId);
     },
 
     render: function() {
-        console.log('this.state.blogs', this.state.blogs);
-        var actions = [];
-        var contents= (<CircularProgress mode="indeterminate"/>);
-        if(this.state.schema) {
-            {this.state.action.map((item, index) => {
-                let boundTouchTap = this._onTouchTap.bind(this, item);
-                actions.push(<RaisedButton key={index} label={item.title} primary={true} onTouchTap={boundTouchTap} />)
-            })}
-            actions.push(<RaisedButton key="Cancel" label="Cancel" secondary={true} onTouchTap={this._onFormClose} />)
-
-            if(this.state.formId === 'com.networknt.light.blog.add') {
-                console.log('BlogAdminHome.render before SchemaForm', this.state.schema);
-                console.log('BlogAdminHome.render before SchemaForm', this.state.form);
-                contents = (<SchemaForm schema={this.state.schema} form={this.state.form} onModelChange={this._onModelChange} />);
-            } else {
-                contents = (<SchemaForm schema={this.state.schema} form={this.state.form} model={this.state.model} onModelChange={this._onModelChange} />);
-            }
-        }
-
         return (
             <span>
                 <Table
@@ -180,9 +117,6 @@ var BlogAdminHome = React.createClass({
                         </TableRow>
                     </TableFooter>
                 </Table>
-                <Dialog title={this.state.formTitle} actions={actions} modal={true} open={this.state.formOpen}>
-                    {contents}
-                </Dialog>
             </span>
         );
     }

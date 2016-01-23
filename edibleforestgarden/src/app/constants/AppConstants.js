@@ -83,6 +83,7 @@ module.exports = {
         GET_FORM: null,
         RECEIVE_FORM: null,
         SUBMIT_FORM_RESPONSE: null,
+        SET_FORM_MODEL: null,
 
         // Page
         GET_PAGE: null,

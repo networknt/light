@@ -63,7 +63,7 @@ const AppRoutes = (
     <Route path='/signup' component={Signup} />
     <Route path='/login' component={Login} />
     <Route path='/logout' component={Logout} />
-    <Route path='/:root/form/:formId' component={Form} />
+    <Route path='/form/:formId' component={Form} />
     <Route path='/page/:pageId' component={Page} />
 
 

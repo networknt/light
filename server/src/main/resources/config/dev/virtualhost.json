@@ -6,7 +6,7 @@
     "id" : "demo.networknt.com"
   },
   "www.edibleforestgarden.ca" : {
-    "base" : "/home/edibleforestgarden/web",
+    "base" : "/home/steve/networknt/light/edibleforestgarden/build",
     "transferMinSize" : "100",
     "supportDevices" : [ "Browser", "Android", "iOS" ],
     "id" : "www.edibleforestgarden.ca"

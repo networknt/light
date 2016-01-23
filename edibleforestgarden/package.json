@@ -37,7 +37,7 @@
     "react-addons-perf": "^0.14.6",
     "react-dom": "^0.14.6",
     "react-router": "^1.0.3",
-    "react-schema-form": "^0.2.1",
+    "react-schema-form": "^0.2.2",
     "react-schema-form-rc-select": "^0.1.2",
     "react-tap-event-plugin": "^0.2.1"
   },

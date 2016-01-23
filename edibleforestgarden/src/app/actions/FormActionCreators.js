@@ -26,6 +26,16 @@ module.exports = {
 
     submitForm: function(action) {
         WebAPIUtils.submitForm(action);
+    },
+
+    setFormModel: function(formId, json) {
+        console.log('setFormModel', formId, json);
+        AppDispatcher.dispatch({
+            type: ActionTypes.SET_FORM_MODEL,
+            formId: formId,
+            json: json
+        });
     }
+
 };
 

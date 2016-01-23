@@ -10,6 +10,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import Dialog from 'material-ui/lib/dialog';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
+import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
 import BlogAdminStore from '../../../stores/BlogAdminStore';
 import FormStore from '../../../stores/FormStore';
 import BlogActionCreators from '../../../actions/BlogActionCreators';
@@ -40,8 +41,6 @@ var BlogAdminHome = React.createClass({
     },
 
     _onFormChange: function() {
-        console.log('BlogAdminHome._onFormChange', this.state.formId);
-        console.log('BlogAdminHome._onFormChange', FormStore.getForm(this.state.formId));
         let schema = FormStore.getForm(this.state.formId).schema;
         let form = FormStore.getForm(this.state.formId).form;
         let action = FormStore.getForm(this.state.formId).action;
@@ -100,7 +99,6 @@ var BlogAdminHome = React.createClass({
     },
 
     render: function() {
-        console.log('this.state.blogs', this.state.blogs);
         var actions = [];
         var contents= (<CircularProgress mode="indeterminate"/>);
         if(this.state.schema) {
@@ -111,11 +109,9 @@ var BlogAdminHome = React.createClass({
             actions.push(<RaisedButton key="Cancel" label="Cancel" secondary={true} onTouchTap={this._onFormClose} />)
 
             if(this.state.formId === 'com.networknt.light.blog.add') {
-                console.log('BlogAdminHome.render before SchemaForm', this.state.schema);
-                console.log('BlogAdminHome.render before SchemaForm', this.state.form);
-                contents = (<SchemaForm schema={this.state.schema} form={this.state.form} onModelChange={this._onModelChange} />);
+                contents = (<SchemaForm schema={this.state.schema} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />);
             } else {
-                contents = (<SchemaForm schema={this.state.schema} form={this.state.form} model={this.state.model} onModelChange={this._onModelChange} />);
+                contents = (<SchemaForm schema={this.state.schema} form={this.state.form} model={this.state.model} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />);
             }
         }
 
@@ -189,17 +185,3 @@ var BlogAdminHome = React.createClass({
 });
 
 module.exports = BlogAdminHome;
-
-/*
- @class: "Blog"
- @fieldTypes: "createDate=t,in_Create=g"
- @rid: "#34:0"
- @type: "d"
- @version: 1
- categoryId: "computer"
- createDate: "2015-12-31T15:06:05.472"
- description: "all about computer"
- host: "example"
- in_Create: Array[1]
-
- */

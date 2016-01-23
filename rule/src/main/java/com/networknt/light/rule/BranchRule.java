@@ -307,7 +307,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                             if(parentRids.get(0).equals(storedParentRid)) {
                                 // same parent, do nothing
                             } else {
-                                eventData.put("delParentId", storedParentId);
+                                if(storedParentId != null) eventData.put("delParentId", storedParentId);
                                 eventData.put("addParentId", parent.getProperty(id));
                             }
                         } else {
@@ -649,7 +649,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         }
         if(json == null) {
             json = getBranchTreeDb(branchType, host);
-            cache.put(host + branchType, json);
+            if(json != null) cache.put(host + branchType, json);
         }
         if(json != null) {
             inputMap.put("result", json);

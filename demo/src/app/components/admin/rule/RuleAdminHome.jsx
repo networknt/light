@@ -187,17 +187,3 @@ var RuleAdminHome = React.createClass({
 });
 
 module.exports = RuleAdminHome;
-
-/*
- @class: "Blog"
- @fieldTypes: "createDate=t,in_Create=g"
- @rid: "#34:0"
- @type: "d"
- @version: 1
- categoryId: "computer"
- createDate: "2015-12-31T15:06:05.472"
- description: "all about computer"
- host: "example"
- in_Create: Array[1]
-
- */

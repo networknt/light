@@ -16,10 +16,7 @@
 var keyMirror = require('fbjs/lib/keyMirror');
 
 module.exports = {
-    Host: 'example',
-
     APIRoot:  '/api/rs',
-
     ClientId: 'example@Browser',
 
     ActionTypes: keyMirror({

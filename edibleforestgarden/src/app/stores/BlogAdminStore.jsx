@@ -7,7 +7,7 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _blogs = [];
-var _errors = [];
+var error = null;
 
 
 var BlogAdminStore = assign({}, EventEmitter.prototype, {
@@ -38,7 +38,11 @@ BlogAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.GET_BLOG_RESPONSE:
-            _blogs = payload.json;
+            error = payload.error;
+            console.log('error', error);
+            if(!error) {
+                _blogs = payload.json;
+            }
             BlogAdminStore.emitChange();
             break;
     }

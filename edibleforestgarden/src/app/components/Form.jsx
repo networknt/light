@@ -3,7 +3,9 @@ import FormStore from '../stores/FormStore';
 import SubmissionStore from '../stores/SubmissionStore';
 import FormActionCreators from '../actions/FormActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
+import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
 import RaisedButton from 'material-ui/lib/raised-button';
+import CircularProgress from 'material-ui/lib/circular-progress';
 import WebAPIUtils from '../utils/WebAPIUtils';
 import utils from 'react-schema-form/lib/utils';
 
@@ -17,7 +19,7 @@ let Form = React.createClass({
             schema: null,
             form: null,
             action: null,
-            model: this.props.model
+            model: null
         };
     },
 
@@ -42,13 +44,13 @@ let Form = React.createClass({
         if(schema) {
             let form = FormStore.getForm(this.props.params.formId).form;
             let action = FormStore.getForm(this.props.params.formId).action;
-            //console.log('schema = ', schema);
-            //console.log('form = ', form);
-            //console.log('action = ', action);
+            let model = FormStore.getModel(this.props.params.formId);
+            console.log('Form._onFormChange: model', model);
             this.setState({
                 schema: schema,
                 form: form,
-                action: action
+                action: action,
+                model: model
             });
         }
     },
@@ -64,7 +66,6 @@ let Form = React.createClass({
     },
 
     render: function() {
-        //console.log('Form: props', this.props);
         if(this.state.schema) {
             var actions = [];
             {this.state.action.map((item, index) => {
@@ -73,12 +74,12 @@ let Form = React.createClass({
             })}
             return (
                 <div>
-                    <SchemaForm schema={this.state.schema} form={this.state.form} model={this.props.model} onModelChange={this._onModelChange} />
+                    <SchemaForm schema={this.state.schema} form={this.state.form} model={this.state.model} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
                     {actions}
                 </div>
             )
         } else {
-            return <div>Loading...</div>
+            return (<CircularProgress mode="indeterminate"/>);
         }
     }
 });
