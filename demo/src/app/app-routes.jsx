@@ -94,6 +94,9 @@ const AppRoutes = (
     <Route path='/admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
     <Route path='/admin/dbAdmin/downloadEvent' component={DownloadEvent} />
     <Route path='/user' component={User} />
+
+    <IndexRoute component={Home}/>
+
   </Route>
 );
 
