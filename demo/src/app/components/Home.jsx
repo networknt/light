@@ -1,11 +1,8 @@
 import React from 'react';
-import FormStore from '../stores/FormStore';
-import SubmissionStore from '../stores/SubmissionStore';
-import FormActionCreators from '../actions/FormActionCreators';
-import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import RaisedButton from 'material-ui/lib/raised-button';
 import WebAPIUtils from '../utils/WebAPIUtils';
-
+import NewsRecentPost from './news/NewsRecentPost';
+import BlogRecentPost from './blog/BlogRecentPost';
 /*
     recent news post    | Permaculture -> Permaculture Nursery
     recent blog post    | Edible Forest Garden -> Dundalk
@@ -15,79 +12,31 @@ import WebAPIUtils from '../utils/WebAPIUtils';
  */
 
 
-
-let Form = React.createClass({
-
-    displayName: 'Form',
-
-    getInitialState: function() {
-        return {
-            schema: null,
-            form: null,
-            action: null,
-            model: this.props.model
-        };
-    },
-
-    componentWillMount: function() {
-        FormStore.addChangeListener(this._onFormChange);
-        SubmissionStore.addChangeListener(this._onSubmissionChange);
-        FormActionCreators.getForm(this.props.params.formId);
-    },
-
-    componentWillUnmount: function() {
-        FormStore.removeChangeListener(this._onFormChange);
-        SubmissionStore.removeChangeListener(this._onSubmissionChange);
-    },
-
-    _onSubmissionChange: function() {
-        // TODO display error or success with toaster.
-    },
-
-
-    _onFormChange: function() {
-        let schema = FormStore.getForm(this.props.params.formId) ? FormStore.getForm(this.props.params.formId).schema : null;
-        if(schema) {
-            let form = FormStore.getForm(this.props.params.formId).form;
-            let action = FormStore.getForm(this.props.params.formId).action;
-            //console.log('schema = ', schema);
-            //console.log('form = ', form);
-            //console.log('action = ', action);
-            this.setState({
-                schema: schema,
-                form: form,
-                action: action
-            });
-        }
-    },
-
-    _onModelChange: function(key, val) {
-        this.setState({model: utils.selectOrSet(key, this.state.model, val)});
-    },
-
-    _onTouchTap: function(action) {
-        console.log('Form._onTouchTap', action, this.state.model);
-        action.data = this.state.model;
-        FormActionCreators.submitForm(action);
-    },
-
+let Home = React.createClass({
     render: function() {
-        //console.log('Form: props', this.props);
-        if(this.state.schema) {
-            const buttons = this.state.action.map((item, idx) => (
-                <RaisedButton key={idx} label={item.title} primary={true} onTouchTap = {(e) => (WebAPIUtils.submitForm(this.state.action))} />
-            ));
-
-            return (
-                <div>
-                    <SchemaForm schema={this.state.schema} form={this.state.form} model={this.props.model} onModelChange={this._onModelChange} />
-                    {buttons}
+        return(
+            <div className="blogRoot">
+                <div className="leftColumn">
+                    <NewsRecentPost/>
+                    <BlogRecentPost/>
                 </div>
-            )
-        } else {
-            return <div>Loading...</div>
-        }
+                <div className="rightColumn">
+                    <p>
+                    <b>Permaculture</b> is a philosophy of working with, rather than against nature; of protracted & thoughtful observation rather than protracted & thoughtless labour; of looking at plants & animals in all their functions, rather than treating any area as a single-product system.
+                    </p>
+                    <p>
+                    <b>Forest garden</b> is a low-maintenance sustainable plant-based food production and agroforestry system based on woodland ecosystems, incorporating fruit and nut trees, shrubs, herbs, vines and perennial vegetables which have yields directly useful to humans. Making use of companion planting, these can be intermixed to grow in a succession of layers, to build a woodland habitat.
+                    </p>
+                    <p>
+                    <b>Permaculture Nursery</b>
+                    </p>
+                    <p>
+                        <b>Permaculture Produce</b>
+                    </p>
+                </div>
+            </div>
+        )
     }
 });
 
-module.exports = Form;
+module.exports = Home;

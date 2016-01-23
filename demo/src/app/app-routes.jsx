@@ -34,7 +34,6 @@ import CatalogProductAdd from './components/catalog/CatalogProductAdd';
 import CatalogProductUpdate from './components/catalog/CatalogProductUpdate';
 import Catalog from './components/catalog/Catalog';
 import CatalogProduct from './components/catalog/CatalogProduct';
-import RecentProduct from './components/catalog/RecentProduct';
 
 import Forum from './components/forum';
 import Admin from './components/admin/AdminMenu';
@@ -86,7 +85,6 @@ const AppRoutes = (
     <Route path='/catalog/productUpdate/:productId' component={CatalogProductUpdate} />
     <Route path='/catalog/:categoryId' component={Catalog} />
     <Route path='/catalog/:categoryId/:productId' component={CatalogProduct} />
-    <Route path='/recentProduct' component={RecentProduct} />
 
 
     <Route path='/admin' component={Admin} />

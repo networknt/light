@@ -84,18 +84,41 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            // update the bfn tree as the number of posts has changed.
-            Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)bfnMap.get("treeCache");
-            if(cache != null) {
-                cache.remove(host + bfnType);
-            }
-            // update listcache as a new post is added.
-            ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
-            if(listCache != null) {
-                listCache.remove(parentRid + "createDate");
-            }
+            clearCache(host, bfnType, parentRid);
             return true;
+        }
+    }
+
+    private void clearCache(String host, String bfnType, String parentRid) {
+        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
+        if(listCache != null && listCache.size() > 0) {
+            boolean cleared = false;
+            List<String> recentList = (List<String>)listCache.remove(host + bfnType);
+            if(!cleared && recentList != null && recentList.size() > 0) {
+                ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
+                if(postCache != null) {
+                    for(String postRid: recentList) {
+                        postCache.remove(postRid);
+                    }
+                    cleared = true;
+                }
+
+            }
+
+            List<String> newestList = (List<String>)listCache.remove(parentRid + "createDate" + "desc");
+            if(!cleared && newestList != null && newestList.size() > 0) {
+                ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
+                if(postCache != null) {
+                    for(String postRid: newestList) {
+                        postCache.remove(postRid);
+                    }
+                    cleared = true;
+                }
+            }
+
+            // TODO handle other list here.
+
         }
     }
 
@@ -154,6 +177,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String)data.get("@rid");
+        String parentRid = null;
         String host = (String)data.get("host");
         String error = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -167,6 +191,11 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                     error = "Post has comment(s), cannot be deleted";
                     inputMap.put("responseCode", 400);
                 } else {
+                    // now get the parentRid in order to remove the cache.
+                    for(Edge e: post.getEdges(Direction.IN, "HasPost")) {
+                        Vertex edgeParent = e.getVertex(Direction.OUT);
+                        parentRid = edgeParent.getId().toString();
+                    }
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
@@ -186,12 +215,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            // update the bfn tree as the number of posts has changed.
-            Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)bfnMap.get("treeCache");
-            if(cache != null) {
-                cache.remove(host + bfnType);
-            }
+            clearCache(host, bfnType, parentRid);
             return true;
         }
     }
@@ -233,6 +257,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("rid");
+        String originalParentRid = null;
+        String parentRid = null;
         String host = (String) data.get("host");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
@@ -254,21 +280,33 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 eventData.put("updateDate", new Date());
                 eventData.put("updateUserId", user.get("userId"));
                 // it is possible for the post to switch parent.
-                String parentRid = (String)data.get("parentRid");
+                parentRid = (String)data.get("parentRid");
                 if(parentRid != null) {
                     // if parentRid is not even selected, nothing to do with the parent edge.
                     Vertex parent = DbService.getVertexByRid(graph, parentRid);
                     boolean found = false;
                     for(Edge e: post.getEdges(Direction.IN, "HasPost")) {
-                        Vertex edgeParent = e.getVertex(Direction.IN);
-                        if(edgeParent.equals(parent)) {
-                            found = true;
-                            break;
+                        Vertex edgeParent = e.getVertex(Direction.OUT);
+                        if(edgeParent != null) {
+                            originalParentRid =  edgeParent.getId().toString();
+                            if(originalParentRid.equals(parentRid)) {
+                                found = true;
+                                break;
+                            }
+
                         }
                     }
                     if(!found) {
                         // replace parent here by passing parentId to the event rule.
                         eventData.put("parentId", parent.getProperty("categoryId"));
+                    }
+                } else {
+                    // get originalParentRid from post for clearing cache.
+                    for(Edge e: post.getEdges(Direction.IN, "HasPost")) {
+                        Vertex edgeParent = e.getVertex(Direction.OUT);
+                        if(edgeParent != null) {
+                            originalParentRid =  edgeParent.getId().toString();
+                        }
                     }
                 }
 
@@ -300,12 +338,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            // update the bfn tree as the last update time has changed.
-            Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)bfnMap.get("treeCache");
-            if(cache != null) {
-                cache.remove(host + bfnType);
-            }
+            clearCache(host, bfnType, originalParentRid);
+            if(parentRid != null) clearCache(host, bfnType, parentRid);
             return true;
         }
     }
@@ -464,17 +498,17 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
         if(listCache == null) {
             listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
+                    .maximumWeightedCapacity(200)
                     .build();
             bfnMap.put("listCache", listCache);
         } else {
-            list = (List<String>)listCache.get(rid + sortedBy);
+            list = (List<String>)listCache.get(rid + sortedBy + sortDir);
         }
 
         ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
         if(postCache == null) {
             postCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
+                    .maximumWeightedCapacity(10000)
                     .build();
             bfnMap.put("postCache", postCache);
         }
@@ -482,7 +516,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         if(list == null) {
             // get the list for db
             list = new ArrayList<String>();
-            String json = getBfnPostDb(rid, sortedBy);
+            String json = getBfnPostDb(rid, sortedBy, sortDir);
             if(json != null) {
                 // convert json to list of maps.
                 List<Map<String, Object>> posts = mapper.readValue(json,
@@ -506,6 +540,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
                 String postRid = list.get(i);
                 Map<String, Object> post = (Map<String, Object>)postCache.get(postRid);
+                // here we assume that post cache will never full.
                 posts.add(post);
             }
             Map<String, Object> result = new HashMap<String, Object>();
@@ -524,11 +559,11 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         }
     }
 
-    protected String getBfnPostDb(String rid, String sortedBy) {
+    protected String getBfnPostDb(String rid, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
         String sql = "select @rid, postId, title, summary, content, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId " +
-                "from (traverse out_Own, out_HasPost from ?) where @class = 'Post' order by " + sortedBy + " desc";
+                "from (traverse out_Own, out_HasPost from ?) where @class = 'Post' order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
@@ -584,11 +619,11 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
         if(listCache == null) {
             listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
+                    .maximumWeightedCapacity(200)
                     .build();
             bfnMap.put("listCache", listCache);
         } else {
-            list = (List<String>)listCache.get(bfnType);
+            list = (List<String>)listCache.get(host + bfnType);
         }
 
         ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
