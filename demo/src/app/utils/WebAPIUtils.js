@@ -504,6 +504,27 @@ module.exports = {
         });
     },
 
+    getPage: function(pageId) {
+        var getPage = {
+            category: 'page',
+            name: 'getPage',
+            readOnly: true,
+            data: {
+                pageId: pageId
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getPage))}
+        }).done(function(data) {
+            ServerActionCreators.getPageResponse(data, null);
+
+        }).fail(function(error) {
+            ServerActionCreators.getPageResponse(null, error);
+        });
+    },
+
     getClientToken: function() {
         var getClientToken = {
             category: 'payment',

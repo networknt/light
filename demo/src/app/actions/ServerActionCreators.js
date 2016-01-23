@@ -188,6 +188,14 @@ module.exports = {
         });
     },
 
+    getPageResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_PAGE_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     receiveClientToken: function(json, error) {
         //console.log('ServerActionCreator receiveClientToken is callled');
         AppDispatcher.dispatch({

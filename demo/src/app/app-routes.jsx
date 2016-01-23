@@ -14,6 +14,7 @@ import Signup from './components/signup';
 import Login from './components/login';
 import Logout from './components/logout';
 import Form from './components/Form';
+import Page from './components/Page';
 
 import BlogCategory from './components/blog/BlogCategory';
 import Blog from './components/blog/Blog';
@@ -63,6 +64,8 @@ const AppRoutes = (
     <Route path='/login' component={Login} />
     <Route path='/logout' component={Logout} />
     <Route path='/:root/form/:formId' component={Form} />
+    <Route path='/page/:pageId' component={Page} />
+
 
     <Route path='/blog' component={BlogCategory} />
     <Route path='/blog/postAdd/:categoryId' component={BlogPostAdd} />
@@ -79,6 +82,7 @@ const AppRoutes = (
     <Route path='/recentNewsPost' component={NewsRecentPost} />
 
     <Route path='/forum' component={Forum} />
+
 
     <Route path='/catalog' component={CatalogCategory} />
     <Route path='/catalog/productAdd/:categoryId' component={CatalogProductAdd} />

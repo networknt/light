@@ -82,7 +82,6 @@ var NewsRecentPost = React.createClass({
                                                 <Markdown text={post.summary} />
                                             </div>
                                         </Paper>
-                                        <hr />
                                     </span>
                                 );
                             }, this)

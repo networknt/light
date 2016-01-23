@@ -7,20 +7,6 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import WebAPIUtils from '../utils/WebAPIUtils';
 import utils from 'react-schema-form/lib/utils';
 
-/*
-class Form extends React.Component {
-    render() {
-        console.log('Form: props', this.props);
-        return (
-            <button onClick={() => {this.props.history.push('user')}}>clickme</button>
-        );
-    }
-}
-
-export default Form;
- */
-
-
 
 let Form = React.createClass({
 
