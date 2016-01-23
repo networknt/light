@@ -20,7 +20,6 @@ function _getErrors(res) {
 
 var APIEndpoints = AppConstants.APIEndpoints;
 var APIRoot = AppConstants.APIRoot;
-var Host = AppConstants.Host;
 var ClientId = AppConstants.ClientId;
 
 module.exports = {
@@ -86,10 +85,7 @@ module.exports = {
         var getMenu = {
             category : 'menu',
             name : 'getMenu',
-            readOnly: true,
-            data : {
-                host : Host
-            }
+            readOnly: true
 
         }
         //console.log('WebAPIUtils loadMenus is called', getMenu);

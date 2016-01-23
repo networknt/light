@@ -13,11 +13,6 @@ const config = {
   resolve: {
     //When requiring, you don't need to add these extensions
     extensions: ['', '.js', '.jsx', '.md', '.txt'],
-    alias: {
-      //material-ui requires will be searched in src folder, not in node_modules
-      'material-ui/lib': path.resolve(__dirname, '../src'),
-      'material-ui': path.resolve(__dirname, '../src'),
-    },
     //Modules will be searched for in these directories
     modulesDirectories: [
       // We need /docs/node_modules to be resolved before /node_modules
