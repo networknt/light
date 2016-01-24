@@ -56,7 +56,6 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String branchId = (String) data.get(branchType + "Id");
         String host = (String) data.get("host");
-        String id = branchType + "Id";
         String error = null;
         String userHost = (String)user.get("host");
         if(userHost != null && !userHost.equals(host)) {
@@ -86,7 +85,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                         } else {
                             // convert parent from @rid to id
                             List in_Own = new ArrayList();
-                            in_Own.add(parent.getProperty(id));
+                            in_Own.add(parent.getProperty("categoryId"));
                             eventData.put("in_Own", in_Own);
                         }
                     }
@@ -109,15 +108,12 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                                         inputMap.put("responseCode", 404);
                                         break;
                                     } else {
-                                        out_Own.add((String)child.getProperty(branchType + "Id"));
+                                        out_Own.add((String)child.getProperty("CategoryId"));
                                     }
                                 }
                             }
                             eventData.put("out_Own", out_Own);
                         }
-                    }
-                    if(error == null) {
-                        eventMap.put(id, HashUtil.generateUUID());
                     }
                 }
             } catch (Exception e) {
@@ -151,8 +147,6 @@ public abstract class BranchRule extends AbstractRule implements Rule {
     protected void addBranchDb(String branchType, Map<String, Object> data) throws Exception {
         String className = branchType.substring(0, 1).toUpperCase() + branchType.substring(1);
         String host = (String)data.get("host");
-        String id = branchType + "Id";
-        String index = className + "." + id;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
@@ -209,8 +203,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
                     eventData.put("host", host);
-                    String id = branchType + "Id";
-                    eventData.put(id, branch.getProperty(id));
+                    eventData.put("categoryId", branch.getProperty("categoryId"));
                 } else {
                     error = "@rid " + rid + " doesn't exist on host " + host;
                     inputMap.put("responseCode", 404);
@@ -245,11 +238,10 @@ public abstract class BranchRule extends AbstractRule implements Rule {
 
     protected void delBranchDb(String branchType, Map<String, Object> data) throws Exception {
         String className = branchType.substring(0, 1).toUpperCase() + branchType.substring(1);
-        String id = branchType + "Id";
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
-            OrientVertex branch = getBranchByHostId(graph, branchType, (String)data.get("host"), (String)data.get(id));
+            OrientVertex branch = getBranchByHostId(graph, branchType, (String)data.get("host"), (String)data.get("categoryId"));
             if(branch != null) {
                 graph.removeVertex(branch);
             }
@@ -267,7 +259,6 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
-        String id = branchType + "Id";
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -302,13 +293,13 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                             for (Vertex vertex : (Iterable<Vertex>) branch.getVertices(Direction.IN, "Own")) {
                                 // we only expect one parent here.
                                 storedParentRid = vertex.getId().toString();
-                                storedParentId = vertex.getProperty(id);
+                                storedParentId = vertex.getProperty("categoryId");
                             }
                             if(parentRids.get(0).equals(storedParentRid)) {
                                 // same parent, do nothing
                             } else {
                                 if(storedParentId != null) eventData.put("delParentId", storedParentId);
-                                eventData.put("addParentId", parent.getProperty(id));
+                                eventData.put("addParentId", parent.getProperty("categoryId"));
                             }
                         } else {
                             inputMap.put("result", "Parent with @rid " + parentRids.get(0) + " cannot be found");
@@ -339,12 +330,12 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                                 inputMap.put("responseCode", 404);
                                 return false;
                             } else {
-                                inputChildren.add((String)child.getProperty(id));
+                                inputChildren.add((String)child.getProperty("categoryId"));
                             }
                         }
                         Set<String> storedChildren = new HashSet<String>();
                         for (Vertex vertex : (Iterable<Vertex>) branch.getVertices(Direction.OUT, "Own")) {
-                            storedChildren.add((String)vertex.getProperty(id));
+                            storedChildren.add((String)vertex.getProperty("categoryId"));
                         }
 
                         Set<String> addChildren = new HashSet<String>(inputChildren);
@@ -383,10 +374,10 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         return true;
     }
 
-    public OrientVertex getBranchByHostId(OrientGraph graph, String branchType, String host, String id) {
+    public OrientVertex getBranchByHostId(OrientGraph graph, String branchType, String host, String categoryId) {
         OrientVertex branch = null;
         OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(branchType + "HostIdIdx");
-        OCompositeKey key = new OCompositeKey(host, id);
+        OCompositeKey key = new OCompositeKey(host, categoryId);
         OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
         if (oid != null) {
             branch = graph.getVertex(oid.getRecord());
@@ -395,14 +386,12 @@ public abstract class BranchRule extends AbstractRule implements Rule {
     }
 
     protected void updBranchDb(String branchType, Map<String, Object> data) throws Exception {
-        String className = branchType.substring(0, 1).toUpperCase() + branchType.substring(1);
-        String id = branchType + "Id";
         String host = (String)data.get("host");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
             Vertex updateUser = graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex branch = getBranchByHostId(graph, branchType, host, (String)data.get(id));
+            OrientVertex branch = getBranchByHostId(graph, branchType, host, (String)data.get("categoryId"));
             if (branch != null) {
                 if(data.get("description") != null) {
                     branch.setProperty("description", data.get("description"));
@@ -465,7 +454,6 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
-        String id = branchType + "Id";
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -490,7 +478,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
                     eventData.put("host", host);
-                    eventData.put(id, branch.getProperty(id));
+                    eventData.put("categoryId", branch.getProperty("categoryId"));
                     eventData.put("updateUserId", user.get("userId"));
                 }
             }
@@ -523,13 +511,12 @@ public abstract class BranchRule extends AbstractRule implements Rule {
 
     protected void downBranchDb(String branchType, Map<String, Object> data) throws Exception {
         String className = branchType.substring(0, 1).toUpperCase() + branchType.substring(1);
-        String id = branchType + "Id";
-        String index = className + "." + id;
+        String index = className + ".categoryId";
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
             OrientVertex updateUser = (OrientVertex)graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex branch = (OrientVertex)graph.getVertexByKey(index, data.get(id));
+            OrientVertex branch = (OrientVertex)graph.getVertexByKey(index, data.get("categoryId"));
             if(branch != null && updateUser != null) {
                 // remove UpVote edge if there is.
                 for (Edge edge : updateUser.getEdges(branch, Direction.OUT, "UpVote")) {
@@ -551,7 +538,6 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
-        String id = branchType + "Id";
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -576,7 +562,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
                     eventData.put("host", host);
-                    eventData.put(id, branch.getProperty(id));
+                    eventData.put("categoryId", branch.getProperty("categoryId"));
                     eventData.put("updateUserId", user.get("userId"));
                 }
             }
@@ -609,13 +595,12 @@ public abstract class BranchRule extends AbstractRule implements Rule {
 
     protected void upBranchDb(String branchType, Map<String, Object> data) throws Exception {
         String className = branchType.substring(0, 1).toUpperCase() + branchType.substring(1);
-        String id = branchType + "Id";
-        String index = className + "." + id;
+        String index = className + ".categoryId";
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
             OrientVertex updateUser = (OrientVertex)graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex branch = (OrientVertex)graph.getVertexByKey(index, data.get(id));
+            OrientVertex branch = (OrientVertex)graph.getVertexByKey(index, data.get("categoryId"));
             if(branch != null && updateUser != null) {
                 // remove DownVote edge if there is.
                 for (Edge edge : updateUser.getEdges(branch, Direction.OUT, "DownVote")) {
@@ -739,7 +724,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
 
     protected String getBranchDropdownDb(String branchType, String host) {
         String json = null;
-        String sql = "SELECT FROM " + branchType + " WHERE host = ? ORDER BY id";
+        String sql = "SELECT FROM " + branchType + " WHERE host = ? ORDER BY categoryId";
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
