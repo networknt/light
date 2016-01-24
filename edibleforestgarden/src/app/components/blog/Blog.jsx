@@ -109,7 +109,7 @@ var Blog = React.createClass({
     },
 
     render: function() {
-        //console.log('total', this.state.total);
+        console.log('Blog.render', this.state.total, this.state.pageNo, this.state.pageSize);
         let addButton = this.state.allowPost? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
         return (
             <div>

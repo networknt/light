@@ -11,6 +11,8 @@ import NewsCategoryStore from '../../stores/NewsCategoryStore';
 import Markdown from '../Markdown';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
+import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
+require('rc-select/assets/index.css');
 import CommonUtils from '../../utils/CommonUtils';
 
 const id = 'com.networknt.light.news.post.add';
@@ -60,6 +62,7 @@ var NewsPostAdd = React.createClass({
 
     _onModelChange: function(key, val) {
         utils.selectOrSet(key, this.state.model, val);
+        this.forceUpdate();
     },
 
     _onTouchTap: function(action) {
@@ -77,7 +80,7 @@ var NewsPostAdd = React.createClass({
             })}
             return (
                 <div>
-                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} />
+                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
                     {actions}
                     <Tabs initialSelectedIndex={1}>
                         <Tab label="Summary">
