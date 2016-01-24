@@ -32,7 +32,6 @@ var ShippingAddress = React.createClass({
 
 
     _onChange: function() {
-
         let schema = FormStore.getForm(id).schema;
         let form = FormStore.getForm(id).form;
         this.setState({

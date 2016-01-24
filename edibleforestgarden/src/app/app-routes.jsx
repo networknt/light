@@ -11,7 +11,7 @@ import Home from './components/Home';
 import About from './components/about';
 import Contact from './components/contact';
 import Signup from './components/signup';
-import Login from './components/login';
+import Login from './components/Login';
 import Logout from './components/logout';
 import Form from './components/Form';
 import Page from './components/Page';

@@ -32,9 +32,9 @@ let Login = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        //console.log('Form._onModelChange:', key);
-        //console.log('Form._onModelChange:', val);
-        this.setState({user: utils.selectOrSet(key, this.state.user, val)});
+        utils.selectOrSet(key, this.state.user, val);
+        //this.forceUpdate();
+        console.log('Login._onModelChange', this.state.user);
     },
 
 
@@ -62,7 +62,7 @@ let Login = React.createClass({
     },
 
     render: function() {
-        //console.log('Form: props', this.props);
+        console.log('Login._onModelChange', this.state.user);
         if(this.state.schema) {
             const buttons = this.state.action.map((item, idx) => (
                 <RaisedButton key={idx} label={item.title} primary={true}

@@ -18,7 +18,6 @@ var ExecQueryCommand = React.createClass({
             form: null,
             model: null,
             action: null,
-            input: null,
             result: null
         };
     },
@@ -55,12 +54,12 @@ var ExecQueryCommand = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        this.setState({input: utils.selectOrSet(key, this.state.input, val)});
+        utils.selectOrSet(key, this.state.model, val);
     },
 
     _onTouchTap: function(action) {
-        console.log('ExecQueryCommand._onTouchTap', action, this.state.input);
-        action.data = this.state.input;
+        //console.log('ExecQueryCommand._onTouchTap', action, this.state.model);
+        action.data = this.state.model;
         DbActionCreators.execQueryCmd(action);
     },
 

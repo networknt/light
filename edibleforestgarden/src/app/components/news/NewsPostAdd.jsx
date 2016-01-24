@@ -59,7 +59,7 @@ var NewsPostAdd = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        this.setState({model: utils.selectOrSet(key, this.state.model, val)});
+        utils.selectOrSet(key, this.state.model, val);
     },
 
     _onTouchTap: function(action) {

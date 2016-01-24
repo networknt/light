@@ -56,15 +56,12 @@ let Form = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        console.log('_onModelChange', key, val, this.state.model);
-        let newModel = _.cloneDeep(this.state.model);
-        utils.selectOrSet(key, newModel, val);
-        console.log('_onModelChange', newModel);
-        this.setState({model: newModel});
+        utils.selectOrSet(key, this.state.model, val);
+        //console.log('Form._onModelChange', key, val, this.state.model);
     },
 
     _onTouchTap: function(action) {
-        console.log('Form._onTouchTap', action, this.state.model);
+        //console.log('Form._onTouchTap', action, this.state.model);
         action.data = this.state.model;
         FormActionCreators.submitForm(action);
     },
