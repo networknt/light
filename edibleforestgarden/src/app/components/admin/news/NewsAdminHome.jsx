@@ -38,7 +38,7 @@ var NewsAdminHome = React.createClass({
 
     _onDeleteNews: function(news) {
         console.log("_onDeleteNews", news);
-        NewsActionCreators.delNews(news);
+        NewsActionCreators.delNews(news['@rid']);
     },
 
     _onUpdateNews: function(news) {
