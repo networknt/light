@@ -308,20 +308,29 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 }
 
                 // tags
+                List<String> tags = (List)data.get("tags");
+                if(tags == null || tags.size() == 0) {
+                    // remove all existing tags
+                    Set<String> delTags = new HashSet<String>();
+                    for (Vertex vertex : (Iterable<Vertex>) post.getVertices(Direction.OUT, "HasTag")) {
+                        delTags.add((String)vertex.getProperty("tagId"));
+                    }
+                    if(delTags.size() > 0) eventData.put("delTags", delTags);
+                } else {
+                    Set<String> inputTags = new HashSet<String>(tags);
+                    Set<String> storedTags = new HashSet<String>();
+                    for (Vertex vertex : (Iterable<Vertex>) post.getVertices(Direction.OUT, "HasTag")) {
+                        storedTags.add((String)vertex.getProperty("tagId"));
+                    }
 
-                Set<String> inputTags = new HashSet<String>((List)data.get("tags"));
-                Set<String> storedTags = new HashSet<String>();
-                for (Vertex vertex : (Iterable<Vertex>) post.getVertices(Direction.OUT, "HasTag")) {
-                    storedTags.add((String)vertex.getProperty("tagId"));
+                    Set<String> addTags = new HashSet<String>(inputTags);
+                    Set<String> delTags = new HashSet<String>(storedTags);
+                    addTags.removeAll(storedTags);
+                    delTags.removeAll(inputTags);
+
+                    if(addTags.size() > 0) eventData.put("addTags", addTags);
+                    if(delTags.size() > 0) eventData.put("delTags", delTags);
                 }
-
-                Set<String> addTags = new HashSet<String>(inputTags);
-                Set<String> delTags = new HashSet<String>(storedTags);
-                addTags.removeAll(storedTags);
-                delTags.removeAll(inputTags);
-
-                if(addTags.size() > 0) eventData.put("addTags", addTags);
-                if(delTags.size() > 0) eventData.put("delTags", delTags);
             } else {
                 error = "@rid " + rid + " cannot be found";
                 inputMap.put("responseCode", 404);
@@ -405,7 +414,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                             OrientVertex tag = (OrientVertex)oid.getRecord();
                             post.addEdge("HasTag", tag);
                         } else {
-                            Vertex tag = graph.addVertex("class:Tag", "host", data.get("host"), "tagId", tagId, "createDate", data.get("createDate"));
+                            Vertex tag = graph.addVertex("class:Tag", "host", data.get("host"), "tagId", tagId, "createDate", data.get("updateDate"));
                             updateUser.addEdge("Create", tag);
                             post.addEdge("HasTag", tag);
                         }
