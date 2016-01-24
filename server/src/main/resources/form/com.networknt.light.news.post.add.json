@@ -72,7 +72,7 @@
       "maxTagTextLength": 20,
       "action": {
         "get" : {
-          "url": "/api/rs?cmd={\"category\": \"client\", \"name\": \"getClientDropdown\", \"readOnly\": true}"
+          "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
         }
       }
     }

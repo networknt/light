@@ -86,7 +86,7 @@
       "maxTagTextLength": 20,
       "action": {
         "get" : {
-          "url": "https://www.networknt.com/api/rs?cmd={\"category\": \"client\", \"name\": \"getClientDropdown\", \"readOnly\": true}"
+          "url": "https://www.networknt.com/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
         }
       }
     }
