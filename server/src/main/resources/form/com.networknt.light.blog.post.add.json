@@ -29,8 +29,12 @@
         "title": "Title",
         "type": "string"
       },
-      "source": {
-        "title": "Source",
+      "originalAuthor": {
+        "title": "Original Author",
+        "type": "string"
+      },
+      "originalLocation": {
+        "title": "Original Location",
         "type": "string"
       },
       "summary": {
@@ -51,7 +55,8 @@
   "form": [
     "parentRid",
     "title",
-    "source",
+    "originalAuthor",
+    "originalLocation",
     {
       "key": "summary",
       "type": "textarea"

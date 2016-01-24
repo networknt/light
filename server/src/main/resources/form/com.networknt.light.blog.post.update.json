@@ -33,8 +33,12 @@
         "title": "Title",
         "type": "string"
       },
-      "source": {
-        "title": "Source",
+      "originalAuthor": {
+        "title": "Original Author",
+        "type": "string"
+      },
+      "originalLocation": {
+        "title": "Original Location",
         "type": "string"
       },
       "summary": {
@@ -65,7 +69,8 @@
     },
     "postId",
     "title",
-    "source",
+    "originalAuthor",
+    "originalLocation",
     {
       "key": "summary",
       "type": "textarea"
