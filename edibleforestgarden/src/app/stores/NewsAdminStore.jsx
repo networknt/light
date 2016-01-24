@@ -6,10 +6,11 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
+var _news = [];
+var error = null;
 
-var _error = null;
 
-var ErrorStore = assign({}, EventEmitter.prototype, {
+var NewsAdminStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -23,21 +24,30 @@ var ErrorStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
+    getNews: function() {
+        return _news;
+    },
+
     getError: function() {
-        return _error;
+        return error;
     }
 
 });
 
-ErrorStore.dispatchToken = AppDispatcher.register(function(payload) {
+NewsAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.SERVER_ERROR_RESPONSE:
-            _error = payload.error;
-            ErrorStore.emitChange();
+        case ActionTypes.GET_NEWS_RESPONSE:
+            error = payload.error;
+            console.log('error', error);
+            if(!error) {
+                _news = payload.json;
+            }
+            NewsAdminStore.emitChange();
             break;
     }
+
     return true;
 });
 
-module.exports = ErrorStore;
+module.exports = NewsAdminStore;

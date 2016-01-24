@@ -11,12 +11,14 @@ import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme';
 import Dialog from 'material-ui/lib/dialog';
 import Colors from 'material-ui/lib/styles/colors';
 import RaisedButton from 'material-ui/lib/raised-button';
+import Snackbar from 'material-ui/lib/snackbar';
 import { History } from 'react-router'
 import AuthStore from '../stores/AuthStore';
 import CartStore from '../stores/CartStore';
 import NewsCategoryStore from '../stores/NewsCategoryStore';
 import BlogCategoryStore from '../stores/BlogCategoryStore';
 import CatalogCategoryStore from '../stores/CatalogCategoryStore';
+import ErrorStore from '../stores/ErrorStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
 import ProductActionCreators from '../actions/ProductActionCreators';
@@ -58,6 +60,7 @@ const Main = React.createClass({
         let muiTheme = ThemeManager.getMuiTheme(LightRawTheme);
         return {
             leftNavOpen: false,
+            snackbarOpen: false,
             shoppingCartOpen: false,
             muiTheme: muiTheme,
             isLoggedIn: AuthStore.isLoggedIn,
@@ -77,6 +80,7 @@ const Main = React.createClass({
         BlogCategoryStore.addChangeListener(this._blogCategoryChange);
         NewsCategoryStore.addChangeListener(this._newsCategoryChange);
         CatalogCategoryStore.addChangeListener(this._catalogCategoryChange);
+        ErrorStore.addChangeListener(this._onErrorChange);
         AuthActionCreators.init();
         this.setState({
             muiTheme: newMuiTheme
@@ -89,6 +93,7 @@ const Main = React.createClass({
         BlogCategoryStore.removeChangeListener(this._blogCategoryChange);
         NewsCategoryStore.removeChangeListener(this._newsCategoryChange);
         CatalogCategoryStore.removeChangeListener(this._catalogCategoryChange);
+        ErrorStore.removeChangeListener(this._onErrorChange)
     },
 
     getChildContext() {
@@ -112,6 +117,14 @@ const Main = React.createClass({
 
     _onTitleTouchTap: function() {
         this.props.history.push('/');
+    },
+
+    _onErrorChange: function() {
+        console.log('error', ErrorStore.getError());
+        this.setState({
+            snackbarOpen: true,
+            errorMessage: ErrorStore.getError().errorText
+        });
     },
 
     _blogCategoryChange: function() {
@@ -262,6 +275,9 @@ const Main = React.createClass({
     },
 
     render() {
+
+
+
         var menuButton = (
             <IconButton iconClassName="material-icons">more_vert</IconButton>
         );
@@ -368,6 +384,7 @@ const Main = React.createClass({
                 <header>
                     <AppBar title='Edible Forest Garden' onTitleTouchTap={this._onTitleTouchTap} onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0}/>
                 </header>
+                <Snackbar open={this.state.snackbarOpen} message={this.state.errorMessage} action="Close" autoHideDuration={3000} onActionTouchTap={this.handleSnackbarTouchTap} onRequestClose={this.handleSnackbarClose} />
                 {this.props.children}
             </div>
         );

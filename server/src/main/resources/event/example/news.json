@@ -17,7 +17,6 @@
     "category": "news",
     "createDate": "2015-05-03T01:03:24.217",
     "ipAddress": "127.0.0.1",
-    "categoryId": "X-I7HMWqTcGGbG9LmJAtXg",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
@@ -41,7 +40,6 @@
     "category": "news",
     "createDate": "2015-05-03T01:03:39.835",
     "ipAddress": "127.0.0.1",
-    "categoryId": "xbrmqBmDSZ2DFIFAepWVpA",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
@@ -65,7 +63,6 @@
     "category": "news",
     "createDate": "2015-05-03T01:03:53.532",
     "ipAddress": "127.0.0.1",
-    "categoryId": "B67WQ2yGSL2qe4YUXoWMAA",
     "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

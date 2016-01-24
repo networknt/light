@@ -54,7 +54,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
-        String branchId = (String) data.get(branchType + "Id");
+        String categoryId = (String) data.get("categoryId");
         String host = (String) data.get("host");
         String error = null;
         String userHost = (String)user.get("host");
@@ -70,9 +70,9 @@ public abstract class BranchRule extends AbstractRule implements Rule {
             eventData.put("createUserId", user.get("userId"));
             OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
-                ODocument branch = getODocumentByHostId(graph, branchType + "HostIdIdx", host, branchId);
+                ODocument branch = getODocumentByHostId(graph, branchType + "HostIdIdx", host, categoryId);
                 if(branch != null) {
-                    error = "Id " + branchId + " exists on host " + host;
+                    error = "categoryId " + categoryId + " exists on host " + host;
                     inputMap.put("responseCode", 400);
                 } else {
                     // make sure parent exists if it is not empty.

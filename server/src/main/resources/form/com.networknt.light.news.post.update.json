@@ -22,8 +22,7 @@
     "properties": {
       "parentRid": {
         "title": "Parent Rid",
-        "type": "string",
-        "readonly": true
+        "type": "string"
       },
       "postId": {
         "title": "Post Id",
@@ -45,11 +44,25 @@
       "content": {
         "title": "Content",
         "type": "string"
+      },
+      "tags": {
+        "title": "Tags",
+        "type": "array",
+        "maxItems": 10
       }
     }
   },
   "form": [
-    "parentRid",
+    {
+      "key": "parentRid",
+      "type": "rc-select",
+      "multiple": false,
+      "action" : {
+        "get": {
+          "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
+        }
+      }
+    },
     "postId",
     "title",
     "source",
@@ -60,6 +73,17 @@
     {
       "key": "content",
       "type": "textarea"
+    },
+    {
+      "key": "tags",
+      "type": "rc-select",
+      "tags": true,
+      "maxTagTextLength": 20,
+      "action": {
+        "get" : {
+          "url": "/api/rs?cmd={\"category\": \"client\", \"name\": \"getClientDropdown\", \"readOnly\": true}"
+        }
+      }
     }
   ]
 }

@@ -81,6 +81,14 @@ module.exports = {
         });
     },
 
+    getNewsResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_NEWS_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     // TODO create a toaster component to display the result.
     delPostResponse: function(json, error) {
         AppDispatcher.dispatch({

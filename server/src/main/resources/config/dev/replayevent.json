@@ -52,6 +52,15 @@
     {
       "description": "This file contains example site news category data for cms",
       "location": "event/example/news.json"
+    },
+    {
+      "description": "This file contains edibleforestgarden site blog category data for cms",
+      "location": "event/edibleforestgarden/blog.json"
+    },
+    {
+      "description": "This file contains edibleforestgarden site news category data for cms",
+      "location": "event/edibleforestgarden/news.json"
     }
+
   ]
 }

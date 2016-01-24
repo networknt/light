@@ -2,6 +2,7 @@
  * Created by steve on 08/07/15.
  */
 var ServerActionCreators = require('../actions/ServerActionCreators.js');
+var ErrorActionCreators = require('../actions/ErrorActionCreators.jsx');
 var AppConstants = require('../constants/AppConstants.js');
 var $ = require('jquery');
 
@@ -212,7 +213,7 @@ module.exports = {
 
         }).fail(function(error) {
             //console.log('error', error);
-            ServerActionCreators.getBlogPostResponse(null, error);
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 
@@ -251,10 +252,27 @@ module.exports = {
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getBlog))}
         }).done(function(data) {
-            ServerActionCreators.getBlogResponse(data, null);
+            ServerActionCreators.getBlogResponse(data);
 
         }).fail(function(error) {
-            ServerActionCreators.getBlogResponse(null, error);
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getNews: function() {
+        let getNews = {
+            category: 'news',
+            name: 'getNews',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getNews))}
+        }).done(function(data) {
+            ServerActionCreators.getNewsResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 

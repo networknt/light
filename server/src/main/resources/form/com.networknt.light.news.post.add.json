@@ -40,6 +40,11 @@
       "content": {
         "title": "Content",
         "type": "string"
+      },
+      "tags": {
+        "title": "Tags",
+        "type": "array",
+        "maxItems": 10
       }
     }
   },
@@ -54,6 +59,18 @@
     {
       "key": "content",
       "type": "textarea"
+    },
+    {
+      "key": "tags",
+      "type": "rc-select",
+      "tags": true,
+      "maxTagTextLength": 20,
+      "action": {
+        "get" : {
+          "url": "/api/rs?cmd={\"category\": \"client\", \"name\": \"getClientDropdown\", \"readOnly\": true}"
+        }
+      }
     }
+
   ]
 }

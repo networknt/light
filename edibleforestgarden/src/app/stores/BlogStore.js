@@ -71,6 +71,7 @@ AppDispatcher.register(function(payload) {
             break;
         */
         case ActionTypes.GET_BLOG_POST_RESPONSE:
+            console.log('GET_BLOG_POST_RESPONSE', payload);
             _total = payload.json.total;
             _allowPost = payload.json.allowPost
             if(_total == 0) {
