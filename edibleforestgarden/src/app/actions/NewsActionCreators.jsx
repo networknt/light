@@ -25,6 +25,11 @@ module.exports = {
         WebAPIUtils.getNews(host);
     },
 
+    delNews: function(rid) {
+        WebAPIUtils.delNews(rid);
+    },
+
+
     addPost: function(action) {
         WebAPIUtils.addPost(action);
     },

@@ -8,7 +8,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import WebAPIUtils from '../utils/WebAPIUtils';
 import utils from 'react-schema-form/lib/utils';
-
+import _ from 'lodash';
 
 let Form = React.createClass({
 
@@ -19,7 +19,7 @@ let Form = React.createClass({
             schema: null,
             form: null,
             action: null,
-            model: null
+            model: {}
         };
     },
 
@@ -45,18 +45,22 @@ let Form = React.createClass({
             let form = FormStore.getForm(this.props.params.formId).form;
             let action = FormStore.getForm(this.props.params.formId).action;
             let model = FormStore.getModel(this.props.params.formId);
-            console.log('Form._onFormChange: model', model);
+            console.log('Form._onFormChange: model', model, this.state.model);
             this.setState({
                 schema: schema,
                 form: form,
                 action: action,
-                model: model
+                model: model || {}
             });
         }
     },
 
     _onModelChange: function(key, val) {
-        this.setState({model: utils.selectOrSet(key, this.state.model, val)});
+        console.log('_onModelChange', key, val, this.state.model);
+        let newModel = _.cloneDeep(this.state.model);
+        utils.selectOrSet(key, newModel, val);
+        console.log('_onModelChange', newModel);
+        this.setState({model: newModel});
     },
 
     _onTouchTap: function(action) {

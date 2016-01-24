@@ -7,8 +7,6 @@ import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import RaisedButton from 'material-ui/lib/raised-button';
-import SchemaForm from 'react-schema-form/lib/SchemaForm';
-import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
 import NewsAdminStore from '../../../stores/NewsAdminStore';
 import FormStore from '../../../stores/FormStore';
 import NewsActionCreators from '../../../actions/NewsActionCreators';

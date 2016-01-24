@@ -7,8 +7,6 @@ import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import RaisedButton from 'material-ui/lib/raised-button';
-import SchemaForm from 'react-schema-form/lib/SchemaForm';
-import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
 import BlogAdminStore from '../../../stores/BlogAdminStore';
 import FormStore from '../../../stores/FormStore';
 import BlogActionCreators from '../../../actions/BlogActionCreators';
@@ -39,12 +37,12 @@ var BlogAdminHome = React.createClass({
     },
 
     _onDeleteBlog: function(blog) {
-        console.log("_onDeleteBlog", blog);
-        BlogActionCreators.delBlog(blog);
+        //console.log("_onDeleteBlog", blog);
+        BlogActionCreators.delBlog(blog['@rid']);
     },
 
     _onUpdateBlog: function(blog) {
-        console.log("_onUpdateBlog", blog);
+        //console.log("_onUpdateBlog", blog);
         let formId = 'com.networknt.light.blog.update';
         FormActionCreators.setFormModel(formId, blog);
         this.props.history.push('/form/' + formId);
