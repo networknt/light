@@ -131,8 +131,6 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
 
     protected void addPostDb(String bfnType, Map<String, Object> data) throws Exception {
         String className = bfnType.substring(0, 1).toUpperCase() + bfnType.substring(1);
-        String id = bfnType + "Id";
-        String index = className + "." + id;
         String host = (String)data.get("host");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
@@ -146,14 +144,12 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 parent.addEdge("HasPost", post);
             }
             // tag
-            Set<String> inputTags = data.get("tags") != null? new HashSet<String>(Arrays.asList(((String)data.get("tags")).split("\\s*,\\s*"))) : new HashSet<String>();
+            List<String> inputTags = (List<String>)data.get("tags");
             for(String tagId: inputTags) {
                 Vertex tag = null;
                 // get the tag is it exists
                 OIndex<?> tagHostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("tagHostIdIdx");
-                logger.debug("tagHostIdIdx = " + tagHostIdIdx);
                 OCompositeKey tagKey = new OCompositeKey(host, tagId);
-                logger.debug("tagKey =" + tagKey);
                 OIdentifiable tagOid = (OIdentifiable) tagHostIdIdx.get(tagKey);
                 if (tagOid != null) {
                     tag = graph.getVertex(tagOid.getRecord());
@@ -242,6 +238,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 // https://github.com/orientechnologies/orientdb/issues/1108
                 delete graph...
                 */
+                // TODO remove tags edge. Do I need to?
                 graph.removeVertex(post);
             }
             graph.commit();
@@ -311,7 +308,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 }
 
                 // tags
-                Set<String> inputTags = data.get("tags") != null? new HashSet<String>(Arrays.asList(((String)data.get("tags")).split("\\s*,\\s*"))) : new HashSet<String>();
+
+                Set<String> inputTags = new HashSet<String>((List)data.get("tags"));
                 Set<String> storedTags = new HashSet<String>();
                 for (Vertex vertex : (Iterable<Vertex>) post.getVertices(Direction.OUT, "HasTag")) {
                     storedTags.add((String)vertex.getProperty("tagId"));
@@ -562,7 +560,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     protected String getBfnPostDb(String rid, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, postId, title, summary, content, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId " +
+        String sql = "select @rid, postId, title, summary, content, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, out_HasTag.tagId " +
                 "from (traverse out_Own, out_HasPost from ?) where @class = 'Post' order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
@@ -682,7 +680,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     protected String getBfnRecentPostDb(String host, String bfnType, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, postId, title, summary, content, createDate, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, " +
+        String sql = "select @rid, postId, title, summary, content, createDate, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, out_HasTag.tagId " +
             "in_HasPost[0].@rid as parentRid, in_HasPost[0].categoryId as parentId " +
             "from Post where host = ? and in_HasPost[0].@class = ? order by " + sortedBy + " " + sortDir;
 

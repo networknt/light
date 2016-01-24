@@ -62,6 +62,7 @@ var BlogPostAdd = React.createClass({
 
     _onModelChange: function(key, val) {
         utils.selectOrSet(key, this.state.model, val);
+        console.log('BlogPostAdd._onModelChange', key, val, this.state.model);
     },
 
     _onTouchTap: function(action) {
