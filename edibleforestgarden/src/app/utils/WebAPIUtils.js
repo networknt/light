@@ -276,6 +276,23 @@ module.exports = {
         });
     },
 
+    getCatalog: function() {
+        let getCatalog = {
+            category: 'catalog',
+            name: 'getCatalog',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getCatalog))}
+        }).done(function(data) {
+            ServerActionCreators.getCatalogResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     delBlog: function(rid) {
         let delBlog = {
             category: 'blog',
@@ -315,6 +332,28 @@ module.exports = {
             dataType: 'json'
         }).done(function(data) {
             ServerActionCreators.delNewsResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delCatalog: function(rid) {
+        let delCatalog = {
+            category: 'catalog',
+            name: 'delCatalog',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delCatalog),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delCatalogResponse(data);
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });

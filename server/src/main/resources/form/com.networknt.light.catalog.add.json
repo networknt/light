@@ -29,13 +29,11 @@
       "in_Own": {
         "title": "Parent",
         "type": "array",
-        "maxItems": 1,
-        "format": "strapselectdynamic"
+        "maxItems": 1
       },
       "out_Own": {
         "title": "Children",
-        "type": "array",
-        "format": "strapselectdynamic"
+        "type": "array"
       }
     }
   },
@@ -44,16 +42,21 @@
     "description",
     {
       "key": "in_Own",
-      "options": {
-        "category": "catalog",
-        "name": "getCatalogDropdown"
+      "type": "rc-select",
+      "multiple": false,
+      "action" : {
+        "get": {
+          "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+        }
       }
     },
     {
       "key": "out_Own",
-      "options": {
-        "category": "catalog",
-        "name": "getCatalogDropdown"
+      "type": "rc-select",
+      "action" : {
+        "get": {
+          "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+        }
       }
     }
   ]

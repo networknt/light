@@ -89,6 +89,13 @@ module.exports = {
         });
     },
 
+    getCatalogResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_CATALOG_RESPONSE,
+            json: json
+        });
+    },
+
     // TODO create a toaster component to display the result.
     delPostResponse: function(json, error) {
         AppDispatcher.dispatch({

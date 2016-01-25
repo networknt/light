@@ -75,6 +75,7 @@ module.exports = {
         SET_PRODUCT_INVENTORY: null,
         REMOVE_ONE_FROM_INVENTORY: null,
         TOGGLE_CART: null, // Open/close cart
+        GET_CATALOG_RESPONSE: null,
 
         SELECT_CATALOG: null,
         LOAD_PRODUCTS: null,
