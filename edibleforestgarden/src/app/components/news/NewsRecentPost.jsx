@@ -19,7 +19,7 @@ var NewsRecentPost = React.createClass({
 
     getInitialState: function() {
         return {
-            recentPosts: [],
+            posts: [],
             total: 0,
             pageSize: 10,
             pageNo: 1
@@ -37,8 +37,8 @@ var NewsRecentPost = React.createClass({
 
     _onNewsChange: function() {
         this.setState({
-            recentPosts: NewsStore.getRecentPosts(),
-            recentPostTotal: NewsStore.getRecentPostTotal()
+            posts: NewsStore.getPosts(),
+            total: NewsStore.getTotal()
         });
     },
 
@@ -71,7 +71,7 @@ var NewsRecentPost = React.createClass({
                 <div className="blogRoot">
                     <div className="leftColumn">
                         {
-                            this.state.recentPosts.map(function(post, index) {
+                            this.state.posts.map(function(post, index) {
                                 var boundClick = this._routeToPost.bind(this, post.parentId, post.postId);
                                 return (
                                     <span key={index}>
@@ -86,7 +86,7 @@ var NewsRecentPost = React.createClass({
                                 );
                             }, this)
                         }
-                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.recentPostTotal}/>
+                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                     </div>
                 </div>
             </div>

@@ -19,7 +19,7 @@ var BlogRecentPost = React.createClass({
 
     getInitialState: function() {
         return {
-            recentPosts: [],
+            posts: [],
             total: 0,
             pageSize: 10,
             pageNo: 1
@@ -37,12 +37,13 @@ var BlogRecentPost = React.createClass({
 
     _onBlogChange: function() {
         this.setState({
-            recentPosts: BlogStore.getRecentPosts(),
-            recentPostTotal: BlogStore.getRecentPostTotal()
+            posts: BlogStore.getPosts(),
+            total: BlogStore.getTotal()
         });
     },
 
     _routeToPost: function(categoryId, postId) {
+        console.log('BlogRecentPost', categoryId, postId);
         this.props.history.push('/blog/' + categoryId + '/' + postId);
     },
 
@@ -71,7 +72,7 @@ var BlogRecentPost = React.createClass({
                 <div className="blogRoot">
                     <div className="leftColumn">
                         {
-                            this.state.recentPosts.map(function(post, index) {
+                            this.state.posts.map(function(post, index) {
                                 var boundClick = this._routeToPost.bind(this, post.parentId, post.postId);
                                 return (
                                     <span key={index}>
@@ -86,7 +87,7 @@ var BlogRecentPost = React.createClass({
                                 );
                             }, this)
                         }
-                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.recentPostTotal}/>
+                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                     </div>
                 </div>
             </div>

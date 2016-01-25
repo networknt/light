@@ -60,7 +60,10 @@ const Main = React.createClass({
         let muiTheme = ThemeManager.getMuiTheme(LightRawTheme);
         return {
             leftNavOpen: false,
+
             snackbarOpen: false,
+            snackbarMessage: "",
+
             shoppingCartOpen: false,
             muiTheme: muiTheme,
             isLoggedIn: AuthStore.isLoggedIn,
@@ -123,7 +126,7 @@ const Main = React.createClass({
         console.log('error', ErrorStore.getError());
         this.setState({
             snackbarOpen: true,
-            errorMessage: ErrorStore.getError().errorText
+            snackbarMessage: ErrorStore.getError().errorText
         });
     },
 
@@ -274,6 +277,14 @@ const Main = React.createClass({
         }
     },
 
+    handleSnackbarClose() {
+        this.setState({snackbarOpen: false})
+    },
+
+    handleSnackbarTouchTap() {
+        alert('Why am I here?');
+    },
+
     render() {
 
 
@@ -384,7 +395,7 @@ const Main = React.createClass({
                 <header>
                     <AppBar title='Edible Forest Garden' onTitleTouchTap={this._onTitleTouchTap} onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0}/>
                 </header>
-                <Snackbar open={this.state.snackbarOpen} message={this.state.errorMessage} action="Close" autoHideDuration={3000} onActionTouchTap={this.handleSnackbarTouchTap} onRequestClose={this.handleSnackbarClose} />
+                <Snackbar open={this.state.snackbarOpen} message={this.state.snackbarMessage} action="Close" autoHideDuration={3000} onActionTouchTap={this.handleSnackbarTouchTap} onRequestClose={this.handleSnackbarClose} />
                 {this.props.children}
             </div>
         );
