@@ -24,7 +24,7 @@
         "type": "string",
         "readonly": true
       },
-      "title": {
+      "name": {
         "title": "Name",
         "type": "string"
       },

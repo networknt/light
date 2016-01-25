@@ -15,15 +15,13 @@
     "title": "Catalog Product Update",
     "required": [
       "productId",
-      "title",
-      "summary",
-      "content"
+      "name",
+      "description"
     ],
     "properties": {
       "parentRid": {
         "title": "Parent Rid",
-        "type": "string",
-        "readonly": true
+        "type": "string"
       },
       "productId": {
         "title": "Product Id",
