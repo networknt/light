@@ -8,6 +8,8 @@ import FormActionCreators from '../../actions/FormActionCreators';
 import CatalogActionCreators from '../../actions/CatalogActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
+import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
+require('rc-select/assets/index.css');
 import CommonUtils from '../../utils/CommonUtils';
 
 const id = 'com.networknt.light.catalog.product.update';
@@ -73,7 +75,7 @@ var CatalogProductUpdate = React.createClass({
             })}
             return (
                 <div>
-                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} />
+                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
                     {actions}
                 </div>
             )

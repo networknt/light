@@ -136,6 +136,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         try{
             graph.begin();
             Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            List<String> tags = (List<String>)data.remove("tags");
+            
             OrientVertex post = graph.addVertex("class:Post", data);
             createUser.addEdge("Create", post);
             // parent
@@ -144,20 +146,21 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 parent.addEdge("HasPost", post);
             }
             // tag
-            List<String> inputTags = (List<String>)data.get("tags");
-            for(String tagId: inputTags) {
-                Vertex tag = null;
-                // get the tag is it exists
-                OIndex<?> tagHostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("tagHostIdIdx");
-                OCompositeKey tagKey = new OCompositeKey(host, tagId);
-                OIdentifiable tagOid = (OIdentifiable) tagHostIdIdx.get(tagKey);
-                if (tagOid != null) {
-                    tag = graph.getVertex(tagOid.getRecord());
-                    post.addEdge("HasTag", tag);
-                } else {
-                    tag = graph.addVertex("class:Tag", "host", host, "tagId", tagId, "createDate", data.get("createDate"));
-                    createUser.addEdge("Create", tag);
-                    post.addEdge("HasTag", tag);
+            if(tags != null && tags.size() > 0) {
+                for(String tagId: tags) {
+                    Vertex tag = null;
+                    // get the tag is it exists
+                    OIndex<?> tagHostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("tagHostIdIdx");
+                    OCompositeKey tagKey = new OCompositeKey(host, tagId);
+                    OIdentifiable tagOid = (OIdentifiable) tagHostIdIdx.get(tagKey);
+                    if (tagOid != null) {
+                        tag = graph.getVertex(tagOid.getRecord());
+                        post.addEdge("HasTag", tag);
+                    } else {
+                        tag = graph.addVertex("class:Tag", "host", host, "tagId", tagId, "createDate", data.get("createDate"));
+                        createUser.addEdge("Create", tag);
+                        post.addEdge("HasTag", tag);
+                    }
                 }
             }
             graph.commit();
@@ -281,21 +284,23 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 if(parentRid != null) {
                     // if parentRid is not even selected, nothing to do with the parent edge.
                     Vertex parent = DbService.getVertexByRid(graph, parentRid);
-                    boolean found = false;
-                    for(Edge e: post.getEdges(Direction.IN, "HasPost")) {
-                        Vertex edgeParent = e.getVertex(Direction.OUT);
-                        if(edgeParent != null) {
-                            originalParentRid =  edgeParent.getId().toString();
-                            if(originalParentRid.equals(parentRid)) {
-                                found = true;
-                                break;
-                            }
+                    if(parent != null) {
+                        boolean found = false;
+                        for(Edge e: post.getEdges(Direction.IN, "HasPost")) {
+                            Vertex edgeParent = e.getVertex(Direction.OUT);
+                            if(edgeParent != null) {
+                                originalParentRid =  edgeParent.getId().toString();
+                                if(originalParentRid.equals(parentRid)) {
+                                    found = true;
+                                    break;
+                                }
 
+                            }
                         }
-                    }
-                    if(!found) {
-                        // replace parent here by passing parentId to the event rule.
-                        eventData.put("parentId", parent.getProperty("categoryId"));
+                        if(!found) {
+                            // replace parent here by passing parentId to the event rule.
+                            eventData.put("parentId", parent.getProperty("categoryId"));
+                        }
                     }
                 } else {
                     // get originalParentRid from post for clearing cache.
@@ -539,7 +544,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                     postCache.put(postRid, post);
                 }
             }
-            listCache.put(rid + sortedBy, list);
+            listCache.put(rid + sortedBy + sortDir, list);
         }
         long total = list.size();
         if(total > 0) {

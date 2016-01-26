@@ -63,6 +63,7 @@ var CatalogProductAdd = React.createClass({
 
     _onTouchTap: function(action) {
         action.data = this.state.model;
+        console.log('CatalogProductAdd._onnTouchTap action', action);
         CatalogActionCreators.addProduct(action);
     },
 

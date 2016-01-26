@@ -493,19 +493,19 @@ module.exports = {
     },
 
     delProduct: function(rid) {
-        let delPost = {
-            category : 'blog',
-            name : 'delPost',
+        let delProduct = {
+            category : 'catalog',
+            name : 'delProduct',
             readOnly: false,
+            data: {
+                '@rid': rid
+            }
         };
-        let data = {};
-        data['@rid'] = rid;
-        delPost.data = data;
 
         $.ajax({
             type: 'POST',
             url: '/api/rs',
-            data: JSON.stringify(delPost),
+            data: JSON.stringify(delProduct),
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {

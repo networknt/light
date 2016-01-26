@@ -53,6 +53,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String host = (String) data.get("host");
+        String parentRid = (String)data.remove("parentRid");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -61,30 +62,22 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             error = "You can only add product from host: " + host;
             inputMap.put("responseCode", 403);
         } else {
-            Map eventMap = getEventMap(inputMap);
-            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-            inputMap.put("eventMap", eventMap);
-            eventData.putAll((Map<String, Object>) inputMap.get("data"));
-            eventData.put("createDate", new Date());
-            eventData.put("createUserId", user.get("userId"));
             OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
                 // make sure parent exists if it is not empty.
-                List<String> parentRids = (List<String>)data.get("in_HasProduct");
-                if(parentRids != null && parentRids.size() == 1) {
-                    Vertex parent = DbService.getVertexByRid(graph, parentRids.get(0));
-                    if(parent == null) {
-                        error = "Parent with @rid " + parentRids.get(0) + " cannot be found.";
-                        inputMap.put("responseCode", 404);
-                    } else {
-                        // convert parent from @rid to id
-                        List in_HasProduct = new ArrayList();
-                        in_HasProduct.add(parent.getProperty("categoryId"));
-                        eventData.put("in_HasProduct", in_HasProduct);
-                    }
-                }
-                if(error == null) {
+                Vertex parent = DbService.getVertexByRid(graph, parentRid);
+                if(parent == null) {
+                    error = "Parent with @rid " + parentRid + " cannot be found.";
+                    inputMap.put("responseCode", 404);
+                } else {
+                    Map eventMap = getEventMap(inputMap);
+                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                    inputMap.put("eventMap", eventMap);
+                    eventData.putAll((Map<String, Object>) inputMap.get("data"));
+                    eventData.put("parentId", parent.getProperty("categoryId"));
                     eventData.put("productId", HashUtil.generateUUID());
+                    eventData.put("createDate", new Date());
+                    eventData.put("createUserId", user.get("userId"));
                 }
             } catch (Exception e) {
                 logger.error("Exception:", e);
@@ -97,15 +90,44 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            // update the branch tree as the number of products has changed.
-            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage("branchMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get("treeCache");
-            if(cache != null) {
-                cache.remove(host + branchType);
-            }
+            clearCache(host, branchType, parentRid);
             return true;
         }
     }
+
+    private void clearCache(String host, String bfnType, String parentRid) {
+        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
+        if(listCache != null && listCache.size() > 0) {
+            boolean cleared = false;
+            List<String> recentList = (List<String>)listCache.remove(host + bfnType);
+            if(!cleared && recentList != null && recentList.size() > 0) {
+                ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)bfnMap.get("productCache");
+                if(productCache != null) {
+                    for(String productRid: recentList) {
+                        productCache.remove(productRid);
+                    }
+                    cleared = true;
+                }
+
+            }
+
+            List<String> newestList = (List<String>)listCache.remove(parentRid + "createDate" + "desc");
+            if(!cleared && newestList != null && newestList.size() > 0) {
+                ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)bfnMap.get("productCache");
+                if(productCache != null) {
+                    for(String productRid: newestList) {
+                        productCache.remove(productRid);
+                    }
+                    cleared = true;
+                }
+            }
+
+            // TODO handle other list here.
+
+        }
+    }
+
 
     public boolean addProductEv (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
@@ -115,41 +137,36 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
     }
 
     protected void addProductDb(Map<String, Object> data) throws Exception {
-        String className = "Catalog";
-        String id = "categoryId";
-        String index = className + "." + id;
         String host = (String)data.get("host");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
             OrientVertex createUser = (OrientVertex)graph.getVertexByKey("User.userId", data.remove("createUserId"));
-            List<String> parentIds = (List<String>)data.remove("in_HasProduct");
+            String parentId = (String)data.remove("parentId");
+            List<String> tags = (List<String>)data.remove("tags");
             OrientVertex product = graph.addVertex("class:Product", data);
             createUser.addEdge("Create", product);
             // parent
-            if(parentIds != null && parentIds.size() == 1) {
-                OrientVertex parent = getBranchByHostId(graph, branchType, host, parentIds.get(0));
-                if(parent != null) {
-                    parent.addEdge("HasProduct", product);
-                }
+            OrientVertex parent = getBranchByHostId(graph, branchType, host, parentId);
+            if(parent != null) {
+                parent.addEdge("HasProduct", product);
             }
             // tag
-            Set<String> inputTags = data.get("tags") != null? new HashSet<String>(Arrays.asList(((String) data.get("tags")).split("\\s*,\\s*"))) : new HashSet<String>();
-            for(String tagId: inputTags) {
-                Vertex tag = null;
-                // get the tag is it exists
-                OIndex<?> tagHostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("tagHostIdIdx");
-                logger.debug("tagHostIdIdx = " + tagHostIdIdx);
-                OCompositeKey tagKey = new OCompositeKey(host, tagId);
-                logger.debug("tagKey =" + tagKey);
-                OIdentifiable tagOid = (OIdentifiable) tagHostIdIdx.get(tagKey);
-                if (tagOid != null) {
-                    tag = graph.getVertex(tagOid.getRecord());
-                    product.addEdge("HasTag", tag);
-                } else {
-                    tag = graph.addVertex("class:Tag", "host", host, "tagId", tagId, "createDate", data.get("createDate"));
-                    createUser.addEdge("Create", tag);
-                    product.addEdge("HasTag", tag);
+            if(tags != null && tags.size() > 0) {
+                for(String tagId: tags) {
+                    Vertex tag = null;
+                    // get the tag is it exists
+                    OIndex<?> tagHostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("tagHostIdIdx");
+                    OCompositeKey tagKey = new OCompositeKey(host, tagId);
+                    OIdentifiable tagOid = (OIdentifiable) tagHostIdIdx.get(tagKey);
+                    if (tagOid != null) {
+                        tag = graph.getVertex(tagOid.getRecord());
+                        product.addEdge("HasTag", tag);
+                    } else {
+                        tag = graph.addVertex("class:Tag", "host", host, "tagId", tagId, "createDate", data.get("createDate"));
+                        createUser.addEdge("Create", tag);
+                        product.addEdge("HasTag", tag);
+                    }
                 }
             }
             graph.commit();
@@ -165,6 +182,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String)data.get("@rid");
+        String parentRid = null;
         String host = (String)data.get("host");
         String error = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -178,6 +196,12 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                     error = "Product has comment(s), cannot be deleted";
                     inputMap.put("responseCode", 400);
                 } else {
+                    // get the parentRid in order to clear cache
+                    for(Edge e: product.getEdges(Direction.IN, "HasProduct")) {
+                        Vertex edgeParent = e.getVertex(Direction.OUT);
+                        parentRid = edgeParent.getId().toString();
+                    }
+
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
@@ -197,12 +221,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            // update the branch tree as the number of products has changed.
-            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage("branchMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get("treeCache");
-            if(cache != null) {
-                cache.remove(host + branchType);
-            }
+            clearCache(host, branchType, parentRid);
             return true;
         }
     }
@@ -243,7 +262,9 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
     public boolean updProduct(Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        String rid = (String) data.get("@rid");
+        String rid = (String) data.get("rid");
+        String originalParentRid = null;
+        String parentRid = null;
         String host = (String) data.get("host");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
@@ -271,45 +292,60 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                     eventData.put("updateUserId", user.get("userId"));
 
                     // parent
-                    List parentRids = (List)data.get("in_HasProduct");
-                    if(parentRids != null) {
-                        Vertex parent = DbService.getVertexByRid(graph, (String)parentRids.get(0));
+                    parentRid =  (String)data.get("parentRid");
+                    if(parentRid != null) {
+                        Vertex parent = DbService.getVertexByRid(graph, parentRid);
                         if(parent != null) {
-
-                            String storedParentRid = null;
-                            String storedParentId = null;
-                            for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.IN, "HasProduct")) {
-                                // we only expect one parent here.
-                                storedParentRid = vertex.getId().toString();
-                                storedParentId = vertex.getProperty("categoryId");
+                            boolean found = false;
+                            for(Edge e: product.getEdges(Direction.IN, "HasProduct")) {
+                                Vertex edgeParent = e.getVertex(Direction.OUT);
+                                if(edgeParent != null) {
+                                    originalParentRid =  edgeParent.getId().toString();
+                                    if(originalParentRid.equals(parentRid)) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
                             }
-                            if(parentRids.get(0).equals(storedParentRid)) {
-                                // same parent, do nothing
-                            } else {
-                                eventData.put("delParentId", storedParentId);
-                                eventData.put("addParentId", parent.getProperty("categoryId"));
+                            if(!found) {
+                                // replace parent here by passing parentId to the event rule.
+                                eventData.put("parentId", parent.getProperty("categoryId"));
                             }
-                        } else {
-                            inputMap.put("result", "Parent with @rid " + parentRids.get(0) + " cannot be found");
-                            inputMap.put("responseCode", 404);
-                            return false;
+                        }
+                    } else {
+                        // get originalParentRid from product for clearing cache.
+                        for(Edge e: product.getEdges(Direction.IN, "HasProduct")) {
+                            Vertex edgeParent = e.getVertex(Direction.OUT);
+                            if(edgeParent != null) {
+                                originalParentRid =  edgeParent.getId().toString();
+                            }
                         }
                     }
 
                     // tags
-                    Set<String> inputTags = data.get("tags") != null? new HashSet<String>(Arrays.asList(((String)data.get("tags")).split("\\s*,\\s*"))) : new HashSet<String>();
-                    Set<String> storedTags = new HashSet<String>();
-                    for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.OUT, "HasTag")) {
-                        storedTags.add((String)vertex.getProperty("tagId"));
+                    List<String> tags = (List)data.get("tags");
+                    if(tags == null || tags.size() == 0) {
+                        // remove all existing tags
+                        Set<String> delTags = new HashSet<String>();
+                        for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.OUT, "HasTag")) {
+                            delTags.add((String)vertex.getProperty("tagId"));
+                        }
+                        if(delTags.size() > 0) eventData.put("delTags", delTags);
+                    } else {
+                        Set<String> inputTags = new HashSet<String>(tags);
+                        Set<String> storedTags = new HashSet<String>();
+                        for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.OUT, "HasTag")) {
+                            storedTags.add((String)vertex.getProperty("tagId"));
+                        }
+
+                        Set<String> addTags = new HashSet<String>(inputTags);
+                        Set<String> delTags = new HashSet<String>(storedTags);
+                        addTags.removeAll(storedTags);
+                        delTags.removeAll(inputTags);
+
+                        if(addTags.size() > 0) eventData.put("addTags", addTags);
+                        if(delTags.size() > 0) eventData.put("delTags", delTags);
                     }
-
-                    Set<String> addTags = new HashSet<String>(inputTags);
-                    Set<String> delTags = new HashSet<String>(storedTags);
-                    addTags.removeAll(storedTags);
-                    delTags.removeAll(inputTags);
-
-                    if(addTags.size() > 0) eventData.put("addTags", addTags);
-                    if(delTags.size() > 0) eventData.put("delTags", delTags);
                 } else {
                     error = "@rid " + rid + " cannot be found";
                     inputMap.put("responseCode", 404);
@@ -328,12 +364,8 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            // update the branch tree as the last update time has changed.
-            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage("branchMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get("treeCache");
-            if(cache != null) {
-                cache.remove(host + branchType);
-            }
+            clearCache(host, branchType, originalParentRid);
+            if(parentRid != null) clearCache(host, branchType, parentRid);
             return true;
         }
     }
@@ -372,21 +404,18 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                 }
                 product.setProperty("updateDate", data.get("updateDate"));
 
-                // handle addParent and delParent
-                String delParentId = (String)data.get("delParentId");
-                if(delParentId != null) {
-                    for (Edge edge : (Iterable<Edge>) product.getEdges(Direction.IN, "HasProduct")) {
-                        graph.removeEdge(edge);
-                    }
-                }
-                String addParentId = (String)data.get("addParentId");
-                if(addParentId != null) {
-                    OrientVertex parent = getBranchByHostId(graph, branchType, host, addParentId);
-                    if (parent != null) {
+                // handle parent update
+                String parentId = (String)data.get("parentId");
+                if(parentId != null) {
+                    OrientVertex parent = getBranchByHostId(graph, branchType, (String) data.get("host"), (String) data.get("parentId"));
+                    if(parent != null) {
+                        // remove the current edge and add a new one.
+                        for(Edge e : product.getEdges(Direction.IN, "HasProduct")) {
+                            e.remove();
+                        }
                         parent.addEdge("HasProduct", product);
                     }
                 }
-
 
                 // handle addTags and delTags
                 OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("tagHostIdIdx");
@@ -399,7 +428,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                             OrientVertex tag = (OrientVertex)oid.getRecord();
                             product.addEdge("HasTag", tag);
                         } else {
-                            Vertex tag = graph.addVertex("class:Tag", "host", data.get("host"), "tagId", tagId, "createDate", data.get("createDate"));
+                            Vertex tag = graph.addVertex("class:Tag", "host", data.get("host"), "tagId", tagId, "createDate", data.get("updateDate"));
                             updateUser.addEdge("Create", tag);
                             product.addEdge("HasTag", tag);
                         }
@@ -408,10 +437,21 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                 Set<String> delTags = (Set)data.get("delTags");
                 if(delTags != null) {
                     for(String tagId: delTags) {
+                        /*
+                        OrientVertex branch = null;
+                        OIndex<?> hostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex(branchType + "HostIdIdx");
+                        OCompositeKey key = new OCompositeKey(host, id);
+                        OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
+                        if (oid != null) {
+                            branch = graph.getVertex(oid.getRecord());
+                        }
+                        return branch;
+                        */
+
                         OCompositeKey key = new OCompositeKey(data.get("host"), tagId);
                         OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
                         if (oid != null) {
-                            OrientVertex tag = (OrientVertex) oid.getRecord();
+                            OrientVertex tag = graph.getVertex(oid.getRecord());
                             for (Edge edge : (Iterable<Edge>) product.getEdges(Direction.OUT, "HasTag")) {
                                 if(edge.getVertex(Direction.IN).equals(tag)) graph.removeEdge(edge);
                             }
@@ -434,30 +474,9 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         String rid = (String)data.get("@rid");
         String host = (String)data.get("host");
         if(rid == null) {
-            // check if categoryId exists and convert it to rid.
-            String categoryId = (String)data.get("categoryId");
-            if(categoryId == null) {
-                inputMap.put("result", "@rid or categoryId is required");
-                inputMap.put("responseCode", 400);
-                return false;
-            } else {
-                // find out rid from categoryId
-                OrientGraph graph = ServiceLocator.getInstance().getGraph();
-                try {
-                    OrientVertex catalog = getBranchByHostId(graph, "catalog", host, categoryId);
-                    if(catalog == null) {
-                        inputMap.put("result", "categoryId "  + categoryId + " doesn't exist on host " + host);
-                        inputMap.put("responseCode", 400);
-                    } else {
-                        rid = catalog.getId().toString();
-                    }
-                } catch (Exception e) {
-                    logger.error("Exception:", e);
-                    throw e;
-                } finally {
-                    graph.shutdown();
-                }
-            }
+            inputMap.put("result", "@rid is required");
+            inputMap.put("responseCode", 400);
+            return false;
         }
         Integer pageSize = (Integer)data.get("pageSize");
         Integer pageNo = (Integer)data.get("pageNo");
@@ -498,29 +517,29 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         // TODO support the following lists: recent, popular
         // Get the page from cache.
         List<String> list = null;
-        Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage("branchMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)branchMap.get("listCache");
+        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
         if(listCache == null) {
             listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
+                    .maximumWeightedCapacity(200)
                     .build();
-            branchMap.put("listCache", listCache);
+            bfnMap.put("listCache", listCache);
         } else {
-            list = (List<String>)listCache.get(rid + sortedBy);
+            list = (List<String>)listCache.get(rid + sortedBy + sortDir);
         }
 
-        ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)branchMap.get("productCache");
+        ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)bfnMap.get("productCache");
         if(productCache == null) {
             productCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
                     .maximumWeightedCapacity(1000)
                     .build();
-            branchMap.put("productCache", productCache);
+            bfnMap.put("productCache", productCache);
         }
 
         if(list == null) {
             // get the list for db
             list = new ArrayList<String>();
-            String json = getCatalogProductDb(rid, sortedBy);
+            String json = getCatalogProductDb(rid, sortedBy, sortDir);
             if(json != null) {
                 // convert json to list of maps.
                 List<Map<String, Object>> products = mapper.readValue(json,
@@ -536,7 +555,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                     productCache.put(productRid, product);
                 }
             }
-            listCache.put(rid + sortedBy, list);
+            listCache.put(rid + sortedBy + sortDir, list);
         }
         long total = list.size();
         if(total > 0) {
@@ -567,11 +586,11 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
     }
 
 
-    protected String getCatalogProductDb(String rid, String sortedBy) {
+    protected String getCatalogProductDb(String rid, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, productId, name, description, variants, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId " +
-                "from (traverse out_Own, out_HasProduct from ?) where @class = 'Product' order by " + sortedBy + " desc";
+        String sql = "select @rid, productId, name, description, variants, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, out_HasTag.tagId " +
+                "from (traverse out_Own, out_HasProduct from ?) where @class = 'Product' order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
@@ -715,7 +734,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)branchMap.get("listCache");
         if(listCache == null) {
             listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
+                    .maximumWeightedCapacity(200)
                     .build();
             branchMap.put("listCache", listCache);
         } else {
@@ -725,7 +744,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)branchMap.get("productCache");
         if(productCache == null) {
             productCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
+                    .maximumWeightedCapacity(10000)
                     .build();
             branchMap.put("productCache", productCache);
         }
@@ -780,7 +799,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
         String sql = "select @rid as rid, productId, name, description, variants, createDate, " +
-            "in_HasProduct[0].@rid as parentRid, in_HasProduct[0].categoryId as parentId " +
+            "in_HasProduct[0].@rid as parentRid, in_HasProduct[0].categoryId as parentId, out_HasTag.tagId " +
             "from Product where host = ? order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
