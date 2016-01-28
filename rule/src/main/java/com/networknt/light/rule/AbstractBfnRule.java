@@ -574,7 +574,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     protected String getBfnPostDb(String rid, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, postId, title, summary, content, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, out_HasTag.tagId " +
+        String sql = "select @rid, postId, title, summary, content, createDate, parentId, in_Create[0].@rid as createRid, " +
+                "in_Create[0].userId as createUserId, in_Create[0].gravatar as gravatar, out_HasTag.tagId as tagId " +
                 "from (traverse out_Own, out_HasPost from ?) where @class = 'Post' order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
@@ -694,7 +695,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     protected String getBfnRecentPostDb(String host, String bfnType, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, postId, title, summary, content, createDate, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, out_HasTag.tagId, " +
+        String sql = "select @rid, postId, title, summary, content, createDate, in_Create[0].@rid as createRid, " +
+            "in_Create[0].userId as createUserId, in_Create[0].gravatar as gravatar, out_HasTag.tagId as tagId, " +
             "in_HasPost[0].@rid as parentRid, in_HasPost[0].categoryId as parentId " +
             "from Post where host = ? and in_HasPost[0].@class = ? order by " + sortedBy + " " + sortDir;
 

@@ -56,8 +56,6 @@ public class RestHandler implements HttpHandler {
     public RestHandler() {
     }
 
-
-
     @Override
     public void handleRequest(HttpServerExchange exchange) throws Exception {
         if(exchange.isInIoThread()) {
@@ -88,8 +86,8 @@ public class RestHandler implements HttpHandler {
             exchange.getResponseHeaders().put(new HttpString("Content-Type"), "application/json; charset=utf-8");
             return;
         } else {
-            logger.error("Invalid Request Method");
             sendErrorResponse(exchange, 400, "Invalid Request Method");
+            logger.error("Invalid Request Method: " + exchange.getRequestMethod());
             return;
         }
 
@@ -104,6 +102,7 @@ public class RestHandler implements HttpHandler {
                     .readValue(json, new TypeReference<HashMap<String, Object>>() {
                     });
         } catch (Exception e) {
+            logger.error("Invalid Command {} ", json);
             sendErrorResponse(exchange, 400, "Invalid Command");
             return;
         }
@@ -111,6 +110,7 @@ public class RestHandler implements HttpHandler {
         String cmdRuleClass = Util.getCommandRuleId(jsonMap);
         Map ruleMap = AbstractRule.getRuleByRuleClass(cmdRuleClass);
         if(ruleMap == null) {
+            logger.error("No handler for the command {}", json);
             sendErrorResponse(exchange, 400, "No handler for the command");
             return;
         }
@@ -143,6 +143,7 @@ public class RestHandler implements HttpHandler {
                 if(!report.isSuccess()) {
                     JsonNode messages = ((ListProcessingReport) report).asJson();
                     sendErrorResponse(exchange, 400, messages.toString());
+                    logger.error("Schema Validation Failed {}", json);
                     return;
                 }
             }
@@ -157,12 +158,14 @@ public class RestHandler implements HttpHandler {
             String msg = e.getMessage();
             if(msg != null && msg.startsWith(JwtUtil.TOKEN_EXPIRED_MESSAGE)) {
                 // return 401 status and let client to refresh the token.
+                logger.info("Token expired");
                 sendErrorResponse(exchange, 401, "token_expired");
                 return;
             }
         } catch (SignatureException e) {
             logger.error("Exception", e);
             // invalid token, return 401 status and let client to discard the token.
+            logger.error("Invalid Token");
             sendErrorResponse(exchange, 401, "invalid_token");
             return;
         }
@@ -176,6 +179,7 @@ public class RestHandler implements HttpHandler {
             List<String> accessRoles = (List)access.get("roles");
             if (!("A").equals(accessLevel) && !("N").equals(accessLevel) && payload == null) {
                 sendErrorResponse(exchange, 400, "Login is required");
+                logger.error("Login is required for command {}", json);
                 return;
             }
 
@@ -195,11 +199,13 @@ public class RestHandler implements HttpHandler {
                 case "N":
                     // Not accessible
                     sendErrorResponse(exchange, 400, "Not accessible");
+                    logger.error("Not accessible");
                     return;
                 case "C":
                     // client id is in the jwt token like userId and roles.
                     if(!clients.contains(clientId)) {
                         sendErrorResponse(exchange, 403, "Client permission denied");
+                        logger.error("Client permission denied");
                         return;
                     }
                     break;
@@ -214,6 +220,7 @@ public class RestHandler implements HttpHandler {
                     }
                     if (!found) {
                         sendErrorResponse(exchange, 403, "Role permission denied");
+                        logger.error("Role permission denied");
                         return;
                     }
                     break;
@@ -221,12 +228,14 @@ public class RestHandler implements HttpHandler {
                     //user only
                     if(payload == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
+                        logger.error("Login is required");
                         return;
                     } else {
                         String userId = (String) user.get("userId");
                         List<String> users = (List)access.get("users");
                         if(!users.contains(userId)) {
                             sendErrorResponse(exchange, 403, "User permission denied");
+                            logger.error("User permission denied");
                             return;
                         }
                     }
@@ -235,10 +244,12 @@ public class RestHandler implements HttpHandler {
                     // client and role
                     if(payload == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
+                        logger.error("Login is required");
                         return;
                     } else {
                         if(!clients.contains(clientId)) {
                             sendErrorResponse(exchange, 403, "Client permission denied");
+                            logger.error("Client permission denied");
                             return;
                         }
                         // client is ok, check roles
@@ -251,6 +262,7 @@ public class RestHandler implements HttpHandler {
                         }
                         if (!found) {
                             sendErrorResponse(exchange, 403, "Role permission denied");
+                            logger.error("Role permission denied");
                             return;
                         }
                     }
@@ -263,6 +275,7 @@ public class RestHandler implements HttpHandler {
                     } else {
                         if(!clients.contains(clientId)) {
                             sendErrorResponse(exchange, 403, "Client permission denied");
+                            logger.error("Client permission denied");
                             return;
                         }
                         // client is ok, check user
@@ -270,6 +283,7 @@ public class RestHandler implements HttpHandler {
                         List<String> users = (List)access.get("users");
                         if(!users.contains(userId)) {
                             sendErrorResponse(exchange, 403, "User permission denied");
+                            logger.error("User permission denied");
                             return;
                         }
                     }
@@ -278,6 +292,7 @@ public class RestHandler implements HttpHandler {
                     // role and user
                     if(payload == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
+                        logger.error("Login is required");
                         return;
                     } else {
                         found = false;
@@ -289,6 +304,7 @@ public class RestHandler implements HttpHandler {
                         }
                         if (!found) {
                             sendErrorResponse(exchange, 403, "Role permission denied");
+                            logger.error("Role permission denied");
                             return;
                         }
                         // role is OK, now check userId
@@ -296,6 +312,7 @@ public class RestHandler implements HttpHandler {
                         List<String> users = (List)access.get("users");
                         if(!users.contains(userId)) {
                             sendErrorResponse(exchange, 403, "User permission denied");
+                            logger.error("User permission denied");
                             return;
                         }
                    }
@@ -304,10 +321,12 @@ public class RestHandler implements HttpHandler {
                     // client, role and user
                     if(payload == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
+                        logger.error("Login is required");
                         return;
                     } else {
                         if(!clients.contains(clientId)) {
                             sendErrorResponse(exchange, 403, "Client permission denied");
+                            logger.error("Client permission denied");
                             return;
                         }
                         // client is ok, check roles
@@ -320,6 +339,7 @@ public class RestHandler implements HttpHandler {
                         }
                         if (!found) {
                             sendErrorResponse(exchange, 403, "Role permission denied");
+                            logger.error("Role permission denied");
                             return;
                         }
                         // role is OK, now check userId
@@ -327,6 +347,7 @@ public class RestHandler implements HttpHandler {
                         List<String> users = (List)access.get("users");
                         if(!users.contains(userId)) {
                             sendErrorResponse(exchange, 403, "User permission denied");
+                            logger.error("User permission denied");
                             return;
                         }
                     }

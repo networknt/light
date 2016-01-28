@@ -107,6 +107,8 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
             String password = (String)data.remove("password");
             OrientVertex credential = graph.addVertex("class:Credential", "password", password);
             data.put("credential", credential);
+            // calculate gravatar md5
+            data.put("gravatar", HashUtil.md5Hex((String)data.get("email")));
             user = graph.addVertex("class:User", data);
             graph.commit();
         } catch (Exception e) {
