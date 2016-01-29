@@ -54,6 +54,7 @@ module.exports = {
         GET_NEWS_TREE_RESPONSE: null,
         GET_NEWS_POST_RESPONSE: null,
         GET_RECENT_NEWS_POST_RESPONSE: null,
+        GET_NEWS_RESPONSE: null,
 
 
         // Forum
@@ -74,6 +75,7 @@ module.exports = {
         SET_PRODUCT_INVENTORY: null,
         REMOVE_ONE_FROM_INVENTORY: null,
         TOGGLE_CART: null, // Open/close cart
+        GET_CATALOG_RESPONSE: null,
 
         SELECT_CATALOG: null,
         LOAD_PRODUCTS: null,
@@ -83,6 +85,7 @@ module.exports = {
         GET_FORM: null,
         RECEIVE_FORM: null,
         SUBMIT_FORM_RESPONSE: null,
+        SET_FORM_MODEL: null,
 
         // Page
         GET_PAGE: null,

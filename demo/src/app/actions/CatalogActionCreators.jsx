@@ -13,6 +13,14 @@ module.exports = {
         WebAPIUtils.getCatalogTree();
     },
 
+    getCatalog: function(host) {
+        WebAPIUtils.getCatalog(host);
+    },
+
+    delCatalog: function(rid) {
+        WebAPIUtils.delCatalog(rid);
+    },
+
     getCatalogProduct: function(rid, pageNo, pageSize) {
         WebAPIUtils.getCatalogProduct(rid, pageNo, pageSize);
     },

@@ -25,6 +25,10 @@ module.exports = {
         WebAPIUtils.getBlog(host);
     },
 
+    delBlog: function(rid) {
+        WebAPIUtils.delBlog(rid);
+    },
+
     addPost: function(action) {
         WebAPIUtils.addPost(action);
     },

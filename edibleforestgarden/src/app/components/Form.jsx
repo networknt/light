@@ -16,6 +16,7 @@ let Form = React.createClass({
 
     getInitialState: function() {
         return {
+            error: null,
             schema: null,
             form: null,
             action: null,
@@ -45,7 +46,6 @@ let Form = React.createClass({
             let form = FormStore.getForm(this.props.params.formId).form;
             let action = FormStore.getForm(this.props.params.formId).action;
             let model = FormStore.getModel(this.props.params.formId);
-            console.log('Form._onFormChange: model', model, this.state.model);
             this.setState({
                 schema: schema,
                 form: form,
@@ -57,13 +57,17 @@ let Form = React.createClass({
 
     _onModelChange: function(key, val) {
         utils.selectOrSet(key, this.state.model, val);
-        //console.log('Form._onModelChange', key, val, this.state.model);
     },
 
     _onTouchTap: function(action) {
         //console.log('Form._onTouchTap', action, this.state.model);
-        action.data = this.state.model;
-        FormActionCreators.submitForm(action);
+        let validationResult = utils.validateBySchema(this.state.schema, this.state.model);
+        if(!validationResult.valid) {
+            this.setState({error: validationResult.error.message});
+        } else {
+            action.data = this.state.model;
+            FormActionCreators.submitForm(action);
+        }
     },
 
     render: function() {
@@ -76,6 +80,7 @@ let Form = React.createClass({
             return (
                 <div>
                     <SchemaForm schema={this.state.schema} form={this.state.form} model={this.state.model} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
+                    <pre>{this.state.error}</pre>
                     {actions}
                 </div>
             )

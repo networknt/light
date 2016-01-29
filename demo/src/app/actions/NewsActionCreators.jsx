@@ -21,6 +21,15 @@ module.exports = {
         WebAPIUtils.getRecentNewsPost(pageNo, pageSize);
     },
 
+    getNews: function(host) {
+        WebAPIUtils.getNews(host);
+    },
+
+    delNews: function(rid) {
+        WebAPIUtils.delNews(rid);
+    },
+
+
     addPost: function(action) {
         WebAPIUtils.addPost(action);
     },

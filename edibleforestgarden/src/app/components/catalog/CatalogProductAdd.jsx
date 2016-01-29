@@ -19,6 +19,7 @@ var CatalogProductAdd = React.createClass({
 
     getInitialState: function() {
         return {
+            error: null,
             schema: null,
             form: null,
             model: null,
@@ -42,7 +43,6 @@ var CatalogProductAdd = React.createClass({
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
         let category = CommonUtils.findCategory(CatalogCategoryStore.getCategory(), this.props.params.categoryId);
-        console.log('CatalogProductAdd._onFormChange', category, schema, form, action);
         this.setState({
             schema: schema,
             form: form,
@@ -62,9 +62,14 @@ var CatalogProductAdd = React.createClass({
     },
 
     _onTouchTap: function(action) {
-        action.data = this.state.model;
-        console.log('CatalogProductAdd._onnTouchTap action', action);
-        CatalogActionCreators.addProduct(action);
+        let validationResult = utils.validateBySchema(this.state.schema, this.state.model);
+        console.log('validationResult', validationResult);
+        if(!validationResult.valid) {
+            this.setState({error: validationResult.error.message});
+        } else {
+            action.data = this.state.model;
+            CatalogActionCreators.addProduct(action);
+        }
     },
 
     render: function() {
@@ -77,6 +82,7 @@ var CatalogProductAdd = React.createClass({
             return (
                 <div>
                     <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
+                    <pre>{this.state.error}</pre>
                     {actions}
                 </div>
             )

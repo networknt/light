@@ -11,7 +11,7 @@ import Home from './components/Home';
 import About from './components/about';
 import Contact from './components/contact';
 import Signup from './components/signup';
-import Login from './components/login';
+import Login from './components/Login';
 import Logout from './components/logout';
 import Form from './components/Form';
 import Page from './components/Page';
@@ -39,6 +39,8 @@ import CatalogProduct from './components/catalog/CatalogProduct';
 import Forum from './components/forum';
 import Admin from './components/admin/AdminMenu';
 import BlogAdminHome from './components/admin/blog/BlogAdminHome';
+import NewsAdminHome from './components/admin/news/NewsAdminHome';
+import CatalogAdminHome from './components/admin/catalog/CatalogAdminHome';
 import DbAdminHome from './components/admin/db/DbAdminHome';
 import ExecQueryCommand from './components/admin/db/ExecQueryCommand';
 import ExportDatabase from './components/admin/db/ExportDatabase';
@@ -63,7 +65,7 @@ const AppRoutes = (
     <Route path='/signup' component={Signup} />
     <Route path='/login' component={Login} />
     <Route path='/logout' component={Logout} />
-    <Route path='/:root/form/:formId' component={Form} />
+    <Route path='/form/:formId' component={Form} />
     <Route path='/page/:pageId' component={Page} />
 
 
@@ -93,6 +95,8 @@ const AppRoutes = (
 
     <Route path='/admin' component={Admin} />
     <Route path='/admin/blogAdmin' component={BlogAdminHome} />
+    <Route path='/admin/newsAdmin' component={NewsAdminHome} />
+    <Route path='/admin/catalogAdmin' component={CatalogAdminHome} />
     <Route path='/admin/dbAdmin' component={DbAdminHome} />
     <Route path='/admin/dbAdmin/exportDatabase' component={ExportDatabase} />
     <Route path='/admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />

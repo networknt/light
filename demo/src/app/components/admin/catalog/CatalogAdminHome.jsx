@@ -7,49 +7,49 @@ import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import RaisedButton from 'material-ui/lib/raised-button';
-import BlogAdminStore from '../../../stores/BlogAdminStore';
+import CatalogAdminStore from '../../../stores/CatalogAdminStore';
 import FormStore from '../../../stores/FormStore';
-import BlogActionCreators from '../../../actions/BlogActionCreators';
+import CatalogActionCreators from '../../../actions/CatalogActionCreators';
 import FormActionCreators from'../../../actions/FormActionCreators';
 
-var BlogAdminHome = React.createClass({
-    displayName: 'BlogAdminHome',
+var CatalogAdminHome = React.createClass({
+    displayName: 'CatalogAdminHome',
 
     getInitialState: function() {
         return {
-            blogs: [],
+            catalogs: []
         };
     },
 
     componentWillMount: function() {
-        BlogAdminStore.addChangeListener(this._onBlogChange);
-        BlogActionCreators.getBlog();
+        CatalogAdminStore.addChangeListener(this._onCatalogChange);
+        CatalogActionCreators.getCatalog();
     },
 
     componentWillUnmount: function() {
-        BlogAdminStore.removeChangeListener(this._onBlogChange);
+        CatalogAdminStore.removeChangeListener(this._onCatalogChange);
     },
 
-    _onBlogChange: function() {
+    _onCatalogChange: function() {
         this.setState({
-            blogs: BlogAdminStore.getBlogs()
+            catalogs: CatalogAdminStore.getCatalogs()
         });
     },
 
-    _onDeleteBlog: function(blog) {
-        //console.log("_onDeleteBlog", blog);
-        BlogActionCreators.delBlog(blog['@rid']);
+    _onDeleteCatalog: function(catalog) {
+        //console.log("_onDeleteCatalog", catalog);
+        CatalogActionCreators.delCatalog(catalog['@rid']);
     },
 
-    _onUpdateBlog: function(blog) {
-        //console.log("_onUpdateBlog", blog);
-        let formId = 'com.networknt.light.blog.update';
-        FormActionCreators.setFormModel(formId, blog);
+    _onUpdateCatalog: function(catalog) {
+        //console.log("_onUpdateCatalog", catalog);
+        let formId = 'com.networknt.light.catalog.update';
+        FormActionCreators.setFormModel(formId, catalog);
         this.props.history.push('/form/' + formId);
     },
 
-    _onAddBlog: function() {
-        let formId = 'com.networknt.light.blog.add';
+    _onAddCatalog: function() {
+        let formId = 'com.networknt.light.catalog.add';
         this.props.history.push('/form/' + formId);
     },
 
@@ -64,8 +64,8 @@ var BlogAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='Blogs' style={{textAlign: 'center'}}>
-                                Blogs
+                            <TableHeaderColumn colSpan="8" tooltip='Catalogs' style={{textAlign: 'center'}}>
+                                Catalogs
                             </TableHeaderColumn>
                         </TableRow>
                         <TableRow>
@@ -82,17 +82,17 @@ var BlogAdminHome = React.createClass({
                         showRowHover={true}
                         stripedRows={true}>
 
-                        {this.state.blogs.map((blog, index) => {
-                            let boundDelete = this._onDeleteBlog.bind(this, blog);
-                            let boundUpdate = this._onUpdateBlog.bind(this, blog);
+                        {this.state.catalogs.map((catalog, index) => {
+                            let boundDelete = this._onDeleteCatalog.bind(this, catalog);
+                            let boundUpdate = this._onUpdateCatalog.bind(this, catalog);
                             return (
                                 <TableRow key={index}>
                                     <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn>{blog.host}</TableRowColumn>
-                                    <TableRowColumn><a onClick={boundUpdate}>{blog.categoryId}</a></TableRowColumn>
-                                    <TableRowColumn>{blog.description}</TableRowColumn>
-                                    <TableRowColumn>{blog.createDate}</TableRowColumn>
-                                    <TableRowColumn>{blog.updateDate}</TableRowColumn>
+                                    <TableRowColumn>{catalog.host}</TableRowColumn>
+                                    <TableRowColumn><a onClick={boundUpdate}>{catalog.categoryId}</a></TableRowColumn>
+                                    <TableRowColumn>{catalog.description}</TableRowColumn>
+                                    <TableRowColumn>{catalog.createDate}</TableRowColumn>
+                                    <TableRowColumn>{catalog.updateDate}</TableRowColumn>
                                 </TableRow>
                             );
                         })}
@@ -110,7 +110,7 @@ var BlogAdminHome = React.createClass({
                         </TableRow>
                         <TableRow>
                             <TableRowColumn colSpan="6" style={{textAlign: 'left'}}>
-                                <RaisedButton label="Add Blog" primary={true} onTouchTap={this._onAddBlog} />
+                                <RaisedButton label="Add Catalog" primary={true} onTouchTap={this._onAddCatalog} />
                             </TableRowColumn>
                         </TableRow>
                     </TableFooter>
@@ -120,4 +120,4 @@ var BlogAdminHome = React.createClass({
     }
 });
 
-module.exports = BlogAdminHome;
+module.exports = CatalogAdminHome;

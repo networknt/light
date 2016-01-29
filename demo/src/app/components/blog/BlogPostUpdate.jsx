@@ -60,7 +60,9 @@ var BlogPostUpdate = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        this.setState({model: utils.selectOrSet(key, this.state.model, val)});
+        utils.selectOrSet(key, this.state.model, val);
+        // force re-rendering in order to update markdown summary and detail.
+        this.forceUpdate();
     },
 
     _onTouchTap: function(action) {

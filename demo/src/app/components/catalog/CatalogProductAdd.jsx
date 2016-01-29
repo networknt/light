@@ -7,6 +7,8 @@ import FormActionCreators from '../../actions/FormActionCreators';
 import CatalogActionCreators from '../../actions/CatalogActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
+import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
+require('rc-select/assets/index.css');
 import CatalogCategoryStore from '../../stores/CatalogCategoryStore';
 import CommonUtils from '../../utils/CommonUtils';
 
@@ -17,6 +19,7 @@ var CatalogProductAdd = React.createClass({
 
     getInitialState: function() {
         return {
+            error: null,
             schema: null,
             form: null,
             model: null,
@@ -40,7 +43,6 @@ var CatalogProductAdd = React.createClass({
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
         let category = CommonUtils.findCategory(CatalogCategoryStore.getCategory(), this.props.params.categoryId);
-        console.log('CatalogProductAdd._onFormChange', category);
         this.setState({
             schema: schema,
             form: form,
@@ -56,12 +58,18 @@ var CatalogProductAdd = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        this.setState({model: utils.selectOrSet(key, this.state.model, val)});
+        utils.selectOrSet(key, this.state.model, val);
     },
 
     _onTouchTap: function(action) {
-        action.data = this.state.model;
-        CatalogActionCreators.addProduct(action);
+        let validationResult = utils.validateBySchema(this.state.schema, this.state.model);
+        console.log('validationResult', validationResult);
+        if(!validationResult.valid) {
+            this.setState({error: validationResult.error.message});
+        } else {
+            action.data = this.state.model;
+            CatalogActionCreators.addProduct(action);
+        }
     },
 
     render: function() {
@@ -73,7 +81,8 @@ var CatalogProductAdd = React.createClass({
             })}
             return (
                 <div>
-                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} />
+                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
+                    <pre>{this.state.error}</pre>
                     {actions}
                 </div>
             )

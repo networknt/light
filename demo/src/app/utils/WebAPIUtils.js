@@ -2,6 +2,7 @@
  * Created by steve on 08/07/15.
  */
 var ServerActionCreators = require('../actions/ServerActionCreators.js');
+var ErrorActionCreators = require('../actions/ErrorActionCreators.jsx');
 var AppConstants = require('../constants/AppConstants.js');
 var $ = require('jquery');
 
@@ -212,7 +213,7 @@ module.exports = {
 
         }).fail(function(error) {
             //console.log('error', error);
-            ServerActionCreators.getBlogPostResponse(null, error);
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 
@@ -251,10 +252,110 @@ module.exports = {
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getBlog))}
         }).done(function(data) {
-            ServerActionCreators.getBlogResponse(data, null);
+            ServerActionCreators.getBlogResponse(data);
 
         }).fail(function(error) {
-            ServerActionCreators.getBlogResponse(null, error);
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getNews: function() {
+        let getNews = {
+            category: 'news',
+            name: 'getNews',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getNews))}
+        }).done(function(data) {
+            ServerActionCreators.getNewsResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getCatalog: function() {
+        let getCatalog = {
+            category: 'catalog',
+            name: 'getCatalog',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getCatalog))}
+        }).done(function(data) {
+            ServerActionCreators.getCatalogResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delBlog: function(rid) {
+        let delBlog = {
+            category: 'blog',
+            name: 'delBlog',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delBlog),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delBlogResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delNews: function(rid) {
+        let delNews = {
+            category: 'news',
+            name: 'delNews',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delNews),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delNewsResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delCatalog: function(rid) {
+        let delCatalog = {
+            category: 'catalog',
+            name: 'delCatalog',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delCatalog),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delCatalogResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 
@@ -392,19 +493,19 @@ module.exports = {
     },
 
     delProduct: function(rid) {
-        let delPost = {
-            category : 'blog',
-            name : 'delPost',
+        let delProduct = {
+            category : 'catalog',
+            name : 'delProduct',
             readOnly: false,
+            data: {
+                '@rid': rid
+            }
         };
-        let data = {};
-        data['@rid'] = rid;
-        delPost.data = data;
 
         $.ajax({
             type: 'POST',
             url: '/api/rs',
-            data: JSON.stringify(delPost),
+            data: JSON.stringify(delProduct),
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {

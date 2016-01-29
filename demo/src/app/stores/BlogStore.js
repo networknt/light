@@ -7,10 +7,8 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 var CHANGE_EVENT = 'change';
 
 var _posts = [];
-var _recentPosts = [];
 var _ancestors = [];
 var _total = 0;
-var _recentPostTotal = 0;
 var _allowPost = false;
 var _post = {};
 
@@ -33,10 +31,6 @@ var BlogStore = _.extend({}, EventEmitter.prototype, {
         return _posts;
     },
 
-    getRecentPosts: function() {
-        return _recentPosts;
-    },
-
     getAncestors: function() {
         return _ancestors;
     },
@@ -47,10 +41,6 @@ var BlogStore = _.extend({}, EventEmitter.prototype, {
 
     getTotal: function() {
         return _total;
-    },
-
-    getRecentPostTotal: function() {
-        return _recentPostTotal;
     },
 
     getPost: function() {
@@ -64,15 +54,10 @@ AppDispatcher.register(function(payload) {
 
     var type = payload.type;
     switch(type) {
-        /*
-        case ActionTypes.GET_BLOG_TREE_RESPONSE:
-            WebAPIUtils.getBlogPost(payload.json[0]['@rid']);
-            //ProductStore.emitChange();
-            break;
-        */
         case ActionTypes.GET_BLOG_POST_RESPONSE:
+            //console.log('GET_BLOG_POST_RESPONSE', payload);
             _total = payload.json.total;
-            _allowPost = payload.json.allowPost
+            _allowPost = payload.json.allowPost;
             if(_total == 0) {
                 _posts = [];
             } else {
@@ -81,11 +66,12 @@ AppDispatcher.register(function(payload) {
             BlogStore.emitChange();
             break;
         case ActionTypes.GET_RECENT_BLOG_POST_RESPONSE:
-            _recentPostTotal = payload.json.total;
-            if(_recentPostTotal == 0) {
-                _recentPosts = [];
+            _total = payload.json.total;
+            // post is no allowed here.
+            if(_total == 0) {
+                _posts = [];
             } else {
-                _recentPosts = payload.json.posts;
+                _posts = payload.json.posts;
             }
             BlogStore.emitChange();
             break;

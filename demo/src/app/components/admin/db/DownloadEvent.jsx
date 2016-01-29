@@ -54,11 +54,11 @@ var DownloadEvent = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        this.setState({model: utils.selectOrSet(key, this.state.model, val)});
+        utils.selectOrSet(key, this.state.model, val);
     },
 
     _onTouchTap: function(action) {
-        console.log('DownloadEvent._onTouchTap', action, this.state.model);
+        //console.log('DownloadEvent._onTouchTap', action, this.state.model);
         action.data = this.state.model;
         DbActionCreators.downloadEvent(action);
     },

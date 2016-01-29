@@ -7,6 +7,8 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _forms = {};
+var _models = {};
+
 var _errors = [];
 
 var FormStore = assign({}, EventEmitter.prototype, {
@@ -27,6 +29,11 @@ var FormStore = assign({}, EventEmitter.prototype, {
         return _forms[id];
     },
 
+    getModel: function(id) {
+        console.log('getModel', id, _models, _models[id]);
+        return _models[id];
+    },
+
     getErrors: function() {
         return _errors;
     }
@@ -37,11 +44,13 @@ FormStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.RECEIVE_FORM:
-            //console.log('FormStore RECEIVE_FORM', payload.json);
-            //console.log('FormStore RECEIVE_FORM', payload.json.formId);
-            //console.log('FormStore RECEIVE_FORM', _forms);
             _forms[payload.json.formId] = payload.json;
             _errors = payload.error;
+            FormStore.emitChange();
+            break;
+        case ActionTypes.SET_FORM_MODEL:
+            console.log('SET_FORM_MODEL', payload);
+            _models[payload.formId] = payload.json;
             FormStore.emitChange();
             break;
     }

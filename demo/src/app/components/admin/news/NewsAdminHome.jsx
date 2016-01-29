@@ -7,49 +7,49 @@ import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
 import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import RaisedButton from 'material-ui/lib/raised-button';
-import BlogAdminStore from '../../../stores/BlogAdminStore';
+import NewsAdminStore from '../../../stores/NewsAdminStore';
 import FormStore from '../../../stores/FormStore';
-import BlogActionCreators from '../../../actions/BlogActionCreators';
+import NewsActionCreators from '../../../actions/NewsActionCreators';
 import FormActionCreators from'../../../actions/FormActionCreators';
 
-var BlogAdminHome = React.createClass({
-    displayName: 'BlogAdminHome',
+var NewsAdminHome = React.createClass({
+    displayName: 'NewsAdminHome',
 
     getInitialState: function() {
         return {
-            blogs: [],
+            news: []
         };
     },
 
     componentWillMount: function() {
-        BlogAdminStore.addChangeListener(this._onBlogChange);
-        BlogActionCreators.getBlog();
+        NewsAdminStore.addChangeListener(this._onNewsChange);
+        NewsActionCreators.getNews();
     },
 
     componentWillUnmount: function() {
-        BlogAdminStore.removeChangeListener(this._onBlogChange);
+        NewsAdminStore.removeChangeListener(this._onNewsChange);
     },
 
-    _onBlogChange: function() {
+    _onNewsChange: function() {
         this.setState({
-            blogs: BlogAdminStore.getBlogs()
+            news: NewsAdminStore.getNews()
         });
     },
 
-    _onDeleteBlog: function(blog) {
-        //console.log("_onDeleteBlog", blog);
-        BlogActionCreators.delBlog(blog['@rid']);
+    _onDeleteNews: function(news) {
+        console.log("_onDeleteNews", news);
+        NewsActionCreators.delNews(news['@rid']);
     },
 
-    _onUpdateBlog: function(blog) {
-        //console.log("_onUpdateBlog", blog);
-        let formId = 'com.networknt.light.blog.update';
-        FormActionCreators.setFormModel(formId, blog);
+    _onUpdateNews: function(news) {
+        console.log("_onUpdateNews", news);
+        let formId = 'com.networknt.light.news.update';
+        FormActionCreators.setFormModel(formId, news);
         this.props.history.push('/form/' + formId);
     },
 
-    _onAddBlog: function() {
-        let formId = 'com.networknt.light.blog.add';
+    _onAddNews: function() {
+        let formId = 'com.networknt.light.news.add';
         this.props.history.push('/form/' + formId);
     },
 
@@ -64,8 +64,8 @@ var BlogAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='Blogs' style={{textAlign: 'center'}}>
-                                Blogs
+                            <TableHeaderColumn colSpan="8" tooltip='News' style={{textAlign: 'center'}}>
+                                News
                             </TableHeaderColumn>
                         </TableRow>
                         <TableRow>
@@ -82,17 +82,17 @@ var BlogAdminHome = React.createClass({
                         showRowHover={true}
                         stripedRows={true}>
 
-                        {this.state.blogs.map((blog, index) => {
-                            let boundDelete = this._onDeleteBlog.bind(this, blog);
-                            let boundUpdate = this._onUpdateBlog.bind(this, blog);
+                        {this.state.news.map((news, index) => {
+                            let boundDelete = this._onDeleteNews.bind(this, news);
+                            let boundUpdate = this._onUpdateNews.bind(this, news);
                             return (
                                 <TableRow key={index}>
                                     <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn>{blog.host}</TableRowColumn>
-                                    <TableRowColumn><a onClick={boundUpdate}>{blog.categoryId}</a></TableRowColumn>
-                                    <TableRowColumn>{blog.description}</TableRowColumn>
-                                    <TableRowColumn>{blog.createDate}</TableRowColumn>
-                                    <TableRowColumn>{blog.updateDate}</TableRowColumn>
+                                    <TableRowColumn>{news.host}</TableRowColumn>
+                                    <TableRowColumn><a onClick={boundUpdate}>{news.categoryId}</a></TableRowColumn>
+                                    <TableRowColumn>{news.description}</TableRowColumn>
+                                    <TableRowColumn>{news.createDate}</TableRowColumn>
+                                    <TableRowColumn>{news.updateDate}</TableRowColumn>
                                 </TableRow>
                             );
                         })}
@@ -110,7 +110,7 @@ var BlogAdminHome = React.createClass({
                         </TableRow>
                         <TableRow>
                             <TableRowColumn colSpan="6" style={{textAlign: 'left'}}>
-                                <RaisedButton label="Add Blog" primary={true} onTouchTap={this._onAddBlog} />
+                                <RaisedButton label="Add News" primary={true} onTouchTap={this._onAddNews} />
                             </TableRowColumn>
                         </TableRow>
                     </TableFooter>
@@ -120,4 +120,4 @@ var BlogAdminHome = React.createClass({
     }
 });
 
-module.exports = BlogAdminHome;
+module.exports = NewsAdminHome;

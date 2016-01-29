@@ -11,6 +11,8 @@ import BlogCategoryStore from '../../stores/BlogCategoryStore';
 import Markdown from '../Markdown';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import utils from 'react-schema-form/lib/utils';
+import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
+require('rc-select/assets/index.css');
 import CommonUtils from '../../utils/CommonUtils';
 
 const id = 'com.networknt.light.blog.post.add';
@@ -43,6 +45,7 @@ var BlogPostAdd = React.createClass({
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
         let category = CommonUtils.findCategory(BlogCategoryStore.getCategory(), this.props.params.categoryId);
+        console.log('BlogPostAdd._onFormChange', schema, form, action, category['@rid']);
         this.setState({
             schema: schema,
             form: form,
@@ -58,7 +61,8 @@ var BlogPostAdd = React.createClass({
     },
 
     _onModelChange: function(key, val) {
-        this.setState({model: utils.selectOrSet(key, this.state.model, val)});
+        utils.selectOrSet(key, this.state.model, val);
+        this.forceUpdate();
     },
 
     _onTouchTap: function(action) {
@@ -76,7 +80,7 @@ var BlogPostAdd = React.createClass({
             })}
             return (
                 <div>
-                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} />
+                    <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
                     {actions}
                     <Tabs initialSelectedIndex={1}>
                         <Tab label="Summary">
