@@ -13,6 +13,7 @@ import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
+import Gravatar from '../Gravatar';
 
 var BlogRecentPost = React.createClass({
     displayName: 'BlogRecentPost',
@@ -78,7 +79,7 @@ var BlogRecentPost = React.createClass({
                                     <span key={index}>
                                         <Paper className="blogPostPaper">
                                             <div className="blogPost">
-                                                <h2 className="title"><a onClick={boundClick}>{post.title}</a></h2>
+                                                <Gravatar md5={post.gravatar} /><h2 className="title"><a onClick={boundClick}>{post.title}</a></h2>
                                                 <span>Submitted by {post.createUserId} on {post.createDate}</span>
                                                 <Markdown text={post.summary} />
                                             </div>
