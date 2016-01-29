@@ -525,6 +525,7 @@ public class InitDatabase {
             Vertex userOwner = graph.addVertex("class:User",
                     "userId", serverConfig.get("ownerId"),
                     "email", serverConfig.get("ownerEmail"),
+                    "gravatar", HashUtil.md5Hex((String)serverConfig.get("ownerEmail")),
                     "roles", roles,
                     "credential", credentialOwner,
                     "createDate", new java.util.Date());
@@ -537,6 +538,7 @@ public class InitDatabase {
                     "userId", serverConfig.get("testId"),
                     "host", "example",
                     "email", serverConfig.get("testEmail"),
+                    "gravatar", HashUtil.md5Hex((String)serverConfig.get("testEmail")),
                     "roles", roles,
                     "credential", credentialTest,
                     "createDate", new java.util.Date());
