@@ -19,27 +19,16 @@ import NewsCategoryStore from '../stores/NewsCategoryStore';
 import BlogCategoryStore from '../stores/BlogCategoryStore';
 import CatalogCategoryStore from '../stores/CatalogCategoryStore';
 import ErrorStore from '../stores/ErrorStore';
+import MenuStore from '../stores/MenuStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
 import ProductActionCreators from '../actions/ProductActionCreators';
 import BlogActionCreators from '../actions/BlogActionCreators';
 import NewsActionCreators from '../actions/NewsActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
+import MenuActionCreators from '../actions/MenuActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import CommonUtils from '../utils/CommonUtils';
-
-// Define menu items for LeftNav
-let menuItems = [
-    { route: '/', text: 'Home' },
-    { route: '/blog', text: 'Blog' },
-    { route: '/news', text: 'News' },
-    { route: '/forum', text: 'Forum' },
-    { route: '/catalog', text: 'Catalog' },
-    { route: '/admin', text: 'Admin' },
-    { route: '/user', text: 'User' },
-    { route: '/about', text: 'About' },
-    { route: '/contact', text: 'Contact' }
-];
 
 const defaultPageNo = 1;
 const defaultPageSize = 10;
@@ -60,10 +49,9 @@ const Main = React.createClass({
         let muiTheme = ThemeManager.getMuiTheme(LightRawTheme);
         return {
             leftNavOpen: false,
-
             snackbarOpen: false,
             snackbarMessage: "",
-
+            menuItems: [],
             shoppingCartOpen: false,
             muiTheme: muiTheme,
             isLoggedIn: AuthStore.isLoggedIn,
@@ -84,7 +72,9 @@ const Main = React.createClass({
         NewsCategoryStore.addChangeListener(this._newsCategoryChange);
         CatalogCategoryStore.addChangeListener(this._catalogCategoryChange);
         ErrorStore.addChangeListener(this._onErrorChange);
+        MenuStore.addChangeListener(this._onMenuChange);
         AuthActionCreators.init();
+        MenuActionCreators.getMenu();
         this.setState({
             muiTheme: newMuiTheme
         });
@@ -96,7 +86,8 @@ const Main = React.createClass({
         BlogCategoryStore.removeChangeListener(this._blogCategoryChange);
         NewsCategoryStore.removeChangeListener(this._newsCategoryChange);
         CatalogCategoryStore.removeChangeListener(this._catalogCategoryChange);
-        ErrorStore.removeChangeListener(this._onErrorChange)
+        ErrorStore.removeChangeListener(this._onErrorChange);
+        MenuStore.removeChangeListener(this._onMenuChange);
     },
 
     getChildContext() {
@@ -127,6 +118,14 @@ const Main = React.createClass({
         this.setState({
             snackbarOpen: true,
             snackbarMessage: ErrorStore.getError().errorText
+        });
+    },
+
+    _onMenuChange: function() {
+        console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
+        // only care about the first level menuItems here.
+        this.setState({
+            menuItems : MenuStore.getMenu().out_Own
         });
     },
 
@@ -286,9 +285,6 @@ const Main = React.createClass({
     },
 
     render() {
-
-
-
         var menuButton = (
             <IconButton iconClassName="material-icons">more_vert</IconButton>
         );
@@ -305,9 +301,30 @@ const Main = React.createClass({
             loginMenuItems.push(<MenuItem key='signup' value='signup' primaryText='Sign up' />);
         }
 
+        let cartButton = '';
+        if (CommonUtils.findMenuItem(this.state.menuItems, 'cart')) {
+            cartButton = <CheckoutButton history={this.props.history} />
+        }
+        let mainMenu = '';
+        if (CommonUtils.findMenuItem(this.state.menuItems, 'main')) {
+            let mainMenuItems = CommonUtils.findMenuItem(this.state.menuItems, 'main').out_Own;
+            console.log('mainMenuItems', mainMenuItems);
+            mainMenu = mainMenuItems.map((item, index) => {
+                if(CommonUtils.hasMenuAccess(item, AuthStore.getRoles())) {
+                    return (
+                        <MenuItem
+                            key={index}
+                            primaryText={item.text}
+                            value={item.route}
+                            />
+                    );
+                }
+            });
+        }
+
         var rightMenu = (
             <div>
-                <CheckoutButton history={this.props.history} />
+                {cartButton}
                 <IconMenu iconButtonElement={userButton}
                           openDirection="bottom-left"
                           onItemTouchTap={this.handleItemTouchTap}>
@@ -316,15 +333,7 @@ const Main = React.createClass({
                 <IconMenu iconButtonElement={menuButton}
                           openDirection="bottom-left"
                           onItemTouchTap={this.handleItemTouchTap}>
-                    {menuItems.map((item, index) => {
-                        return (
-                            <MenuItem
-                                key={index}
-                                primaryText={item.text}
-                                value={item.route}
-                                />
-                        );
-                    })}
+                    {mainMenu}
                 </IconMenu>
             </div>
         );

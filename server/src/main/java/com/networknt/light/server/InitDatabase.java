@@ -502,8 +502,10 @@ public class InitDatabase {
 
             graph.addVertex( "class:Role", "roleId", "anonymous", "description", "Anonymous or guest that have readonly access to certain things");
             graph.addVertex( "class:Role", "roleId", "user", "description", "logged in user who can do certain things");
+            graph.addVertex( "class:Role", "roleId", "accessAdmin", "description", "admin endpoint access for the host");
             graph.addVertex( "class:Role", "roleId", "dbAdmin", "description", "admin database objects for the host");
             graph.addVertex( "class:Role", "roleId", "hostAdmin", "description", "admin hosts for the platform");
+            graph.addVertex( "class:Role", "roleId", "roleAdmin", "description", "admin roles for the host");
             graph.addVertex( "class:Role", "roleId", "userAdmin", "description", "admin users for the host");
             graph.addVertex( "class:Role", "roleId", "statusAdmin", "description", "admin status display for the host");
             graph.addVertex( "class:Role", "roleId", "configAdmin", "description", "admin config for the host");
@@ -544,6 +546,7 @@ public class InitDatabase {
                     "menuItemId", "accessAdmin",
                     "text", "Access Admin",
                     "route", "/admin/accessAdmin",
+                    "roles", "accessAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_accessAdmin);
 
@@ -551,6 +554,7 @@ public class InitDatabase {
                     "menuItemId", "hostAdmin",
                     "text", "Host Admin",
                     "route", "/admin/hostAdmin",
+                    "roles", "roleAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_hostAdmin);
 
@@ -558,6 +562,7 @@ public class InitDatabase {
                     "menuItemId", "pageAdmin",
                     "text", "Page Admin",
                     "route", "/admin/pageAdmin",
+                    "roles", "pageAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_pageAdmin);
 
@@ -565,6 +570,7 @@ public class InitDatabase {
                     "menuItemId", "formAdmin",
                     "text", "Form Admin",
                     "route", "/admin/formAdmin",
+                    "roles", "formAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_formAdmin);
 
@@ -572,6 +578,7 @@ public class InitDatabase {
                     "menuItemId", "ruleAdmin",
                     "text", "Rule Admin",
                     "route", "/admin/ruleAdmin",
+                    "roles", "ruleAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_ruleAdmin);
 
@@ -579,6 +586,7 @@ public class InitDatabase {
                     "menuItemId", "menuAdmin",
                     "text", "Menu Admin",
                     "route", "/admin/menuAdmin",
+                    "roles", "menuAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_menuAdmin);
 
@@ -586,6 +594,7 @@ public class InitDatabase {
                     "menuItemId", "dbAdmin",
                     "text", "DB Admin",
                     "route", "/admin/dbAdmin",
+                    "roles", "dbAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_dbAdmin);
 
@@ -593,6 +602,7 @@ public class InitDatabase {
                     "menuItemId", "userAdmin",
                     "text", "User Admin",
                     "route", "/admin/userAdmin",
+                    "roles", "userAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_userAdmin);
 
@@ -600,16 +610,16 @@ public class InitDatabase {
                     "menuItemId", "roleAdmin",
                     "text", "Role Admin",
                     "route", "/admin/roleAdmin",
+                    "roles", "roleAdmin,admin,owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_roleAdmin);
 
+            // Main
             Vertex m_admin = graph.addVertex("class:MenuItem",
                     "menuItemId", "admin",
-                    "label", "Admin",
-                    "path", "/admin",
-                    "ctrl", "AdminCtrl",
-                    "left", true,
-                    "roles", "owner,admin,pageAdmin,formAdmin,ruleAdmin,menuAdmin,dbAdmin,productAdmin,forumAdmin,blogAdmin,newsAdmin,userAdmin,roleAdmin", // make sure there is no space between ,
+                    "text", "Admin",
+                    "route", "/admin",
+                    "roles", "owner,admin,accessAdmin,pageAdmin,formAdmin,ruleAdmin,menuAdmin,dbAdmin,catalogAdmin,productAdmin,forumAdmin,blogAdmin,newsAdmin,userAdmin,roleAdmin", // make sure there is no space between ,
                     "createDate", new java.util.Date());
             m_admin.addEdge("Own", m_ruleAdmin);
             m_admin.addEdge("Own", m_accessAdmin);
@@ -622,73 +632,107 @@ public class InitDatabase {
             m_admin.addEdge("Own", m_pageAdmin);
             userOwner.addEdge("Create", m_admin);
 
+            Vertex m_home = graph.addVertex("class:MenuItem",
+                    "menuItemId", "home",
+                    "text", "Home",
+                    "route", "/",
+                    "roles", "anonymous,user",
+                    "createDate", new java.util.Date());
+            userOwner.addEdge("Create", m_home);
 
 
+            Vertex m_profile = graph.addVertex("class:MenuItem",
+                    "menuItemId", "profile",
+                    "text", "Profile",
+                    "route", "/profile",
+                    "roles", "user",
+                    "createDate", new java.util.Date());
+            userOwner.addEdge("Create", m_profile);
+
+            Vertex m_about = graph.addVertex("class:MenuItem",
+                    "menuItemId", "about",
+                    "text", "About",
+                    "route", "/about",
+                    "roles", "anonymous,user",
+                    "createDate", new java.util.Date());
+            userOwner.addEdge("Create", m_about);
+
+            Vertex m_main = graph.addVertex("class:MenuItem",
+                    "menuItemId", "main",
+                    "text", "Main",
+                    "route", "/main",
+                    "roles", "anonymous,user",
+                    "createDate", new java.util.Date());
+            m_main.addEdge("Own", m_home);
+            m_main.addEdge("Own", m_profile);
+            m_main.addEdge("Own", m_about);
+            m_main.addEdge("Own", m_admin);
+            userOwner.addEdge("Create", m_main);
+
+
+            // User
             Vertex m_logOut = graph.addVertex("class:MenuItem",
                     "menuItemId", "logOut",
-                    "label", "Log Out",
-                    "path", "/page/com-networknt-light-v-user-logout",
-                    "left", false,
+                    "text", "Log Out",
+                    "route", "/logout",
                     "roles", "user",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_logOut);
 
             Vertex m_logIn = graph.addVertex("class:MenuItem",
                     "menuItemId", "logIn",
-                    "label", "Log In",
-                    "path", "/signin",
-                    "tpl", "views/form.html",
-                    "ctrl", "signinCtrl",
-                    "left", false,
+                    "text", "Log In",
+                    "route", "/login",
                     "roles", "anonymous",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_logIn);
 
             Vertex m_signUp = graph.addVertex("class:MenuItem",
                     "menuItemId", "signUp",
-                    "label", "Sign Up",
-                    "path", "/form/com.networknt.light.user.signup",
-                    "tpl", "views/form.html",
-                    "ctrl", "FormCtrl",
-                    "left", false,
+                    "text", "Sign Up",
+                    "route", "/signup",
                     "roles", "anonymous",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_signUp);
 
+            Vertex m_user = graph.addVertex("class:MenuItem",
+                    "menuItemId", "user",
+                    "text", "User",
+                    "route", "/user",
+                    "roles", "anonymous,user",
+                    "createDate", new java.util.Date());
+            m_user.addEdge("Own", m_logOut);
+            m_user.addEdge("Own", m_logIn);
+            m_user.addEdge("Own", m_signUp);
+            userOwner.addEdge("Create", m_user);
+
+
             Vertex m_edibleforestgarden = graph.addVertex("class:Menu",
                     "host", "www.edibleforestgarden.ca",
                     "createDate", new java.util.Date());
-            m_edibleforestgarden.addEdge("Own", m_admin);
-            m_edibleforestgarden.addEdge("Own", m_logOut);
-            m_edibleforestgarden.addEdge("Own", m_logIn);
-            m_edibleforestgarden.addEdge("Own", m_signUp);
+            m_edibleforestgarden.addEdge("Own", m_user);
+            m_edibleforestgarden.addEdge("Own", m_main);
             userOwner.addEdge("Create", m_edibleforestgarden);
 
             Vertex m_networknt = graph.addVertex("class:Menu",
                     "host", "www.networknt.com",
                     "createDate", new java.util.Date());
-            m_networknt.addEdge("Own", m_admin);
-            m_networknt.addEdge("Own", m_logOut);
-            m_networknt.addEdge("Own", m_logIn);
-            m_networknt.addEdge("Own", m_signUp);
+            m_networknt.addEdge("Own", m_user);
+            m_networknt.addEdge("Own", m_main);
             userOwner.addEdge("Create", m_networknt);
 
             Vertex m_example = graph.addVertex("class:Menu",
                     "host", "example",
                     "createDate", new java.util.Date());
-            m_example.addEdge("Own", m_admin);
-            m_example.addEdge("Own", m_logOut);
-            m_example.addEdge("Own", m_logIn);
-            m_example.addEdge("Own", m_signUp);
+            m_example.addEdge("Own", m_user);
+            m_example.addEdge("Own", m_main);
             userOwner.addEdge("Create", m_example);
 
             Vertex m_demo = graph.addVertex("class:Menu",
                     "host", "demo.networknt.com",
                     "createDate", new java.util.Date());
-            m_demo.addEdge("Own", m_admin);
-            m_demo.addEdge("Own", m_logOut);
-            m_demo.addEdge("Own", m_logIn);
-            m_demo.addEdge("Own", m_signUp);
+            m_demo.addEdge("Own", m_user);
+            m_demo.addEdge("Own", m_main);
             userOwner.addEdge("Create", m_demo);
 
             // create rules to bootstrap the installation through event replay.

@@ -83,17 +83,12 @@ module.exports = {
         });
     },
 
-    loadMenu: function() {
-        var getMenu = {
+    getMenu: function() {
+        let getMenu = {
             category : 'menu',
             name : 'getMenu',
-            readOnly: true,
-            data : {
-                host : Host
-            }
-
-        }
-        //console.log('WebAPIUtils loadMenus is called', getMenu);
+            readOnly: true
+        };
         $.ajax({
             type: 'POST',
             url: '/api/rs',
@@ -101,11 +96,28 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            //console.log('getMenu done', data);
-            ServerActionCreators.receiveMenu(data, null);
+            ServerActionCreators.getMenuResponse(data);
         }).fail(function(error) {
-            //console.log('getMenu error', error);
-            ServerActionCreators.receiveMenu(null, error);
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getAllAccess: function() {
+        let getAllAccess = {
+            category : 'access',
+            name : 'getAllAccess',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(getAllAccess),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.getAllAccessResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 

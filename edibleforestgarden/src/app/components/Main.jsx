@@ -136,7 +136,7 @@ const Main = React.createClass({
     },
 
     _onMenuChange: function() {
-        console.log('Main._onMenuChange', MenuStore.getMenu());
+        console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
 
 
     },

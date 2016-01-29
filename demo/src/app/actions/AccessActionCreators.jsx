@@ -5,7 +5,7 @@ var AppConstants = require('../constants/AppConstants.js');
 var WebAPIUtils = require('../utils/WebAPIUtils.js');
 
 module.exports = {
-    getMenu: function() {
-        WebAPIUtils.getMenu();
+    getAllAccess: function() {
+        WebAPIUtils.getAllAccess();
     }
 };

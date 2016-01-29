@@ -11,16 +11,15 @@
     "schema": {
         "type": "object",
         "title": "Menu",
-        "required": ["host"],
+        "required": ["host", "out_Own"],
         "properties": {
             "host": {
-                "title": "Host that the menu is added to",
+                "title": "Host",
                 "type": "string"
             },
             "out_Own": {
                 "type": "array",
-                "title": "Menu Items",
-                "format": "strapselectdynamic"
+                "title": "Menu Items"
             }
         }
     },

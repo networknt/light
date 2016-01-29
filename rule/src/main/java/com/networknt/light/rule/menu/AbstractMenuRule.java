@@ -199,7 +199,7 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
         if(json == null) {
             Vertex menu = graph.getVertexByKey("Menu.host", host);
             if(menu != null) {
-                json = ((OrientVertex)menu).getRecord().toJSON("rid,fetchPlan:out_Own.in_Create:-2 out_Own:2");
+                json = ((OrientVertex)menu).getRecord().toJSON("rid,fetchPlan:[*]in_Create:-2 [*]out_Create:-2 [*]in_Update:-2 [*]out_Update:-2 [*]in_Own:-2 [*]out_Own:4");
             }
             if(json != null) {
                 if(cache == null) {

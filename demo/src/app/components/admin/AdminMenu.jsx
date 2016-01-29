@@ -1,15 +1,9 @@
 import React from 'react';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-
-let menuItems = [
-    { route: '/admin/blogAdmin', text: 'Blog Admin' },
-    { route: '/admin/newsAdmin', text: 'News Admin' },
-    { route: '/admin/forumAdmin', text: 'Forum Admin' },
-    { route: '/admin/catalogAdmin', text: 'Catalog Admin' },
-    { route: '/admin/dbAdmin', text: 'Db Admin' },
-    { route: '/admin/userAdmin', text: 'User Admin' }
-];
+import MenuStore from '../../stores/MenuStore';
+import AuthStore from '../../stores/AuthStore';
+import CommonUtils from '../../utils/CommonUtils';
 
 class AdminMenu extends React.Component {
 
@@ -25,17 +19,32 @@ class AdminMenu extends React.Component {
     }
 
     render() {
+        let adminMenu = '';
+        let out_Own = MenuStore.getMenu().out_Own;
+        console.log('out_Own', out_Own);
+        if (out_Own && CommonUtils.findMenuItem(out_Own, 'main')) {
+            let mainMenuItems =  CommonUtils.findMenuItem(out_Own, 'main').out_Own;
+            console.log('mainMenuItems', mainMenuItems);
+            if(mainMenuItems && CommonUtils.findMenuItem(mainMenuItems, 'admin')) {
+                let adminMenuItems = CommonUtils.findMenuItem(mainMenuItems, 'admin').out_Own;
+                console.log('adminMenuItems', adminMenuItems);
+                adminMenu = adminMenuItems.map((item, index) => {
+                    if(CommonUtils.hasMenuAccess(item, AuthStore.getRoles())) {
+                        return (
+                            <MenuItem
+                                key={index}
+                                primaryText={item.text}
+                                value={item.route}
+                                />
+                        );
+                    }
+                });
+            }
+        }
+
         return (
             <Menu onItemTouchTap={this._onItemTouchTap}>
-                {menuItems.map((item, index) => {
-                    return (
-                        <MenuItem
-                            key={index}
-                            primaryText={item.text}
-                            value={item.route}
-                            />
-                    );
-                })}
+                {adminMenu}
             </Menu>
         );
     }

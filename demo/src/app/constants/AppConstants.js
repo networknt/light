@@ -17,9 +17,12 @@ var keyMirror = require('fbjs/lib/keyMirror');
 
 module.exports = {
     APIRoot:  '/api/rs',
-    ClientId: 'example@Browser',
+    ClientId: 'edibleforestgarden.ca@Browser',
 
     ActionTypes: keyMirror({
+        // Server
+        SERVER_ERROR_RESPONSE: null,
+
         // Auth
         LOGIN_REQUEST: null,
         LOGIN_RESPONSE: null,
@@ -29,8 +32,12 @@ module.exports = {
         SIGNUP_REQUEST: null,
 
         // Menu
-        LOAD_MENU: null,
-        RECEIVE_MENU: null,
+        GET_MENU: null,
+        GET_MENU_RESPONSE: null,
+
+        // Access
+        GET_ALL_ACCESS_RESPONSE: null,
+
         // Routes
         REDIRECT: null,
 
