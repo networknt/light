@@ -16,12 +16,10 @@ module.exports = {
         });
     },
 
-    receiveMenu: function(json, error) {
-        //console.log('ServerActionCreators receiveMenu', json);
+    getMenuResponse: function(json) {
         AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_MENU,
-            json: json,
-            error: error
+            type: ActionTypes.GET_MENU_RESPONSE,
+            json: json
         });
     },
 

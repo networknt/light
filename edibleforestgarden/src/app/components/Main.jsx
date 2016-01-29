@@ -19,16 +19,18 @@ import NewsCategoryStore from '../stores/NewsCategoryStore';
 import BlogCategoryStore from '../stores/BlogCategoryStore';
 import CatalogCategoryStore from '../stores/CatalogCategoryStore';
 import ErrorStore from '../stores/ErrorStore';
+import MenuStore from '../stores/MenuStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
 import ProductActionCreators from '../actions/ProductActionCreators';
 import BlogActionCreators from '../actions/BlogActionCreators';
 import NewsActionCreators from '../actions/NewsActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
+import MenuActionCreators from '../actions/MenuActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import CommonUtils from '../utils/CommonUtils';
 
-// Define menu items for LeftNav
+// Define menu items for Navagiation
 let menuItems = [
     { route: '/', text: 'Home' },
     { route: '/blog', text: 'Blog' },
@@ -84,7 +86,9 @@ const Main = React.createClass({
         NewsCategoryStore.addChangeListener(this._newsCategoryChange);
         CatalogCategoryStore.addChangeListener(this._catalogCategoryChange);
         ErrorStore.addChangeListener(this._onErrorChange);
+        MenuStore.addChangeListener(this._onMenuChange);
         AuthActionCreators.init();
+        MenuActionCreators.getMenu();
         this.setState({
             muiTheme: newMuiTheme
         });
@@ -96,7 +100,8 @@ const Main = React.createClass({
         BlogCategoryStore.removeChangeListener(this._blogCategoryChange);
         NewsCategoryStore.removeChangeListener(this._newsCategoryChange);
         CatalogCategoryStore.removeChangeListener(this._catalogCategoryChange);
-        ErrorStore.removeChangeListener(this._onErrorChange)
+        ErrorStore.removeChangeListener(this._onErrorChange);
+        MenuStore.removeChangeListener(this._onMenuChange);
     },
 
     getChildContext() {
@@ -128,6 +133,12 @@ const Main = React.createClass({
             snackbarOpen: true,
             snackbarMessage: ErrorStore.getError().errorText
         });
+    },
+
+    _onMenuChange: function() {
+        console.log('Main._onMenuChange', MenuStore.getMenu());
+
+
     },
 
     _blogCategoryChange: function() {

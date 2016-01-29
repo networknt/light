@@ -163,12 +163,9 @@ public class InitDatabase {
 
             OrientVertexType menuItem = graph.createVertexType("MenuItem");
             menuItem.createProperty("menuItemId", OType.STRING);    // unique id
-            menuItem.createProperty("label", OType.STRING);
+            menuItem.createProperty("text", OType.STRING);  // label of the menu button
             menuItem.createProperty("host", OType.STRING);  // host  some common menuItems have no host.
-            menuItem.createProperty("path", OType.STRING);
-            menuItem.createProperty("tpl", OType.STRING);
-            menuItem.createProperty("ctrl", OType.STRING);
-            menuItem.createProperty("left", OType.BOOLEAN); // on the left side of nav bar if true
+            menuItem.createProperty("route", OType.STRING); // react-route defined in the system.
             menuItem.createProperty("roles", OType.EMBEDDEDLIST);
             menuItem.createProperty("createDate", OType.DATETIME);
             menuItem.createProperty("updateDate", OType.DATETIME);
@@ -545,64 +542,64 @@ public class InitDatabase {
 
             Vertex m_accessAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "accessAdmin",
-                    "label", "Access Admin",
-                    "path", "/page/com-networknt-light-v-access-admin-home",
+                    "text", "Access Admin",
+                    "route", "/admin/accessAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_accessAdmin);
 
             Vertex m_hostAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "hostAdmin",
-                    "label", "Host Admin",
-                    "path", "/page/com-networknt-light-v-host-admin-home",
+                    "text", "Host Admin",
+                    "route", "/admin/hostAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_hostAdmin);
 
             Vertex m_pageAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "pageAdmin",
-                    "label", "Page Admin",
-                    "path", "/page/com-networknt-light-v-page-admin-home",
+                    "text", "Page Admin",
+                    "route", "/admin/pageAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_pageAdmin);
 
             Vertex m_formAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "formAdmin",
-                    "label", "Form Admin",
-                    "path", "/page/com-networknt-light-v-form-admin-home",
+                    "text", "Form Admin",
+                    "route", "/admin/formAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_formAdmin);
 
             Vertex m_ruleAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "ruleAdmin",
-                    "label", "Rule Admin",
-                    "path", "/page/com-networknt-light-v-rule-admin-home",
+                    "text", "Rule Admin",
+                    "route", "/admin/ruleAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_ruleAdmin);
 
             Vertex m_menuAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "menuAdmin",
-                    "label", "Menu Admin",
-                    "path", "/page/com-networknt-light-v-menu-admin-home",
+                    "text", "Menu Admin",
+                    "route", "/admin/menuAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_menuAdmin);
 
             Vertex m_dbAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "dbAdmin",
-                    "label", "DB Admin",
-                    "path", "/page/com-networknt-light-v-db-admin-home",
+                    "text", "DB Admin",
+                    "route", "/admin/dbAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_dbAdmin);
 
             Vertex m_userAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "userAdmin",
-                    "label", "User Admin",
-                    "path", "/page/com-networknt-light-v-user-admin-home",
+                    "text", "User Admin",
+                    "route", "/admin/userAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_userAdmin);
 
             Vertex m_roleAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "roleAdmin",
-                    "label", "Role Admin",
-                    "path", "/page/com-networknt-light-v-role-admin-home",
+                    "text", "Role Admin",
+                    "route", "/admin/roleAdmin",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_roleAdmin);
 

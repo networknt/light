@@ -10,7 +10,6 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _menu = [];
-var _errors = [];
 
 var MenuStore = assign({}, EventEmitter.prototype, {
 
@@ -28,21 +27,15 @@ var MenuStore = assign({}, EventEmitter.prototype, {
 
     getMenu: function() {
         return _menu;
-    },
-
-    getErrors: function() {
-        return _errors;
     }
-
 });
 
 MenuStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.RECEIVE_MENU:
-            //console.log('MenuStore RECEIVE_MENU', payload.json);
+        case ActionTypes.GET_MENU_RESPONSE:
             _menu = payload.json;
-            //console.log('menuStore _menu = ', _menu);
+            console.log('menuStore _menu = ', _menu);
             MenuStore.emitChange();
             break;
     }
