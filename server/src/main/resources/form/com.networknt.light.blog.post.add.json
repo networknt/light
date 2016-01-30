@@ -33,8 +33,12 @@
         "title": "Original Author",
         "type": "string"
       },
-      "originalLocation": {
-        "title": "Original Location",
+      "originalSite": {
+        "title": "Original Site",
+        "type": "string"
+      },
+      "originalUrl": {
+        "title": "Original Url",
         "type": "string"
       },
       "summary": {
@@ -56,7 +60,8 @@
     "parentRid",
     "title",
     "originalAuthor",
-    "originalLocation",
+    "originalSite",
+    "originalUrl",
     {
       "key": "summary",
       "type": "textarea"

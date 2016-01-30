@@ -56,6 +56,13 @@ var BlogPost = React.createClass({
     },
 
     render: function() {
+        let tags = '';
+        if(this.state.post.tags) {
+            tags = this.state.post.tags.map((tag, index) => {
+                return <span key={index}>{tag}</span>
+            });
+        }
+
         let updateButton = this.state.allowPost? <RaisedButton label="Update Post" primary={true} onTouchTap={this._onUpdatePost} /> : '';
         let deleteButton = this.state.allowPost? <RaisedButton label="Delete Post" primary={true} onTouchTap={this._onDeletePost} /> : '';
         return (
@@ -66,6 +73,7 @@ var BlogPost = React.createClass({
                     <div className="blogPost">
                         <h2 className="title">{this.state.post.title}</h2>
                         <span>Submitted by {this.state.post.createUserId} on {this.state.post.createDate}</span>
+                        <div>{tags}</div>
                         <Markdown text={this.state.post.content} />
                     </div>
                 </Paper>
