@@ -102,6 +102,49 @@ module.exports = {
         });
     },
 
+    getRole: function() {
+        let getRole = {
+            category : 'role',
+            name : 'getRole',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(getRole),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.getRoleResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delRole: function(rid) {
+        let delRole = {
+            category: 'role',
+            name: 'delRole',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delRole),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            console.log('data', data);
+            ServerActionCreators.delRoleResponse(data);
+        }).fail(function(error) {
+            console.log('error', error);
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getAllAccess: function() {
         let getAllAccess = {
             category : 'access',

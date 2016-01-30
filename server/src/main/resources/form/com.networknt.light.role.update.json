@@ -11,16 +11,22 @@
     "schema": {
         "type": "object",
         "title": "Role",
-        "required": ["desc"],
+        "required": ["roleId", "description"],
         "properties": {
-            "desc": {
+            "roleId": {
+                "title": "Role Id",
+                "type": "string",
+                "readOnly": true
+            },
+            "description": {
                 "title": "Description",
                 "type": "string"
             }
         }
     },
     "form": [
-        "desc"
+        "roleId",
+        "description"
     ]
 }
 

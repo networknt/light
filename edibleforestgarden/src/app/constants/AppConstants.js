@@ -35,6 +35,9 @@ module.exports = {
         GET_MENU: null,
         GET_MENU_RESPONSE: null,
 
+        // Role
+        GET_ROLE_RESPONSE: null,
+
         // Access
         GET_ALL_ACCESS_RESPONSE: null,
 

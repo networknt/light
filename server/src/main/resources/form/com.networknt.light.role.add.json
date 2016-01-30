@@ -11,13 +11,13 @@
     "schema": {
         "type": "object",
         "title": "Role",
-        "required": ["roleId", "desc"],
+        "required": ["roleId", "description"],
         "properties": {
             "roleId": {
                 "title": "Role Id",
                 "type": "string"
             },
-            "desc": {
+            "description": {
                 "title": "Description",
                 "type": "string"
             }
@@ -25,7 +25,7 @@
     },
     "form": [
         "roleId",
-        "desc"
+        "description"
     ]
 }
 

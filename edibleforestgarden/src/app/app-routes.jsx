@@ -47,7 +47,7 @@ import ExecQueryCommand from './components/admin/db/ExecQueryCommand';
 import ExportDatabase from './components/admin/db/ExportDatabase';
 import DownloadEvent from './components/admin/db/DownloadEvent';
 import AccessAdminHome from './components/admin/access/AccessAdminHome';
-
+import RoleAdminHome from './components/admin/role/RoleAdminHome';
 
 /**
  * Routes: https://github.com/rackt/react-router/blob/master/docs/api/components/Route.md
@@ -105,6 +105,7 @@ const AppRoutes = (
     <Route path='/admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
     <Route path='/admin/dbAdmin/downloadEvent' component={DownloadEvent} />
     <Route path='/admin/accessAdmin' component={AccessAdminHome} />
+    <Route path='/admin/roleAdmin' component={RoleAdminHome} />
 
     <IndexRoute component={Home}/>
 
