@@ -15,6 +15,7 @@ import Login from './components/Login';
 import Logout from './components/logout';
 import Form from './components/Form';
 import Page from './components/Page';
+import Profile from './components/Profile';
 
 import BlogCategory from './components/blog/BlogCategory';
 import Blog from './components/blog/Blog';
@@ -45,7 +46,7 @@ import DbAdminHome from './components/admin/db/DbAdminHome';
 import ExecQueryCommand from './components/admin/db/ExecQueryCommand';
 import ExportDatabase from './components/admin/db/ExportDatabase';
 import DownloadEvent from './components/admin/db/DownloadEvent';
-import User from './components/user';
+import AccessAdminHome from './components/admin/access/AccessAdminHome';
 
 
 /**
@@ -65,6 +66,8 @@ const AppRoutes = (
     <Route path='/signup' component={Signup} />
     <Route path='/login' component={Login} />
     <Route path='/logout' component={Logout} />
+    <Route path='/profile' component={Profile} />
+
     <Route path='/form/:formId' component={Form} />
     <Route path='/page/:pageId' component={Page} />
 
@@ -101,7 +104,7 @@ const AppRoutes = (
     <Route path='/admin/dbAdmin/exportDatabase' component={ExportDatabase} />
     <Route path='/admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
     <Route path='/admin/dbAdmin/downloadEvent' component={DownloadEvent} />
-    <Route path='/user' component={User} />
+    <Route path='/admin/accessAdmin' component={AccessAdminHome} />
 
     <IndexRoute component={Home}/>
 

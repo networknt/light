@@ -23,6 +23,13 @@ module.exports = {
         });
     },
 
+    getAllAccessResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_ACCESS_RESPONSE,
+            json: json
+        });
+    },
+
     getBlogTreeResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_BLOG_TREE_RESPONSE,

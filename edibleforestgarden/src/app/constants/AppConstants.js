@@ -34,6 +34,10 @@ module.exports = {
         // Menu
         GET_MENU: null,
         GET_MENU_RESPONSE: null,
+
+        // Access
+        GET_ALL_ACCESS_RESPONSE: null,
+
         // Routes
         REDIRECT: null,
 

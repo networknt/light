@@ -30,19 +30,6 @@ import MenuActionCreators from '../actions/MenuActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import CommonUtils from '../utils/CommonUtils';
 
-// Define menu items for Navagiation
-let menuItems = [
-    { route: '/', text: 'Home' },
-    { route: '/blog', text: 'Blog' },
-    { route: '/news', text: 'News' },
-    { route: '/forum', text: 'Forum' },
-    { route: '/catalog', text: 'Catalog' },
-    { route: '/admin', text: 'Admin' },
-    { route: '/user', text: 'User' },
-    { route: '/about', text: 'About' },
-    { route: '/contact', text: 'Contact' }
-];
-
 const defaultPageNo = 1;
 const defaultPageSize = 10;
 
@@ -62,10 +49,9 @@ const Main = React.createClass({
         let muiTheme = ThemeManager.getMuiTheme(LightRawTheme);
         return {
             leftNavOpen: false,
-
             snackbarOpen: false,
             snackbarMessage: "",
-
+            menuItems: [],
             shoppingCartOpen: false,
             muiTheme: muiTheme,
             isLoggedIn: AuthStore.isLoggedIn,
@@ -137,8 +123,10 @@ const Main = React.createClass({
 
     _onMenuChange: function() {
         console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
-
-
+        // only care about the first level menuItems here.
+        this.setState({
+            menuItems : MenuStore.getMenu().out_Own
+        });
     },
 
     _blogCategoryChange: function() {
@@ -297,9 +285,6 @@ const Main = React.createClass({
     },
 
     render() {
-
-
-
         var menuButton = (
             <IconButton iconClassName="material-icons">more_vert</IconButton>
         );
@@ -316,9 +301,30 @@ const Main = React.createClass({
             loginMenuItems.push(<MenuItem key='signup' value='signup' primaryText='Sign up' />);
         }
 
+        let cartButton = '';
+        if (CommonUtils.findMenuItem(this.state.menuItems, 'cart')) {
+            cartButton = <CheckoutButton history={this.props.history} />
+        }
+        let mainMenu = '';
+        if (CommonUtils.findMenuItem(this.state.menuItems, 'main')) {
+            let mainMenuItems = CommonUtils.findMenuItem(this.state.menuItems, 'main').out_Own;
+            console.log('mainMenuItems', mainMenuItems);
+            mainMenu = mainMenuItems.map((item, index) => {
+                if(CommonUtils.hasMenuAccess(item, AuthStore.getRoles())) {
+                    return (
+                        <MenuItem
+                            key={index}
+                            primaryText={item.text}
+                            value={item.route}
+                            />
+                    );
+                }
+            });
+        }
+
         var rightMenu = (
             <div>
-                <CheckoutButton history={this.props.history} />
+                {cartButton}
                 <IconMenu iconButtonElement={userButton}
                           openDirection="bottom-left"
                           onItemTouchTap={this.handleItemTouchTap}>
@@ -327,15 +333,7 @@ const Main = React.createClass({
                 <IconMenu iconButtonElement={menuButton}
                           openDirection="bottom-left"
                           onItemTouchTap={this.handleItemTouchTap}>
-                    {menuItems.map((item, index) => {
-                        return (
-                            <MenuItem
-                                key={index}
-                                primaryText={item.text}
-                                value={item.route}
-                                />
-                        );
-                    })}
+                    {mainMenu}
                 </IconMenu>
             </div>
         );

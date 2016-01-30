@@ -87,10 +87,7 @@ module.exports = {
         let getMenu = {
             category : 'menu',
             name : 'getMenu',
-            readOnly: true,
-            data : {
-                host : Host
-            }
+            readOnly: true
         };
         $.ajax({
             type: 'POST',
@@ -100,6 +97,25 @@ module.exports = {
             dataType: 'json'
         }).done(function(data) {
             ServerActionCreators.getMenuResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getAllAccess: function() {
+        let getAllAccess = {
+            category : 'access',
+            name : 'getAllAccess',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(getAllAccess),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.getAllAccessResponse(data);
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });

@@ -9,9 +9,9 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _menu = [];
+var _accesses = [];
 
-var MenuStore = assign({}, EventEmitter.prototype, {
+var AccessAdminStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -25,21 +25,21 @@ var MenuStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getMenu: function() {
-        return _menu;
+    getAllAccess: function() {
+        return _accesses;
     }
 });
 
-MenuStore.dispatchToken = AppDispatcher.register(function(payload) {
+AccessAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.GET_MENU_RESPONSE:
-            _menu = payload.json;
-            MenuStore.emitChange();
+        case ActionTypes.GET_ALL_ACCESS_RESPONSE:
+            _accesses = payload.json;
+            AccessAdminStore.emitChange();
             break;
     }
 
     return true;
 });
 
-module.exports = MenuStore;
+module.exports = AccessAdminStore;
