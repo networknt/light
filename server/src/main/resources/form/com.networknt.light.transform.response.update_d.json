@@ -22,12 +22,12 @@
       "ruleClass": {
         "title": "Rule Class",
         "type": "string",
-        "readonly": true
+        "readOnly": true
       },
       "sequence": {
         "title": "Sequence",
         "type": "number",
-        "readonly": true
+        "readOnly": true
       },
       "transformRule": {
         "title": "Transform Rule",

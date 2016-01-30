@@ -27,7 +27,7 @@
       "postId": {
         "title": "Post Id",
         "type": "string",
-        "readonly": true
+        "readOnly": true
       },
       "title": {
         "title": "Title",

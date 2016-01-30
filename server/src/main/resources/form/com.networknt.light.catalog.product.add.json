@@ -22,7 +22,7 @@
       "parentRid": {
         "title": "Parent Rid",
         "type": "string",
-        "readonly": true
+        "readOnly": true
       },
       "name": {
         "title": "Name",

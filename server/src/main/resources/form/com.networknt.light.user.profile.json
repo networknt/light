@@ -18,13 +18,13 @@
                 "title": "User Id",
                 "type": "string",
                 "description": "User Id can be used to log in.",
-                "readonly": true
+                "readOnly": true
             },
             "email": {
                 "title": "Email",
                 "type": "string",
                 "description": "Email can be used to log in.",
-                "readonly": true
+                "readOnly": true
             },
             "firstName": {
                 "title": "First Name",

@@ -21,12 +21,12 @@
       "id": {
         "title": "ID",
         "type": "string",
-        "readonly": "true"
+        "readOnly": true
       },
       "@rid": {
         "title": "RID",
         "type": "string",
-        "readonly": "true"
+        "readOnly": true
       },
       "title": {
         "title": "Title [Mandatory, 12 to 90 characters]",
@@ -55,11 +55,11 @@
               "items": [
                 {
                   "title": "ID",
-                  "readonly": true,
+                  "readOnly": true,
                   "schema": {
                     "title": "ID",
                     "type": "string",
-                    "readonly": "true"
+                    "readOnly": true
                   },
                   "ngModelOptions": {
                     "updateOnDefault": true
@@ -71,7 +71,7 @@
                 },
                 {
                   "title": "RID",
-                  "readonly": true,
+                  "readOnly": true,
                   "schema": {
                     "title": "id",
                     "type": "string"

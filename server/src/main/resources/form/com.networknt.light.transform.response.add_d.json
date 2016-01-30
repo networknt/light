@@ -22,7 +22,7 @@
       "ruleClass": {
         "title": "Rule Class",
         "type": "string",
-        "readonly": true
+        "readOnly": true
       },
       "sequence": {
         "title": "Sequence",

@@ -16,7 +16,7 @@
       "ruleClass": {
         "title": "Rule Class",
         "type": "string",
-        "readonly": true
+        "readOnly": true
       },
       "enableCors": {
         "title": "Enable CORS?",
