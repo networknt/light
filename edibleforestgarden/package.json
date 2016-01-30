@@ -38,7 +38,7 @@
     "react-dom": "^0.14.6",
     "react-router": "^1.0.3",
     "react-schema-form": "^0.2.2",
-    "react-schema-form-rc-select": "^0.1.2",
+    "react-schema-form-rc-select": "^0.1.4",
     "react-tap-event-plugin": "^0.2.1"
   },
   "devDependencies": {

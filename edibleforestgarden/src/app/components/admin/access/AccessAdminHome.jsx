@@ -11,6 +11,7 @@ import Dialog from 'material-ui/lib/dialog';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import AccessAdminStore from '../../../stores/AccessAdminStore';
 import AccessActionCreators from '../../../actions/AccessActionCreators';
+import FormActionCreators from '../../../actions/FormActionCreators';
 
 var AccessAdminHome = React.createClass({
     displayName: 'AccessAdminHome',
@@ -63,7 +64,7 @@ var AccessAdminHome = React.createClass({
                         </TableRow>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Rule Class'>Rule Class</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Rule Class' colSpan="5">Rule Class</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Access Level'>Access Level</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Clients'>Clients</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Roles'>Roles</TableHeaderColumn>
@@ -85,7 +86,7 @@ var AccessAdminHome = React.createClass({
                             return (
                                 <TableRow key={index}>
                                     <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn><a onClick={boundUpdate}>{access.ruleClass}</a></TableRowColumn>
+                                    <TableRowColumn colSpan="5"><a onClick={boundUpdate}>{access.ruleClass}</a></TableRowColumn>
                                     <TableRowColumn>{access.accessLevel}</TableRowColumn>
                                     <TableRowColumn>{access.clients}</TableRowColumn>
                                     <TableRowColumn>{access.roles}</TableRowColumn>
@@ -103,7 +104,7 @@ var AccessAdminHome = React.createClass({
                     <TableFooter>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Rule Class'>Rule Class</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Rule Class' colSpan="5">Rule Class</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Access Level'>Access Level</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Clients'>Clients</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Roles'>Roles</TableHeaderColumn>

@@ -20,51 +20,19 @@
       "ruleClass": {
         "title": "Rule Class",
         "type": "string",
-        "readonly": true
+        "readOnly": true
       },
       "accessLevel": {
         "title": "Access Level",
-        "type": "string",
-        "format": "uiselect",
-        "items": [
-          {"value": "A", "label": "Authorized to anyone"},
-          {"value": "N", "label": "Not Accessible"},
-          {"value": "C", "label": "Client Based"},
-          {"value": "R", "label": "Role Based"},
-          {"value": "U", "label": "User Based"},
-          {"value": "CR", "label": "Client and Role Based"},
-          {"value": "CU", "label": "Client and User Based"},
-          {"value": "RU", "label": "Role and User Based"},
-          {"value": "CRU", "label": "Client, Role and User Based"}
-        ]
+        "type": "string"
       },
       "clients": {
         "title": "Clients",
-        "type": "array",
-        "format": "strapselect",
-        "items": [
-          {
-            "label": "dynamic",
-            "value": {
-              "category": "client",
-              "name": "getClientDropdown"
-            }
-          }
-        ]
+        "type": "array"
       },
       "roles": {
         "title": "Roles",
-        "type": "array",
-        "format": "strapselect",
-        "items": [
-          {
-            "label": "dynamic",
-            "value": {
-              "category": "role",
-              "name": "getRoleDropdown"
-            }
-          }
-        ]
+        "type": "array"
       },
       "users": {
         "title": "Users [Separate by comma if multiple]",
@@ -74,9 +42,50 @@
   },
   "form": [
     "ruleClass",
-    "accessLevel",
-    "clients",
-    "roles",
+    {
+      "key": "accessLevel",
+      "type": "rc-select",
+      "multiple": false,
+      "items": [
+        {"value": "A", "label": "Authorized to anyone"},
+        {"value": "N", "label": "Not Accessible"},
+        {"value": "C", "label": "Client Based"},
+        {"value": "R", "label": "Role Based"},
+        {"value": "U", "label": "User Based"},
+        {"value": "CR", "label": "Client and Role Based"},
+        {"value": "CU", "label": "Client and User Based"},
+        {"value": "RU", "label": "Role and User Based"},
+        {"value": "CRU", "label": "Client, Role and User Based"}
+      ]
+    },
+    {
+      "key": "clients",
+      "type": "rc-select",
+      "multiple": true,
+      "items": [
+        {
+          "label": "dynamic",
+          "value": {
+            "category": "client",
+            "name": "getClientDropdown"
+          }
+        }
+      ]
+    },
+    {
+      "key": "roles",
+      "type": "rc-select",
+      "multiple": true,
+      "items": [
+        {
+          "label": "dynamic",
+          "value": {
+            "category": "role",
+            "name": "getRoleDropdown"
+          }
+        }
+      ]
+    },
     {
       "key": "users",
       "type": "textarea"

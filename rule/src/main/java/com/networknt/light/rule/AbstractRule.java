@@ -57,7 +57,6 @@ public abstract class AbstractRule implements Rule {
         // get class name
         System.out.println(this.getClass().getPackage());
         System.out.println(this.getClass().getName());
-        System.out.println("category = " + eventMap.get("category"));
         // check if publisher is enabled.
         Map map = getRuleByRuleClass(this.getClass().getName());
         Object isPublisher = map.get("isPublisher");
