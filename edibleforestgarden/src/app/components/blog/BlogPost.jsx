@@ -59,10 +59,13 @@ var BlogPost = React.createClass({
         let tags = '';
         if(this.state.post.tags) {
             tags = this.state.post.tags.map((tag, index) => {
-                return <span key={index}>{tag}</span>
+                return <span key={index}>{tag}&nbsp;&nbsp;&nbsp;</span>
             });
         }
-
+        let original = '';
+        if(this.state.post.originalAuthor && this.state.post.originalSite && this.state.post.originalUrl) {
+            original = <div><a href={this.state.post.originalUrl} target="_blank">Submitted by {this.state.post.originalAuthor} via {this.state.post.originalSite}</a></div>
+        }
         let updateButton = this.state.allowPost? <RaisedButton label="Update Post" primary={true} onTouchTap={this._onUpdatePost} /> : '';
         let deleteButton = this.state.allowPost? <RaisedButton label="Delete Post" primary={true} onTouchTap={this._onDeletePost} /> : '';
         return (
@@ -74,6 +77,7 @@ var BlogPost = React.createClass({
                         <h2 className="title">{this.state.post.title}</h2>
                         <span>Submitted by {this.state.post.createUserId} on {this.state.post.createDate}</span>
                         <div>{tags}</div>
+                        {original}
                         <Markdown text={this.state.post.content} />
                     </div>
                 </Paper>
