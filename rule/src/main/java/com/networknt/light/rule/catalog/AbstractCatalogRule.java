@@ -572,7 +572,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
             if(entities.size() > 0) {
                 entityList = new ArrayList<String>();
                 for(ODocument entity: entities) {
-                    entityList.add(entity.field("rid").toString());
+                    entityList.add(((ODocument)entity.field("rid")).field("@rid").toString());
                 }
             }
         } catch (Exception e) {
