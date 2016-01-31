@@ -74,6 +74,10 @@
       "location": "event/edibleforestgarden/news.json"
     },
     {
+      "description": "This file contains edibleforestgarden site news post data for cms",
+      "location": "event/edibleforestgarden/news_post.json"
+    },
+    {
       "description": "This file contains edibleforestgarden site catalog data for commerce",
       "location": "event/edibleforestgarden/catalog.json"
     }
