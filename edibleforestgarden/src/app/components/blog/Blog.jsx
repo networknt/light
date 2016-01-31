@@ -31,7 +31,7 @@ var Blog = React.createClass({
         return {
             posts: [],
             ancestors: [],
-            allowPost: false,
+            allowUpdate: false,
             total: 0,
             pageSize: 10,
             pageNo: 1,
@@ -63,7 +63,7 @@ var Blog = React.createClass({
     _onBlogChange: function() {
         this.setState({
             ancestors: BlogStore.getAncestors(),
-            allowPost: BlogStore.getAllowPost(),
+            allowUpdate: BlogStore.getAllowUpdate(),
             posts: BlogStore.getPosts(),
             total: BlogStore.getTotal()
         });
@@ -110,7 +110,7 @@ var Blog = React.createClass({
 
     render: function() {
         console.log('Blog.render', this.state.total, this.state.pageNo, this.state.pageSize);
-        let addButton = this.state.allowPost? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
+        let addButton = this.state.allowUpdate? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
         return (
             <div>
                 <div className="blogHeader">

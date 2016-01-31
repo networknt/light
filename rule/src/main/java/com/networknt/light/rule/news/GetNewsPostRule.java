@@ -29,6 +29,6 @@ import com.networknt.light.rule.Rule;
  */
 public class GetNewsPostRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return getBfnPost(objects);
+        return getCategoryEntity("news", objects);
     }
 }

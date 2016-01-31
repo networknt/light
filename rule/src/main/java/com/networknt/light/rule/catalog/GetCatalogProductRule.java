@@ -25,6 +25,6 @@ import com.networknt.light.rule.Rule;
  */
 public class GetCatalogProductRule extends AbstractCatalogRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return getCatalogProduct(objects);
+        return getCategoryEntity("catalog", objects);
     }
 }

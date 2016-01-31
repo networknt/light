@@ -445,6 +445,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         }
     }
 
+    /*
     public boolean getCatalogProduct(Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
@@ -538,12 +539,11 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
             return true;
         }
     }
-
-    @Override
     protected String getCategoryEntitytDb(String rid, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, productId, name, description, variants, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, out_HasTag.tagId " +
+        String sql = "select @rid, productId, name, description, variants, createDate, parentId, in_Create[0].@rid as createRid, " +
+                "in_Create[0].userId as createUserId, out_HasTag.tagId " +
                 "from (traverse out_Own, out_HasProduct from ?) where @class = 'Product' order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
@@ -559,7 +559,58 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         }
         return json;
     }
+    */
 
+    @Override
+    protected List<String> getCategoryEntityListDb(String categoryRid, String sortedBy, String sortDir) {
+        List<String> entityList = null;
+        String sql = "select @rid from (traverse out_Own, out_HasProduct from ?) where @class = 'Product' order by " + sortedBy + " " + sortDir;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> entities = graph.getRawGraph().command(query).execute(categoryRid);
+            if(entities.size() > 0) {
+                entityList = new ArrayList<String>();
+                for(ODocument entity: entities) {
+                    entityList.add(entity.field("rid").toString());
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return entityList;
+    }
+
+    @Override
+    protected Map<String, Object> getCategoryEntityDb(String entityRid) {
+        Map<String, Object> jsonMap = null;
+        String sql = "SELECT @rid as rid, productId, name, description, variants, createDate," +
+                "in_HasPost[0].@rid as parentRid, in_HasPost[0].categoryId as parentId, " +
+                "in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, " +
+                "out_HasTag.tagId as tags FROM ? ";
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> entities = graph.getRawGraph().command(query).execute(entityRid);
+            if(entities.size() > 0) {
+                ODocument entity = entities.get(0);
+                entity.removeField("@type");
+                entity.removeField("@rid");
+                entity.removeField("@version");
+                entity.removeField("@fieldTypes");
+                jsonMap = entity.toMap();
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return jsonMap;
+    }
+
+    /*
     protected List getAncestorDb(String rid) {
         List<Map<String, Object>> ancestors = null;
         String sql = "select @rid, categoryId, description from (traverse in('Own') from ?)";
@@ -587,6 +638,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         }
         return ancestors;
     }
+    */
 
     public boolean getProduct(Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
@@ -654,96 +706,26 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         return json;
     }
 
-
-    public boolean getRecentProduct(Object ...objects) throws Exception {
-        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
-        Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        String host = (String)data.get("host");
-        Integer pageSize = (Integer)data.get("pageSize");
-        Integer pageNo = (Integer)data.get("pageNo");
-        if(pageSize == null) {
-            inputMap.put("result", "pageSize is required");
-            inputMap.put("responseCode", 400);
-            return false;
-        }
-        if(pageNo == null) {
-            inputMap.put("result", "pageNo is required");
-            inputMap.put("responseCode", 400);
-            return false;
-        }
-        String sortDir = (String)data.get("sortDir");
-        String sortedBy = (String)data.get("sortedBy");
-        if(sortDir == null) {
-            sortDir = "desc";
-        }
-        if(sortedBy == null) {
-            sortedBy = "createDate";
-        }
-        // allowUpdate will be false always. In fact it is ignored.
-        boolean allowUpdate = false;
-
-        // Get the page from cache.
-        List<String> list = null;
-        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
-        if(listCache != null) {
-            list = (List<String>)listCache.get("product");
-        }
-
-        if(list == null) {
-            list = getCategoryRecentEntityList(host, categoryType, sortedBy, sortDir);
-        }
-        long total = list.size();
-        if(total > 0) {
-            List<Map<String, Object>> entities = new ArrayList<Map<String, Object>>();
-            ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
-            for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
-                String entityRid = list.get(i);
-                Map<String, Object> entity = (Map<String, Object>)entityCache.get(entityRid);
-                if(entity == null) {
-                    logger.warn("entity {} is missing from cache but list {} is in cache", entityRid, host + categoryType);
-                    getCategoryRecentEntityList(host, categoryType, sortedBy, sortDir);
-                    entity = (Map<String, Object>)entityCache.get(entityRid);
-
-                }
-                entities.add(entity);
-            }
-            Map<String, Object> result = new HashMap<String, Object>();
-            result.put("total", total);
-            result.put("products", entities);
-            result.put("allowUpdate", allowUpdate);
-            inputMap.put("result", mapper.writeValueAsString(result));
-            return true;
-        } else {
-            // there is no product available. but still need to return allowUpdate
-            Map<String, Object> result = new HashMap<String, Object>();
-            result.put("total", 0);
-            result.put("allowUpdate", allowUpdate);
-            inputMap.put("result", mapper.writeValueAsString(result));
-            return true;
-        }
-    }
-
-
-    protected String getRecentProductDb(String host, String sortedBy, String sortDir) {
-        String json = null;
-        // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid as rid, productId, name, description, variants, createDate, " +
-            "in_HasProduct[0].@rid as parentRid, in_HasProduct[0].categoryId as parentId, out_HasTag.tagId " +
-            "from Product where host = ? order by " + sortedBy + " " + sortDir;
+    @Override
+    protected List<String> getRecentEntityListDb(String host, String categoryType, String sortedBy, String sortDir) {
+        List<String> entityList = null;
+        String sql = "select @rid from Product where host = ? order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> products = graph.getRawGraph().command(query).execute(host);
-            if(products.size() > 0) {
-                json = OJSONWriter.listToJSON(products, null);
+            List<ODocument> entities = graph.getRawGraph().command(query).execute(host);
+            if(entities.size() > 0) {
+                entityList = new ArrayList<String>();
+                for(ODocument entity: entities) {
+                    entityList.add(((ODocument)entity.field("rid")).field("@rid").toString());
+                }
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
         } finally {
             graph.shutdown();
         }
-        return json;
+        return entityList;
     }
 
 }

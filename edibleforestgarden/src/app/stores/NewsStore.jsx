@@ -9,7 +9,7 @@ var CHANGE_EVENT = 'change';
 var _posts = [];
 var _ancestors = [];
 var _total = 0;
-var _allowPost = false;
+var _allowUpdate = false;
 var _post = {};
 
 var NewsStore = _.extend({}, EventEmitter.prototype, {
@@ -35,8 +35,8 @@ var NewsStore = _.extend({}, EventEmitter.prototype, {
         return _ancestors;
     },
 
-    getAllowPost: function() {
-        return _allowPost;
+    getAllowUpdate: function() {
+        return _allowUpdate;
     },
 
     getTotal: function() {
@@ -54,11 +54,11 @@ AppDispatcher.register(function(payload) {
     switch(type) {
         case ActionTypes.GET_NEWS_POST_RESPONSE:
             _total = payload.json.total;
-            _allowPost = payload.json.allowPost;
+            _allowUpdate = payload.json.allowUpdate;
             if(_total == 0) {
                 _posts = [];
             } else {
-                _posts = payload.json.posts;
+                _posts = payload.json.entities;
             }
             NewsStore.emitChange();
             break;
@@ -67,7 +67,7 @@ AppDispatcher.register(function(payload) {
             if(_total == 0) {
                 _posts = [];
             } else {
-                _posts = payload.json.posts;
+                _posts = payload.json.entities;
             }
             NewsStore.emitChange();
             break;

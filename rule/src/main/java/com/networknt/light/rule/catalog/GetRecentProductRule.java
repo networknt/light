@@ -11,6 +11,6 @@ import com.networknt.light.rule.Rule;
  */
 public class GetRecentProductRule extends AbstractCatalogRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return getRecentProduct(objects);
+        return getRecentEntity("Catalog", objects);
     }
 }

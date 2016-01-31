@@ -102,7 +102,7 @@ AppDispatcher.register(function(payload) {
             if(_total == 0) {
                 _products = [];
             } else {
-                _products = payload.json.products;
+                _products = payload.json.entities;
                 _products.forEach(_productsMixin);
             }
             CatalogStore.emitChange();

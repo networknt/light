@@ -18,7 +18,7 @@ var BlogPost = React.createClass({
     getInitialState: function() {
         return {
             post: {},
-            allowPost: false
+            allowUpdate: false
         };
     },
 
@@ -35,7 +35,7 @@ var BlogPost = React.createClass({
         //console.log('BlogPost index ', this.props.params.index);
         this.setState({
             post: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId),
-            allowPost: BlogStore.getAllowPost()
+            allowUpdate: BlogStore.getAllowUpdate()
         })
     },
 
@@ -66,8 +66,8 @@ var BlogPost = React.createClass({
         if(this.state.post.originalAuthor && this.state.post.originalSite && this.state.post.originalUrl) {
             original = <div><a href={this.state.post.originalUrl} target="_blank">Submitted by {this.state.post.originalAuthor} via {this.state.post.originalSite}</a></div>
         }
-        let updateButton = this.state.allowPost? <RaisedButton label="Update Post" primary={true} onTouchTap={this._onUpdatePost} /> : '';
-        let deleteButton = this.state.allowPost? <RaisedButton label="Delete Post" primary={true} onTouchTap={this._onDeletePost} /> : '';
+        let updateButton = this.state.allowUpdate? <RaisedButton label="Update Post" primary={true} onTouchTap={this._onUpdatePost} /> : '';
+        let deleteButton = this.state.allowUpdate? <RaisedButton label="Delete Post" primary={true} onTouchTap={this._onDeletePost} /> : '';
         return (
             <span>
                 {updateButton}

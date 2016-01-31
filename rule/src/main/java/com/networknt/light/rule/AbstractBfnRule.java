@@ -438,12 +438,12 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         }
     }
 
-    public boolean getBfnPost(Object ...objects) throws Exception {
+    public boolean getCategoryEntity(String categoryType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        String rid = (String)data.get("@rid");
+        String categoryRid = (String)data.get("@rid");
         String host = (String)data.get("host");
-        if(rid == null) {
+        if(categoryRid == null) {
             inputMap.put("result", "@rid is required");
             inputMap.put("responseCode", 400);
             return false;
@@ -468,63 +468,59 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         if(sortedBy == null) {
             sortedBy = "createDate";
         }
-        boolean allowPost = false;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        if(payload != null) {
-            Map<String,Object> user = (Map<String, Object>)payload.get("user");
-            List roles = (List)user.get("roles");
-            if(roles.contains("owner")) {
-                allowPost = true;
-            } else if(roles.contains("admin") || roles.contains("blogAdmin") || roles.contains("blogUser")){
-                if(host.equals(user.get("host"))) {
-                    allowPost = true;
-                }
-            }
-        }
+        boolean allowUpdate = isUpdateAllowed(categoryType, host, inputMap);
 
         // TODO support the following lists: recent, popular, controversial
         // Get the page from cache.
-        List<String> list = null;
-        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
-        if(listCache != null) {
-            list = (List<String>)listCache.get(rid + sortedBy + sortDir);
-        }
-
-        if(list == null) {
-            list = getCategoryEntityList(rid, sortedBy, sortDir);
-        }
-        long total = list.size();
-        if(total > 0) {
-            List<Map<String, Object>> posts = new ArrayList<Map<String, Object>>();
-            ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
+        List<String> list = getCategoryEntityList(categoryRid, sortedBy, sortDir);
+        if(list != null && list.size() > 0) {
+            long total = list.size();
+            List<Map<String, Object>> entities = new ArrayList<Map<String, Object>>();
             for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
-                String postRid = list.get(i);
-                Map<String, Object> post = (Map<String, Object>)entityCache.get(postRid);
-                if(post == null) {
-                    logger.warn("post {} is missing from cache but list {} is in cache", postRid, rid);
-                    getCategoryEntityList(rid, sortedBy, sortDir);
-                    post = (Map<String, Object>)entityCache.get(postRid);
+                String entityRid = list.get(i);
+                Map<String, Object> entity = getCategoryEntity(entityRid);
+                if(entity != null) {
+                    entities.add(entity);
+                } else {
+                    logger.warn("Could not find entity {} from List {}", entityRid, categoryRid + sortedBy + sortDir);
                 }
-                posts.add(post);
             }
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", total);
-            result.put("posts", posts);
-            result.put("allowPost", allowPost);
+            result.put("entities", entities);
+            result.put("allowUpdate", allowUpdate);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         } else {
             // there is no post available. but still need to return allowPost
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", 0);
-            result.put("allowPost", allowPost);
+            result.put("allowUpdate", allowUpdate);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         }
     }
 
+    protected boolean isUpdateAllowed(String categoryType, String host, Map<String, Object> inputMap) {
+        boolean isAllowed = false;
+        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        if(payload != null) {
+            Map<String,Object> user = (Map<String, Object>)payload.get("user");
+            List roles = (List)user.get("roles");
+            if(roles.contains("owner")) {
+                isAllowed = true;
+            } else if(roles.contains("admin") || roles.contains(categoryType + "Admin") || roles.contains(categoryType + "User")) {
+                if(host.equals(user.get("host"))) {
+                    isAllowed = true;
+                }
+            }
+        }
+        return isAllowed;
+    }
+
     protected List<String> getCategoryEntityList(String categoryRid, String sortedBy, String sortDir) throws Exception {
+        List<String> list = null;
+        // get list from cache
         Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
         ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
         if(listCache == null) {
@@ -532,65 +528,107 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                     .maximumWeightedCapacity(200)
                     .build();
             categoryMap.put("listCache", listCache);
+        } else {
+            list = (List<String>)listCache.get(categoryRid + sortedBy + sortDir);
         }
-
-        ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
-        if(entityCache == null) {
-            entityCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(10000)
-                    .build();
-            categoryMap.put("entityCache", entityCache);
-        }
-
-        // get the list for db
-        List<String> list = new ArrayList<String>();
-        String json = getCategoryEntitytDb(categoryRid, sortedBy, sortDir);
-        if(json != null) {
-            List<Map<String, Object>> entities = mapper.readValue(json,
-                    new TypeReference<ArrayList<HashMap<String, Object>>>() {
-                    });
-            for(Map<String, Object> entity: entities) {
-                String entityRid = (String)entity.get("rid");
-                list.add(entityRid);
-                entity.remove("@rid");
-                entity.remove("@type");
-                entity.remove("@version");
-                entity.remove("@fieldTypes");
-                entityCache.put(entityRid, entity);
+        if(list == null) {
+            // not in cache, get from db
+            list = getCategoryEntityListDb(categoryRid, sortedBy, sortDir);
+            if(list != null) {
+                listCache.put(categoryRid + sortedBy + sortDir, list);
             }
         }
-        listCache.put(categoryRid + sortedBy + sortDir, list);
         return list;
     }
 
-    protected String getCategoryEntitytDb(String rid, String sortedBy, String sortDir) {
-        String json = null;
-        String sql = "select @rid, postId, title, summary, content, originalAuthor, originalSite, originalUrl, createDate, parentId, in_Create[0].@rid as createRid, " +
-                "in_Create[0].userId as createUserId, in_Create[0].gravatar as gravatar, out_HasTag.tagId as tags " +
-                "from (traverse out_Own, out_HasPost from ?) where @class = 'Post' order by " + sortedBy + " " + sortDir;
+    protected List<String> getCategoryEntityListDb(String categoryRid, String sortedBy, String sortDir) {
+        List<String> entityList = null;
+        String sql = "select @rid from (traverse out_Own, out_HasPost from ?) where @class = 'Post' order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> posts = graph.getRawGraph().command(query).execute(rid);
-            if(posts.size() > 0) {
-                json = OJSONWriter.listToJSON(posts, null);
+            List<ODocument> entities = graph.getRawGraph().command(query).execute(categoryRid);
+            if(entities.size() > 0) {
+                entityList = new ArrayList<String>();
+                for(ODocument entity: entities) {
+                    entityList.add(((ODocument)entity.field("rid")).field("@rid").toString());
+                }
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
         } finally {
             graph.shutdown();
         }
-        return json;
+        return entityList;
+    }
+
+    protected Map<String, Object> getCategoryEntity(String entityRid) {
+        Map<String, Object> entity = null;
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
+        if(entityCache == null) {
+            entityCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(10000)
+                    .build();
+            categoryMap.put("entityCache", entityCache);
+        } else {
+            entity = (Map<String, Object>)entityCache.get(entityRid);
+        }
+        if(entity == null) {
+            entity = getCategoryEntityDb(entityRid);
+            if(entity != null) {
+                entityCache.put(entityRid, entity);
+            }
+        }
+        return entity;
+    }
+
+    protected Map<String, Object> getCategoryEntityDb(String entityRid) {
+        Map<String, Object> jsonMap = null;
+        String sql = "SELECT @rid as rid, postId, title, summary, content, originalAuthor, originalSite, originalUrl, " +
+                "createDate, in_HasPost[0].@rid as parentRid, in_HasPost[0].categoryId as parentId, " +
+                "in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, " +
+                "in_Create[0].gravatar as gravatar, out_HasTag.tagId as tags FROM ? ";
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> entities = graph.getRawGraph().command(query).execute(entityRid);
+            if(entities.size() > 0) {
+                jsonMap = new HashMap<String, Object>();
+                ODocument entity = entities.get(0);
+                jsonMap.put("rid", ((ODocument)entity.field("rid")).field("@rid").toString());
+                jsonMap.put("postId", entity.field("postId"));
+                jsonMap.put("title", entity.field("title"));
+                jsonMap.put("summary", entity.field("summary"));
+                jsonMap.put("content", entity.field("content"));
+                jsonMap.put("originalAuthor", entity.field("originalAuthor"));
+                jsonMap.put("originalSite", entity.field("originalSite"));
+                jsonMap.put("originalUrl", entity.field("originalUrl"));
+                jsonMap.put("createDate", entity.field("createDate"));
+                jsonMap.put("parentRid", ((ODocument)entity.field("parentRid")).field("@rid").toString());
+                jsonMap.put("parentId", entity.field("parentId"));
+                jsonMap.put("createRid", ((ODocument)entity.field("createRid")).field("@rid").toString());
+                jsonMap.put("createUserId", entity.field("createUserId"));
+                jsonMap.put("gravatar", entity.field("gravatar"));
+                jsonMap.put("tags", entity.field("tags"));
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return jsonMap;
+
     }
 
     /**
-     * Get recent post for blog/news/forum regardless category
+     * Get recent entity for category blog/news/forum/catelog regardless category
      *
      * @param objects
      * @return
      * @throws Exception
      */
-    public boolean getBfnRecentPost(String bfnType, Object ...objects) throws Exception {
+    public boolean getRecentEntity(String categoryType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String host = (String)data.get("host");
@@ -614,53 +652,43 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         if(sortedBy == null) {
             sortedBy = "createDate";
         }
-        // allowPost will always be false as it has to be posted in a category context.
-        boolean allowPost = false;
+        // allowUpdate will always be false as it has to be posted in a category context.
+        boolean allowUpdate = false;
 
         // Get the list from cache.
-        List<String> list = null;
-        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
-        if(listCache != null) {
-            list = (List<String>)listCache.get(host + bfnType);
-        }
+        List<String> list = getRecentEntityList(host, categoryType, sortedBy, sortDir);
 
-        if(list == null) {
-            list = getCategoryRecentEntityList(host, bfnType, sortedBy, sortDir);
-        }
-        long total = list.size();
-        if(total > 0) {
-            List<Map<String, Object>> posts = new ArrayList<Map<String, Object>>();
-            ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
+        if(list != null && list.size() > 0) {
+            long total = list.size();
+            List<Map<String, Object>> entities = new ArrayList<Map<String, Object>>();
             for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
-                String postRid = list.get(i);
-
-                Map<String, Object> post = (Map<String, Object>)entityCache.get(postRid);
-                if(post == null) {
-                    // if this even happens, need to increase entity cache size.
-                    logger.warn("post {} is missing from cache but list {} is in cache", postRid, host + bfnType);
-                    getCategoryRecentEntityList(host, bfnType, sortedBy, sortDir);
-                    post = (Map<String, Object>)entityCache.get(postRid);
+                String entityRid = list.get(i);
+                Map<String, Object> entity = getCategoryEntity(entityRid);
+                if(entity != null) {
+                    entities.add(entity);
+                } else {
+                    logger.warn("Could not find entity {} from List {}", entityRid, host + categoryType);
                 }
-                posts.add(post);
             }
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", total);
-            result.put("posts", posts);
-            result.put("allowPost", allowPost);
+            result.put("entities", entities);
+            result.put("allowUpdate", allowUpdate);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         } else {
             // there is no post available. but still need to return allowPost
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", 0);
-            result.put("allowPost", allowPost);
+            result.put("allowUpdate", allowUpdate);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         }
     }
 
-    protected List<String> getCategoryRecentEntityList(String host, String categoryType, String sortedBy, String sortDir) throws Exception {
+    protected List<String> getRecentEntityList(String host, String categoryType, String sortedBy, String sortDir) {
+        List<String> list = null;
+        // get list from cache
         Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
         ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
         if(listCache == null) {
@@ -668,57 +696,37 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                     .maximumWeightedCapacity(200)
                     .build();
             categoryMap.put("listCache", listCache);
+        } else {
+            list = (List<String>)listCache.get(host + categoryType);
         }
-
-        ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
-        if(entityCache == null) {
-            entityCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(10000)
-                    .build();
-            categoryMap.put("entityCache", entityCache);
-        }
-
-        // get the list for db
-        List<String> list = new ArrayList<String>();
-        String json = getCategoryRecentEntityDb(host, categoryType, sortedBy, sortDir);
-        if(json != null) {
-            List<Map<String, Object>> entities = mapper.readValue(json,
-                    new TypeReference<ArrayList<HashMap<String, Object>>>() {
-                    });
-            for(Map<String, Object> entity: entities) {
-                String entityRid = (String)entity.get("rid");
-                list.add(entityRid);
-                entity.remove("@rid");
-                entity.remove("@type");
-                entity.remove("@version");
-                entity.remove("@fieldTypes");
-                entityCache.put(entityRid, entity);
+        if(list == null) {
+            // not in cache, get from db
+            list = getRecentEntityListDb(host, categoryType, sortedBy, sortDir);
+            if(list != null) {
+                listCache.put(host + categoryType, list);
             }
         }
-        listCache.put(host + categoryType, list);
         return list;
     }
 
-    protected String getCategoryRecentEntityDb(String host, String bfnType, String sortedBy, String sortDir) {
-        String json = null;
-        // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, postId, title, summary, content, originalAuthor, originalSite, originalUrl, createDate, in_Create[0].@rid as createRid, " +
-            "in_Create[0].userId as createUserId, in_Create[0].gravatar as gravatar, out_HasTag.tagId as tags, " +
-            "in_HasPost[0].@rid as parentRid, in_HasPost[0].categoryId as parentId " +
-            "from Post where host = ? and in_HasPost[0].@class = ? order by " + sortedBy + " " + sortDir;
-
+    protected List<String> getRecentEntityListDb(String host, String categoryType, String sortedBy, String sortDir) {
+        List<String> entityList = null;
+        String sql = "select @rid from Post where host = ? and in_HasPost[0].@class = ? order by " + sortedBy + " " + sortDir;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> posts = graph.getRawGraph().command(query).execute(host, bfnType);
-            if(posts.size() > 0) {
-                json = OJSONWriter.listToJSON(posts, null);
+            List<ODocument> entities = graph.getRawGraph().command(query).execute(host, categoryType);
+            if(entities.size() > 0) {
+                entityList = new ArrayList<String>();
+                for(ODocument entity: entities) {
+                    entityList.add(((ODocument)entity.field("rid")).field("@rid").toString());
+                }
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
         } finally {
             graph.shutdown();
         }
-        return json;
+        return entityList;
     }
 }

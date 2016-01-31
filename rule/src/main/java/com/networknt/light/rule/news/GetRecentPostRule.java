@@ -12,6 +12,6 @@ import com.networknt.light.rule.Rule;
  */
 public class GetRecentPostRule extends AbstractBfnRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
-        return getBfnRecentPost("News", objects);
+        return getRecentEntity("News", objects);
     }
 }
