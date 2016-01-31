@@ -9,41 +9,47 @@ import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Dialog from 'material-ui/lib/dialog';
 import CircularProgress from 'material-ui/lib/circular-progress';
-import AccessAdminStore from '../../../stores/AccessAdminStore';
-import AccessActionCreators from '../../../actions/AccessActionCreators';
+import RoleAdminStore from '../../../stores/RoleAdminStore';
+import RoleActionCreators from '../../../actions/RoleActionCreators';
 import FormActionCreators from '../../../actions/FormActionCreators';
 
-var AccessAdminHome = React.createClass({
-    displayName: 'AccessAdminHome',
+var RoleAdminHome = React.createClass({
+    displayName: 'RoleAdminHome',
 
     getInitialState: function() {
         return {
-            accesses: []
+            roles: []
         };
     },
 
     componentWillMount: function() {
-        AccessAdminStore.addChangeListener(this._onAccessChange);
-        AccessActionCreators.getAllAccess();
+        RoleAdminStore.addChangeListener(this._onRoleChange);
+        RoleActionCreators.getRole();
     },
 
     componentWillUnmount: function() {
-        AccessAdminStore.removeChangeListener(this._onAccessChange);
+        RoleAdminStore.removeChangeListener(this._onRoleChange);
     },
 
-    _onAccessChange: function() {
+    _onRoleChange: function() {
+        console.log('RoleAdminHome._onRoleChange', RoleAdminStore.getRoles());
         this.setState({
-            accesses: AccessAdminStore.getAllAccess()
+            roles: RoleAdminStore.getRoles()
         });
     },
 
-    _onDeleteAccess: function(access) {
-        AccessActionCreators.delAccess(access['@rid']);
+    _onDeleteRole: function(role) {
+        RoleActionCreators.delRole(role['@rid']);
     },
 
-    _onUpdateAccess: function(access) {
-        let formId = 'com.networknt.light.access.upd_d';
-        FormActionCreators.setFormModel(formId, access);
+    _onUpdateRole: function(role) {
+        let formId = 'com.networknt.light.role.update';
+        FormActionCreators.setFormModel(formId, role);
+        this.props.history.push('/form/' + formId);
+    },
+
+    _onAddRole: function() {
+        let formId = 'com.networknt.light.role.add';
         this.props.history.push('/form/' + formId);
     },
 
@@ -58,17 +64,15 @@ var AccessAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='Access' style={{textAlign: 'center'}}>
-                                Access
+                            <TableHeaderColumn colSpan="8" tooltip='Roles' style={{textAlign: 'center'}}>
+                                Roles
                             </TableHeaderColumn>
                         </TableRow>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Rule Class' colSpan="5">Rule Class</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Access Level'>Access Level</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Clients'>Clients</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Roles'>Roles</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Users'>Users</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Role Id'>Role Id</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Description' colSpan="3">Description</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
@@ -80,21 +84,19 @@ var AccessAdminHome = React.createClass({
                         showRowHover={true}
                         stripedRows={true}>
 
-                        {this.state.accesses.map((access, index) => {
-                            let boundDelete = this._onDeleteAccess.bind(this, access);
-                            let boundUpdate = this._onUpdateAccess.bind(this, access);
+                        {this.state.roles.map((role, index) => {
+                            let boundDelete = this._onDeleteRole.bind(this, role);
+                            let boundUpdate = this._onUpdateRole.bind(this, role);
                             return (
                                 <TableRow key={index}>
                                     <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn colSpan="5"><a onClick={boundUpdate}>{access.ruleClass}</a></TableRowColumn>
-                                    <TableRowColumn>{access.accessLevel}</TableRowColumn>
-                                    <TableRowColumn>{access.clients}</TableRowColumn>
-                                    <TableRowColumn>{access.roles}</TableRowColumn>
-                                    <TableRowColumn>{access.users}</TableRowColumn>
-                                    <TableRowColumn>{access.createUserId}</TableRowColumn>
-                                    <TableRowColumn>{access.createDate}</TableRowColumn>
-                                    <TableRowColumn>{access.updateUserId}</TableRowColumn>
-                                    <TableRowColumn>{access.updateDate}</TableRowColumn>
+                                    <TableRowColumn><a onClick={boundUpdate}>{role.roleId}</a></TableRowColumn>
+                                    <TableRowColumn>{role.host}</TableRowColumn>
+                                    <TableRowColumn colSpan="3">{role.description}</TableRowColumn>
+                                    <TableRowColumn>{role.createUserId}</TableRowColumn>
+                                    <TableRowColumn>{role.createDate}</TableRowColumn>
+                                    <TableRowColumn>{role.updateUserId}</TableRowColumn>
+                                    <TableRowColumn>{role.updateDate}</TableRowColumn>
                                 </TableRow>
                             );
                         })}
@@ -104,16 +106,20 @@ var AccessAdminHome = React.createClass({
                     <TableFooter>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Rule Class' colSpan="5">Rule Class</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Access Level'>Access Level</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Clients'>Clients</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Roles'>Roles</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Users'>Users</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Role Id'>Role Id</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Description' colSpan="3">Description</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
+                        <TableRow>
+                            <TableRowColumn colSpan="6" style={{textAlign: 'left'}}>
+                                <RaisedButton label="Add Role" primary={true} onTouchTap={this._onAddRole} />
+                            </TableRowColumn>
+                        </TableRow>
+
                     </TableFooter>
                 </Table>
             </span>
@@ -121,4 +127,4 @@ var AccessAdminHome = React.createClass({
     }
 });
 
-module.exports = AccessAdminHome;
+module.exports = RoleAdminHome;

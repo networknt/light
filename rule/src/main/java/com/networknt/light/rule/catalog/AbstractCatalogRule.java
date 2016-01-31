@@ -587,7 +587,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
     protected Map<String, Object> getCategoryEntityDb(String entityRid) {
         Map<String, Object> jsonMap = null;
         String sql = "SELECT @rid as rid, productId, name, description, variants, createDate," +
-                "in_HasPost[0].@rid as parentRid, in_HasPost[0].categoryId as parentId, " +
+                "in_HasProduct[0].@rid as parentRid, in_HasProduct[0].categoryId as parentId, " +
                 "in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, " +
                 "out_HasTag.tagId as tags FROM ? ";
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -607,7 +607,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                 jsonMap.put("parentId", entity.field("parentId"));
                 jsonMap.put("createRid", ((ODocument)entity.field("createRid")).field("@rid").toString());
                 jsonMap.put("createUserId", entity.field("createUserId"));
-                jsonMap.put("tags", entity.field("tags"));
+                if(entity.field("tags") != null) jsonMap.put("tags", entity.field("tags"));
             }
         } catch (Exception e) {
             logger.error("Exception:", e);

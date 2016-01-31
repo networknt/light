@@ -18,7 +18,7 @@ var NewsPost = React.createClass({
     getInitialState: function() {
         return {
             post: {},
-            allowPost: false
+            allowUpdate: false
         };
     },
 
@@ -35,7 +35,7 @@ var NewsPost = React.createClass({
         //console.log('NewsPost index ', this.props.params.index);
         this.setState({
             post: CommonUtils.findPost(NewsStore.getPosts(), this.props.params.postId),
-            allowPost: NewsStore.getAllowPost()
+            allowUpdate: NewsStore.getAllowUpdate()
         })
     },
 
@@ -56,8 +56,18 @@ var NewsPost = React.createClass({
     },
 
     render: function() {
-        let updateButton = this.state.allowPost? <RaisedButton label="Update Post" primary={true} onTouchTap={this._onUpdatePost} /> : '';
-        let deleteButton = this.state.allowPost? <RaisedButton label="Delete Post" primary={true} onTouchTap={this._onDeletePost} /> : '';
+        let tags = '';
+        if(this.state.post.tags) {
+            tags = this.state.post.tags.map((tag, index) => {
+                return <span key={index}>{tag}&nbsp;&nbsp;&nbsp;</span>
+            });
+        }
+        let original = '';
+        if(this.state.post.originalAuthor && this.state.post.originalSite && this.state.post.originalUrl) {
+            original = <div><a href={this.state.post.originalUrl} target="_blank">Submitted by {this.state.post.originalAuthor} via {this.state.post.originalSite}</a></div>
+        }
+        let updateButton = this.state.allowUpdate? <RaisedButton label="Update Post" primary={true} onTouchTap={this._onUpdatePost} /> : '';
+        let deleteButton = this.state.allowUpdate? <RaisedButton label="Delete Post" primary={true} onTouchTap={this._onDeletePost} /> : '';
         return (
             <span>
                 {updateButton}
@@ -66,6 +76,8 @@ var NewsPost = React.createClass({
                     <div className="blogPost">
                         <h2 className="title">{this.state.post.title}</h2>
                         <span>Submitted by {this.state.post.createUserId} on {this.state.post.createDate}</span>
+                        <div>{tags}</div>
+                        {original}
                         <Markdown text={this.state.post.content} />
                     </div>
                 </Paper>

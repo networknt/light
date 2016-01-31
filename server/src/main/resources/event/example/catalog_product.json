@@ -36,9 +36,7 @@
           "length": 8
         }
       ],
-      "in_HasProduct": [
-        "computer"
-      ],
+      "parentId": "computer",
       "createDate": "2015-09-25T02:02:53.507"
     },
     "name": "addProduct",
@@ -73,9 +71,7 @@
           "length": 19
         }
       ],
-      "in_HasProduct": [
-        "computer"
-      ],
+      "parentId": "computer",
       "createDate": "2015-09-25T02:04:39.210"
     },
     "name": "addProduct",
@@ -110,9 +106,7 @@
           "length": 12
         }
       ],
-      "in_HasProduct": [
-        "case"
-      ],
+      "parentId": "case",
       "createDate": "2015-09-25T02:06:13.597"
     },
     "name": "addProduct",
@@ -158,9 +152,7 @@
           "length": 4
         }
       ],
-      "in_HasProduct": [
-        "desktopCase"
-      ],
+      "parentId": "desktopCase",
       "createDate": "2015-09-25T02:08:25.150"
     },
     "name": "addProduct",
@@ -206,9 +198,7 @@
           "length": 8
         }
       ],
-      "in_HasProduct": [
-        "serverCase"
-      ],
+      "parentId": "serverCase",
       "createDate": "2015-09-25T02:10:37.631"
     },
     "name": "addProduct",
@@ -254,9 +244,7 @@
           "length": 6
         }
       ],
-      "in_HasProduct": [
-        "hardDrive"
-      ],
+      "parentId": "hardDrive",
       "createDate": "2015-09-25T02:12:15.688"
     },
     "name": "addProduct",

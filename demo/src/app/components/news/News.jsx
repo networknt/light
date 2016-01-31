@@ -22,7 +22,7 @@ var News = React.createClass({
         return {
             posts: [],
             ancestors: [],
-            allowPost: false,
+            allowUpdate: false,
             total: 0,
             pageSize: 10,
             pageNo: 1
@@ -52,7 +52,7 @@ var News = React.createClass({
     _onNewsChange: function() {
         this.setState({
             ancestors: NewsStore.getAncestors(),
-            allowPost: NewsStore.getAllowPost(),
+            allowUpdate: NewsStore.getAllowUpdate(),
             posts: NewsStore.getPosts(),
             total: NewsStore.getTotal()
         });
@@ -97,7 +97,7 @@ var News = React.createClass({
 
     render: function() {
         //console.log('total', this.state.total);
-        let addButton = this.state.allowPost? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
+        let addButton = this.state.allowUpdate? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
         return (
             <div>
                 <div className="blogHeader">

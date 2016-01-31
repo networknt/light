@@ -42,8 +42,8 @@
       "location": "event/example/catalog.json"
     },
     {
-      "description": "This file contains example site product data for commerce",
-      "location": "event/example/product.json"
+      "description": "This file contains example site catalog product data for commerce",
+      "location": "event/example/catalog_product.json"
     },
     {
       "description": "This file contains example site blog category data for cms",
@@ -57,7 +57,10 @@
       "description": "This file contains example site news category data for cms",
       "location": "event/example/news.json"
     },
-
+    {
+      "description": "This file contains example site news post data for cms",
+      "location": "event/example/news_post.json"
+    },
     {
       "description": "This file contains edibleforestgarden site blog category data for cms",
       "location": "event/edibleforestgarden/blog.json"

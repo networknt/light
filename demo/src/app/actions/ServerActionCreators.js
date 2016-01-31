@@ -23,6 +23,20 @@ module.exports = {
         });
     },
 
+    getRoleResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ROLE_RESPONSE,
+            json: json
+        });
+    },
+
+    delRoleResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.DEL_ROLE_RESPONSE,
+            json: json
+        });
+    },
+
     getAllAccessResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_ALL_ACCESS_RESPONSE,

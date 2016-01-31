@@ -601,16 +601,16 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 jsonMap.put("title", entity.field("title"));
                 jsonMap.put("summary", entity.field("summary"));
                 jsonMap.put("content", entity.field("content"));
-                jsonMap.put("originalAuthor", entity.field("originalAuthor"));
-                jsonMap.put("originalSite", entity.field("originalSite"));
-                jsonMap.put("originalUrl", entity.field("originalUrl"));
+                if(entity.field("originalAuthor") != null) jsonMap.put("originalAuthor", entity.field("originalAuthor"));
+                if(entity.field("originalSite") != null) jsonMap.put("originalSite", entity.field("originalSite"));
+                if(entity.field("originalUrl") != null) jsonMap.put("originalUrl", entity.field("originalUrl"));
                 jsonMap.put("createDate", entity.field("createDate"));
                 jsonMap.put("parentRid", ((ODocument)entity.field("parentRid")).field("@rid").toString());
                 jsonMap.put("parentId", entity.field("parentId"));
                 jsonMap.put("createRid", ((ODocument)entity.field("createRid")).field("@rid").toString());
                 jsonMap.put("createUserId", entity.field("createUserId"));
                 jsonMap.put("gravatar", entity.field("gravatar"));
-                jsonMap.put("tags", entity.field("tags"));
+                if(entity.field("tags") != null) jsonMap.put("tags", entity.field("tags"));
             }
         } catch (Exception e) {
             logger.error("Exception:", e);

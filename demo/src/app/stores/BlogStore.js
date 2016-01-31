@@ -9,7 +9,7 @@ var CHANGE_EVENT = 'change';
 var _posts = [];
 var _ancestors = [];
 var _total = 0;
-var _allowPost = false;
+var _allowUpdate = false;
 var _post = {};
 
 var BlogStore = _.extend({}, EventEmitter.prototype, {
@@ -35,8 +35,8 @@ var BlogStore = _.extend({}, EventEmitter.prototype, {
         return _ancestors;
     },
 
-    getAllowPost: function() {
-        return _allowPost;
+    getAllowUpdate: function() {
+        return _allowUpdate;
     },
 
     getTotal: function() {
@@ -57,11 +57,11 @@ AppDispatcher.register(function(payload) {
         case ActionTypes.GET_BLOG_POST_RESPONSE:
             //console.log('GET_BLOG_POST_RESPONSE', payload);
             _total = payload.json.total;
-            _allowPost = payload.json.allowPost;
+            _allowUpdate = payload.json.allowUpdatet;
             if(_total == 0) {
                 _posts = [];
             } else {
-                _posts = payload.json.posts;
+                _posts = payload.json.entities;
             }
             BlogStore.emitChange();
             break;
@@ -71,7 +71,7 @@ AppDispatcher.register(function(payload) {
             if(_total == 0) {
                 _posts = [];
             } else {
-                _posts = payload.json.posts;
+                _posts = payload.json.entities;
             }
             BlogStore.emitChange();
             break;
