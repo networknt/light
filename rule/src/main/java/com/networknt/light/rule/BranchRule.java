@@ -617,6 +617,14 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         }
     }
 
+    /**
+     * Only this method needs to be cached as it is called by the site home rendering. Other get methods
+     * are for admin only and no need to be cached.
+     * @param branchType
+     * @param objects
+     * @return
+     * @throws Exception
+     */
     public boolean getBranchTree(String branchType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
@@ -626,7 +634,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get("treeCache");
         if(cache == null) {
             cache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
+                    .maximumWeightedCapacity(100)
                     .build();
             branchMap.put("treeCache", cache);
         } else {

@@ -90,35 +90,14 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     }
 
     private void clearCache(String host, String bfnType, String parentRid) {
-        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
         if(listCache != null && listCache.size() > 0) {
-            boolean cleared = false;
-            List<String> recentList = (List<String>)listCache.remove(host + bfnType);
-            if(!cleared && recentList != null && recentList.size() > 0) {
-                ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
-                if(postCache != null) {
-                    for(String postRid: recentList) {
-                        postCache.remove(postRid);
-                    }
-                    cleared = true;
-                }
-
-            }
-
-            List<String> newestList = (List<String>)listCache.remove(parentRid + "createDate" + "desc");
-            if(!cleared && newestList != null && newestList.size() > 0) {
-                ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
-                if(postCache != null) {
-                    for(String postRid: newestList) {
-                        postCache.remove(postRid);
-                    }
-                    cleared = true;
-                }
-            }
-
-            // TODO handle other list here.
-
+            // clear recent list (recent list regardless category
+            listCache.remove(host + bfnType);
+            // clear newestList for this parentRid only this category
+            listCache.remove(parentRid + "createDate" + "desc");
+            // TODO handler future list here.
         }
     }
 
@@ -506,53 +485,27 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         // TODO support the following lists: recent, popular, controversial
         // Get the page from cache.
         List<String> list = null;
-        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
-        if(listCache == null) {
-            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(200)
-                    .build();
-            bfnMap.put("listCache", listCache);
-        } else {
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
+        if(listCache != null) {
             list = (List<String>)listCache.get(rid + sortedBy + sortDir);
         }
 
-        ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
-        if(postCache == null) {
-            postCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(10000)
-                    .build();
-            bfnMap.put("postCache", postCache);
-        }
-
         if(list == null) {
-            // get the list for db
-            list = new ArrayList<String>();
-            String json = getBfnPostDb(rid, sortedBy, sortDir);
-            if(json != null) {
-                // convert json to list of maps.
-                List<Map<String, Object>> posts = mapper.readValue(json,
-                        new TypeReference<ArrayList<HashMap<String, Object>>>() {
-                        });
-                for(Map<String, Object> post: posts) {
-                    String postRid = (String)post.get("rid");
-                    list.add(postRid);
-                    post.remove("@rid");
-                    post.remove("@type");
-                    post.remove("@version");
-                    post.remove("@fieldTypes");
-                    postCache.put(postRid, post);
-                }
-            }
-            listCache.put(rid + sortedBy + sortDir, list);
+            list = getCategoryEntityList(rid, sortedBy, sortDir);
         }
         long total = list.size();
         if(total > 0) {
             List<Map<String, Object>> posts = new ArrayList<Map<String, Object>>();
+            ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
             for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
                 String postRid = list.get(i);
-                Map<String, Object> post = (Map<String, Object>)postCache.get(postRid);
-                // here we assume that post cache will never full.
+                Map<String, Object> post = (Map<String, Object>)entityCache.get(postRid);
+                if(post == null) {
+                    logger.warn("post {} is missing from cache but list {} is in cache", postRid, rid);
+                    getCategoryEntityList(rid, sortedBy, sortDir);
+                    post = (Map<String, Object>)entityCache.get(postRid);
+                }
                 posts.add(post);
             }
             Map<String, Object> result = new HashMap<String, Object>();
@@ -571,9 +524,47 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         }
     }
 
-    protected String getBfnPostDb(String rid, String sortedBy, String sortDir) {
+    protected List<String> getCategoryEntityList(String categoryRid, String sortedBy, String sortDir) throws Exception {
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
+        if(listCache == null) {
+            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(200)
+                    .build();
+            categoryMap.put("listCache", listCache);
+        }
+
+        ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
+        if(entityCache == null) {
+            entityCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(10000)
+                    .build();
+            categoryMap.put("entityCache", entityCache);
+        }
+
+        // get the list for db
+        List<String> list = new ArrayList<String>();
+        String json = getCategoryEntitytDb(categoryRid, sortedBy, sortDir);
+        if(json != null) {
+            List<Map<String, Object>> entities = mapper.readValue(json,
+                    new TypeReference<ArrayList<HashMap<String, Object>>>() {
+                    });
+            for(Map<String, Object> entity: entities) {
+                String entityRid = (String)entity.get("rid");
+                list.add(entityRid);
+                entity.remove("@rid");
+                entity.remove("@type");
+                entity.remove("@version");
+                entity.remove("@fieldTypes");
+                entityCache.put(entityRid, entity);
+            }
+        }
+        listCache.put(categoryRid + sortedBy + sortDir, list);
+        return list;
+    }
+
+    protected String getCategoryEntitytDb(String rid, String sortedBy, String sortDir) {
         String json = null;
-        // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
         String sql = "select @rid, postId, title, summary, content, originalAuthor, originalSite, originalUrl, createDate, parentId, in_Create[0].@rid as createRid, " +
                 "in_Create[0].userId as createUserId, in_Create[0].gravatar as gravatar, out_HasTag.tagId as tags " +
                 "from (traverse out_Own, out_HasPost from ?) where @class = 'Post' order by " + sortedBy + " " + sortDir;
@@ -628,52 +619,29 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
 
         // Get the list from cache.
         List<String> list = null;
-        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
-        if(listCache == null) {
-            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(200)
-                    .build();
-            bfnMap.put("listCache", listCache);
-        } else {
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
+        if(listCache != null) {
             list = (List<String>)listCache.get(host + bfnType);
         }
 
-        ConcurrentMap<Object, Object> postCache = (ConcurrentMap<Object, Object>)bfnMap.get("postCache");
-        if(postCache == null) {
-            postCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(10000)
-                    .build();
-            bfnMap.put("postCache", postCache);
-        }
-
         if(list == null) {
-            // get the list for db
-            list = new ArrayList<String>();
-            String json = getBfnRecentPostDb(host, bfnType, sortedBy, sortDir);
-            if(json != null) {
-                // convert json to list of maps.
-                List<Map<String, Object>> posts = mapper.readValue(json,
-                        new TypeReference<ArrayList<HashMap<String, Object>>>() {
-                        });
-                for(Map<String, Object> post: posts) {
-                    String postRid = (String)post.get("rid");
-                    list.add(postRid);
-                    post.remove("@rid");
-                    post.remove("@type");
-                    post.remove("@version");
-                    post.remove("@fieldTypes");
-                    postCache.put(postRid, post);
-                }
-            }
-            listCache.put(bfnType, list);
+            list = getCategoryRecentEntityList(host, bfnType, sortedBy, sortDir);
         }
         long total = list.size();
         if(total > 0) {
             List<Map<String, Object>> posts = new ArrayList<Map<String, Object>>();
+            ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
             for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
                 String postRid = list.get(i);
-                Map<String, Object> post = (Map<String, Object>)postCache.get(postRid);
+
+                Map<String, Object> post = (Map<String, Object>)entityCache.get(postRid);
+                if(post == null) {
+                    // if this even happens, need to increase entity cache size.
+                    logger.warn("post {} is missing from cache but list {} is in cache", postRid, host + bfnType);
+                    getCategoryRecentEntityList(host, bfnType, sortedBy, sortDir);
+                    post = (Map<String, Object>)entityCache.get(postRid);
+                }
                 posts.add(post);
             }
             Map<String, Object> result = new HashMap<String, Object>();
@@ -692,7 +660,46 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         }
     }
 
-    protected String getBfnRecentPostDb(String host, String bfnType, String sortedBy, String sortDir) {
+    protected List<String> getCategoryRecentEntityList(String host, String categoryType, String sortedBy, String sortDir) throws Exception {
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
+        if(listCache == null) {
+            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(200)
+                    .build();
+            categoryMap.put("listCache", listCache);
+        }
+
+        ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
+        if(entityCache == null) {
+            entityCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(10000)
+                    .build();
+            categoryMap.put("entityCache", entityCache);
+        }
+
+        // get the list for db
+        List<String> list = new ArrayList<String>();
+        String json = getCategoryRecentEntityDb(host, categoryType, sortedBy, sortDir);
+        if(json != null) {
+            List<Map<String, Object>> entities = mapper.readValue(json,
+                    new TypeReference<ArrayList<HashMap<String, Object>>>() {
+                    });
+            for(Map<String, Object> entity: entities) {
+                String entityRid = (String)entity.get("rid");
+                list.add(entityRid);
+                entity.remove("@rid");
+                entity.remove("@type");
+                entity.remove("@version");
+                entity.remove("@fieldTypes");
+                entityCache.put(entityRid, entity);
+            }
+        }
+        listCache.put(host + categoryType, list);
+        return list;
+    }
+
+    protected String getCategoryRecentEntityDb(String host, String bfnType, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
         String sql = "select @rid, postId, title, summary, content, originalAuthor, originalSite, originalUrl, createDate, in_Create[0].@rid as createRid, " +

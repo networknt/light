@@ -18,6 +18,7 @@ package com.networknt.light.rule.catalog;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import com.networknt.light.rule.AbstractBfnRule;
 import com.networknt.light.rule.BranchRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
@@ -43,9 +44,9 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by steve on 25/04/15.
  */
-public abstract class AbstractCatalogRule extends BranchRule implements Rule {
+public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rule {
     static final Logger logger = LoggerFactory.getLogger(AbstractCatalogRule.class);
-    static final String branchType = "catalog";
+    static final String categoryType = "catalog";
 
     public abstract boolean execute (Object ...objects) throws Exception;
 
@@ -90,41 +91,17 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, branchType, parentRid);
+            clearCache(host, categoryType, parentRid);
             return true;
         }
     }
 
     private void clearCache(String host, String bfnType, String parentRid) {
-        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
         if(listCache != null && listCache.size() > 0) {
-            boolean cleared = false;
-            List<String> recentList = (List<String>)listCache.remove(host + bfnType);
-            if(!cleared && recentList != null && recentList.size() > 0) {
-                ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)bfnMap.get("productCache");
-                if(productCache != null) {
-                    for(String productRid: recentList) {
-                        productCache.remove(productRid);
-                    }
-                    cleared = true;
-                }
-
-            }
-
-            List<String> newestList = (List<String>)listCache.remove(parentRid + "createDate" + "desc");
-            if(!cleared && newestList != null && newestList.size() > 0) {
-                ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)bfnMap.get("productCache");
-                if(productCache != null) {
-                    for(String productRid: newestList) {
-                        productCache.remove(productRid);
-                    }
-                    cleared = true;
-                }
-            }
-
-            // TODO handle other list here.
-
+            listCache.remove(host + bfnType);
+            listCache.remove(parentRid + "createDate" + "desc");
         }
     }
 
@@ -147,7 +124,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             OrientVertex product = graph.addVertex("class:Product", data);
             createUser.addEdge("Create", product);
             // parent
-            OrientVertex parent = getBranchByHostId(graph, branchType, host, parentId);
+            OrientVertex parent = getBranchByHostId(graph, categoryType, host, parentId);
             if(parent != null) {
                 parent.addEdge("HasProduct", product);
             }
@@ -221,7 +198,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, branchType, parentRid);
+            clearCache(host, categoryType, parentRid);
             return true;
         }
     }
@@ -273,7 +250,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         try {
             String userHost = (String)user.get("host");
             if(userHost != null && !userHost.equals(host)) {
-                inputMap.put("result", "You can only update " + branchType + " from host: " + host);
+                inputMap.put("result", "You can only update " + categoryType + " from host: " + host);
                 inputMap.put("responseCode", 403);
                 return false;
             } else {
@@ -364,8 +341,8 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, branchType, originalParentRid);
-            if(parentRid != null) clearCache(host, branchType, parentRid);
+            clearCache(host, categoryType, originalParentRid);
+            if(parentRid != null) clearCache(host, categoryType, parentRid);
             return true;
         }
     }
@@ -407,7 +384,7 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
                 // handle parent update
                 String parentId = (String)data.get("parentId");
                 if(parentId != null) {
-                    OrientVertex parent = getBranchByHostId(graph, branchType, (String) data.get("host"), (String) data.get("parentId"));
+                    OrientVertex parent = getBranchByHostId(graph, categoryType, (String) data.get("host"), (String) data.get("parentId"));
                     if(parent != null) {
                         // remove the current edge and add a new one.
                         for(Edge e : product.getEdges(Direction.IN, "HasProduct")) {
@@ -517,57 +494,34 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         // TODO support the following lists: recent, popular
         // Get the page from cache.
         List<String> list = null;
-        Map<String, Object> bfnMap = ServiceLocator.getInstance().getMemoryImage("bfnMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)bfnMap.get("listCache");
-        if(listCache == null) {
-            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(200)
-                    .build();
-            bfnMap.put("listCache", listCache);
-        } else {
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
+        if(listCache != null) {
             list = (List<String>)listCache.get(rid + sortedBy + sortDir);
         }
 
-        ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)bfnMap.get("productCache");
-        if(productCache == null) {
-            productCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(1000)
-                    .build();
-            bfnMap.put("productCache", productCache);
-        }
 
         if(list == null) {
-            // get the list for db
-            list = new ArrayList<String>();
-            String json = getCatalogProductDb(rid, sortedBy, sortDir);
-            if(json != null) {
-                // convert json to list of maps.
-                List<Map<String, Object>> products = mapper.readValue(json,
-                        new TypeReference<ArrayList<HashMap<String, Object>>>() {
-                        });
-                for(Map<String, Object> product: products) {
-                    String productRid = (String)product.get("rid");
-                    list.add(productRid);
-                    product.remove("@rid");
-                    product.remove("@type");
-                    product.remove("@version");
-                    product.remove("@fieldTypes");
-                    productCache.put(productRid, product);
-                }
-            }
-            listCache.put(rid + sortedBy + sortDir, list);
+            list = getCategoryEntityList(rid, sortedBy, sortDir);
         }
         long total = list.size();
         if(total > 0) {
-            List<Map<String, Object>> products = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> entities = new ArrayList<Map<String, Object>>();
+            ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
             for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
-                String productRid = list.get(i);
-                Map<String, Object> product = (Map<String, Object>)productCache.get(productRid);
-                products.add(product);
+                String entityRid = list.get(i);
+                Map<String, Object> entity = (Map<String, Object>)entityCache.get(entityRid);
+                if(entity == null) {
+                    logger.warn("entity {} is missing from cache but list {} is in cache", entityRid, rid);
+                    getCategoryEntityList(rid, sortedBy, sortDir);
+                    entity = (Map<String, Object>)entityCache.get(entityRid);
+
+                }
+                entities.add(entity);
             }
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", total);
-            result.put("products", products);
+            result.put("products", entities);
             result.put("rid", rid);
             result.put("allowUpdate", allowUpdate);
             result.put("ancestors", ancestors);
@@ -585,8 +539,8 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
         }
     }
 
-
-    protected String getCatalogProductDb(String rid, String sortedBy, String sortDir) {
+    @Override
+    protected String getCategoryEntitytDb(String rid, String sortedBy, String sortDir) {
         String json = null;
         // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
         String sql = "select @rid, productId, name, description, variants, createDate, parentId, in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, out_HasTag.tagId " +
@@ -730,57 +684,33 @@ public abstract class AbstractCatalogRule extends BranchRule implements Rule {
 
         // Get the page from cache.
         List<String> list = null;
-        Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage("branchMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)branchMap.get("listCache");
-        if(listCache == null) {
-            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(200)
-                    .build();
-            branchMap.put("listCache", listCache);
-        } else {
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
+        if(listCache != null) {
             list = (List<String>)listCache.get("product");
         }
 
-        ConcurrentMap<Object, Object> productCache = (ConcurrentMap<Object, Object>)branchMap.get("productCache");
-        if(productCache == null) {
-            productCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
-                    .maximumWeightedCapacity(10000)
-                    .build();
-            branchMap.put("productCache", productCache);
-        }
-
         if(list == null) {
-            // get the list for db
-            list = new ArrayList<String>();
-            String json = getRecentProductDb(host, sortedBy, sortDir);
-            if(json != null) {
-                // convert json to list of maps.
-                List<Map<String, Object>> products = mapper.readValue(json,
-                        new TypeReference<ArrayList<HashMap<String, Object>>>() {
-                        });
-                for(Map<String, Object> product: products) {
-                    String productRid = (String)product.get("rid");
-                    list.add(productRid);
-                    product.remove("@rid");
-                    product.remove("@type");
-                    product.remove("@version");
-                    product.remove("@fieldTypes");
-                    productCache.put(productRid, product);
-                }
-            }
-            listCache.put("product", list);
+            list = getCategoryRecentEntityList(host, categoryType, sortedBy, sortDir);
         }
         long total = list.size();
         if(total > 0) {
-            List<Map<String, Object>> products = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> entities = new ArrayList<Map<String, Object>>();
+            ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
             for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
-                String productRid = list.get(i);
-                Map<String, Object> product = (Map<String, Object>)productCache.get(productRid);
-                products.add(product);
+                String entityRid = list.get(i);
+                Map<String, Object> entity = (Map<String, Object>)entityCache.get(entityRid);
+                if(entity == null) {
+                    logger.warn("entity {} is missing from cache but list {} is in cache", entityRid, host + categoryType);
+                    getCategoryRecentEntityList(host, categoryType, sortedBy, sortDir);
+                    entity = (Map<String, Object>)entityCache.get(entityRid);
+
+                }
+                entities.add(entity);
             }
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", total);
-            result.put("products", products);
+            result.put("products", entities);
             result.put("allowUpdate", allowUpdate);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
