@@ -595,12 +595,19 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
             List<ODocument> entities = graph.getRawGraph().command(query).execute(entityRid);
             if(entities.size() > 0) {
+                jsonMap = new HashMap<String, Object>();
                 ODocument entity = entities.get(0);
-                entity.removeField("@type");
-                entity.removeField("@rid");
-                entity.removeField("@version");
-                entity.removeField("@fieldTypes");
-                jsonMap = entity.toMap();
+                jsonMap.put("rid", ((ODocument)entity.field("rid")).field("@rid").toString());
+                jsonMap.put("productId", entity.field("productId"));
+                jsonMap.put("name", entity.field("name"));
+                jsonMap.put("description", entity.field("description"));
+                jsonMap.put("variants", entity.field("variants"));
+                jsonMap.put("createDate", entity.field("createDate"));
+                jsonMap.put("parentRid", ((ODocument)entity.field("parentRid")).field("@rid").toString());
+                jsonMap.put("parentId", entity.field("parentId"));
+                jsonMap.put("createRid", ((ODocument)entity.field("createRid")).field("@rid").toString());
+                jsonMap.put("createUserId", entity.field("createUserId"));
+                jsonMap.put("tags", entity.field("tags"));
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
