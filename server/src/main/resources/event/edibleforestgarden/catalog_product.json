@@ -1,0 +1,84 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:12",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10013,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "cJMhhZTuRf6QEUrxKDYxFQ",
+      "name": "Comfrey Bocking 4",
+      "host": "www.edibleforestgarden.ca",
+      "description": "Russian comfrey bocking 4",
+      "variants": [
+        {
+          "sku": "comfrey_bocking4_one",
+          "type": "One root",
+          "price": 2,
+          "image": "1.png",
+          "inventory": 100
+        },
+        {
+          "sku": "comfrey_booking4_ten",
+          "type": "Ten roots",
+          "price": 15,
+          "image": "2.png",
+          "inventory": 50
+        }
+      ],
+      "parentId": "Herbaceous",
+      "tags": [
+        "dynamic accumulator"
+      ],
+      "createDate": "2016-02-01T04:27:20.242"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2016-02-01T04:27:20.241",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:20",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10021,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "productId": "Kit_ZByXQruXl49R8Rrq8g",
+      "name": "Comfrey Bocking 14",
+      "host": "www.edibleforestgarden.ca",
+      "description": "Russian Comfrey Bocking 14",
+      "variants": [
+        {
+          "sku": "comfrey_bocking14_one",
+          "type": "One root",
+          "price": 2,
+          "image": "3.png",
+          "inventory": 100
+        },
+        {
+          "sku": "comfrey_bocking14_ten",
+          "type": "Ten roots",
+          "price": 15,
+          "image": "4.png",
+          "inventory": 50
+        }
+      ],
+      "parentId": "Herbaceous",
+      "tags": [
+        "dynamic accumulator"
+      ],
+      "createDate": "2016-02-01T04:34:15.823"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2016-02-01T04:34:15.823",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

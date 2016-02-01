@@ -80,6 +80,10 @@
     {
       "description": "This file contains edibleforestgarden site catalog data for commerce",
       "location": "event/edibleforestgarden/catalog.json"
+    },
+    {
+      "description": "This file contains edibleforestgarden site catalog product data for commerce",
+      "location": "event/edibleforestgarden/catalog_product.json"
     }
   ]
 }

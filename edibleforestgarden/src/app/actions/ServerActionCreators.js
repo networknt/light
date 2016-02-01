@@ -92,6 +92,13 @@ module.exports = {
         });
     },
 
+    getTagEntityResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_TAG_ENTITY_RESPONSE,
+            json: json
+        });
+    },
+
     getBlogResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_BLOG_RESPONSE,

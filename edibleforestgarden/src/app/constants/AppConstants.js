@@ -44,6 +44,9 @@ module.exports = {
         // Routes
         REDIRECT: null,
 
+        // Tag
+        GET_TAG_ENTITY_RESPONSE: null,
+
         // Blog
         GET_BLOG_TREE_RESPONSE: null,
         GET_BLOG_POST_RESPONSE: null,

@@ -624,6 +624,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                             OrientVertex vertex = (OrientVertex)iterator.next();
                             jsonMap.put("parentRid", vertex.getIdentity().toString());
                             jsonMap.put("parentId", vertex.getProperty("categoryId"));
+                            jsonMap.put("parentType", vertex.getLabel());
                         }
                         if(entity.getProperty("originalAuthor") != null) jsonMap.put("originalAuthor", entity.getProperty("originalAuthor"));
                         if(entity.getProperty("originalSite") != null) jsonMap.put("originalSite", entity.getProperty("originalSite"));
@@ -640,6 +641,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                             OrientVertex vertex = (OrientVertex)iterator.next();
                             jsonMap.put("parentRid", vertex.getIdentity().toString());
                             jsonMap.put("parentId", vertex.getProperty("categoryId"));
+                            jsonMap.put("parentType", vertex.getLabel());
                         }
                         break;
                     default:

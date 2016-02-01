@@ -36,6 +36,11 @@
         "title": "Description",
         "type": "string"
       },
+      "tags": {
+        "title": "Tags",
+        "type": "array",
+        "maxItems": 10
+      },
       "variants": {
         "type": "array",
         "minItems": 1,
@@ -90,6 +95,17 @@
       "key": "description",
       "type": "textarea",
       "rows": 20
+    },
+    {
+      "key": "tags",
+      "type": "rc-select",
+      "tags": true,
+      "maxTagTextLength": 20,
+      "action": {
+        "get" : {
+          "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+        }
+      }
     },
     {
       "key": "variants",

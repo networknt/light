@@ -295,6 +295,29 @@ module.exports = {
         });
     },
 
+    getTagEntity: function(tagId, pageNo, pageSize) {
+        let getTagEntity = {
+            category: 'tag',
+            name: 'getTagEntity',
+            readOnly: true,
+            data: {
+                pageSize: pageSize,
+                pageNo: pageNo,
+                tagId: tagId
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getTagEntity))}
+        }).done(function(data) {
+            ServerActionCreators.getTagEntityResponse(data);
+
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
 
     getBlog: function() {
         let getBlog = {
