@@ -55,6 +55,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String host = (String) data.get("host");
         String parentRid = (String)data.remove("parentRid");
+        List<String> tags = null;
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -76,9 +77,11 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                     inputMap.put("eventMap", eventMap);
                     eventData.putAll((Map<String, Object>) inputMap.get("data"));
                     eventData.put("parentId", parent.getProperty("categoryId"));
-                    eventData.put("productId", HashUtil.generateUUID());
+                    eventData.put("entityId", HashUtil.generateUUID());
                     eventData.put("createDate", new Date());
                     eventData.put("createUserId", user.get("userId"));
+                    // get tags for clearing cache.
+                    tags = (List<String>)inputMap.get("tags");
                 }
             } catch (Exception e) {
                 logger.error("Exception:", e);
@@ -91,20 +94,11 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, categoryType, parentRid);
+            clearListCache(host, categoryType, parentRid);
+            if(tags != null && tags.size() > 0) clearTagCache(host, tags);
             return true;
         }
     }
-
-    private void clearCache(String host, String bfnType, String parentRid) {
-        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
-        if(listCache != null && listCache.size() > 0) {
-            listCache.remove(host + bfnType);
-            listCache.remove(parentRid + "createDate" + "desc");
-        }
-    }
-
 
     public boolean addProductEv (Object ...objects) throws Exception {
         Map<String, Object> eventMap = (Map<String, Object>) objects[0];
@@ -160,6 +154,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String)data.get("@rid");
         String parentRid = null;
+        List<String> tags = null;
         String host = (String)data.get("host");
         String error = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -178,11 +173,21 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                         Vertex edgeParent = e.getVertex(Direction.OUT);
                         parentRid = edgeParent.getId().toString();
                     }
+                    // get tags in order to clear cache
+                    Iterable iterable = product.getProperty("out_HasTag");
+                    if(iterable != null) {
+                        Iterator iterator = iterable.iterator();
+                        tags = new ArrayList<String>();
+                        while(iterator.hasNext()) {
+                            OrientVertex vertex = (OrientVertex)iterator.next();
+                            tags.add(vertex.getProperty("tagId"));
+                        }
+                    }
 
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
-                    eventData.put("productId", product.getProperty("productId"));
+                    eventData.put("entityId", product.getProperty("entityId"));
                 }
             } else {
                 error = "@rid " + rid + " cannot be found";
@@ -198,7 +203,9 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, categoryType, parentRid);
+            clearListCache(host, categoryType, parentRid);
+            if(tags != null && tags.size() > 0) clearTagCache(host, tags);
+            clearEntityCache(rid);
             return true;
         }
     }
@@ -217,7 +224,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
-            OrientVertex product = (OrientVertex)graph.getVertexByKey("Product.productId", data.get("productId"));
+            OrientVertex product = (OrientVertex)graph.getVertexByKey("Product.entityId", data.get("entityId"));
             if(product != null) {
                 // TODO cascade deleting all comments belong to the product.
                 // Need to come up a query on that to get the entire tree.
@@ -242,6 +249,9 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         String rid = (String) data.get("rid");
         String originalParentRid = null;
         String parentRid = null;
+        Set<String> delTags = null;
+        Set<String> addTags = null;
+
         String host = (String) data.get("host");
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
@@ -260,7 +270,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
-                    eventData.put("productId", product.getProperty("productId"));
+                    eventData.put("entityId", product.getProperty("entityId"));
                     eventData.put("name", data.get("name"));
                     eventData.put("host", data.get("host"));
                     eventData.put("description", data.get("description"));
@@ -303,7 +313,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                     List<String> tags = (List)data.get("tags");
                     if(tags == null || tags.size() == 0) {
                         // remove all existing tags
-                        Set<String> delTags = new HashSet<String>();
+                        delTags = new HashSet<String>();
                         for (Vertex vertex : (Iterable<Vertex>) product.getVertices(Direction.OUT, "HasTag")) {
                             delTags.add((String)vertex.getProperty("tagId"));
                         }
@@ -315,8 +325,8 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                             storedTags.add((String)vertex.getProperty("tagId"));
                         }
 
-                        Set<String> addTags = new HashSet<String>(inputTags);
-                        Set<String> delTags = new HashSet<String>(storedTags);
+                        addTags = new HashSet<String>(inputTags);
+                        delTags = new HashSet<String>(storedTags);
                         addTags.removeAll(storedTags);
                         delTags.removeAll(inputTags);
 
@@ -341,8 +351,11 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, categoryType, originalParentRid);
-            if(parentRid != null) clearCache(host, categoryType, parentRid);
+            clearListCache(host, categoryType, originalParentRid);
+            if(parentRid != null) clearListCache(host, categoryType, parentRid);
+            if(delTags != null && delTags.size() > 0) clearTagCache(host, new ArrayList<String>(delTags));
+            if(addTags != null && addTags.size() > 0) clearTagCache(host, new ArrayList<String>(addTags));
+            clearEntityCache(rid);
             return true;
         }
     }
@@ -360,7 +373,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         try{
             graph.begin();
             Vertex updateUser = graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex product = (OrientVertex)graph.getVertexByKey("Product.productId", data.get("productId"));
+            OrientVertex product = (OrientVertex)graph.getVertexByKey("Product.entityId", data.get("entityId"));
             if(product != null) {
                 updateUser.addEdge("Update", product);
                 // fields
@@ -402,7 +415,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                         OCompositeKey key = new OCompositeKey(data.get("host"), tagId);
                         OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
                         if (oid != null) {
-                            OrientVertex tag = (OrientVertex)oid.getRecord();
+                            OrientVertex tag = graph.getVertex(oid.getRecord());
                             product.addEdge("HasTag", tag);
                         } else {
                             Vertex tag = graph.addVertex("class:Tag", "host", data.get("host"), "tagId", tagId, "createDate", data.get("updateDate"));
@@ -444,122 +457,6 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
             graph.shutdown();
         }
     }
-
-    /*
-    public boolean getCatalogProduct(Object ...objects) throws Exception {
-        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
-        Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        String rid = (String)data.get("@rid");
-        String host = (String)data.get("host");
-        if(rid == null) {
-            inputMap.put("result", "@rid is required");
-            inputMap.put("responseCode", 400);
-            return false;
-        }
-        Integer pageSize = (Integer)data.get("pageSize");
-        Integer pageNo = (Integer)data.get("pageNo");
-        if(pageSize == null) {
-            inputMap.put("result", "pageSize is required");
-            inputMap.put("responseCode", 400);
-            return false;
-        }
-        if(pageNo == null) {
-            inputMap.put("result", "pageNo is required");
-            inputMap.put("responseCode", 400);
-            return false;
-        }
-        String sortDir = (String)data.get("sortDir");
-        String sortedBy = (String)data.get("sortedBy");
-        if(sortDir == null) {
-            sortDir = "desc";
-        }
-        if(sortedBy == null) {
-            sortedBy = "createDate";
-        }
-        boolean allowUpdate = false;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        if(payload != null) {
-            Map<String,Object> user = (Map<String, Object>)payload.get("user");
-            List roles = (List)user.get("roles");
-            if(roles.contains("owner")) {
-                allowUpdate = true;
-            } else if(roles.contains("admin") || roles.contains("catalogAdmin") || roles.contains("productAdmin")){
-                if(host.equals(user.get("host"))) {
-                    allowUpdate = true;
-                }
-            }
-        }
-        // get ancestors
-        List<Map<String, Object>> ancestors = getAncestorDb(rid);
-
-        // TODO support the following lists: recent, popular
-        // Get the page from cache.
-        List<String> list = null;
-        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
-        if(listCache != null) {
-            list = (List<String>)listCache.get(rid + sortedBy + sortDir);
-        }
-
-
-        if(list == null) {
-            list = getCategoryEntityList(rid, sortedBy, sortDir);
-        }
-        long total = list.size();
-        if(total > 0) {
-            List<Map<String, Object>> entities = new ArrayList<Map<String, Object>>();
-            ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
-            for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
-                String entityRid = list.get(i);
-                Map<String, Object> entity = (Map<String, Object>)entityCache.get(entityRid);
-                if(entity == null) {
-                    logger.warn("entity {} is missing from cache but list {} is in cache", entityRid, rid);
-                    getCategoryEntityList(rid, sortedBy, sortDir);
-                    entity = (Map<String, Object>)entityCache.get(entityRid);
-
-                }
-                entities.add(entity);
-            }
-            Map<String, Object> result = new HashMap<String, Object>();
-            result.put("total", total);
-            result.put("products", entities);
-            result.put("rid", rid);
-            result.put("allowUpdate", allowUpdate);
-            result.put("ancestors", ancestors);
-            inputMap.put("result", mapper.writeValueAsString(result));
-            return true;
-        } else {
-            // there is no product available. but still need to return allowUpdate
-            Map<String, Object> result = new HashMap<String, Object>();
-            result.put("total", 0);
-            result.put("rid", rid);
-            result.put("allowUpdate", allowUpdate);
-            result.put("ancestors", ancestors);
-            inputMap.put("result", mapper.writeValueAsString(result));
-            return true;
-        }
-    }
-    protected String getCategoryEntitytDb(String rid, String sortedBy, String sortDir) {
-        String json = null;
-        // TODO there is a bug that prepared query only support one parameter. That is why sortedBy is concat into the sql.
-        String sql = "select @rid, productId, name, description, variants, createDate, parentId, in_Create[0].@rid as createRid, " +
-                "in_Create[0].userId as createUserId, out_HasTag.tagId " +
-                "from (traverse out_Own, out_HasProduct from ?) where @class = 'Product' order by " + sortedBy + " " + sortDir;
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> products = graph.getRawGraph().command(query).execute(rid);
-            if(products.size() > 0) {
-                json = OJSONWriter.listToJSON(products, null);
-            }
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-        } finally {
-            graph.shutdown();
-        }
-        return json;
-    }
-    */
 
     @Override
     protected List<String> getCategoryEntityListDb(String categoryRid, String sortedBy, String sortDir) {
@@ -613,6 +510,13 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
     }
     */
 
+    /**
+     * This is product admin rule to get a list of product for amdin.
+     *
+     * @param objects
+     * @return
+     * @throws Exception
+     */
     public boolean getProduct(Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");

@@ -33,7 +33,7 @@ var CatalogProduct = React.createClass({
     componentDidMount: function() {
         console.log('CatalogProduct.componentDidMount', CatalogStore.getProducts(), this.props.params.index);
         this.setState({
-            product: CommonUtils.findProduct(CatalogStore.getProducts(), this.props.params.productId),
+            product: CommonUtils.findProduct(CatalogStore.getProducts(), this.props.params.entityId),
             allowUpdate: CatalogStore.getAllowUpdate()
         });
     },
@@ -46,7 +46,7 @@ var CatalogProduct = React.createClass({
 
     _onUpdateProduct: function () {
         //console.log("_onUpdateProduct is called");
-        this.props.history.push('/catalog/productUpdate/' + this.props.params.productId);
+        this.props.history.push('/catalog/productUpdate/' + this.props.params.entityId);
     },
 
     _onDeleteProduct: function () {

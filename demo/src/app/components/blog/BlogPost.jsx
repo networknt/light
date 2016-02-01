@@ -34,7 +34,7 @@ var BlogPost = React.createClass({
         //console.log('BlogPost blogPosts', BlogStore.getPosts());
         //console.log('BlogPost index ', this.props.params.index);
         this.setState({
-            post: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId),
+            post: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.entityId),
             allowUpdate: BlogStore.getAllowUpdate()
         })
     },
@@ -47,7 +47,7 @@ var BlogPost = React.createClass({
 
     _onUpdatePost: function () {
         console.log("_onUpdatePost is called");
-        this.props.history.push('/blog/postUpdate/' + this.props.params.postId);
+        this.props.history.push('/blog/postUpdate/' + this.props.params.entityId);
     },
 
     _onDeletePost: function () {
@@ -55,11 +55,16 @@ var BlogPost = React.createClass({
         BlogActionCreators.delPost(this.state.post.rid);
     },
 
+    _routeToTag: function(tagId) {
+        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+    },
+
     render: function() {
         let tags = '';
         if(this.state.post.tags) {
             tags = this.state.post.tags.map((tag, index) => {
-                return <span key={index}>{tag}&nbsp;&nbsp;&nbsp;</span>
+                let boundTagClick = this._routeToTag.bind(this, tag);
+                return <span key={index}><a href='#' onClick={boundTagClick}>{tag}</a>&nbsp;&nbsp;&nbsp;</span>
             });
         }
         let original = '';

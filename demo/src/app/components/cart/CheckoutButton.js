@@ -105,7 +105,7 @@ var CheckoutButton = React.createClass({
         // before switching to payment gateway, save the order here.
         var order = {};
         // all the numbers should be calculated on the server and only items should be passed here
-        // need at least @rid/productId, sku, quantity in order to calculate all the numbers.
+        // need at least @rid/entityId, sku, quantity in order to calculate all the numbers.
         //console.log('cartItems', this.state.cartItems);
         var items = [];
         this.state.cartItems.forEach(function(cartItem) {

@@ -43,7 +43,7 @@ public abstract class AbstractProductRule extends AbstractRule implements Rule {
         try {
             graph.begin();
             OrientVertex updateUser = (OrientVertex) graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex product = (OrientVertex) graph.getVertexByKey("Product.productId", data.get("productId"));
+            OrientVertex product = (OrientVertex) graph.getVertexByKey("Product.entityId", data.get("entityId"));
             if (product != null && updateUser != null) {
                 // remove DownVote edge if there is.
                 for (Edge edge : updateUser.getEdges(product, Direction.OUT, "DownVote")) {
@@ -65,7 +65,7 @@ public abstract class AbstractProductRule extends AbstractRule implements Rule {
         try {
             graph.begin();
             OrientVertex updateUser = (OrientVertex) graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex product = (OrientVertex) graph.getVertexByKey("Product.productId", data.get("productId"));
+            OrientVertex product = (OrientVertex) graph.getVertexByKey("Product.entityId", data.get("entityId"));
             if (product != null && updateUser != null) {
                 // remove UpVote edge if there is.
                 for (Edge edge : updateUser.getEdges(product, Direction.OUT, "UpVote")) {

@@ -41,7 +41,7 @@ public abstract class AbstractPostRule extends AbstractRule implements Rule {
         try {
             graph.begin();
             OrientVertex updateUser = (OrientVertex) graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex post = (OrientVertex) graph.getVertexByKey("Post.postId", data.get("postId"));
+            OrientVertex post = (OrientVertex) graph.getVertexByKey("Post.entityId", data.get("entityId"));
             if (post != null && updateUser != null) {
                 // remove DownVote edge if there is.
                 for (Edge edge : updateUser.getEdges(post, Direction.OUT, "DownVote")) {
@@ -63,7 +63,7 @@ public abstract class AbstractPostRule extends AbstractRule implements Rule {
         try {
             graph.begin();
             OrientVertex updateUser = (OrientVertex) graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex post = (OrientVertex) graph.getVertexByKey("Post.postId", data.get("postId"));
+            OrientVertex post = (OrientVertex) graph.getVertexByKey("Post.entityId", data.get("entityId"));
             if (post != null && updateUser != null) {
                 // remove UpVote edge if there is.
                 for (Edge edge : updateUser.getEdges(post, Direction.OUT, "UpVote")) {

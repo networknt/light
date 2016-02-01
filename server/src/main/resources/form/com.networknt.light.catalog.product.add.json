@@ -16,7 +16,8 @@
     "required": [
       "parentRid",
       "name",
-      "description"
+      "description",
+      "variants"
     ],
     "properties": {
       "parentRid": {

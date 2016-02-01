@@ -57,7 +57,7 @@ let Login = React.createClass({
     _onAuthChange: function() {
         // route to user page once it is logged in.
         if(AuthStore.isLoggedIn()) {
-            this.props.history.push('user');
+            this.props.history.push('profile');
         }
     },
 

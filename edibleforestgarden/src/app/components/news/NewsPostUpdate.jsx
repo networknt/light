@@ -44,12 +44,12 @@ var NewsPostUpdate = React.createClass({
         let schema = FormStore.getForm(id).schema;
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
-        //console.log('NewsPostUpdate.onFormChange', this.props.params.postId, CommonUtils.findPost(NewsStore.getPosts(), this.props.params.postId));
+        //console.log('NewsPostUpdate.onFormChange', this.props.params.entityId, CommonUtils.findPost(NewsStore.getPosts(), this.props.params.entityId));
         this.setState({
             schema: schema,
             form: form,
             action: action,
-            model: CommonUtils.findPost(NewsStore.getPosts(), this.props.params.postId)
+            model: CommonUtils.findPost(NewsStore.getPosts(), this.props.params.entityId)
         });
     },
 

@@ -44,12 +44,12 @@ var BlogPostUpdate = React.createClass({
         let schema = FormStore.getForm(id).schema;
         let form = FormStore.getForm(id).form;
         let action = FormStore.getForm(id).action;
-        //console.log('onFormChange', this.props.params.postId, CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId));
+        //console.log('onFormChange', this.props.params.entityId, CommonUtils.findPost(BlogStore.getPosts(), this.props.params.entityId));
         this.setState({
             schema: schema,
             form: form,
             action: action,
-            model: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.postId)
+            model: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.entityId)
         });
     },
 

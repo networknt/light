@@ -12,10 +12,10 @@ function findCategory(category, categoryId) {
     return null;
 }
 
-function findPost(posts, postId) {
+function findPost(posts, entityId) {
     let post = null;
     for(var i = 0; i < posts.length; i++) {
-        if(posts[i].postId === postId) {
+        if(posts[i].entityId === entityId) {
             post = posts[i];
             break;
         }
@@ -23,10 +23,10 @@ function findPost(posts, postId) {
     return post;
 }
 
-function findProduct(products, productId) {
+function findProduct(products, entityId) {
     let product = null;
     for(var i = 0; i < products.length; i++) {
-        if(products[i].productId === productId) {
+        if(products[i].entityId === entityId) {
             product = products[i];
             break;
         }

@@ -50,7 +50,7 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             String parentClassName = (String)data.remove("parentClassName");
             Vertex parent = null;
             if("Post".equals(parentClassName)) {
-                parent = graph.getVertexByKey("Post.postId", parentId);
+                parent = graph.getVertexByKey("Post.entityId", parentId);
             } else {
                 parent = graph.getVertexByKey("Comment.commentId", parentId);
             }

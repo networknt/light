@@ -46,7 +46,7 @@ var CatalogProductUpdate = React.createClass({
             schema: schema,
             form: form,
             action: action,
-            model: CommonUtils.findProduct(CatalogStore.getProducts(), this.props.params.productId)
+            model: CommonUtils.findProduct(CatalogStore.getProducts(), this.props.params.entityId)
         });
     },
 

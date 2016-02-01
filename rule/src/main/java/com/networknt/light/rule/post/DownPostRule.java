@@ -63,7 +63,7 @@ public class DownPostRule extends AbstractPostRule implements Rule {
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
-                    eventData.put("postId", post.getProperty("postId"));
+                    eventData.put("entityId", post.getProperty("entityId"));
                     eventData.put("updateUserId", user.get("userId"));
                 }
             }

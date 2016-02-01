@@ -4,8 +4,6 @@ var BlogStore = require('../../stores/BlogStore');
 import BlogCategoryStore from '../../stores/BlogCategoryStore';
 var BlogActionCreators = require('../../actions/BlogActionCreators');
 var classNames = require('classnames');
-import Paper from 'material-ui/lib/paper';
-import Markdown from '../Markdown';
 import RaisedButton from 'material-ui/lib/raised-button';
 require('rc-pagination/assets/index.css');
 import Pagination from 'rc-pagination';
@@ -13,7 +11,7 @@ import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
-import Gravatar from '../Gravatar';
+import BlogSummary from './BlogSummary';
 
 var BlogRecentPost = React.createClass({
     displayName: 'BlogRecentPost',
@@ -43,9 +41,9 @@ var BlogRecentPost = React.createClass({
         });
     },
 
-    _routeToPost: function(categoryId, postId) {
-        console.log('BlogRecentPost', categoryId, postId);
-        this.props.history.push('/blog/' + categoryId + '/' + postId);
+    _routeToPost: function(categoryId, entityId) {
+        console.log('BlogRecentPost', categoryId, entityId);
+        this.props.history.push('/blog/' + categoryId + '/' + entityId);
     },
 
     _onPageNoChange: function (key) {
@@ -74,16 +72,10 @@ var BlogRecentPost = React.createClass({
                     <div className="leftColumn">
                         {
                             this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.parentId, post.postId);
+                                var boundClick = this._routeToPost.bind(this, post.parentId, post.entityId);
                                 return (
                                     <span key={index}>
-                                        <Paper className="blogPostPaper">
-                                            <div className="blogPost">
-                                                <Gravatar md5={post.gravatar} /><h2 className="title"><a onClick={boundClick}>{post.title}</a></h2>
-                                                <span>Submitted by {post.createUserId} on {post.createDate}</span>
-                                                <Markdown text={post.summary} />
-                                            </div>
-                                        </Paper>
+                                        <BlogSummary post={post} onClick ={boundClick} />
                                     </span>
                                 );
                             }, this)

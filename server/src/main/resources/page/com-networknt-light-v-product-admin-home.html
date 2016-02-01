@@ -26,7 +26,7 @@
             },
             {
                 title: 'Product Id',
-                value: 'productId'
+                value: 'entityId'
             },
             {
                 title: 'Description',
@@ -117,7 +117,7 @@
                         <tr>
                             <td></td>
                             <td><input ng-model="filter.host" type="text" /></td>
-                            <td><input ng-model="filter.productId" type="text" /></td>
+                            <td><input ng-model="filter.entityId" type="text" /></td>
                             <td><input ng-model="filter.description" type="text" /></td>
                             <td><input ng-model="filter.createUserId" type="text" /></td>
                             <td><input ng-model="filter.createDate" type="text" /></td>
@@ -127,7 +127,7 @@
                         <tr ng-repeat="product in products | filter: filter | orderBy: sort.sortedBy">
                             <td><a href ng-click="delete(product)">Delete</a></td>
                             <td>{{product.host}}</td>
-                            <td><a href ng-click="update(product)">{{product.productId}}</a></td>
+                            <td><a href ng-click="update(product)">{{product.entityId}}</a></td>
                             <td>{{product.description}}</td>
                             <td>{{product.createUserId}}</td>
                             <td>{{product.createDate}}</td>

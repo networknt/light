@@ -9,7 +9,7 @@ var Ancestor = require('../Ancestor');
 
 function getProduct(product, index) {
     return (
-        <Product product={product} productIndex={index} key={product.productId} />
+        <Product product={product} productIndex={index} key={product.entityId} />
     );
 }
 

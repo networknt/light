@@ -82,8 +82,8 @@ var Blog = React.createClass({
         BlogActionCreators.getBlogPost(rid, this.state.pageNo, this.state.pageSize);
     },
 
-    _routeToPost: function(postId) {
-        this.props.history.push('/blog/' + this.props.params.categoryId + '/' + postId);
+    _routeToPost: function(entityId) {
+        this.props.history.push('/blog/' + this.props.params.categoryId + '/' + entityId);
     },
 
     _onAddPost: function () {
@@ -120,7 +120,7 @@ var Blog = React.createClass({
                     <div className="leftColumn">
                         {
                             this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.postId);
+                                var boundClick = this._routeToPost.bind(this, post.entityId);
                                 return (
                                     <span key={index}>
                                         <Paper className="blogPostPaper">

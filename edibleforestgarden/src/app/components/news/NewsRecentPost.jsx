@@ -42,8 +42,8 @@ var NewsRecentPost = React.createClass({
         });
     },
 
-    _routeToPost: function(categoryId, postId) {
-        this.props.history.push('/news/' + categoryId + '/' + postId);
+    _routeToPost: function(categoryId, entityId) {
+        this.props.history.push('/news/' + categoryId + '/' + entityId);
     },
 
     _onPageNoChange: function (key) {
@@ -72,7 +72,7 @@ var NewsRecentPost = React.createClass({
                     <div className="leftColumn">
                         {
                             this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.parentId, post.postId);
+                                var boundClick = this._routeToPost.bind(this, post.parentId, post.entityId);
                                 return (
                                     <span key={index}>
                                         <Paper className="blogPostPaper">

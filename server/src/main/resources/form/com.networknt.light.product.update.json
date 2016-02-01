@@ -15,7 +15,7 @@
     "title": "Product",
     "required": [
       "in_HasProduct",
-      "productId",
+      "entityId",
       "name",
       "description",
       "variants"
@@ -27,7 +27,7 @@
         "maxItems": 1,
         "format": "strapselectdynamic"
       },
-      "productId": {
+      "entityId": {
         "title": "Product Id",
         "type": "string",
         "readOnly": true
@@ -106,7 +106,7 @@
         "name": "getCatalogDropdown"
       }
     },
-    "productId",
+    "entityId",
     "name",
     "description",
     {

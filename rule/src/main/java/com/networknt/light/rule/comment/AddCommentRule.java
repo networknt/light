@@ -59,7 +59,7 @@ public class AddCommentRule extends AbstractCommentRule implements Rule {
                 String parentClassName = parent.getProperty("@class");
                 eventData.put("parentClassName", parentClassName); // parent can be a post or a comment
                 if("Post".equals(parentClassName)) {
-                    eventData.put("parentId", parent.getProperty("postId"));
+                    eventData.put("parentId", parent.getProperty("entityId"));
                 } else {
                     eventData.put("parentId", parent.getProperty("commentId"));
                 }

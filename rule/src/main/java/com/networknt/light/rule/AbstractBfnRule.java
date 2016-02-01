@@ -38,6 +38,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by steve on 28/12/14.
@@ -71,7 +73,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 inputMap.put("eventMap", eventMap);
                 eventData.putAll((Map<String, Object>) inputMap.get("data"));
                 eventData.put("parentId", parent.getProperty("categoryId"));
-                eventData.put("postId", HashUtil.generateUUID());
+                eventData.put("entityId", HashUtil.generateUUID());
                 eventData.put("createDate", new Date());
                 eventData.put("createUserId", user.get("userId"));
             }
@@ -85,12 +87,13 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, bfnType, parentRid);
+            clearListCache(host, bfnType, parentRid);
+            clearTagCache(host, (List<String>) inputMap.get("tags"));
             return true;
         }
     }
 
-    private void clearCache(String host, String bfnType, String parentRid) {
+    protected void clearListCache(String host, String bfnType, String parentRid) {
         Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
         ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
         if(listCache != null && listCache.size() > 0) {
@@ -99,6 +102,27 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             // clear newestList for this parentRid only this category
             listCache.remove(parentRid + "createDate" + "desc");
             // TODO handler future list here.
+        }
+    }
+
+    protected void clearTagCache(String host, List<String> tags) {
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
+        if(listCache != null && listCache.size() > 0) {
+            // clear tagList for this host
+            if(tags != null && tags.size() > 0) {
+                for(String tag: tags) {
+                    listCache.remove(host + tag);
+                }
+            }
+        }
+    }
+
+    protected void clearEntityCache(String entityRid) {
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
+        if(entityCache != null) {
+            entityCache.remove(entityRid);
         }
     }
 
@@ -159,6 +183,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         String parentRid = null;
         String host = (String)data.get("host");
         String error = null;
+        List<String> tags = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OrientVertex post = (OrientVertex)DbService.getVertexByRid(graph, rid);
@@ -175,10 +200,21 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                         Vertex edgeParent = e.getVertex(Direction.OUT);
                         parentRid = edgeParent.getId().toString();
                     }
+                    // now find all the tags to clear the tag list cache.
+                    Iterable iterable = post.getProperty("out_HasTag");
+                    if(iterable != null) {
+                        Iterator iterator = iterable.iterator();
+                        tags = new ArrayList<String>();
+                        while(iterator.hasNext()) {
+                            OrientVertex vertex = (OrientVertex)iterator.next();
+                            tags.add(vertex.getProperty("tagId"));
+                        }
+                    }
+
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
-                    eventData.put("postId", post.getProperty("postId"));
+                    eventData.put("entityId", post.getProperty("entityId"));
                 }
             } else {
                 error = "@rid " + rid + " cannot be found";
@@ -194,7 +230,9 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, bfnType, parentRid);
+            clearListCache(host, bfnType, parentRid);
+            if(tags != null && tags.size() > 0) clearTagCache(host, tags);
+            clearEntityCache(rid);
             return true;
         }
     }
@@ -213,7 +251,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
-            OrientVertex post = (OrientVertex)graph.getVertexByKey("Post.postId", data.get("postId"));
+            OrientVertex post = (OrientVertex)graph.getVertexByKey("Post.entityId", data.get("entityId"));
             if(post != null) {
                 // TODO cascade deleting all comments belong to the post.
                 // Need to come up a query on that to get the entire tree.
@@ -241,6 +279,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         String parentRid = null;
         String host = (String) data.get("host");
         String error = null;
+        Set<String> addTags = null;
+        Set<String> delTags = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
@@ -252,7 +292,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.put("host", data.get("host"));
-                eventData.put("postId", post.getProperty("postId"));
+                eventData.put("entityId", post.getProperty("entityId"));
                 eventData.put("title", data.get("title"));
                 eventData.put("source", data.get("source"));
                 eventData.put("summary", data.get("summary"));
@@ -296,7 +336,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 List<String> tags = (List)data.get("tags");
                 if(tags == null || tags.size() == 0) {
                     // remove all existing tags
-                    Set<String> delTags = new HashSet<String>();
+                    delTags = new HashSet<String>();
                     for (Vertex vertex : (Iterable<Vertex>) post.getVertices(Direction.OUT, "HasTag")) {
                         delTags.add((String)vertex.getProperty("tagId"));
                     }
@@ -308,8 +348,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                         storedTags.add((String)vertex.getProperty("tagId"));
                     }
 
-                    Set<String> addTags = new HashSet<String>(inputTags);
-                    Set<String> delTags = new HashSet<String>(storedTags);
+                    addTags = new HashSet<String>(inputTags);
+                    delTags = new HashSet<String>(storedTags);
                     addTags.removeAll(storedTags);
                     delTags.removeAll(inputTags);
 
@@ -330,8 +370,11 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            clearCache(host, bfnType, originalParentRid);
-            if(parentRid != null) clearCache(host, bfnType, parentRid);
+            clearListCache(host, bfnType, originalParentRid);
+            if(parentRid != null) clearListCache(host, bfnType, parentRid);
+            if(delTags != null && delTags.size() > 0) clearTagCache(host, new ArrayList<String>(delTags));
+            if(addTags != null && addTags.size() > 0) clearTagCache(host, new ArrayList<String>(addTags));
+            clearEntityCache(rid);
             return true;
         }
     }
@@ -348,7 +391,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         try{
             graph.begin();
             Vertex updateUser = graph.getVertexByKey("User.userId", data.remove("updateUserId"));
-            OrientVertex post = (OrientVertex)graph.getVertexByKey("Post.postId", data.get("postId"));
+            OrientVertex post = (OrientVertex)graph.getVertexByKey("Post.entityId", data.get("entityId"));
 
             if(post != null) {
                 updateUser.addEdge("Update", post);
@@ -396,7 +439,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                         OCompositeKey key = new OCompositeKey(data.get("host"), tagId);
                         OIdentifiable oid = (OIdentifiable) hostIdIdx.get(key);
                         if (oid != null) {
-                            OrientVertex tag = (OrientVertex)oid.getRecord();
+                            OrientVertex tag = graph.getVertex(oid.getRecord());
                             post.addEdge("HasTag", tag);
                         } else {
                             Vertex tag = graph.addVertex("class:Tag", "host", data.get("host"), "tagId", tagId, "createDate", data.get("updateDate"));
@@ -614,7 +657,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 }
                 switch(entity.getLabel()) {
                     case "Post":
-                        jsonMap.put("postId", entity.getProperty("postId"));
+                        jsonMap.put("entityId", entity.getProperty("entityId"));
                         jsonMap.put("title", entity.getProperty("title"));
                         jsonMap.put("summary", entity.getProperty("summary"));
                         jsonMap.put("content", entity.getProperty("content"));
@@ -631,7 +674,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                         if(entity.getProperty("originalUrl") != null) jsonMap.put("originalUrl", entity.getProperty("originalUrl"));
                         break;
                     case "Product":
-                        jsonMap.put("productId", entity.getProperty("productId"));
+                        jsonMap.put("entityId", entity.getProperty("entityId"));
                         jsonMap.put("name", entity.getProperty("name"));
                         jsonMap.put("description", entity.getProperty("description"));
                         jsonMap.put("variants", entity.getProperty("variants"));

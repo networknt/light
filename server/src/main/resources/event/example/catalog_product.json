@@ -8,7 +8,7 @@
     "createUserId": "stevehu",
     "data": {
       "createUserId": "stevehu",
-      "productId": "dqGTGzAcSAOYWujmWmnGLA",
+      "entityId": "dqGTGzAcSAOYWujmWmnGLA",
       "name": "HP",
       "host": "example",
       "description": "HP Computer",
@@ -54,7 +54,7 @@
     "createUserId": "stevehu",
     "data": {
       "createUserId": "stevehu",
-      "productId": "5E_MKOQdR3qENvnNwG-T-g",
+      "entityId": "5E_MKOQdR3qENvnNwG-T-g",
       "name": "IBM Computer",
       "host": "example",
       "description": "IBM Computer is the best in the world",
@@ -89,7 +89,7 @@
     "createUserId": "stevehu",
     "data": {
       "createUserId": "stevehu",
-      "productId": "x3EQMrqTSWaslqdvBvs6gg",
+      "entityId": "x3EQMrqTSWaslqdvBvs6gg",
       "name": "Acer",
       "host": "example",
       "description": "Acer Case has most reasonable price",
@@ -124,7 +124,7 @@
     "createUserId": "stevehu",
     "data": {
       "createUserId": "stevehu",
-      "productId": "8mrI0DmoSCGMcdlX1E2zRQ",
+      "entityId": "8mrI0DmoSCGMcdlX1E2zRQ",
       "name": "Dell",
       "host": "example",
       "description": "Dell Desktop Case",
@@ -170,7 +170,7 @@
     "createUserId": "stevehu",
     "data": {
       "createUserId": "stevehu",
-      "productId": "dp48Gjz9SligBuKo-LqEAg",
+      "entityId": "dp48Gjz9SligBuKo-LqEAg",
       "name": "Sun",
       "host": "example",
       "description": "Sun Server Case",
@@ -216,7 +216,7 @@
     "createUserId": "stevehu",
     "data": {
       "createUserId": "stevehu",
-      "productId": "pu9Hn3vLSgmcfdECwJsHig",
+      "entityId": "pu9Hn3vLSgmcfdECwJsHig",
       "name": "Seagate",
       "host": "example",
       "description": "Seagate Drive",

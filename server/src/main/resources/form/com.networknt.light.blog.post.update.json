@@ -14,7 +14,7 @@
     "type": "object",
     "title": "Blog Post Update",
     "required": [
-      "postId",
+      "entityId",
       "title",
       "summary",
       "content"
@@ -24,7 +24,7 @@
         "title": "Parent Rid",
         "type": "string"
       },
-      "postId": {
+      "entityId": {
         "title": "Post Id",
         "type": "string",
         "readOnly": true
@@ -71,7 +71,7 @@
         }
       }
     },
-    "postId",
+    "entityId",
     "title",
     "originalAuthor",
     "originalSite",

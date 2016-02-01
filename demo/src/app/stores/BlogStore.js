@@ -57,7 +57,7 @@ AppDispatcher.register(function(payload) {
         case ActionTypes.GET_BLOG_POST_RESPONSE:
             //console.log('GET_BLOG_POST_RESPONSE', payload);
             _total = payload.json.total;
-            _allowUpdate = payload.json.allowUpdatet;
+            _allowUpdate = payload.json.allowUpdate;
             if(_total == 0) {
                 _posts = [];
             } else {

@@ -76,8 +76,8 @@ var Catalog = React.createClass({
         CatalogActionCreators.getCatalogProduct(rid, this.state.pageNo, this.state.pageSize);
     },
 
-    _routeToProduct: function(productId) {
-        this.props.history.push('/catalog/' + this.props.params.categoryId + '/' + productId);
+    _routeToProduct: function(entityId) {
+        this.props.history.push('/catalog/' + this.props.params.categoryId + '/' + entityId);
     },
 
     _onAddCart: function(index) {
@@ -118,7 +118,7 @@ var Catalog = React.createClass({
                     <div className="leftColumn">
                         {
                             this.state.products.map(function(product, index) {
-                                var boundClick = this._routeToProduct.bind(this, product.productId);
+                                var boundClick = this._routeToProduct.bind(this, product.entityId);
                                 var boundAddCart = this._onAddCart.bind(this, index);
                                 //console.log("Catalog.render", product);
                                 var variants = product.variants;

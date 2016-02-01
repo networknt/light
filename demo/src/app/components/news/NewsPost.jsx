@@ -34,7 +34,7 @@ var NewsPost = React.createClass({
         //console.log('NewsPost blogPosts', NewsStore.getNewsPosts());
         //console.log('NewsPost index ', this.props.params.index);
         this.setState({
-            post: CommonUtils.findPost(NewsStore.getPosts(), this.props.params.postId),
+            post: CommonUtils.findPost(NewsStore.getPosts(), this.props.params.entityId),
             allowUpdate: NewsStore.getAllowUpdate()
         })
     },
@@ -47,7 +47,7 @@ var NewsPost = React.createClass({
 
     _onUpdatePost: function () {
         console.log("_onUpdatePost is called");
-        this.props.history.push('/news/postUpdate/' + this.props.params.postId);
+        this.props.history.push('/news/postUpdate/' + this.props.params.entityId);
     },
 
     _onDeletePost: function () {

@@ -63,7 +63,7 @@ public class UpProductRule extends AbstractProductRule implements Rule {
                     Map eventMap = getEventMap(inputMap);
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
-                    eventData.put("productId", product.getProperty("productId"));
+                    eventData.put("entityId", product.getProperty("entityId"));
                     eventData.put("updateUserId", user.get("userId"));
                 }
             }
