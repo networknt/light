@@ -583,40 +583,6 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         return entityList;
     }
 
-    @Override
-    protected Map<String, Object> getCategoryEntityDb(String entityRid) {
-        Map<String, Object> jsonMap = null;
-        String sql = "SELECT @rid as rid, productId, name, description, variants, createDate," +
-                "in_HasProduct[0].@rid as parentRid, in_HasProduct[0].categoryId as parentId, " +
-                "in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, " +
-                "out_HasTag.tagId as tags FROM ? ";
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> entities = graph.getRawGraph().command(query).execute(entityRid);
-            if(entities.size() > 0) {
-                jsonMap = new HashMap<String, Object>();
-                ODocument entity = entities.get(0);
-                jsonMap.put("rid", ((ODocument)entity.field("rid")).field("@rid").toString());
-                jsonMap.put("productId", entity.field("productId"));
-                jsonMap.put("name", entity.field("name"));
-                jsonMap.put("description", entity.field("description"));
-                jsonMap.put("variants", entity.field("variants"));
-                jsonMap.put("createDate", entity.field("createDate"));
-                jsonMap.put("parentRid", ((ODocument)entity.field("parentRid")).field("@rid").toString());
-                jsonMap.put("parentId", entity.field("parentId"));
-                jsonMap.put("createRid", ((ODocument)entity.field("createRid")).field("@rid").toString());
-                jsonMap.put("createUserId", entity.field("createUserId"));
-                if(entity.field("tags") != null) jsonMap.put("tags", entity.field("tags"));
-            }
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-        } finally {
-            graph.shutdown();
-        }
-        return jsonMap;
-    }
-
     /*
     protected List getAncestorDb(String rid) {
         List<Map<String, Object>> ancestors = null;

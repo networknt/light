@@ -30,6 +30,7 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientElementIterable;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
@@ -562,7 +563,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         return entityList;
     }
 
-    protected Map<String, Object> getCategoryEntity(String entityRid) {
+    public Map<String, Object> getCategoryEntity(String entityRid) {
         Map<String, Object> entity = null;
         Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
         ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
@@ -583,34 +584,67 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         return entity;
     }
 
-    protected Map<String, Object> getCategoryEntityDb(String entityRid) {
+    public Map<String, Object> getCategoryEntityDb(String entityRid) {
         Map<String, Object> jsonMap = null;
-        String sql = "SELECT @rid as rid, postId, title, summary, content, originalAuthor, originalSite, originalUrl, " +
-                "createDate, in_HasPost[0].@rid as parentRid, in_HasPost[0].categoryId as parentId, " +
-                "in_Create[0].@rid as createRid, in_Create[0].userId as createUserId, " +
-                "in_Create[0].gravatar as gravatar, out_HasTag.tagId as tags FROM ? ";
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> entities = graph.getRawGraph().command(query).execute(entityRid);
-            if(entities.size() > 0) {
+            OrientVertex entity = (OrientVertex)DbService.getVertexByRid(graph, entityRid);
+            if(entity != null) {
                 jsonMap = new HashMap<String, Object>();
-                ODocument entity = entities.get(0);
-                jsonMap.put("rid", ((ODocument)entity.field("rid")).field("@rid").toString());
-                jsonMap.put("postId", entity.field("postId"));
-                jsonMap.put("title", entity.field("title"));
-                jsonMap.put("summary", entity.field("summary"));
-                jsonMap.put("content", entity.field("content"));
-                if(entity.field("originalAuthor") != null) jsonMap.put("originalAuthor", entity.field("originalAuthor"));
-                if(entity.field("originalSite") != null) jsonMap.put("originalSite", entity.field("originalSite"));
-                if(entity.field("originalUrl") != null) jsonMap.put("originalUrl", entity.field("originalUrl"));
-                jsonMap.put("createDate", entity.field("createDate"));
-                jsonMap.put("parentRid", ((ODocument)entity.field("parentRid")).field("@rid").toString());
-                jsonMap.put("parentId", entity.field("parentId"));
-                jsonMap.put("createRid", ((ODocument)entity.field("createRid")).field("@rid").toString());
-                jsonMap.put("createUserId", entity.field("createUserId"));
-                jsonMap.put("gravatar", entity.field("gravatar"));
-                if(entity.field("tags") != null) jsonMap.put("tags", entity.field("tags"));
+                jsonMap.put("type", entity.getLabel());
+                jsonMap.put("rid", entity.getIdentity().toString());
+                jsonMap.put("createDate", entity.getProperty("createDate"));
+                OrientElementIterable iterable = entity.getProperty("in_Create");
+                Iterator iterator = iterable.iterator();
+                if(iterator.hasNext()) {
+                    OrientVertex vertex = (OrientVertex)iterator.next();
+                    jsonMap.put("createRid", vertex.getIdentity().toString());
+                    jsonMap.put("createUserId", vertex.getProperty("userId"));
+                    jsonMap.put("gravatar", vertex.getProperty("gravatar"));
+                }
+                iterable = entity.getProperty("out_HasTag");
+                if(iterable != null) {
+                    iterator = iterable.iterator();
+                    List<String> tags = new ArrayList<String>();
+                    while(iterator.hasNext()) {
+                        OrientVertex vertex = (OrientVertex)iterator.next();
+                        tags.add(vertex.getProperty("tagId"));
+                    }
+                    if(tags.size() > 0) jsonMap.put("tags", tags);
+                }
+                switch(entity.getLabel()) {
+                    case "Post":
+                        jsonMap.put("postId", entity.getProperty("postId"));
+                        jsonMap.put("title", entity.getProperty("title"));
+                        jsonMap.put("summary", entity.getProperty("summary"));
+                        jsonMap.put("content", entity.getProperty("content"));
+                        iterable = entity.getProperty("in_HasPost");
+                        iterator = iterable.iterator();
+                        if(iterator.hasNext()) {
+                            OrientVertex vertex = (OrientVertex)iterator.next();
+                            jsonMap.put("parentRid", vertex.getIdentity().toString());
+                            jsonMap.put("parentId", vertex.getProperty("categoryId"));
+                        }
+                        if(entity.getProperty("originalAuthor") != null) jsonMap.put("originalAuthor", entity.getProperty("originalAuthor"));
+                        if(entity.getProperty("originalSite") != null) jsonMap.put("originalSite", entity.getProperty("originalSite"));
+                        if(entity.getProperty("originalUrl") != null) jsonMap.put("originalUrl", entity.getProperty("originalUrl"));
+                        break;
+                    case "Product":
+                        jsonMap.put("productId", entity.getProperty("productId"));
+                        jsonMap.put("name", entity.getProperty("name"));
+                        jsonMap.put("description", entity.getProperty("description"));
+                        jsonMap.put("variants", entity.getProperty("variants"));
+                        iterable = entity.getProperty("in_HasProduct");
+                        iterator = iterable.iterator();
+                        if(iterator.hasNext()) {
+                            OrientVertex vertex = (OrientVertex)iterator.next();
+                            jsonMap.put("parentRid", vertex.getIdentity().toString());
+                            jsonMap.put("parentId", vertex.getProperty("categoryId"));
+                        }
+                        break;
+                    default:
+                        logger.error("Unknown entity type", entity.getLabel());
+                }
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
@@ -618,7 +652,6 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
             graph.shutdown();
         }
         return jsonMap;
-
     }
 
     /**

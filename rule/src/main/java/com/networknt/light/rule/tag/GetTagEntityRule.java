@@ -8,7 +8,7 @@ import com.networknt.light.rule.Rule;
  * AccessLevel A anybody
  *
  */
-public class GetTagEntity extends AbstractTagRule implements Rule {
+public class GetTagEntityRule extends AbstractTagRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         return getTagEntity(objects);
     }

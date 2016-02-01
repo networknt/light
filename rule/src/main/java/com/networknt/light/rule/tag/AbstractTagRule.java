@@ -22,22 +22,22 @@ import com.networknt.light.rule.AbstractBfnRule;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.rule.db.AbstractDbRule;
+import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.orientechnologies.orient.core.db.record.OIdentifiable;
+import com.orientechnologies.orient.core.db.record.ridbag.ORidBag;
 import com.orientechnologies.orient.core.index.OCompositeKey;
 import com.orientechnologies.orient.core.index.OIndex;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.impls.orient.OrientElementIterable;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -121,33 +121,19 @@ public abstract class AbstractTagRule extends AbstractBfnRule implements Rule {
         }
 
         // Get the entity list from cache.
-        List<String> list = null;
-        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
-        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
-        if(listCache != null) {
-            list = (List<String>)listCache.get(host + tagId);
-        }
-        ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
+        List<String> list = getTagEntityList(host, tagId);
 
-
-        if(list == null) {
-            list = new ArrayList<String>();
-            OrientVertex tag = getTagDb(host, tagId);
-            if(tag != null) {
-                List<String> tags = tag.getProperty("in_HasTag");
-            }
-            listCache.put(host + tagId, list);
-        }
-
-        long total = list.size();
-        if(total > 0) {
+        if(list != null && list.size() > 0) {
+            long total = list.size();
             List<Map<String, Object>> entities = new ArrayList<Map<String, Object>>();
             for(int i = pageSize*(pageNo - 1); i < Math.min(pageSize*pageNo, list.size()); i++) {
                 String entityRid = list.get(i);
-                Map<String, Object> entity = (Map<String, Object>)entityCache.get(entityRid);
-                // TODO load entity based on categoryType here.
-                // here we assume that entity cache will never be full.
-                entities.add(entity);
+                Map<String, Object> entity = getTagEntity(entityRid);
+                if(entity != null) {
+                    entities.add(entity);
+                } else {
+                    logger.warn("Could not find entity {} from List {}", entityRid, host + tagId);
+                }
             }
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("total", total);
@@ -162,22 +148,71 @@ public abstract class AbstractTagRule extends AbstractBfnRule implements Rule {
         }
     }
 
-    protected OrientVertex getTagDb(String host, String tagId) {
+    protected Map<String, Object> getTagEntity(String entityRid) {
+        Map<String, Object> entity = null;
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> entityCache = (ConcurrentMap<Object, Object>)categoryMap.get("entityCache");
+        if(entityCache == null) {
+            entityCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(10000)
+                    .build();
+            categoryMap.put("entityCache", entityCache);
+        } else {
+            entity = (Map<String, Object>)entityCache.get(entityRid);
+        }
+        if(entity == null) {
+            entity = getCategoryEntityDb(entityRid);
+            if(entity != null) {
+                entityCache.put(entityRid, entity);
+            }
+        }
+        return entity;
+    }
+
+    protected List<String> getTagEntityList(String host, String tagId) {
+        List<String> list = null;
+        Map<String, Object> categoryMap = ServiceLocator.getInstance().getMemoryImage("categoryMap");
+        ConcurrentMap<Object, Object> listCache = (ConcurrentMap<Object, Object>)categoryMap.get("listCache");
+        if(listCache == null) {
+            listCache = new ConcurrentLinkedHashMap.Builder<Object, Object>()
+                    .maximumWeightedCapacity(200)
+                    .build();
+            categoryMap.put("listCache", listCache);
+        } else {
+            list = (List<String>)listCache.get(host + tagId);
+        }
+        if(list == null) {
+            list = getTagEntityListDb(host, tagId);
+            if(list != null) {
+                listCache.put(host + tagId, list);
+            }
+        }
+        return list;
+    }
+
+    protected List<String> getTagEntityListDb(String host, String tagId) {
+        List<String> entityList = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        OrientVertex tag = null;
         try {
             OIndex<?> tagHostIdIdx = graph.getRawGraph().getMetadata().getIndexManager().getIndex("tagHostIdIdx");
             OCompositeKey key = new OCompositeKey(host, tagId);
             OIdentifiable oid = (OIdentifiable) tagHostIdIdx.get(key);
             if (oid != null) {
-                tag = (OrientVertex)oid.getRecord();
+                ODocument doc = (ODocument)oid.getRecord();
+                entityList = new ArrayList<String>();
+                ORidBag entities = doc.field("in_HasTag");
+                Iterator<OIdentifiable> iterator = entities.iterator();
+                while (iterator.hasNext()) {
+                    OIdentifiable identifiable = iterator.next();
+                    entityList.add(identifiable.getIdentity().toString());
+                }
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
         } finally {
             graph.shutdown();
         }
-        return tag;
+        return entityList;
     }
 
 }
