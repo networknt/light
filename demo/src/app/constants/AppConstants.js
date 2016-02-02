@@ -74,7 +74,6 @@ module.exports = {
         GET_FORUM_TREE_RESPONSE: null,
 
         // Catalog
-        GET_CATALOG_TREE: null,
         GET_CATALOG_TREE_RESPONSE: null,
         GET_CATALOG_PRODUCT_RESPONSE: null,
         ADD_PRODUCT_RESPONSE: null,

@@ -8,7 +8,6 @@ import IconButton from 'material-ui/lib/icon-button';
 import Badge from 'material-ui/lib/badge';
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme';
-import Dialog from 'material-ui/lib/dialog';
 import Colors from 'material-ui/lib/styles/colors';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Snackbar from 'material-ui/lib/snackbar';
@@ -122,7 +121,7 @@ const Main = React.createClass({
     },
 
     _onMenuChange: function() {
-        console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
+        //console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
         // only care about the first level menuItems here.
         this.setState({
             menuItems : MenuStore.getMenu().out_Own
@@ -157,7 +156,7 @@ const Main = React.createClass({
     },
 
     _catalogCategoryChange: function() {
-        console.log('Main._catalogCategoryChange', CatalogCategoryStore.getCategory());
+        //console.log('Main._catalogCategoryChange', CatalogCategoryStore.getCategory());
         this.setState({
             catalogCategory: CatalogCategoryStore.getCategory()
         });
@@ -308,7 +307,7 @@ const Main = React.createClass({
         let mainMenu = '';
         if (CommonUtils.findMenuItem(this.state.menuItems, 'main')) {
             let mainMenuItems = CommonUtils.findMenuItem(this.state.menuItems, 'main').out_Own;
-            console.log('mainMenuItems', mainMenuItems);
+            //console.log('mainMenuItems', mainMenuItems);
             mainMenu = mainMenuItems.map((item, index) => {
                 if(CommonUtils.hasMenuAccess(item, AuthStore.getRoles())) {
                     return (

@@ -5,36 +5,56 @@ import Gravatar from '../Gravatar';
 import Markdown from '../Markdown';
 import VariantSelect from './VariantSelect';
 import CartActionCreators from '../../actions/CartActionCreators';
+import CartStore from '../../stores/CartStore';
 import _ from 'lodash';
 
-class ProductSummary extends React.Component {
+var ProductSummary = React.createClass ({
+    displayName: 'ProductSummary',
+    propTypes: {
+        product: React.PropTypes.object.isRequired,
+        onClick: React.PropTypes.func.isRequired
+    },
 
-    constructor(props) {
-        super(props);
-        this._onVariantSelect = this._onVariantSelect.bind(this);
-        this._onAddCart = this._onAddCart.bind(this);
-        this.state = {
+    getInitialState: function() {
+        return {
             product: _.extend(this.props.product, {variantIndex: 0})
-        };
-    }
+        }
+    },
 
-    _onAddCart() {
-        console.log('ProductSummary._onAddCart', this.state.product);
+    componentWillMount: function() {
+        CartStore.addChangeListener(this._onCartStoreChange);
+    },
+
+    componentWillUnmount: function() {
+        CartStore.removeChangeListener(this._onCartStoreChange);
+    },
+
+    _onCartStoreChange: function() {
+        // synch inventory with cart
+        let inventory = CartStore.getInventory(this.state.product.entityId);
+        if(inventory) {
+            console.log('ProductSummary._onCartStoreChange', inventory);
+            let variants = this.state.product.variants;
+            for (var i = 0; i < variants.length; i++) {
+                variants[i].inventory = inventory[variants[i].sku]
+            }
+        }
+    },
+
+    _onAddCart: function() {
+        //console.log('ProductSummary._onAddCart', this.state.product);
         CartActionCreators.addToCart(this.state.product);
-        // update product inventory
-        let variant = this.state.product.variants[this.state.product.variantIndex];
-        variant.inventory = variant.inventory - 1;
-        this.forceUpdate();
-    }
+        // inventory will be updated by CartStore.
+    },
 
-    _onVariantSelect(event, variantIndex, value) {
-        console.log('ProductSummary._onVariantSelect', event, variantIndex, value);
+    _onVariantSelect: function(event, variantIndex, value) {
+        //console.log('ProductSummary._onVariantSelect', event, variantIndex, value);
         this.state.product.variantIndex = variantIndex;
         this.forceUpdate();
-    }
+    },
 
-    render() {
-        console.log('ProductSummary.render this.state.product', this.state.product);
+    render: function() {
+        //console.log('ProductSummary.render this.state.product', this.state.product);
         var variants = this.state.product.variants;
         var i = this.state.product.variantIndex;
         var inventory = variants[i].inventory;
@@ -63,11 +83,6 @@ class ProductSummary extends React.Component {
             </Paper>
         );
     }
-}
+});
 
-ProductSummary.propTypes = {
-    product: React.PropTypes.object.isRequired,
-    onClick: React.PropTypes.func.isRequired
-};
-
-export default ProductSummary;
+module.exports = ProductSummary;

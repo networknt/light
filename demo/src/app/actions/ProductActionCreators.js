@@ -10,6 +10,7 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
+    /*
     setProductVariant: function(variant) {
         //console.log('ProductActionCreator setProductVariant', variant);
         AppDispatcher.dispatch({
@@ -18,6 +19,7 @@ module.exports = {
             variantIndex: variant.variantIndex
         });
     },
+    */
 
     /*
     removeOneFromInventory: function(product) {
@@ -37,13 +39,6 @@ module.exports = {
     },
     */
 
-    getCatalogTree: function() {
-        AppDispatcher.dispatch({
-            type: ActionTypes.GET_CATALOG_TREE
-        });
-        WebAPIUtils.getCatalogTree();
-    },
-
     /*
     selectCatalog: function(node, selected, onCategorySelect) {
         //console.log('ProductActionCreators is called' || node || selected || onCategorySelect);
@@ -59,18 +54,12 @@ module.exports = {
     },
     */
 
+    getCatalogTree: function() {
+        WebAPIUtils.getCatalogTree();
+    },
+
     getCatalogProduct: function(rid) {
-        /*
-        AppDispatcher.dispatch({
-            type: ActionTypes.SELECT_CATALOG,
-            rid: node.props.catalog['@rid'],
-            node: node,
-            selected: selected,
-            onCategorySelect: onCategorySelect
-        });
-        */
         WebAPIUtils.getCatalogProduct(rid);
     }
-
 
 };

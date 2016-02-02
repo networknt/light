@@ -31,7 +31,7 @@
     "material-ui": "^0.14.2",
     "object-assign": "^4.0.1",
     "objectpath": "^1.2.1",
-    "rc-pagination": "^1.3.7",
+    "rc-pagination": "^1.4.0",
     "rc-select": "^5.8.0",
     "react": "^0.14.6",
     "react-addons-perf": "^0.14.6",

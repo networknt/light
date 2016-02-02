@@ -16,6 +16,7 @@ var _taxes;
 var _clientToken;
 
 var _cartItems = [];
+var _inventory = {};  //entityId is key of map(sku, inventory) as inventory for variants. used to update product summary and detail.
 var _isOpen = false;
 
 function _add(product) {
@@ -102,6 +103,10 @@ var CartStore = assign({}, EventEmitter.prototype, {
     getCartStatus: function() {
         //console.log('CartStore getCartStatus is called', _isOpen)
         return _isOpen;
+    },
+
+    getInventory: function(entityId) {
+        return _inventory[entityId];  // each product summary will use entityId to query inventory
     }
 });
 
@@ -113,23 +118,40 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
         case ActionTypes.ADD_PRODUCT_TO_CART:
             var product = payload.product;
             var i = product.variantIndex;
-            var cartItem = _getItemBySku(product.variants[i].sku);
+            var sku = product.variants[i].sku;
+            // check if this cartItem has been added before.
+            var cartItem = _getItemBySku(sku);
             if(!cartItem) {
-                var newItem = _create(payload.product);
-                _add(newItem);
-            }else {
+                cartItem = _create(product);
+                _add(cartItem);
+            } else {
                 cartItem.qty += 1;
             }
+            // upd inventory
+            let inventory = _inventory[product.entityId];
+            if(!inventory) {
+                inventory = {};
+                for(var j = 0; j < product.variants.length; j++) {
+                    inventory[product.variants[j].sku] = product.variants[j].inventory
+                }
+                _inventory[product.entityId] = inventory;
+            }
+            inventory[sku] = inventory[sku] - 1;
+            console.log('CartStore.ADD_PRODUCT_TO_CART _inventory', _inventory);
             CartStore.emitChange();
             break;
 
         case ActionTypes.SET_QTY:
-            _setQty(payload.qty, payload.sku);
+            _setQty(payload.qty, payload.cartItem.sku);
+            // upd inventory
+            _inventory[payload.cartItem.entityId][payload.cartItem.sku] = payload.cartItem.initialInventory - payload.qty;
             CartStore.emitChange();
             break;
 
         case ActionTypes.REMOVE_CART_ITEM:
-            _remove(payload.sku);
+            _remove(payload.cartItem.sku);
+            // upd inventory
+            _inventory[payload.cartItem.entityId][payload.cartItem.sku] = payload.cartItem.initialInventory;
             CartStore.emitChange();
             break;
 
