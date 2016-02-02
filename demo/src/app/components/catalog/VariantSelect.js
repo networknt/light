@@ -12,7 +12,7 @@ var VariantSelect = React.createClass({
 
     propTypes: {
         variants: React.PropTypes.array.isRequired,
-        index: React.PropTypes.number.isRequired
+        onVariantSelect: React.PropTypes.func.isRequired
     },
 
     getInitialState: function() {
@@ -22,7 +22,7 @@ var VariantSelect = React.createClass({
     },
 
     render: function() {
-        //console.log('VariantSelect props', this.props);
+        console.log('VariantSelect variants', this.props.variants);
         var menuItems = this.props.variants.map(function(variant, index) {
             return <MenuItem key={index} value={index} primaryText={variant.type + ' $' + variant.price.toFixed(2)}/>;
         });
@@ -38,8 +38,7 @@ var VariantSelect = React.createClass({
         this.setState({
             value: variantIndex
         });
-        var index = this.props.index;
-        ProductActionCreator.setProductVariant({index, variantIndex});
+        this.props.onVariantSelect(e, variantIndex, value);
     }
 
 });

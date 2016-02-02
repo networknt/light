@@ -77,12 +77,6 @@ var Catalog = React.createClass({
         this.props.history.push('/catalog/' + this.props.params.categoryId + '/' + entityId);
     },
 
-    _onAddCart: function(index) {
-        //console.log('_onAddCart', index);
-        var product = this.state.products[index];
-        CartActionCreators.addToCart(product);
-    },
-
     _onAddProduct: function () {
         this.props.history.push('/catalog/productAdd/' + this.props.params.categoryId);
     },
@@ -116,10 +110,9 @@ var Catalog = React.createClass({
                         {
                             this.state.products.map(function(product, index) {
                                 var boundClick = this._routeToProduct.bind(this, product.entityId);
-                                var boundAddCart = this._onAddCart.bind(this, index);
                                 return (
                                     <span key={index}>
-                                        <ProductSummary index={index} product={product} onClick={boundClick} onAddCart={boundAddCart} />
+                                        <ProductSummary product={product} onClick={boundClick} />
                                     </span>
                                 );
                             }, this)
