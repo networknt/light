@@ -7,8 +7,10 @@ import AppConstants from '../../constants/AppConstants';
 import Paper from 'material-ui/lib/paper';
 import Markdown from '../Markdown';
 import CatalogActionCreators from '../../actions/CatalogActionCreators';
+import ProductActionCreators from '../../actions/ProductActionCreators';
 import CatalogStore from '../../stores/CatalogStore';
 import ProductStore from '../../stores/ProductStore';
+import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
 
@@ -24,17 +26,23 @@ var CatalogProduct = React.createClass({
 
     componentWillMount: function() {
         ProductStore.addChangeListener(this._onProductChange);
-
+        EntityStore.addChangeListener(this._onEntityChange);
     },
 
     componentWillUnmount: function() {
         ProductStore.removeChangeListener(this._onProductChange);
+        EntityStore.removeChangeListener(this._onEntityChange);
     },
 
     componentDidMount: function() {
-        console.log('CatalogProduct.componentDidMount', CatalogStore.getProducts(), this.props.params.index);
+        //console.log('CatalogProduct.componentDidMount', CatalogStore.getProducts(), this.props.params.index);
+        let product = CommonUtils.findProduct(CatalogStore.getProducts(), this.props.params.entityId);
+        if(!product) {
+            ProductActionCreators.getProduct(this.props.params.entityId);
+        }
+
         this.setState({
-            product: CommonUtils.findProduct(CatalogStore.getProducts(), this.props.params.entityId),
+            product: product? product : {},
             allowUpdate: CatalogStore.getAllowUpdate()
         });
     },
@@ -43,6 +51,12 @@ var CatalogProduct = React.createClass({
         console.log('CatalogProduct._onProductChange', ProductStore.getResult(), ProductStore.getErrors());
         // TODO display toaster
 
+    },
+
+    _onEntityChange: function() {
+        this.setState({
+            product: EntityStore.getEntity()
+        })
     },
 
     _onUpdateProduct: function () {

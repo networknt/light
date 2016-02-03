@@ -39,7 +39,7 @@ public class GetPostRule extends AbstractPostRule implements Rule {
         String entityId = (String)data.get("entityId");
         if(entityId != null) {
             // convert entityId to entityRid first
-            String entityRid = getEntityRid(entityId);
+            String entityRid = getEntityRid("Post", entityId);
             Map<String, Object> result = getCategoryEntity(entityRid);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;

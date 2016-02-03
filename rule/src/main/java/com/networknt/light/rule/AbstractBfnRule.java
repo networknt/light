@@ -271,11 +271,11 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         }
     }
 
-    public String getEntityRid(String entityId) {
+    public String getEntityRid(String entityType, String entityId) {
         String entityRid = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            OrientVertex entity = (OrientVertex)graph.getVertexByKey("Post.entityId", entityId);
+            OrientVertex entity = (OrientVertex)graph.getVertexByKey(entityType + ".entityId", entityId);
             entityRid = entity.getIdentity().toString();
         } catch (Exception e) {
             logger.error("Exception:", e);

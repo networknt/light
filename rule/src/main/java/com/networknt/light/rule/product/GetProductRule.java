@@ -19,8 +19,8 @@ public class GetProductRule extends AbstractProductRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String entityId = (String)data.get("entityId");
         if(entityId != null) {
-            String entityRid = getEntityRid(entityId);
-            Map<String, Object> result = getCategoryEntity(entityId);
+            String entityRid = getEntityRid("Product", entityId);
+            Map<String, Object> result = getCategoryEntity(entityRid);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         } else {
