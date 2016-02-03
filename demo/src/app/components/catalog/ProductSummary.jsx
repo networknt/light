@@ -33,7 +33,6 @@ var ProductSummary = React.createClass ({
         // synch inventory with cart
         let inventory = CartStore.getInventory(this.state.product.entityId);
         if(inventory) {
-            console.log('ProductSummary._onCartStoreChange', inventory);
             let variants = this.state.product.variants;
             for (var i = 0; i < variants.length; i++) {
                 variants[i].inventory = inventory[variants[i].sku]

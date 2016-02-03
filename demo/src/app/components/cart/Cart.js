@@ -10,7 +10,6 @@ var CartItem = require('./CartItem');
 var Cart = React.createClass({
 
     render: function() {
-        console.log('Cart.cartItems = ', this.props.cartItems);
         var cartItems = this.props.cartItems.map((cartItem, index) => {
             console.log(index, cartItem);
             return <CartItem key={index} cartItem={cartItem} />

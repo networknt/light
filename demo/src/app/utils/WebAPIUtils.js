@@ -145,6 +145,50 @@ module.exports = {
         });
     },
 
+    getPost: function(entityId) {
+        let getPost = {
+            category : 'post',
+            name : 'getPost',
+            readOnly: true,
+            data: {
+                entityId: entityId
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(getPost),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.getPostResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getProduct: function(entityId) {
+        let getProduct = {
+            category : 'product',
+            name : 'getProduct',
+            readOnly: true,
+            data: {
+                entityId: entityId
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(getProduct),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.getProductResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getAllAccess: function() {
         let getAllAccess = {
             category : 'access',

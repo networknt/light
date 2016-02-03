@@ -24,6 +24,7 @@ var CatalogProduct = React.createClass({
 
     componentWillMount: function() {
         ProductStore.addChangeListener(this._onProductChange);
+
     },
 
     componentWillUnmount: function() {
@@ -66,7 +67,7 @@ var CatalogProduct = React.createClass({
                     <div className="blogPost">
                         <h2 className="title">{this.state.product.name}</h2>
                         <span>Submitted by {this.state.product.createUserId} on {this.state.product.createDate}</span>
-                        <Markdown text={this.state.product.description} />
+                        <Markdown text={this.state.product.content} />
                     </div>
                 </Paper>
                 <hr />

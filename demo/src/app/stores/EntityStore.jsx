@@ -6,9 +6,9 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _result;
+var _entity;
 
-var PostStore = assign({}, EventEmitter.prototype, {
+var EntityStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -22,23 +22,26 @@ var PostStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getResult: function() {
-        return _result;
+    getEntity: function() {
+        return _entity;
     }
+
 });
 
-PostStore.dispatchToken = AppDispatcher.register(function(payload) {
+EntityStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.ADD_POST_RESPONSE:
-        case ActionTypes.UPD_POST_RESPONSE:
-        case ActionTypes.DEL_POST_RESPONSE:
-            _result = payload.json;
-            PostStore.emitChange();
+        case ActionTypes.GET_POST_RESPONSE:
+            _entity = payload.json;
+            EntityStore.emitChange();
+            break;
+
+        case ActionTypes.GET_PRODUCT_RESPONSE:
+            _entity = payload.json;
+            EntityStore.emitChange();
             break;
     }
-
     return true;
 });
 
-module.exports = PostStore;
+module.exports = EntityStore;

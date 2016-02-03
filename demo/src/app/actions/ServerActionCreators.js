@@ -37,6 +37,20 @@ module.exports = {
         });
     },
 
+    getPostResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_POST_RESPONSE,
+            json: json
+        });
+    },
+
+    getProductResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_PRODUCT_RESPONSE,
+            json: json
+        });
+    },
+
     getAllAccessResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_ALL_ACCESS_RESPONSE,

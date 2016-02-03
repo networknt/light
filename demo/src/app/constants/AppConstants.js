@@ -38,6 +38,12 @@ module.exports = {
         // Role
         GET_ROLE_RESPONSE: null,
 
+        // Post
+        GET_POST_RESPONSE: null,
+
+        // Product
+        GET_PRODUCT_RESPONSE: null,
+
         // Access
         GET_ALL_ACCESS_RESPONSE: null,
 

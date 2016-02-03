@@ -17,6 +17,7 @@
 package com.networknt.light.rule.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.light.rule.AbstractBfnRule;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
@@ -32,7 +33,7 @@ import java.util.Map;
 /**
  * Created by husteve on 10/14/2014.
  */
-public abstract class AbstractProductRule extends AbstractRule implements Rule {
+public abstract class AbstractProductRule extends AbstractBfnRule implements Rule {
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
     static final Logger logger = LoggerFactory.getLogger(AbstractProductRule.class);
 

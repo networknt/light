@@ -21,7 +21,7 @@ import ErrorStore from '../stores/ErrorStore';
 import MenuStore from '../stores/MenuStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
-import ProductActionCreators from '../actions/ProductActionCreators';
+import CatalogActionCreators from '../actions/CatalogActionCreators';
 import BlogActionCreators from '../actions/BlogActionCreators';
 import NewsActionCreators from '../actions/NewsActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
@@ -250,7 +250,7 @@ const Main = React.createClass({
         //console.log('before workaround', this.props.location.pathname, secondPath, rid);
         if(secondPath != null && secondPath != categoryId) {
             //console.log('The main window has the same route, force to reload blogPost...');
-            ProductActionCreators.getCatalogProduct(node.props.category['@rid'], defaultPageNo, defaultPageSize);
+            CatalogActionCreators.getCatalogProduct(node.props.category['@rid'], defaultPageNo, defaultPageSize);
         }
     },
 

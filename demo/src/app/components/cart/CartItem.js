@@ -6,7 +6,6 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var CartActionCreators = require('../../actions/CartActionCreators');
-var ProductActionCreators = require('../../actions/ProductActionCreators');
 var _ = require('lodash');
 
 

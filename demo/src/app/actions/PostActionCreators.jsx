@@ -9,7 +9,7 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
-    getProduct: function(entityId) {
-        WebAPIUtils.getProduct(entityId);
+    getPost: function(entityId) {
+        WebAPIUtils.getPost(entityId);
     }
 };

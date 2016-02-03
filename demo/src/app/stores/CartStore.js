@@ -137,7 +137,6 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
                 _inventory[product.entityId] = inventory;
             }
             inventory[sku] = inventory[sku] - 1;
-            console.log('CartStore.ADD_PRODUCT_TO_CART _inventory', _inventory);
             CartStore.emitChange();
             break;
 
