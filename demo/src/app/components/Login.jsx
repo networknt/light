@@ -2,9 +2,9 @@ import React from 'react';
 import FormStore from '../stores/FormStore';
 import AuthStore from '../stores/AuthStore';
 import FormActionCreators from '../actions/FormActionCreators';
+import AuthActionCreators from '../actions/AuthActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import RaisedButton from 'material-ui/lib/raised-button';
-import WebAPIUtils from '../utils/WebAPIUtils';
 import utils from 'react-schema-form/lib/utils';
 
 const id = 'com.networknt.light.user.signin';
@@ -66,7 +66,7 @@ let Login = React.createClass({
         if(this.state.schema) {
             const buttons = this.state.action.map((item, idx) => (
                 <RaisedButton key={idx} label={item.title} primary={true}
-                    onTouchTap = {(e) => (WebAPIUtils.login(this.state.user.userIdEmail, this.state.user.password, this.state.user.rememberMe))} />
+                    onTouchTap = {(e) => (AuthActionCreators.login(this.state.user.userIdEmail, this.state.user.password, this.state.user.rememberMe))} />
             ));
 
             return (

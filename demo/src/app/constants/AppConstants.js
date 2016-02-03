@@ -24,12 +24,12 @@ module.exports = {
         SERVER_ERROR_RESPONSE: null,
 
         // Auth
-        LOGIN_REQUEST: null,
-        LOGIN_RESPONSE: null,
+        SIGNIN_USER_REQUEST: null,
+        SIGNIN_USER_RESPONSE: null,
+        SIGNUP_USER_RESPONSE: null,
         REFRESH: null,
         LOGOUT: null,
         INIT: null,
-        SIGNUP_REQUEST: null,
 
         // Menu
         GET_MENU: null,

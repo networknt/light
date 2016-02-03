@@ -8,11 +8,17 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    receiveLogin: function(json, error) {
+    signInUserResponse: function(json) {
         AppDispatcher.dispatch({
-            type: ActionTypes.LOGIN_RESPONSE,
-            json: json,
-            error: error
+            type: ActionTypes.SIGNIN_USER_RESPONSE,
+            json: json
+        });
+    },
+
+    signUpUserResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.SIGNUP_USER_RESPONSE,
+            json: json
         });
     },
 

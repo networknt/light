@@ -19,40 +19,40 @@ function _getErrors(res) {
     return errorMsgs;
 }
 
-var APIEndpoints = AppConstants.APIEndpoints;
-var APIRoot = AppConstants.APIRoot;
-var Host = AppConstants.Host;
 var ClientId = AppConstants.ClientId;
 
 module.exports = {
 
-    signup: function(email, username, password, passwordConfirmation) {
-        request.post(APIEndpoints.REGISTRATION)
-            .send({ user: {
+    signup: function(email, userId, password, passwordConfirm, firstName, lastName) {
+        let signUpUser ={
+            category : 'user',
+            name: 'signUpUser',
+            readOnly: false,
+            data: {
                 email: email,
-                username: username,
+                userId: userId,
                 password: password,
-                password_confirmation: passwordConfirmation,
+                password_confirmation: passwordConfirm,
+                firstName: firstName,
+                lastName: lastName,
                 clientId: ClientId
-            }})
-            .set('Accept', 'application/json')
-            .end(function(error, res) {
-                if (res) {
-                    if (res.error) {
-                        var errorMsgs = _getErrors(res);
-                        ServerActionCreators.receiveLogin(null, errorMsgs);
-                    } else {
-                        json = JSON.parse(res.text);
-                        ServerActionCreators.receiveLogin(json, null);
-                    }
-                }
-            });
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/api/rs',
+            data: JSON.stringify(signUpUser),
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.signUpUserResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
     },
 
     login: function(userIdEmail, password, rememberMe) {
-        //console.log('login in WebAPIUtils is been called');
-
-        var signIn =  {
+        let signInUser =  {
             category : 'user',
             name : 'signInUser',
             readOnly: false,
@@ -63,23 +63,16 @@ module.exports = {
                 clientId: ClientId
             }
         };
-
-
-        //console.log('login', signIn);
         $.ajax({
             type: 'POST',
             contentType: 'application/json',
             url: '/api/rs',
-            data: JSON.stringify(signIn),
-            dataType: 'json',
-            error: function(jqXHR, status, error) {
-                //console.log('login error', error);
-                ServerActionCreators.receiveLogin(null, error);
-            },
-            success: function(result, status, xhr) {
-                //console.log('login success', result);
-                ServerActionCreators.receiveLogin(result, null);
-            }
+            data: JSON.stringify(signInUser),
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.signInUserResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 

@@ -84,12 +84,12 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     //console.log('type', type);
     switch(type) {
-        case ActionTypes.LOGIN_REQUEST:
+        case ActionTypes.SIGNIN_USER_REQUEST:
             // This is an indicator if refresh token will be used to get another access token after access token is expired.
             _rememberMe = payload.rememberMe;
             break;
 
-        case ActionTypes.LOGIN_RESPONSE:
+        case ActionTypes.SIGNIN_USER_RESPONSE:
             console.log('Login response is callled.');
             if (payload.json) {
                 // Successfully logged in and get access token back. If remember me is checked, then a refresh token is returned as well.

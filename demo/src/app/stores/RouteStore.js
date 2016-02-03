@@ -49,7 +49,7 @@ RouteStore.dispatchToken = AppDispatcher.register(function(payload) {
             //router.transitionTo(action.route);
             break;
 
-        case ActionTypes.LOGIN_RESPONSE:
+        case ActionTypes.SIGNIN_USER_RESPONSE:
             if (AuthStore.isLoggedIn()) {
                 //router.transitionTo('app');
             }
