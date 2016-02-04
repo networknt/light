@@ -42,6 +42,7 @@
     "react-tap-event-plugin": "^0.2.1"
   },
   "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
     "babel-core": "^6.3.26",
     "babel-eslint": "^4.1.6",
     "babel-loader": "^6.2.0",
@@ -54,6 +55,7 @@
     "css-loader": "^0.23.0",
     "eslint": "^1.10.3",
     "eslint-plugin-react": "^3.13.0",
+    "extract-text-webpack-plugin": "^1.0.1",
     "highlight.js": "^9.0.0",
     "history": "1.13.x",
     "html-webpack-plugin": "^1.6.1",
