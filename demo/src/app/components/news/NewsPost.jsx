@@ -68,11 +68,16 @@ var NewsPost = React.createClass({
         NewsActionCreators.delPost(this.state.post.rid);
     },
 
+    _routeToTag: function(tagId) {
+        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+    },
+
     render: function() {
         let tags = '';
         if(this.state.post.tags) {
             tags = this.state.post.tags.map((tag, index) => {
-                return <span key={index}>{tag}&nbsp;&nbsp;&nbsp;</span>
+                let boundTagClick = this._routeToTag.bind(this, tag);
+                return <span key={index}><a href='#' onClick={boundTagClick}>{tag}</a>&nbsp;&nbsp;&nbsp;</span>
             });
         }
         let original = '';
