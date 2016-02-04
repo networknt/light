@@ -116,7 +116,7 @@ const Main = React.createClass({
         console.log('error', ErrorStore.getError());
         this.setState({
             snackbarOpen: true,
-            snackbarMessage: ErrorStore.getError().errorText
+            snackbarMessage: ErrorStore.getStatus() + " " + ErrorStore.getError()
         });
     },
 
@@ -280,7 +280,7 @@ const Main = React.createClass({
     },
 
     handleSnackbarTouchTap() {
-        alert('Why am I here?');
+        this.setState({snackbarOpen: false})
     },
 
     render() {

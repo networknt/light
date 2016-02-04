@@ -8,6 +8,7 @@ var CHANGE_EVENT = 'change';
 
 
 var _error = null;
+var _status = null;
 
 var ErrorStore = assign({}, EventEmitter.prototype, {
 
@@ -25,8 +26,11 @@ var ErrorStore = assign({}, EventEmitter.prototype, {
 
     getError: function() {
         return _error;
-    }
+    },
 
+    getStatus: function() {
+        return _status;
+    }
 });
 
 ErrorStore.dispatchToken = AppDispatcher.register(function(payload) {
@@ -34,6 +38,7 @@ ErrorStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
         case ActionTypes.SERVER_ERROR_RESPONSE:
             _error = payload.error;
+            _status = payload.status;
             ErrorStore.emitChange();
             break;
     }

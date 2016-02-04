@@ -11,7 +11,8 @@ module.exports = {
     serverErrorResponse: function(error) {
         AppDispatcher.dispatch({
             type: ActionTypes.SERVER_ERROR_RESPONSE,
-            error: error
+            error: error.responseJSON.error,
+            status: error.status
         });
     }
 };
