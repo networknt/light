@@ -5,6 +5,10 @@ import BlogCategoryStore from '../../stores/BlogCategoryStore';
 var BlogActionCreators = require('../../actions/BlogActionCreators');
 var classNames = require('classnames');
 import RaisedButton from 'material-ui/lib/raised-button';
+import Toolbar from 'material-ui/lib/toolbar/toolbar';
+import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import ToolbarSeparator from 'material-ui/lib/toolbar/toolbar-separator';
+import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 require('rc-pagination/assets/index.css');
 import Pagination from 'rc-pagination';
 import Locale from 'rc-pagination/lib/locale/en_US';
@@ -12,6 +16,13 @@ require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
 import BlogSummary from './BlogSummary';
+import ListTreeNode from '../ListTreeNode';
+import List from 'material-ui/lib/lists/list';
+import ListItem from 'material-ui/lib/lists/list-item';
+import DropDownMenu from 'material-ui/lib/DropDownMenu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+import Menu from 'material-ui/lib/menus/menu';
+import ArrowDropRight from 'material-ui/lib/svg-icons/navigation-arrow-drop-right';
 
 var Blog = React.createClass({
     displayName: 'Blog',
@@ -107,16 +118,27 @@ var Blog = React.createClass({
         BlogActionCreators.getBlogPost(this.state.rid, this.state.pageNo, pageSize);
     },
 
+    handledropdownChange : function (event, index, value) {
+        this.setState({dropdownvalue: value})
+    },
+
     render: function() {
         console.log('Blog.render', this.state.total, this.state.pageNo, this.state.pageSize);
-        let addButton = this.state.allowUpdate? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
+        let addButton = this.state.allowUpdate ? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
+
         return (
-            <div>
-                <div className="blogHeader">
-                    <h2>Blogs{addButton}</h2>
-                </div>
+            <div style={{textAlign: 'center', marginLeft: '10px', marginRight: '10px', marginTop: 20 + 'px'}}>
                 <div className="blogRoot">
                     <div className="leftColumn">
+                        <Toolbar>
+                            <ToolbarGroup float="left">
+                                <ToolbarTitle text="Blogs" />
+                            </ToolbarGroup>
+                            <ToolbarGroup float="right">
+                                <ToolbarSeparator />
+                                {addButton}
+                            </ToolbarGroup>
+                        </Toolbar>
                         {
                             this.state.posts.map(function(post, index) {
                                 var boundClick = this._routeToPost.bind(this, post.entityId);
