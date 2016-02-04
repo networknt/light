@@ -601,9 +601,11 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            ServerActionCreators.updProductResponse(data, null);
+            console.log('updProduct done', data);
+            ServerActionCreators.updProductResponse(data);
         }).fail(function(error) {
-            ServerActionCreators.updProductResponse(null, error);
+            console.log('updProduct fail', error);
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 

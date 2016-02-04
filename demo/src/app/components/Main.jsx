@@ -116,7 +116,7 @@ const Main = React.createClass({
         console.log('error', ErrorStore.getError());
         this.setState({
             snackbarOpen: true,
-            snackbarMessage: ErrorStore.getStatus() + " " + ErrorStore.getError()
+            snackbarMessage: ErrorStore.getStatus() + " " + ErrorStore.getMessage()
         });
     },
 

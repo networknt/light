@@ -7,8 +7,9 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 
-var _error = null;
+var _message = null;
 var _status = null;
+var _error = null;
 
 var ErrorStore = assign({}, EventEmitter.prototype, {
 
@@ -24,12 +25,16 @@ var ErrorStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getError: function() {
-        return _error;
+    getMessage: function() {
+        return _message;
     },
 
     getStatus: function() {
         return _status;
+    },
+
+    getError: function() {
+        return _error;
     }
 });
 
@@ -38,7 +43,12 @@ ErrorStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
         case ActionTypes.SERVER_ERROR_RESPONSE:
             _error = payload.error;
-            _status = payload.status;
+            _status = _error.status;
+            if(_status === 200) {
+                _message = _error.statusText;
+            } else {
+                _message = _error.responseJSON.error;
+            }
             ErrorStore.emitChange();
             break;
     }
