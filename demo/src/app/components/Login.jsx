@@ -5,6 +5,7 @@ import FormActionCreators from '../actions/FormActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import RaisedButton from 'material-ui/lib/raised-button';
+import CircularProgress from 'material-ui/lib/circular-progress';
 import utils from 'react-schema-form/lib/utils';
 
 const id = 'com.networknt.light.user.signin';
@@ -34,7 +35,6 @@ let Login = React.createClass({
     _onModelChange: function(key, val) {
         utils.selectOrSet(key, this.state.user, val);
         //this.forceUpdate();
-        console.log('Login._onModelChange', this.state.user);
     },
 
 
@@ -43,9 +43,6 @@ let Login = React.createClass({
         if(schema) {
             let form = FormStore.getForm(id).form;
             let action = FormStore.getForm(id).action;
-            //console.log('schema = ', schema);
-            //console.log('form = ', form);
-            //console.log('action = ', action);
             this.setState({
                 schema: schema,
                 form: form,
@@ -76,7 +73,7 @@ let Login = React.createClass({
                 </div>
             )
         } else {
-            return <div>Loading...</div>
+            return (<CircularProgress mode="indeterminate"/>);
         }
     }
 });

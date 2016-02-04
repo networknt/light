@@ -90,7 +90,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             break;
 
         case ActionTypes.SIGNIN_USER_RESPONSE:
-            console.log('Login response is callled.');
+            //console.log('Login response is callled.');
             if (payload.json) {
                 // Successfully logged in and get access token back. If remember me is checked, then a refresh token is returned as well.
                 _isLoggedIn = true;
@@ -102,7 +102,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                 localStorage.setItem('accessToken', _accessToken);
                 //console.log('_accessToken', _accessToken);
                 var jwt = jwtDecode(_accessToken);
-                console.log('jwt', jwt);
+                //console.log('jwt', jwt);
                 _currentUser = jwt.user;
 
                 if(_rememberMe) {

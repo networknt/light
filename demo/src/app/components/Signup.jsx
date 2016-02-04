@@ -5,6 +5,7 @@ import FormActionCreators from '../actions/FormActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import RaisedButton from 'material-ui/lib/raised-button';
+import CircularProgress from 'material-ui/lib/circular-progress';
 import utils from 'react-schema-form/lib/utils';
 
 const id = 'com.networknt.light.user.signup';
@@ -71,7 +72,7 @@ let Signup = React.createClass({
                 </div>
             )
         } else {
-            return <div>Loading...</div>
+            return (<CircularProgress mode="indeterminate"/>);
         }
     }
 });
