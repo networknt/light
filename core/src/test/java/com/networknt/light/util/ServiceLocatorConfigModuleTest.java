@@ -25,7 +25,7 @@ public class ServiceLocatorConfigModuleTest extends TestCase {
     public void testGetConfigFromApp() throws Exception {
         ServiceLocator sl = ServiceLocator.getInstance();
         sl.delConfig("test");
-        Map<String, Object> configMap = sl.getConfig("test");
+        Map<String, Object> configMap = sl.getJsonMapConfig("test");
         Assert.assertEquals("default module level config should be in resources/config folder", configMap.get("key"));
     }
 }

@@ -70,8 +70,8 @@ public class LightServer {
 
     static public void start() {
         // hosts and server configuration
-        Map<String, Object> hostConfigMap = ServiceLocator.getInstance().getConfig(ServiceLocator.HOST_CONFIG);
-        Map<String, Object> serverConfigMap = ServiceLocator.getInstance().getConfig(ServiceLocator.SERVER_CONFIG);
+        Map<String, Object> hostConfigMap = ServiceLocator.getInstance().getJsonMapConfig(ServiceLocator.HOST_CONFIG);
+        Map<String, Object> serverConfigMap = ServiceLocator.getInstance().getJsonMapConfig(ServiceLocator.SERVER_CONFIG);
 
         OrientGraphFactory factory = ServiceLocator.getInstance().getFactory();
         // check if database exists, if not create it and init it.
@@ -170,7 +170,7 @@ public class LightServer {
      *
      */
     static private void replayEvent() {
-        Map<String, Object> config = ServiceLocator.getInstance().getConfig("replayevent");
+        Map<String, Object> config = ServiceLocator.getInstance().getJsonMapConfig("replayevent");
         if((Boolean)config.get("replay") == true) {
             logger.info("Replay is true for db initialization. Loading event files...");
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();

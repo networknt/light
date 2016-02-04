@@ -40,7 +40,7 @@ import java.util.Map;
 public class JwtUtil {
     public static String TOKEN_EXPIRED_MESSAGE = "Invalid iat and/or exp.";
     static final String OAUTH2_CONFIG = "oauth2";
-    static final Map<String, Object> oauth2Config = ServiceLocator.getInstance().getConfig(OAUTH2_CONFIG);
+    static final Map<String, Object> oauth2Config = ServiceLocator.getInstance().getJsonMapConfig(OAUTH2_CONFIG);
 
     static VerifierProviders verifierProviders = null;
     static{

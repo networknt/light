@@ -40,7 +40,7 @@ import java.util.Map;
 public class InitDatabase {
     static final XLogger logger = XLoggerFactory.getXLogger(InitDatabase.class);
     static final String SERVER_CONFIG = "server";
-    static final Map<String, Object> serverConfig = ServiceLocator.getInstance().getConfig(SERVER_CONFIG);
+    static final Map<String, Object> serverConfig = ServiceLocator.getInstance().getJsonMapConfig(SERVER_CONFIG);
 
     public static void main(final String[] args) {
         initDb();

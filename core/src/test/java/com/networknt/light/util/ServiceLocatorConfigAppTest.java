@@ -22,7 +22,7 @@ public class ServiceLocatorConfigAppTest extends TestCase {
     public void testGetConfigFromApp() throws Exception {
         ServiceLocator sl = ServiceLocator.getInstance();
         sl.delConfig("test");
-        Map<String, Object> configMap = sl.getConfig("test");
+        Map<String, Object> configMap = sl.getJsonMapConfig("test");
         Assert.assertEquals("application level config is in config folder with subfolder dev/sit/uat/prod and dev is the default if no system properties API_ENV is defined", configMap.get("key"));
     }
 }

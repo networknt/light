@@ -46,6 +46,7 @@ public class RestClientTest extends TestCase {
     public void tearDown() throws Exception {
         if(server != null) {
             server.stop();
+            Thread.sleep(1000);
             System.out.println("The server is stopped.");
         }
     }

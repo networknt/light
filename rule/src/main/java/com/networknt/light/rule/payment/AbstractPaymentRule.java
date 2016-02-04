@@ -26,7 +26,7 @@ public abstract class AbstractPaymentRule extends AbstractRule implements Rule {
 
     static {
         // load braintree config for each host and initialize gateways.
-        Map<String, Object> config = ServiceLocator.getInstance().getConfig("braintree");
+        Map<String, Object> config = ServiceLocator.getInstance().getJsonMapConfig("braintree");
         for (Map.Entry<String, Object> entry : config.entrySet()) {
             String host = entry.getKey();
             Map<String, Object> braintreeConfig = (Map<String, Object>)entry.getValue();

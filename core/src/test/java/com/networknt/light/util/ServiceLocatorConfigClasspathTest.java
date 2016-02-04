@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by steve on 22/11/15.
  */
-public class ServiceLocatorConfigExternalTest extends TestCase {
+public class ServiceLocatorConfigClasspathTest extends TestCase {
 
     ServiceLocator sl = ServiceLocator.getInstance();
     String homeDir = System.getProperty("user.home");
@@ -39,7 +39,7 @@ public class ServiceLocatorConfigExternalTest extends TestCase {
     @Test
     public void testGetConfigFromClassPath() throws Exception {
         sl.delConfig("test");
-        Map<String, Object> configMap = sl.getConfig("test");
+        Map<String, Object> configMap = sl.getJsonMapConfig("test");
         Assert.assertEquals("externalized config will be in the classpath", configMap.get("key"));
     }
 

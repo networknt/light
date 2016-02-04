@@ -35,9 +35,7 @@ import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.slf4j.profiler.Profiler;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,7 +49,10 @@ public class ServiceLocator {
     static final String CONFIG_EXT = ".json";
     static final String API_ENV = "API_ENV";
     static final String API_ENV_DEV = "dev";
+    static final String EXTERNAL_PROPERTY_DIR = System.getProperty("config.dir", "");
     static final String CONFIG_FOLDER = "config/";
+    static final String CONFIG_EXT_JSON = ".json";
+
     static final public String SERVER_CONFIG = "server";
     static final public String HOST_CONFIG = "virtualhost";
 
@@ -61,7 +62,7 @@ public class ServiceLocator {
     ObjectMapper mapper = new ObjectMapper();
 
     Map<String, Map<String, Object>> memoryImage = new ConcurrentHashMap<String,Map<String, Object>>(10, 0.9f, 1);
-    Map<String, Map<String, Object>> configImage = new ConcurrentHashMap<String,Map<String, Object>>(10, 0.9f, 1);
+    Map<String, Object> configImage = new ConcurrentHashMap<String,Object>(10, 0.9f, 1);
 
     Map<String, MBassador<Map<String, Object>>> eventBusMap = new ConcurrentHashMap<>(10, 0.9f, 1);
 
@@ -97,11 +98,11 @@ public class ServiceLocator {
     }
 
     public Map<String, Object> getHostMap() {
-        return getConfig(HOST_CONFIG);
+        return getJsonMapConfig(HOST_CONFIG);
     }
 
     public String getDbUrl() {
-        Map<String, Object> serverConfig = getConfig(SERVER_CONFIG);
+        Map<String, Object> serverConfig = getJsonMapConfig(SERVER_CONFIG);
         String dbName = (String)serverConfig.get("dbName");
         return "plocal:"+ System.getProperty("user.home") + "/" + dbName;
     }
@@ -137,25 +138,48 @@ public class ServiceLocator {
     }
 
     /**
+     * Get Object by the name of the config and class in JSON format.
+     *
+     * @param configName
+     * @return
+     */
+    public Object getJsonObjectConfig(String configName, Class clazz) {
+        logger.entry(configName, clazz);
+        //checkCacheExpiration();
+        Object config = (Object)configImage.get(configName);
+        if(config == null) {
+            synchronized (ServiceLocator.class) {
+                config = (Object)configImage.get(configName);
+                if(config == null) {
+                    config = loadJsonObjectConfig(configName, clazz);
+                    if(config != null) configImage.put(configName, config);
+                }
+            }
+        }
+        logger.exit(config);
+        return config;
+    }
+
+    /**
      * Get configuration map by the name of the config. The file will only be loaded from file system
      * the first time.
      *
      * @param configName
      * @return
      */
-    public Map<String, Object> getConfig(String configName) {
+    public Map<String, Object> getJsonMapConfig(String configName) {
         logger.entry(configName);
         audit.info("getConfig for {}", configName);
         Profiler profiler = new Profiler(ServiceLocator.class.getName());
         profiler.setLogger(logger);
         profiler.start("getConfig");
-        Map<String, Object> config = configImage.get(configName);
+        Map<String, Object> config = (Map<String, Object>)configImage.get(configName);
         if(config == null) {
             synchronized (ServiceLocator.class) {
-                config = configImage.get(configName);
+                config = (Map<String, Object>)configImage.get(configName);
                 if(config == null) {
-                    config = loadConfig(configName);
-                    configImage.put(configName, config);
+                    config = loadJsonMapConfig(configName);
+                    if(config != null) configImage.put(configName, config);
                 }
             }
         }
@@ -176,43 +200,39 @@ public class ServiceLocator {
         logger.exit();
     }
 
-    /**
-     * Load configuration file in the following sequence.
-     * 1. From classpath
-     * 2. From app resources /config/dev
-     * 3. From module resources /config
-     */
-    private Map<String, Object> loadConfig(String configName) {
-        Map<String, Object> config = null;
-        String configFilename = configName + CONFIG_EXT;
-        String env = System.getProperty(API_ENV, API_ENV_DEV);
+    private String loadStringFromFile(String filename) {
+        String content = null;
+        logger.entry(filename);
         InputStream inStream = null;
         try {
-            // load from system classpath first. Externalized
-            inStream = getClass().getClassLoader().getResourceAsStream(configFilename);
+            inStream = getConfigStream(filename);
             if(inStream != null) {
-                config = mapper.readValue(inStream, new TypeReference<HashMap<String, Object>>() {});
-                if(logger.isDebugEnabled()) {
-                    logger.debug("config loaded from classpath for " + configName + " : " + config);
+                content = convertStreamToString(inStream);
+            }
+        } catch (Exception ioe) {
+            logger.catching(ioe);
+        } finally {
+            if(inStream != null) {
+                try {
+                    inStream.close();
+                } catch(IOException ioe) {
+                    logger.catching(ioe);
                 }
-            } else {
-                // load from app config/dev
-                inStream = getClass().getClassLoader().getResourceAsStream(CONFIG_FOLDER + env + "/" + configFilename);
-                if(inStream != null) {
-                    config = mapper.readValue(inStream, new TypeReference<HashMap<String, Object>>() {});
-                    if(logger.isDebugEnabled()) {
-                        logger.debug("config loaded from app resources for " + configName + " in " + env + " : " + config);
-                    }
-                } else {
-                    inStream = getClass().getClassLoader().getResourceAsStream(CONFIG_FOLDER + configFilename);
-                    if(inStream != null) {
-                        // couldn't load it from classpath or app resource, then use the one from resource /config folder.
-                        config = mapper.readValue(inStream, new TypeReference<HashMap<String, Object>>() {});
-                        if(logger.isDebugEnabled()) {
-                            logger.debug("config loaded from module resources for " + configName + " : " + config);
-                        }
-                    }
-                }
+            }
+        }
+        logger.exit(content);
+        return content;
+    }
+
+    private Object loadJsonObjectConfig(String configName, Class clazz) {
+        Object config = null;
+        logger.entry(configName, clazz);
+        String configFilename = configName + CONFIG_EXT_JSON;
+        InputStream inStream = null;
+        try {
+            inStream = getConfigStream(configFilename);
+            if(inStream != null) {
+                config = mapper.readValue(inStream, clazz);
             }
         } catch (IOException ioe) {
             logger.catching(ioe);
@@ -225,7 +245,83 @@ public class ServiceLocator {
                 }
             }
         }
+        logger.exit(config);
         return config;
     }
 
+    private Map<String, Object> loadJsonMapConfig(String configName) {
+        Map<String, Object> config = null;
+        logger.entry(configName);
+        String configFilename = configName + CONFIG_EXT_JSON;
+        InputStream inStream = null;
+        try {
+            inStream = getConfigStream(configFilename);
+            if(inStream != null) {
+                config = mapper.readValue(inStream, new TypeReference<HashMap<String, Object>>() {});
+            }
+        } catch (IOException ioe) {
+            logger.catching(ioe);
+        } finally {
+            if(inStream != null) {
+                try {
+                    inStream.close();
+                } catch(IOException ioe) {
+                    logger.catching(ioe);
+                }
+            }
+        }
+        logger.exit(config);
+        return config;
+    }
+
+    private InputStream getConfigStream(String configFilename) {
+
+        String env = System.getProperty(API_ENV, API_ENV_DEV);
+
+        // load from system property path first. Externalized on the target deployment environment
+        InputStream inStream = null;
+        try{
+            inStream = new FileInputStream(EXTERNAL_PROPERTY_DIR + "/" + configFilename);
+        } catch (FileNotFoundException ex){
+            if(logger.isInfoEnabled()) {
+                logger.info("Config not found in filesystem. Trying classpath locations.");
+            }
+        }
+        if (inStream != null) {
+            if(logger.isInfoEnabled()) {
+                logger.info("Config loaded from external filesystem directory for " + configFilename + " in " + EXTERNAL_PROPERTY_DIR);
+            }
+            return inStream;
+        }
+        inStream = getClass().getClassLoader().getResourceAsStream(configFilename);
+        if(inStream != null) {
+            if(logger.isInfoEnabled()) {
+                logger.info("config loaded from classpath for " + configFilename);
+            }
+            return inStream;
+        }
+        // load from app config/dev
+        inStream = getClass().getClassLoader().getResourceAsStream(CONFIG_FOLDER + env + "/" + configFilename);
+        if(inStream != null) {
+            if(logger.isInfoEnabled()) {
+                logger.info("config loaded from app environmental folder in resources for " + configFilename + " in " + env);
+            }
+            return inStream;
+        }
+        inStream = getClass().getClassLoader().getResourceAsStream(CONFIG_FOLDER + configFilename);
+        if(inStream != null) {
+            // couldn't load it from classpath or app resource, then use the one from resource /config folder.
+            if(logger.isInfoEnabled()) {
+                logger.info("config loaded from module resources for " + configFilename);
+            }
+            return inStream;
+        }
+        logger.error("Unable to load config " + configFilename);
+        return inStream;
+    }
+
+    static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
 }
