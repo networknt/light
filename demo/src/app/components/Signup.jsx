@@ -59,7 +59,7 @@ let Signup = React.createClass({
         if(this.state.schema) {
             const buttons = this.state.action.map((item, idx) => (
                 <RaisedButton key={idx} label={item.title} primary={true}
-                              onTouchTap = {(e) => (AuthActionCreators.login(this.state.user.email, this.state.user.userId,
+                              onTouchTap = {(e) => (AuthActionCreators.signup(this.state.user.email, this.state.user.userId,
                                this.state.user.password, this.state.user.passwordConfirm, this.state.user.firstName,
                                this.state.user.lastName))} />
             ));

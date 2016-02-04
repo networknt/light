@@ -32,7 +32,7 @@ module.exports = {
                 email: email,
                 userId: userId,
                 password: password,
-                password_confirmation: passwordConfirm,
+                passwordConfirm: passwordConfirm,
                 firstName: firstName,
                 lastName: lastName,
                 clientId: ClientId
