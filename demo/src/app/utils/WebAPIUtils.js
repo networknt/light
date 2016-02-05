@@ -95,6 +95,25 @@ module.exports = {
         });
     },
 
+    getAllMenu: function() {
+        let getAllMenu = {
+            category : 'menu',
+            name : 'getAllMenu',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(getAllMenu),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.getAllMenuResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getRole: function() {
         let getRole = {
             category : 'role',
@@ -656,6 +675,29 @@ module.exports = {
         });
     },
 
+    getAllUser: function(pageNo, pageSize) {
+        var getAllUser = {
+            category: 'user',
+            name: 'getAllUser',
+            readOnly: true,
+            data: {
+                pageSize : pageSize,
+                pageNo : pageNo,
+                sortDir : 'desc',
+                sortedBy : 'createDate'
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getAllUser))}
+        }).done(function(data) {
+            ServerActionCreators.getAllUserResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     updateShippingAddress: function(data) {
         var updAddress = {
             category: 'shipping',
@@ -722,6 +764,25 @@ module.exports = {
         });
     },
 
+    getAllForm: function() {
+        var getAllForm = {
+            category: 'form',
+            name: 'getAllForm',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getAllForm))}
+        }).done(function(data) {
+            console.log('getAllForm', data);
+            ServerActionCreators.getAllFormResponse(data);
+
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getPage: function(pageId) {
         var getPage = {
             category: 'page',
@@ -740,6 +801,23 @@ module.exports = {
 
         }).fail(function(error) {
             ServerActionCreators.getPageResponse(null, error);
+        });
+    },
+
+    getAllPage: function() {
+        var getAllPage = {
+            category: 'page',
+            name: 'getAllPage',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getAllPage))}
+        }).done(function(data) {
+            ServerActionCreators.getAllPageResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 
@@ -849,6 +927,23 @@ module.exports = {
             ServerActionCreators.downloadEventResponse(data, null);
         }).fail(function(error) {
             ServerActionCreators.downloadEventResponse(null, error);
+        });
+    },
+
+    getRule: function() {
+        var getRule = {
+            category: 'rule',
+            name: 'getRule',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getRule))}
+        }).done(function(data) {
+            ServerActionCreators.getRuleResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
         });
     }
 

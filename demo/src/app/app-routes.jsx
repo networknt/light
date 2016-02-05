@@ -49,6 +49,11 @@ import ExportDatabase from './components/admin/db/ExportDatabase';
 import DownloadEvent from './components/admin/db/DownloadEvent';
 import AccessAdminHome from './components/admin/access/AccessAdminHome';
 import RoleAdminHome from './components/admin/role/RoleAdminHome';
+import UserAdminHome from './components/admin/user/UserAdminHome';
+import MenuAdminHome from './components/admin/menu/MenuAdminHome';
+import FormAdminHome from './components/admin/form/FormAdminHome';
+import PageAdminHome from './components/admin/page/PageAdminHome';
+import RuleAdminHome from './components/admin/rule/RuleAdminHome';
 
 /**
  * Routes: https://github.com/rackt/react-router/blob/master/docs/api/components/Route.md
@@ -107,6 +112,11 @@ const AppRoutes = (
     <Route path='/admin/dbAdmin/downloadEvent' component={DownloadEvent} />
     <Route path='/admin/accessAdmin' component={AccessAdminHome} />
     <Route path='/admin/roleAdmin' component={RoleAdminHome} />
+    <Route path='/admin/userAdmin' component={UserAdminHome} />
+    <Route path='/admin/menuAdmin' component={MenuAdminHome} />
+    <Route path='/admin/formAdmin' component={FormAdminHome} />
+    <Route path='/admin/pageAdmin' component={PageAdminHome} />
+    <Route path='/admin/ruleAdmin' component={RuleAdminHome} />
 
     <IndexRoute component={Home}/>
 

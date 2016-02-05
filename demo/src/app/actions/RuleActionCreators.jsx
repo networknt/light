@@ -6,12 +6,8 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    getPage: function(pageId) {
-        WebAPIUtils.getPage(pageId);
-    },
-
-    getAllPage: function() {
-        WebAPIUtils.getAllPage();
+    getRule: function() {
+        WebAPIUtils.getRule();
     }
 
 };

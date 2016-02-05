@@ -34,6 +34,7 @@ module.exports = {
         // Menu
         GET_MENU: null,
         GET_MENU_RESPONSE: null,
+        GET_ALL_MENU_RESPONSE: null,
 
         // Role
         GET_ROLE_RESPONSE: null,
@@ -97,13 +98,17 @@ module.exports = {
 
         SELECT_CATALOG: null,
         LOAD_PRODUCTS: null,
+
+        // User
         RECEIVE_USER: null,
+        GET_ALL_USER_RESPONSE: null,
 
         // Form
         GET_FORM: null,
         RECEIVE_FORM: null,
         SUBMIT_FORM_RESPONSE: null,
         SET_FORM_MODEL: null,
+        GET_ALL_FORM_RESPONSE: null,
 
         // Page
         GET_PAGE: null,
@@ -127,8 +132,10 @@ module.exports = {
 
         // Db
         EXEC_QUERY_CMD_RESPONSE: null,
-        DOWNLOAD_EVENT_RESPONSE: null
+        DOWNLOAD_EVENT_RESPONSE: null,
 
+        // Rule
+        GET_RULE_RESPONSE: null
     }),
 
     monthNames: ["January", "February", "March", "April", "May", "June",

@@ -9,49 +9,46 @@ import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Dialog from 'material-ui/lib/dialog';
 import CircularProgress from 'material-ui/lib/circular-progress';
-import SchemaForm from 'react-schema-form/lib/SchemaForm';
-import RuleAdminStore from '../../../stores/RuleAdminStore';
-import FormStore from '../../../stores/FormStore';
-import RuleActionCreators from '../../../actions/RuleActionCreators';
-import FormActionCreators from'../../../actions/FormActionCreators';
+import PageAdminStore from '../../../stores/PageAdminStore';
+import PageActionCreators from '../../../actions/PageActionCreators';
 
-var RuleAdminHome = React.createClass({
-    displayName: 'RuleAdminHome',
+var PageAdminHome = React.createClass({
+    displayName: 'PageAdminHome',
 
     getInitialState: function() {
         return {
-            rules: []
+            pages: []
         };
     },
 
     componentWillMount: function() {
-        RuleAdminStore.addChangeListener(this._onRuleChange);
-        RuleActionCreators.getRule();
+        PageAdminStore.addChangeListener(this._onPageChange);
+        PageActionCreators.getAllPage();
     },
 
     componentWillUnmount: function() {
-        RuleAdminStore.removeChangeListener(this._onRuleChange);
+        PageAdminStore.removeChangeListener(this._onPageChange);
     },
 
-    _onRuleChange: function() {
+    _onPageChange: function() {
+        console.log('PageAdminHome._onPageChange', PageAdminStore.getPages());
         this.setState({
-            rules: RuleAdminStore.getRules()
+            pages: PageAdminStore.getPages()
         });
     },
 
-    _onDeleteRule: function(rule) {
-        console.log("_onDeleteRule", rule);
-        RuleActionCreators.delRule(rule);
+    _onDeletePage: function(page) {
+        PageActionCreators.delPage(page['@rid']);
     },
 
-    _onUpdateRule: function(rule) {
-        let formId = 'com.networknt.light.rule.update';
-        FormActionCreators.setFormModel(formId, rule);
+    _onUpdatePage: function(page) {
+        let formId = 'com.networknt.light.page.update';
+        FormActionCreators.setFormModel(formId, page);
         this.props.history.push('/form/' + formId);
     },
 
-    _onAddRule: function() {
-        let formId = 'com.networknt.light.rule.add';
+    _onAddPage: function() {
+        let formId = 'com.networknt.light.page.add';
         this.props.history.push('/form/' + formId);
     },
 
@@ -66,13 +63,14 @@ var RuleAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="10" tooltip='Rules' style={{textAlign: 'center'}}>
-                                Rules
+                            <TableHeaderColumn colSpan="11" tooltip='Pages' style={{textAlign: 'center'}}>
+                                Pages
                             </TableHeaderColumn>
                         </TableRow>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Rule Class' colSpan="3">Rule Class</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Page Id' colSpan="3">Page Id</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Host' colSpan="3">Host</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
@@ -84,17 +82,18 @@ var RuleAdminHome = React.createClass({
                         showRowHover={true}
                         stripedRows={true}>
 
-                        {this.state.rules.map((rule, index) => {
-                            let boundDelete = this._onDeleteRule.bind(this, rule);
-                            let boundUpdate = this._onUpdateRule.bind(this, rule);
+                        {this.state.pages.map((page, index) => {
+                            let boundDelete = this._onDeletePage.bind(this, page);
+                            let boundUpdate = this._onUpdatePage.bind(this, page);
                             return (
                                 <TableRow key={index}>
                                     <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn colSpan="3"><a onClick={boundUpdate}>{rule.ruleClass}</a></TableRowColumn>
-                                    <TableRowColumn>{rule.createUserId}</TableRowColumn>
-                                    <TableRowColumn>{rule.createDate}</TableRowColumn>
-                                    <TableRowColumn>{rule.updateUserId}</TableRowColumn>
-                                    <TableRowColumn>{rule.updateDate}</TableRowColumn>
+                                    <TableRowColumn colSpan="3"><a onClick={boundUpdate}>{page.pageId}</a></TableRowColumn>
+                                    <TableRowColumn colSpan="3">{page.host}</TableRowColumn>
+                                    <TableRowColumn>{page.createUserId}</TableRowColumn>
+                                    <TableRowColumn>{page.createDate}</TableRowColumn>
+                                    <TableRowColumn>{page.updateUserId}</TableRowColumn>
+                                    <TableRowColumn>{page.updateDate}</TableRowColumn>
                                 </TableRow>
                             );
                         })}
@@ -104,15 +103,16 @@ var RuleAdminHome = React.createClass({
                     <TableFooter>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Rule Class' colSpan="3">Rule Class</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Page Id' colSpan="3">Page Id</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Host' colSpan="3">Host</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                         <TableRow>
-                            <TableRowColumn colSpan="10" style={{textAlign: 'left'}}>
-                                <RaisedButton label="Add Rule" primary={true} onTouchTap={this._onAddRule} />
+                            <TableRowColumn colSpan="11" style={{textAlign: 'left'}}>
+                                <RaisedButton label="Add Page" primary={true} onTouchTap={this._onAddPage} />
                             </TableRowColumn>
                         </TableRow>
 
@@ -123,4 +123,4 @@ var RuleAdminHome = React.createClass({
     }
 });
 
-module.exports = RuleAdminHome;
+module.exports = PageAdminHome;

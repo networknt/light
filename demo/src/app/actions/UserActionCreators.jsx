@@ -5,12 +5,12 @@ var AppConstants = require('../constants/AppConstants.js');
 var WebAPIUtils = require('../utils/WebAPIUtils.js');
 
 module.exports = {
-    getMenu: function() {
-        WebAPIUtils.getMenu();
+    getAllUser: function(pageNo, pageSize) {
+        WebAPIUtils.getAllUser(pageNo, pageSize);
     },
 
-    getAllMenu: function() {
-        WebAPIUtils.getAllMenu();
+    delUser: function(rid) {
+        WebAPIUtils.delUser(rid);
     }
 
 };

@@ -1,10 +1,10 @@
 [
   {
     "@type": "d",
-    "@rid": "#18:278",
+    "@rid": "#18:275",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10279,
+    "eventId": 10276,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.access.upd_d",
@@ -126,20 +126,20 @@
           "success": "/page/com-networknt-light-v-access-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.323"
+      "createDate": "2016-02-05T13:42:07.948"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.323",
+    "createDate": "2016-02-05T13:42:07.948",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:279",
+    "@rid": "#18:276",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10280,
+    "eventId": 10277,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.blog.add",
@@ -203,20 +203,20 @@
           "success": "/page/com-networknt-light-v-blog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.354"
+      "createDate": "2016-02-05T13:42:07.966"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.354",
+    "createDate": "2016-02-05T13:42:07.966",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:280",
+    "@rid": "#18:277",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10281,
+    "eventId": 10278,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.blog.post.add",
@@ -302,20 +302,20 @@
           "success": "/page/com-networknt-light-v-blog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.393"
+      "createDate": "2016-02-05T13:42:08.008"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.393",
+    "createDate": "2016-02-05T13:42:08.008",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:281",
+    "@rid": "#18:278",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10282,
+    "eventId": 10279,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.blog.post.update",
@@ -415,20 +415,20 @@
           "success": "/page/com-networknt-light-v-blog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.433"
+      "createDate": "2016-02-05T13:42:08.034"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.433",
+    "createDate": "2016-02-05T13:42:08.034",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:282",
+    "@rid": "#18:279",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10283,
+    "eventId": 10280,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.blog.update",
@@ -492,20 +492,20 @@
           "success": "/page/com-networknt-light-v-blog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.478"
+      "createDate": "2016-02-05T13:42:08.072"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.478",
+    "createDate": "2016-02-05T13:42:08.072",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:283",
+    "@rid": "#18:280",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10284,
+    "eventId": 10281,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.catalog.add",
@@ -569,20 +569,20 @@
           "success": "/page/com-networknt-light-v-catalog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.521"
+      "createDate": "2016-02-05T13:42:08.127"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.521",
+    "createDate": "2016-02-05T13:42:08.127",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:284",
+    "@rid": "#18:281",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10285,
+    "eventId": 10282,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.catalog.product.add",
@@ -592,7 +592,9 @@
         "required": [
           "parentRid",
           "name",
-          "description"
+          "description",
+          "content",
+          "variants"
         ],
         "properties": {
           "parentRid": {
@@ -606,6 +608,10 @@
           },
           "description": {
             "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
             "type": "string"
           },
           "tags": {
@@ -657,6 +663,11 @@
         {
           "key": "description",
           "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "content",
+          "type": "textarea",
           "rows": 20
         },
         {
@@ -694,20 +705,20 @@
           "success": "/page/com-networknt-light-v-blog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.540"
+      "createDate": "2016-02-05T13:42:08.166"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.540",
+    "createDate": "2016-02-05T13:42:08.166",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:285",
+    "@rid": "#18:282",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10286,
+    "eventId": 10283,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.catalog.product.update",
@@ -717,7 +728,9 @@
         "required": [
           "entityId",
           "name",
-          "description"
+          "description",
+          "content",
+          "variants"
         ],
         "properties": {
           "parentRid": {
@@ -735,6 +748,10 @@
           },
           "description": {
             "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
             "type": "string"
           },
           "tags": {
@@ -796,6 +813,11 @@
         {
           "key": "description",
           "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "content",
+          "type": "textarea",
           "rows": 20
         },
         {
@@ -833,20 +855,20 @@
           "success": "/page/com-networknt-light-v-blog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.592"
+      "createDate": "2016-02-05T13:42:08.224"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.592",
+    "createDate": "2016-02-05T13:42:08.224",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:286",
+    "@rid": "#18:283",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10287,
+    "eventId": 10284,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.catalog.update",
@@ -910,20 +932,20 @@
           "success": "/page/com-networknt-light-v-catalog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.607"
+      "createDate": "2016-02-05T13:42:08.266"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.607",
+    "createDate": "2016-02-05T13:42:08.266",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:287",
+    "@rid": "#18:284",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10288,
+    "eventId": 10285,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.class.feed",
@@ -1395,20 +1417,20 @@
           "success": "/"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.642"
+      "createDate": "2016-02-05T13:42:08.314"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.642",
+    "createDate": "2016-02-05T13:42:08.314",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:288",
+    "@rid": "#18:285",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10289,
+    "eventId": 10286,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.common.command",
@@ -1493,20 +1515,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.682"
+      "createDate": "2016-02-05T13:42:08.361"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.682",
+    "createDate": "2016-02-05T13:42:08.361",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:289",
+    "@rid": "#18:286",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10290,
+    "eventId": 10287,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.config.update",
@@ -1556,20 +1578,20 @@
           "title": "Update"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.699"
+      "createDate": "2016-02-05T13:42:08.385"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.699",
+    "createDate": "2016-02-05T13:42:08.385",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:290",
+    "@rid": "#18:287",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10291,
+    "eventId": 10288,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.downloadEvent",
@@ -1606,20 +1628,20 @@
           "title": "Download Events"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.717"
+      "createDate": "2016-02-05T13:42:08.406"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.716",
+    "createDate": "2016-02-05T13:42:08.406",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:291",
+    "@rid": "#18:288",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10292,
+    "eventId": 10289,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.execQueryCommand",
@@ -1653,20 +1675,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.731"
+      "createDate": "2016-02-05T13:42:08.435"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.731",
+    "createDate": "2016-02-05T13:42:08.435",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:292",
+    "@rid": "#18:289",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10293,
+    "eventId": 10290,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.execSchemaCommand",
@@ -1700,20 +1722,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.746"
+      "createDate": "2016-02-05T13:42:08.449"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.746",
+    "createDate": "2016-02-05T13:42:08.449",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:293",
+    "@rid": "#18:290",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10294,
+    "eventId": 10291,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.execUpdateCommand",
@@ -1747,20 +1769,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.767"
+      "createDate": "2016-02-05T13:42:08.475"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.767",
+    "createDate": "2016-02-05T13:42:08.475",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:294",
+    "@rid": "#18:291",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10295,
+    "eventId": 10292,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.exportDb",
@@ -1790,20 +1812,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.789"
+      "createDate": "2016-02-05T13:42:08.490"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.789",
+    "createDate": "2016-02-05T13:42:08.490",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:295",
+    "@rid": "#18:292",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10296,
+    "eventId": 10293,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.replayEvent",
@@ -1837,20 +1859,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.804"
+      "createDate": "2016-02-05T13:42:08.506"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.804",
+    "createDate": "2016-02-05T13:42:08.506",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:296",
+    "@rid": "#18:293",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10297,
+    "eventId": 10294,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.demo.strapselect_d",
@@ -1981,20 +2003,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.821"
+      "createDate": "2016-02-05T13:42:08.527"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.821",
+    "createDate": "2016-02-05T13:42:08.527",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:297",
+    "@rid": "#18:294",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10298,
+    "eventId": 10295,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.demo.uiselect_d",
@@ -2400,20 +2422,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.848"
+      "createDate": "2016-02-05T13:42:08.583"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.848",
+    "createDate": "2016-02-05T13:42:08.583",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:298",
+    "@rid": "#18:295",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10299,
+    "eventId": 10296,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.feeds",
@@ -2466,20 +2488,20 @@
           "title": "Inject"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.872"
+      "createDate": "2016-02-05T13:42:08.619"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.872",
+    "createDate": "2016-02-05T13:42:08.619",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:299",
+    "@rid": "#18:296",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10300,
+    "eventId": 10297,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.form.import",
@@ -2510,20 +2532,20 @@
           "success": "/page/com-networknt-light-v-form-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.889"
+      "createDate": "2016-02-05T13:42:08.640"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.889",
+    "createDate": "2016-02-05T13:42:08.640",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:300",
+    "@rid": "#18:297",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10301,
+    "eventId": 10298,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.forum.add",
@@ -2584,20 +2606,20 @@
           "success": "/page/com-networknt-light-v-forum-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.914"
+      "createDate": "2016-02-05T13:42:08.670"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.914",
+    "createDate": "2016-02-05T13:42:08.670",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:301",
+    "@rid": "#18:298",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10302,
+    "eventId": 10299,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.forum.post.add",
@@ -2687,20 +2709,20 @@
           "success": "/page/com-networknt-light-v-forum-post"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.937"
+      "createDate": "2016-02-05T13:42:08.687"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.937",
+    "createDate": "2016-02-05T13:42:08.687",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:302",
+    "@rid": "#18:299",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10303,
+    "eventId": 10300,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.forum.post.update",
@@ -2871,20 +2893,20 @@
           "success": "/page/com-networknt-light-v-forum-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.956"
+      "createDate": "2016-02-05T13:42:08.714"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.956",
+    "createDate": "2016-02-05T13:42:08.714",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:303",
+    "@rid": "#18:300",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10304,
+    "eventId": 10301,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.forum.update",
@@ -2945,20 +2967,20 @@
           "success": "/page/com-networknt-light-v-forum-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.980"
+      "createDate": "2016-02-05T13:42:08.732"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.980",
+    "createDate": "2016-02-05T13:42:08.732",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:304",
+    "@rid": "#18:301",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10305,
+    "eventId": 10302,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.host.add",
@@ -3000,20 +3022,20 @@
           "success": "/page/com-networknt-light-v-host-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:22.997"
+      "createDate": "2016-02-05T13:42:08.747"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:22.997",
+    "createDate": "2016-02-05T13:42:08.747",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:305",
+    "@rid": "#18:302",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10306,
+    "eventId": 10303,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.host.update",
@@ -3049,20 +3071,20 @@
           "success": "/page/com-networknt-light-v-host-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.011"
+      "createDate": "2016-02-05T13:42:08.763"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.011",
+    "createDate": "2016-02-05T13:42:08.763",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:306",
+    "@rid": "#18:303",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10307,
+    "eventId": 10304,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.menu.addMenu",
@@ -3104,20 +3126,20 @@
           "success": "/page/com-networknt-light-v-menu-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.023"
+      "createDate": "2016-02-05T13:42:08.790"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.023",
+    "createDate": "2016-02-05T13:42:08.790",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:307",
+    "@rid": "#18:304",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10308,
+    "eventId": 10305,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.menu.addMenuItem",
@@ -3202,20 +3224,20 @@
           "success": "/page/com-networknt-light-v-menu-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.039"
+      "createDate": "2016-02-05T13:42:08.814"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.039",
+    "createDate": "2016-02-05T13:42:08.814",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:308",
+    "@rid": "#18:305",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10309,
+    "eventId": 10306,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.menu.updateMenu",
@@ -3257,20 +3279,20 @@
           "success": "/page/com-networknt-light-v-menu-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.062"
+      "createDate": "2016-02-05T13:42:08.845"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.062",
+    "createDate": "2016-02-05T13:42:08.845",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:309",
+    "@rid": "#18:306",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10310,
+    "eventId": 10307,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.menu.updateMenuItem",
@@ -3349,20 +3371,20 @@
           "success": "/page/com-networknt-light-v-menu-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.080"
+      "createDate": "2016-02-05T13:42:08.888"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.080",
+    "createDate": "2016-02-05T13:42:08.888",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:310",
+    "@rid": "#18:307",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10311,
+    "eventId": 10308,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.news.add",
@@ -3426,20 +3448,20 @@
           "success": "/page/com-networknt-light-v-news-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.104"
+      "createDate": "2016-02-05T13:42:08.925"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.104",
+    "createDate": "2016-02-05T13:42:08.925",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:311",
+    "@rid": "#18:308",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10312,
+    "eventId": 10309,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.news.post.add",
@@ -3525,20 +3547,20 @@
           "success": "/page/com-networknt-light-v-blog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.130"
+      "createDate": "2016-02-05T13:42:09.028"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.130",
+    "createDate": "2016-02-05T13:42:09.028",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:312",
+    "@rid": "#18:309",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10313,
+    "eventId": 10310,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.news.post.update",
@@ -3638,20 +3660,20 @@
           "success": "/page/com-networknt-light-v-blog-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.154"
+      "createDate": "2016-02-05T13:42:09.050"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.154",
+    "createDate": "2016-02-05T13:42:09.050",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:313",
+    "@rid": "#18:310",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10314,
+    "eventId": 10311,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.news.update",
@@ -3715,20 +3737,20 @@
           "success": "/page/com-networknt-light-v-news-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.211"
+      "createDate": "2016-02-05T13:42:09.083"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.211",
+    "createDate": "2016-02-05T13:42:09.083",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:314",
+    "@rid": "#18:311",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10315,
+    "eventId": 10312,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.page.add",
@@ -3770,20 +3792,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.228"
+      "createDate": "2016-02-05T13:42:09.102"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.228",
+    "createDate": "2016-02-05T13:42:09.102",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:315",
+    "@rid": "#18:312",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10316,
+    "eventId": 10313,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.page.import",
@@ -3820,20 +3842,20 @@
           "success": "/page/com-networknt-light-v-page-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.264"
+      "createDate": "2016-02-05T13:42:09.126"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.264",
+    "createDate": "2016-02-05T13:42:09.126",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:316",
+    "@rid": "#18:313",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10317,
+    "eventId": 10314,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.page.update",
@@ -3875,20 +3897,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.280"
+      "createDate": "2016-02-05T13:42:09.141"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.280",
+    "createDate": "2016-02-05T13:42:09.141",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:317",
+    "@rid": "#18:314",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10318,
+    "eventId": 10315,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.product.add",
@@ -4013,20 +4035,20 @@
           "success": "/page/com-networknt-light-v-product-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.295"
+      "createDate": "2016-02-05T13:42:09.161"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.295",
+    "createDate": "2016-02-05T13:42:09.161",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:318",
+    "@rid": "#18:315",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10319,
+    "eventId": 10316,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.product.update",
@@ -4158,20 +4180,20 @@
           "success": "/page/com-networknt-light-v-product-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.346"
+      "createDate": "2016-02-05T13:42:09.199"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.346",
+    "createDate": "2016-02-05T13:42:09.199",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:319",
+    "@rid": "#18:316",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10320,
+    "eventId": 10317,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.role.add",
@@ -4207,20 +4229,20 @@
           "success": "/page/com-networknt-light-v-role-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.414"
+      "createDate": "2016-02-05T13:42:09.215"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.414",
+    "createDate": "2016-02-05T13:42:09.215",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:320",
+    "@rid": "#18:317",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10321,
+    "eventId": 10318,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.role.update",
@@ -4257,20 +4279,20 @@
           "success": "/page/com-networknt-light-v-role-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.439"
+      "createDate": "2016-02-05T13:42:09.284"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.439",
+    "createDate": "2016-02-05T13:42:09.284",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:321",
+    "@rid": "#18:318",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10322,
+    "eventId": 10319,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.add",
@@ -4313,20 +4335,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.485"
+      "createDate": "2016-02-05T13:42:09.338"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.485",
+    "createDate": "2016-02-05T13:42:09.338",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:322",
+    "@rid": "#18:319",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10323,
+    "eventId": 10320,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.cors.update",
@@ -4368,20 +4390,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.504"
+      "createDate": "2016-02-05T13:42:09.352"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.504",
+    "createDate": "2016-02-05T13:42:09.352",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:323",
+    "@rid": "#18:320",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10324,
+    "eventId": 10321,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.etag.update",
@@ -4423,20 +4445,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.528"
+      "createDate": "2016-02-05T13:42:09.372"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.528",
+    "createDate": "2016-02-05T13:42:09.372",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:324",
+    "@rid": "#18:321",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10325,
+    "eventId": 10322,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.import",
@@ -4473,20 +4495,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.551"
+      "createDate": "2016-02-05T13:42:09.393"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.551",
+    "createDate": "2016-02-05T13:42:09.393",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:325",
+    "@rid": "#18:322",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10326,
+    "eventId": 10323,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.publisher.update",
@@ -4523,20 +4545,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.578"
+      "createDate": "2016-02-05T13:42:09.425"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.578",
+    "createDate": "2016-02-05T13:42:09.425",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:326",
+    "@rid": "#18:323",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10327,
+    "eventId": 10324,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.schema.update",
@@ -4579,20 +4601,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.598"
+      "createDate": "2016-02-05T13:42:09.450"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.598",
+    "createDate": "2016-02-05T13:42:09.450",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:327",
+    "@rid": "#18:324",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10328,
+    "eventId": 10325,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.subscriber.update",
@@ -4629,20 +4651,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.628"
+      "createDate": "2016-02-05T13:42:09.467"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.628",
+    "createDate": "2016-02-05T13:42:09.467",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:328",
+    "@rid": "#18:325",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10329,
+    "eventId": 10326,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.update",
@@ -4679,20 +4701,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.649"
+      "createDate": "2016-02-05T13:42:09.509"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.649",
+    "createDate": "2016-02-05T13:42:09.509",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:329",
+    "@rid": "#18:326",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10330,
+    "eventId": 10327,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.transform.request.add_d",
@@ -4757,20 +4779,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.664"
+      "createDate": "2016-02-05T13:42:09.532"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.664",
+    "createDate": "2016-02-05T13:42:09.532",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:330",
+    "@rid": "#18:327",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10331,
+    "eventId": 10328,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.transform.request.update_d",
@@ -4836,20 +4858,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.681"
+      "createDate": "2016-02-05T13:42:09.565"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.681",
+    "createDate": "2016-02-05T13:42:09.565",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:331",
+    "@rid": "#18:328",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10332,
+    "eventId": 10329,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.transform.response.add_d",
@@ -4914,20 +4936,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.701"
+      "createDate": "2016-02-05T13:42:09.580"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.701",
+    "createDate": "2016-02-05T13:42:09.580",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:332",
+    "@rid": "#18:329",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10333,
+    "eventId": 10330,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.transform.response.update_d",
@@ -4993,20 +5015,20 @@
           "success": "/page/com-networknt-light-v-rule-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.719"
+      "createDate": "2016-02-05T13:42:09.593"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.719",
+    "createDate": "2016-02-05T13:42:09.593",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:333",
+    "@rid": "#18:330",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10334,
+    "eventId": 10331,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.address",
@@ -5094,20 +5116,20 @@
           "title": "New"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.733"
+      "createDate": "2016-02-05T13:42:09.606"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.733",
+    "createDate": "2016-02-05T13:42:09.606",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:334",
+    "@rid": "#18:331",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10335,
+    "eventId": 10332,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.change.password",
@@ -5148,20 +5170,20 @@
           "title": "Change Password"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.745"
+      "createDate": "2016-02-05T13:42:09.619"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.745",
+    "createDate": "2016-02-05T13:42:09.619",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:335",
+    "@rid": "#18:332",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10336,
+    "eventId": 10333,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.profile",
@@ -5210,20 +5232,20 @@
           "title": "Update"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.755"
+      "createDate": "2016-02-05T13:42:09.632"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.755",
+    "createDate": "2016-02-05T13:42:09.632",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:336",
+    "@rid": "#18:333",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10337,
+    "eventId": 10334,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.role.update_d",
@@ -5260,20 +5282,20 @@
           "success": "/page/com-networknt-light-v-user-admin-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.773"
+      "createDate": "2016-02-05T13:42:09.646"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.773",
+    "createDate": "2016-02-05T13:42:09.646",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:337",
+    "@rid": "#18:334",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10338,
+    "eventId": 10335,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.signin",
@@ -5318,20 +5340,20 @@
           "success": "/page/com-networknt-light-v-user-home"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.804"
+      "createDate": "2016-02-05T13:42:09.664"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.804",
+    "createDate": "2016-02-05T13:42:09.664",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:338",
+    "@rid": "#18:335",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10339,
+    "eventId": 10336,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.signup",
@@ -5353,6 +5375,7 @@
           "email": {
             "title": "Email",
             "type": "string",
+            "pattern": "^\\S+@\\S+$",
             "description": "Email can be used to log in."
           },
           "password": {
@@ -5376,10 +5399,7 @@
       "createUserId": "stevehu",
       "form": [
         "userId",
-        {
-          "key": "email",
-          "type": "email"
-        },
+        "email",
         {
           "key": "password",
           "type": "password"
@@ -5399,20 +5419,20 @@
           "title": "Register"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.827"
+      "createDate": "2016-02-05T13:42:09.698"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.827",
+    "createDate": "2016-02-05T13:42:09.698",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#18:339",
+    "@rid": "#18:336",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10340,
+    "eventId": 10337,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.update.profile",
@@ -5443,13 +5463,12 @@
           "title": "Update"
         }
       ],
-      "createDate": "2016-02-01T18:05:23.858"
+      "createDate": "2016-02-05T13:42:09.713"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-01T18:05:23.858",
+    "createDate": "2016-02-05T13:42:09.713",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   }
-
 ]
