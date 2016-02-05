@@ -49,7 +49,6 @@ public class ServiceLocator {
     static final String CONFIG_EXT = ".json";
     static final String API_ENV = "API_ENV";
     static final String API_ENV_DEV = "dev";
-    static final String EXTERNAL_PROPERTY_DIR = System.getProperty("config.dir", "");
     static final String CONFIG_FOLDER = "config/";
     static final String CONFIG_EXT_JSON = ".json";
 
@@ -281,7 +280,7 @@ public class ServiceLocator {
         // load from system property path first. Externalized on the target deployment environment
         InputStream inStream = null;
         try{
-            inStream = new FileInputStream(EXTERNAL_PROPERTY_DIR + "/" + configFilename);
+            inStream = new FileInputStream(System.getProperty("config.dir", "") + "/" + configFilename);
         } catch (FileNotFoundException ex){
             if(logger.isInfoEnabled()) {
                 logger.info("Config not found in filesystem. Trying classpath locations.");
@@ -289,7 +288,7 @@ public class ServiceLocator {
         }
         if (inStream != null) {
             if(logger.isInfoEnabled()) {
-                logger.info("Config loaded from external filesystem directory for " + configFilename + " in " + EXTERNAL_PROPERTY_DIR);
+                logger.info("Config loaded from external filesystem directory for " + configFilename + " in " + System.getProperty("config.dir", ""));
             }
             return inStream;
         }
