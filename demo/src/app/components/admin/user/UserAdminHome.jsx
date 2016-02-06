@@ -58,11 +58,6 @@ var UserAdminHome = React.createClass({
         this.props.history.push('/form/' + formId);
     },
 
-    _onAddUser: function() {
-        let formId = 'com.networknt.light.user.add';
-        this.props.history.push('/form/' + formId);
-    },
-
     _onPageNoChange: function (key) {
         this.setState({
             pageNo: key
@@ -139,12 +134,6 @@ var UserAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Last Name'>Last Name</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
                         </TableRow>
-                        <TableRow>
-                            <TableRowColumn colSpan="9" style={{textAlign: 'left'}}>
-                                <RaisedButton label="Add User" primary={true} onTouchTap={this._onAddUser} />
-                            </TableRowColumn>
-                        </TableRow>
-
                     </TableFooter>
                 </Table>
                 <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>

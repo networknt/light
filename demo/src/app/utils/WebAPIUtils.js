@@ -891,7 +891,6 @@ module.exports = {
     },
 
     submitForm: function(action) {
-        console.log('WebAPIUtils submitForm is called', action);
         $.ajax({
             type: 'POST',
             url: '/api/rs',
@@ -899,7 +898,7 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            cosnole.log('WebAPIUtils.submitForm done', data);
+            console.log('WebAPIUtils.submitForm done', data);
             ServerActionCreators.submitFormResponse(data, null);
         }).fail(function(error) {
             console.log('WebAPIUtils.submitForm fail', error);

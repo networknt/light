@@ -297,7 +297,7 @@ const Main = React.createClass({
             loginMenuItems.push(<MenuItem key='logout' value='logout' primaryText='Sign out' />)
         } else {
             loginMenuItems.push(<MenuItem key='login' value='login' primaryText='Log in' />);
-            loginMenuItems.push(<MenuItem key='signup' value='signup' primaryText='Sign up' />);
+            loginMenuItems.push(<MenuItem key='signup' value='/form/com.networknt.light.user.signup' primaryText='Sign up' />);
         }
 
         let cartButton = '';

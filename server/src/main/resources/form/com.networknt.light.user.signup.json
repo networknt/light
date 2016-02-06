@@ -4,7 +4,8 @@
         "category" : "user",
         "name" : "signUpUser",
         "readOnly": false,
-        "title": "Register"
+        "title": "Register",
+        "success": "/page/com-networknt-light-v-user-signup"
     }],
     "schema": {
         "type": "object",
