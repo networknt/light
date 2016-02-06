@@ -1135,5 +1135,24 @@
     "createDate": "2015-03-24T01:51:38.458",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-06T15:55:37.526",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.user.ActivateUserRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-06T15:55:37.526",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

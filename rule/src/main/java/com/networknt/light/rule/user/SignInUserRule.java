@@ -58,7 +58,15 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
                     user = (OrientVertex)getUserByUserId(graph, userIdEmail);
                 }
                 if(user != null) {
-                    if(checkPassword(graph, user, inputPassword)) {
+                    // check if the user is activate already
+                    if(user.getProperty("code") != null) {
+                        error = "Account is not activated yet";
+                        inputMap.put("responseCode", 400);
+                    } else if (user.getProperty("locked") != null && (boolean)user.getProperty("locked")) {
+                        // check if the user is locked already
+                        error = "Account is locked";
+                        inputMap.put("responseCode", 400);
+                    } else if(checkPassword(graph, user, inputPassword)){
                         String jwt = generateToken(user, clientId, rememberMe);
                         if(jwt != null) {
                             Map eventMap = getEventMap(inputMap);
