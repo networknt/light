@@ -66,7 +66,7 @@ const config = {
     new webpack.HotModuleReplacementPlugin(),
     //Allows error warninggs but does not stop compiling. Will remove when eslint is added
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin(buildPath + '/style.css', {
+    new ExtractTextPlugin(path.resolve(__dirname,'/style.css') , {
       allChunks: true
     })
   ],
@@ -121,7 +121,7 @@ const config = {
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=" + path.resolve(__dirname, "src/www/assets/stylesheets"))
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=" + path.resolve(__dirname, "/src/www/assets/stylesheets"))
       }
     ]
   },
