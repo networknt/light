@@ -43,10 +43,11 @@ module.exports = {
         });
     },
 
-    delRoleResponse: function(json) {
+    delRoleResponse: function(rid) {
+        console.log('ServerActionCreators.delRoleResponse', rid);
         AppDispatcher.dispatch({
             type: ActionTypes.DEL_ROLE_RESPONSE,
-            json: json
+            rid: rid
         });
     },
 

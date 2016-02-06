@@ -38,6 +38,7 @@ module.exports = {
 
         // Role
         GET_ROLE_RESPONSE: null,
+        DEL_ROLE_RESPONSE: null,
 
         // Post
         GET_POST_RESPONSE: null,

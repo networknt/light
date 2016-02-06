@@ -44,6 +44,15 @@ RoleAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
             _hosts = payload.json.hosts;
             RoleAdminStore.emitChange();
             break;
+        case ActionTypes.DEL_ROLE_RESPONSE:
+            // remove the deleted one from the list.
+            let rid = payload.rid;
+            console.log('RoleAdminStore.DEL_ROLE_RESPONSE', rid, _roles);
+            _roles.splice(_.findIndex(_roles, function(role) {
+                return role['@rid'] === rid;
+            }), 1);
+            RoleAdminStore.emitChange();
+            break;
     }
 
     return true;

@@ -152,7 +152,10 @@ module.exports = {
             console.log('data', data);
             ServerActionCreators.delRoleResponse(data);
         }).fail(function(error) {
-            console.log('error', error);
+            if(error.status === 200) {
+                console.log('calling delRoleResponse', rid);
+                ServerActionCreators.delRoleResponse(rid);
+            }
             ErrorActionCreators.serverErrorResponse(error);
         });
     },
@@ -896,9 +899,14 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
+            cosnole.log('WebAPIUtils.submitForm done', data);
             ServerActionCreators.submitFormResponse(data, null);
         }).fail(function(error) {
-            ServerActionCreators.submitFormResponse(null, error);
+            console.log('WebAPIUtils.submitForm fail', error);
+            if(error.status === 200) {
+                ServerActionCreators.submitFormResponse(error);
+            }
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 
