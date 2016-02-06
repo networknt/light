@@ -29,6 +29,13 @@ module.exports = {
         });
     },
 
+    getAllMenuResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_MENU_RESPONSE,
+            json: json
+        });
+    },
+
     getRoleResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_ROLE_RESPONSE,
@@ -60,6 +67,13 @@ module.exports = {
     getAllAccessResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_ALL_ACCESS_RESPONSE,
+            json: json
+        });
+    },
+
+    getAllUserResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_USER_RESPONSE,
             json: json
         });
     },
@@ -305,6 +319,27 @@ module.exports = {
             type: ActionTypes.DOWNLOAD_EVENT_RESPONSE,
             json: json,
             error: error
+        });
+    },
+
+    getAllFormResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_FORM_RESPONSE,
+            json: json
+        });
+    },
+
+    getAllPageResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_PAGE_RESPONSE,
+            json: json
+        });
+    },
+
+    getRuleResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_RULE_RESPONSE,
+            json: json
         });
     }
 

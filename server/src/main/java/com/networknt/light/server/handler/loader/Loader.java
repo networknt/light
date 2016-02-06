@@ -72,7 +72,7 @@ public class Loader {
 
         try {
 
-            System.out.println(response.getStatusLine());
+            //System.out.println(response.getStatusLine());
             HttpEntity entity = response.getEntity();
             BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
             String json = "";
@@ -80,7 +80,7 @@ public class Loader {
             while ((line = rd.readLine()) != null) {
                 json = json + line;
             }
-            System.out.println("json = " + json);
+            //System.out.println("json = " + json);
             Map<String, Object> jsonMap = ServiceLocator.getInstance().getMapper().readValue(json,
                     new TypeReference<HashMap<String, Object>>() {
                     });
