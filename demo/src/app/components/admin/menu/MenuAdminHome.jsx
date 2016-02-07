@@ -58,7 +58,7 @@ var MenuAdminHome = React.createClass({
 
     _onUpdateMenuItem: function(menuItem) {
         let formId = 'com.networknt.light.menu.updateMenuItem';
-        FormActionCreators.setFormModel(formId, menu);
+        FormActionCreators.setFormModel(formId, menuItem);
         this.props.history.push('/form/' + formId);
     },
 
