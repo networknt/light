@@ -1,3 +1,8 @@
+.blogPostPaper {
+  margin: 20px;
+  padding: 30px;
+}
+
 .blogPostRoot {
   background-color: #EFEFEF;
   display: flex;
@@ -5,11 +10,6 @@
   align-items: center;
   flex-direction: column;
   padding: 40px;
-  
-  .blogPostPaper {
-    margin: 0;
-    padding: 30px;
-    width: 100%;
 
     .title {
       font-size: 2 * $blogPostContentText;
@@ -30,7 +30,7 @@
       font-weight: $fontWeightLight;
       line-height: 40px;
     }
-  }
+
   .aboutTheAuthor {
     width: 96.7%;
     margin-top: 30px;
