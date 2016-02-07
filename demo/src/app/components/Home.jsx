@@ -15,7 +15,7 @@ import BlogRecentPost from './blog/BlogRecentPost';
 let Home = React.createClass({
     render: function() {
         return(
-            <div className="blogRoot">
+            <div>
                 <div className="leftColumn">
                     <NewsRecentPost history={this.props.history} />
                     <BlogRecentPost history={this.props.history} />

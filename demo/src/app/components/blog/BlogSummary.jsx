@@ -15,7 +15,7 @@ class BlogSummary extends React.Component {
 
     render() {
         return (
-            <Paper className="blogPostPaper">
+            <Paper>
                 <Card>
                     <CardHeader title={"Created by: " + this.props.post.createUserId} subtitle= {"On: " + this.props.post.createDate} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
                     <CardTitle title={this.props.post.title}/>

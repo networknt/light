@@ -11,7 +11,10 @@ import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
-import NewsSummary from './NewsSummary';
+
+// Using the general Summary component for News/Blog/Forum summaries.
+// import NewsSummary from './NewsSummary';
+import Summary from '../common/Summary.jsx';
 
 var NewsRecentPost = React.createClass({
     displayName: 'NewsRecentPost',
@@ -64,23 +67,19 @@ var NewsRecentPost = React.createClass({
     render: function() {
         return (
             <div>
-                <div className="blogHeader">
-                    <h2>Recent News Posts</h2>
+                <div className="header">
+                    <h2 className="headerContent">Recent News Posts</h2>
                 </div>
-                <div className="blogRoot">
-                    <div className="leftColumn">
-                        {
-                            this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.parentId, post.entityId);
-                                return (
-                                    <span key={index}>
-                                        <NewsSummary post={post} onClick ={boundClick} />
-                                    </span>
-                                );
-                            }, this)
-                        }
-                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
-                    </div>
+                <div className="leftColumn">
+                    {
+                        this.state.posts.map(function(post, index) {
+                            var boundClick = this._routeToPost.bind(this, post.parentId, post.entityId);
+                            return (
+                                <Summary post={post} onClick ={boundClick} key={index}/>
+                            );
+                        }, this)
+                    }
+                    <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                 </div>
             </div>
         );

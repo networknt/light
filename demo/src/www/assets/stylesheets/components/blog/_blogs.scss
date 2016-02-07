@@ -15,7 +15,7 @@
   .mainBlogHeader {
     font-size: 30px;
     color: $colors-darkWhite;
-    font-weight: $font-weight-light;
+    font-weight: $fontWeightLight;
   }
 }
 
@@ -42,7 +42,7 @@
       margin-top: 5px;
     }
     p {
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       font-size: 1em;
     }
   }
@@ -54,7 +54,7 @@
       border-color: $colors-green300;
       border: 3px solid $colors-green300;
       border-radius: 25%;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       font-size: 18px;
       width: 25px;
       height: 25px;

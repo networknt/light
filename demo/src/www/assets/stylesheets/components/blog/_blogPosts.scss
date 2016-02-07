@@ -28,7 +28,7 @@ $blogPostContentText: 24px;
     }
     .title {
       font-size: 2 * $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       line-height: 72px;
       font-family: Lato serif;
       a {
@@ -39,12 +39,12 @@ $blogPostContentText: 24px;
     }
     .year {
       font-size: $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       color: black
     }
     .content {
       font-size: $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       line-height: 40px;
     }
   }
@@ -82,7 +82,7 @@ $blogPostContentText: 24px;
       margin-top: 5px;
     }
     p {
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       font-size: 1em;
     }
   }

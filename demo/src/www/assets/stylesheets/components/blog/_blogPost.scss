@@ -13,7 +13,7 @@
 
     .title {
       font-size: 2 * $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       line-height: 72px;
       font-family: Lato serif;
       color: $colors-green300;
@@ -21,13 +21,13 @@
     }
     .date {
       font-size: $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       color: black;
       margin-bottom: 50px;
     }
     .content {
       font-size: $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       line-height: 40px;
     }
   }
@@ -48,7 +48,7 @@
       }
     }
     p {
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       font-size: 1em;
     }
   }

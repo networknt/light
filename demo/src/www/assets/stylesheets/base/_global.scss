@@ -1,3 +1,6 @@
+@import "globalVariables";
+@import "typography";
+
 html {
   font-family: 'Roboto', sans-serif;
   -ms-text-size-adjust: 100%;
@@ -8,5 +11,20 @@ body {
   font-size: 15px;
   line-height: 20px;
   margin: 0;
-  background-color: $colors-backgroundGrey;
+  background-color: $mainBackgroundColor;
+}
+
+.header {
+  background-color: $mainForegroundColor;
+  overflow: hidden;
+  width: 100%;
+  padding: 55px 0;
+  margin: 0;
+  text-align: center;
+  line-height: 20px;
+  .headerContent {
+    font-size: 30px;
+    color: $darkWhite;
+    font-weight: $fontWeightLight;
+  }
 }
