@@ -11,6 +11,7 @@ import CardText from 'material-ui/lib/card/card-text';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Avatar from 'material-ui/lib/avatar';
 
+// Deprecated, use common/Summary instead.
 class NewsSummary extends React.Component {
 
     render() {
