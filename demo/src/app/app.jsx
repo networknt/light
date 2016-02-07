@@ -10,6 +10,8 @@ import AuthStore from './stores/AuthStore';
 import AppConstants from './constants/AppConstants';
 import $ from 'jquery';
 
+require('../www/assets/stylesheets/main.scss');
+
 let buffer = [];  // save all the requests that gets token expired
 let refreshing = false;
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Paper from 'material-ui/lib/paper';
+import Paper from '../../../../node_modules/material-ui/lib/paper';
 import Gravatar from '../Gravatar';
 import Markdown from '../Markdown';
 
@@ -11,12 +11,11 @@ import CardText from 'material-ui/lib/card/card-text';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Avatar from 'material-ui/lib/avatar';
 
-// Deprecated, use common/Summary instead.
-class NewsSummary extends React.Component {
+class Summary extends React.Component {
 
     render() {
         return (
-            <Paper>
+            <Paper className="summaryPaper">
                 <Card>
                     <CardHeader title={"Created by: " + this.props.post.createUserId} subtitle= {"On: " + this.props.post.createDate} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
                     <CardTitle title={this.props.post.title}/>
@@ -32,9 +31,9 @@ class NewsSummary extends React.Component {
     }
 }
 
-NewsSummary.propTypes = {
+Summary.propTypes = {
     post: React.PropTypes.object.isRequired,
     onClick: React.PropTypes.func.isRequired
 };
 
-export default NewsSummary;
+export default Summary;

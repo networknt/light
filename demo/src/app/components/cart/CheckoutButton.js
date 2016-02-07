@@ -20,6 +20,8 @@ var utils = require('react-schema-form/lib/utils.js');
 import RaisedButton from 'material-ui/lib/raised-button';
 import IconButton from 'material-ui/lib/icon-button';
 import Dialog from 'material-ui/lib/dialog';
+import Badge from 'material-ui/lib/badge';
+import NotificationsIcon from 'material-ui/lib/svg-icons/social/notifications';
 
 
 function getStateFromStores() {
@@ -193,8 +195,9 @@ var CheckoutButton = React.createClass({
 
         return (
             <span>
-                <IconButton iconClassName="material-icons" onTouchTap={this.handleCartTouchTap}>shopping_cart</IconButton>
-                <span className={cartHeaderIconClasses}>{this.state.cartItemsCount}</span>
+                <Badge badgeContent={this.state.cartItemsCount} onTouchTap={this.handleCartTouchTap} primary={true} style={{margin: 0, padding: 0}} badgeStyle={{width:'22px', height: '22px'}}>
+                    <IconButton iconClassName="material-icons" onTouchTap={this.handleCartTouchTap} iconStyle={{margin: 0}}>shopping_cart</IconButton>
+                </Badge>
                 <Dialog
                     title={this.state.title}
                     actions={actions}

@@ -5,15 +5,10 @@
   align-items: center;
   flex-direction: column;
   padding: 40px;
-  
-  .blogPostPaper {
-    margin: 0;
-    padding: 30px;
-    width: 100%;
 
     .title {
       font-size: 2 * $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       line-height: 72px;
       font-family: Lato serif;
       color: $colors-green300;
@@ -21,16 +16,16 @@
     }
     .date {
       font-size: $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       color: black;
       margin-bottom: 50px;
     }
     .content {
       font-size: $blogPostContentText;
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       line-height: 40px;
     }
-  }
+
   .aboutTheAuthor {
     width: 96.7%;
     margin-top: 30px;
@@ -48,7 +43,7 @@
       }
     }
     p {
-      font-weight: $font-weight-light;
+      font-weight: $fontWeightLight;
       font-size: 1em;
     }
   }

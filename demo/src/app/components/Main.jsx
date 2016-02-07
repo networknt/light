@@ -402,10 +402,12 @@ const Main = React.createClass({
                     {leftNavContent}
                 </LeftNav>
                 <header>
-                    <AppBar title='Edible Forest Garden' onTitleTouchTap={this._onTitleTouchTap} onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0}/>
+                    <AppBar title='Edible Forest Garden' onTitleTouchTap={this._onTitleTouchTap} onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0} className="mainAppBar"/>
                 </header>
                 <Snackbar open={this.state.snackbarOpen} message={this.state.snackbarMessage} action="Close" autoHideDuration={3000} onActionTouchTap={this.handleSnackbarTouchTap} onRequestClose={this.handleSnackbarClose} />
-                {this.props.children}
+                <span className="mainRoot">
+                    {this.props.children}
+                </span>
             </div>
         );
     }
