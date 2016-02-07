@@ -96,7 +96,7 @@ var BlogPost = React.createClass({
                         <p className="headerSubContent">Submitted by {this.state.post.createUserId} on {this.state.post.createDate}</p>
                     </div>
                     {updateSection}
-                    <Paper className="blogPostPaper">
+                    <Paper className="postPaper">
                         <div className="blogPost">
                             <div>{tags}</div>
                             {original}
