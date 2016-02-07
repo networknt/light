@@ -15,7 +15,8 @@ import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
-import BlogSummary from './BlogSummary';
+//import BlogSummary from './BlogSummary';
+import Summary from '../common/Summary.jsx';
 import ListTreeNode from '../ListTreeNode';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
@@ -127,34 +128,29 @@ var Blog = React.createClass({
         let addButton = this.state.allowUpdate ? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
 
         return (
-            <div style={{textAlign: 'center', marginLeft: '10px', marginRight: '10px', marginTop: 20 + 'px'}}>
-                <div className="blogRoot">
-                    <div className="leftColumn">
-                        <Toolbar>
-                            <ToolbarGroup float="left">
-                                <ToolbarTitle text="Blogs" />
-                            </ToolbarGroup>
-                            <ToolbarGroup float="right">
-                                <ToolbarSeparator />
-                                {addButton}
-                            </ToolbarGroup>
-                        </Toolbar>
-                        {
-                            this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.entityId);
-                                return (
-                                    <span key={index}>
-                                        <BlogSummary post={post} onClick ={boundClick} />
-                                    </span>
-                                );
-                            }, this)
-                        }
-                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
+            <div>
+                <div className="leftColumn">
+                    <div className="header">
+                        <h2 className="headerContent">Blog</h2>
                     </div>
-                    <div className="rightColumn">
-                        <div className="blogInfo">
-                        </div>
-                    </div>
+                    <Toolbar>
+                        <ToolbarGroup float="left">
+                            <ToolbarTitle text={this.props.params.categoryId} />
+                        </ToolbarGroup>
+                        <ToolbarGroup float="right">
+                            <ToolbarSeparator />
+                            {addButton}
+                        </ToolbarGroup>
+                    </Toolbar>
+                    {
+                        this.state.posts.map(function(post, index) {
+                            var boundClick = this._routeToPost.bind(this, post.entityId);
+                            return (
+                                <Summary post={post} onClick ={boundClick} key={index}/>
+                            );
+                        }, this)
+                    }
+                    <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                 </div>
             </div>
         );
