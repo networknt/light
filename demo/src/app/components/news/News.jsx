@@ -12,6 +12,12 @@ require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
 import NewsSummary from './NewsSummary';
+import Summary from '../common/Summary.jsx';
+
+import Toolbar from 'material-ui/lib/toolbar/toolbar';
+import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import ToolbarSeparator from 'material-ui/lib/toolbar/toolbar-separator';
+import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 
 var News = React.createClass({
     displayName: 'News',
@@ -98,29 +104,31 @@ var News = React.createClass({
         let addButton = this.state.allowUpdate? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
         return (
             <div>
-                <div className="blogHeader">
-                    <h2>News{addButton}</h2>
-                </div>
-                <div className="blogRoot">
-                    <div className="leftColumn">
-                        {
-                            this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.entityId);
-                                return (
-                                    <span key={index}>
-                                        <NewsSummary post={post} onClick ={boundClick} />
-                                    </span>
+                <div className="leftColumn">
+                    <div className="header">
+                        <h2 className="headerContent">News</h2>
+                    </div>
+                    <Toolbar>
+                        <ToolbarGroup float="left">
+                            <ToolbarTitle text={this.props.params.categoryId} />
+                        </ToolbarGroup>
+                        <ToolbarGroup float="right">
+                            <ToolbarSeparator />
+                            {addButton}
+                        </ToolbarGroup>
+                    </Toolbar>
+                    {
+                        this.state.posts.map(function(post, index) {
+                            var boundClick = this._routeToPost.bind(this, post.entityId);
+                            return (
+                            <Summary post={post} onClick ={boundClick} key={index}/>
                                 );
                             }, this)
                         }
-                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
-                    </div>
-                    <div className="rightColumn">
-                        <div className="blogInfo">
-                        </div>
-                    </div>
+                    <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                 </div>
             </div>
+
         );
     }
 });
