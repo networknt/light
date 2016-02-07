@@ -3,16 +3,29 @@ import Paper from 'material-ui/lib/paper';
 import Gravatar from '../Gravatar';
 import Markdown from '../Markdown';
 
+import Card from 'material-ui/lib/card/card';
+import CardActions from 'material-ui/lib/card/card-actions';
+import CardHeader from 'material-ui/lib/card/card-header';
+import CardTitle from 'material-ui/lib/card/card-title';
+import CardText from 'material-ui/lib/card/card-text';
+import RaisedButton from 'material-ui/lib/raised-button';
+import Avatar from 'material-ui/lib/avatar';
+
 class NewsSummary extends React.Component {
 
     render() {
         return (
             <Paper className="blogPostPaper">
-                <div className="blogPost">
-                    <Gravatar md5={this.props.post.gravatar} /><h2 className="title"><a onClick={this.props.onClick}>{this.props.post.title}</a></h2>
-                    <span>Submitted by {this.props.post.createUserId} on {this.props.post.createDate}</span>
-                    <Markdown text={this.props.post.summary} />
-                </div>
+                <Card>
+                    <CardHeader title={"Created by: " + this.props.post.createUserId} subtitle= {"On: " + this.props.post.createDate} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
+                    <CardTitle title={this.props.post.title}/>
+                    <CardText>
+                        <Markdown text={this.props.post.summary} />
+                    </CardText>
+                    <CardActions>
+                        <RaisedButton label="Read More" primary={true} onClick={this.props.onClick}/>
+                    </CardActions>
+                </Card>
             </Paper>
         );
     }
