@@ -68,11 +68,22 @@ var CatalogProduct = React.createClass({
         CatalogActionCreators.delProduct(this.state.product.rid);
     },
 
+    _routeToTag: function(tagId) {
+        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+    },
+
     render: function() {
         console.log('CatalogProduct.render', this.state.product);
-
+        let tags = '';
+        if(this.state.product.tags) {
+            tags = this.state.product.tags.map((tag, index) => {
+                let boundTagClick = this._routeToTag.bind(this, tag);
+                return <span key={index}><a href='#' onClick={boundTagClick}>{tag}</a>&nbsp;&nbsp;&nbsp;</span>
+            });
+        }
         let updateButton = this.state.allowUpdate? <RaisedButton label="Update Product" primary={true} onTouchTap={this._onUpdateProduct} /> : '';
         let deleteButton = this.state.allowUpdate? <RaisedButton label="Delete Product" primary={true} onTouchTap={this._onDeleteProduct} /> : '';
+        let content = this.state.product.content? <Markdown text={this.state.product.content} /> : '';
         return (
             <span>
                 {updateButton}
@@ -80,8 +91,8 @@ var CatalogProduct = React.createClass({
                 <Paper className="blogPostPaper">
                     <div className="blogPost">
                         <h2 className="title">{this.state.product.name}</h2>
-                        <span>Submitted by {this.state.product.createUserId} on {this.state.product.createDate}</span>
-                        <Markdown text={this.state.product.content} />
+                        <div>{tags}</div>
+                        {content}
                     </div>
                 </Paper>
                 <hr />

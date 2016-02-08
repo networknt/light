@@ -691,6 +691,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                         jsonMap.put("entityId", entity.getProperty("entityId"));
                         jsonMap.put("name", entity.getProperty("name"));
                         jsonMap.put("description", entity.getProperty("description"));
+                        jsonMap.put("content", entity.getProperty("content"));
                         jsonMap.put("variants", entity.getProperty("variants"));
                         iterable = entity.getProperty("in_HasProduct");
                         iterator = iterable.iterator();

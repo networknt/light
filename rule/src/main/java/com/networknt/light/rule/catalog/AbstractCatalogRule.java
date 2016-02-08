@@ -274,6 +274,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                     eventData.put("name", data.get("name"));
                     eventData.put("host", data.get("host"));
                     eventData.put("description", data.get("description"));
+                    eventData.put("content", data.get("content"));
                     eventData.put("variants", data.get("variants"));
                     eventData.put("updateDate", new Date());
                     eventData.put("updateUserId", user.get("userId"));
@@ -338,9 +339,6 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                     inputMap.put("responseCode", 404);
                 }
             }
-
-            // make sure parent exists if it is not empty.
-
         } catch (Exception e) {
             logger.error("Exception:", e);
             throw e;
@@ -386,6 +384,11 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
                     product.setProperty("description", data.get("description"));
                 } else {
                     product.removeProperty("description");
+                }
+                if(data.get("content") != null) {
+                    product.setProperty("content", data.get("content"));
+                } else {
+                    product.removeProperty("content");
                 }
                 if(data.get("variants") != null) {
                     product.setProperty("variants", data.get("variants"));

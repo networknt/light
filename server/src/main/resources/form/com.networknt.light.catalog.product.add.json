@@ -7,7 +7,7 @@
       "name": "addProduct",
       "readOnly": false,
       "title": "Submit",
-      "success": "/page/com-networknt-light-v-blog-admin-home"
+      "success": "/catalog"
     }
   ],
   "schema": {
