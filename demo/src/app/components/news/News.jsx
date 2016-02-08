@@ -16,6 +16,10 @@ import NewsSummary from './NewsSummary';
 var News = React.createClass({
     displayName: 'News',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             posts: [],
@@ -68,12 +72,12 @@ var News = React.createClass({
     },
 
     _routeToPost: function(entityId) {
-        this.props.history.push('/news/' + this.props.params.categoryId + '/' + entityId);
+        this.context.router.push('/news/' + this.props.params.categoryId + '/' + entityId);
     },
 
     _onAddPost: function () {
         //console.log("_onAddPost is called");
-        this.props.history.push('/news/postAdd/' + this.props.params.categoryId);
+        this.context.router.push('/news/postAdd/' + this.props.params.categoryId);
     },
 
     _onPageNoChange: function (key) {

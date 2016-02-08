@@ -16,6 +16,10 @@ import FormActionCreators from '../../../actions/FormActionCreators';
 var AccessAdminHome = React.createClass({
     displayName: 'AccessAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             accesses: []
@@ -44,7 +48,7 @@ var AccessAdminHome = React.createClass({
     _onUpdateAccess: function(access) {
         let formId = 'com.networknt.light.access.upd_d';
         FormActionCreators.setFormModel(formId, access);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     render: function() {

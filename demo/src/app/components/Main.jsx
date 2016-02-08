@@ -44,6 +44,10 @@ const Main = React.createClass({
         muiTheme: React.PropTypes.object
     },
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState() {
         let muiTheme = ThemeManager.getMuiTheme(LightRawTheme);
         return {
@@ -109,7 +113,7 @@ const Main = React.createClass({
     },
 
     _onTitleTouchTap: function() {
-        this.props.history.push('/');
+        this.context.router.push('/');
     },
 
     _onErrorChange: function() {
@@ -189,7 +193,7 @@ const Main = React.createClass({
         }
         // route to Blog with a specific categoryId in the path
         let categoryId = node.props.category.categoryId;
-        this.props.history.push('/blog/' + categoryId);
+        this.context.router.push('/blog/' + categoryId);
         // if the current location is blog/:categoryId and has different categoryId then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
@@ -216,7 +220,7 @@ const Main = React.createClass({
         }
         // route to News with a specific categoryId in the path
         let categoryId = node.props.category.categoryId;
-        this.props.history.push('/news/' + categoryId);
+        this.context.router.push('/news/' + categoryId);
         // if the current location is blog/:blogRid and has different blogRid then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
@@ -243,7 +247,7 @@ const Main = React.createClass({
         }
         // route to Catalog with a specific categoryId in the path
         let categoryId = node.props.category.categoryId;
-        this.props.history.push('/catalog/' + categoryId);
+        this.context.router.push('/catalog/' + categoryId);
         // if the current location is blog/:blogRid and has different blogRid then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
@@ -257,7 +261,7 @@ const Main = React.createClass({
     handleItemTouchTap(event, item) {
         // clear category as context has switched. waiting for the new category to be loaded.
         this.setState({leftNavOpen: false, category: []});
-        this.props.history.push(item.props.value);
+        this.context.router.push(item.props.value);
     },
 
     getFirstPath(path) {
@@ -302,7 +306,7 @@ const Main = React.createClass({
 
         let cartButton = '';
         if (CommonUtils.findMenuItem(this.state.menuItems, 'cart')) {
-            cartButton = <CheckoutButton history={this.props.history} />
+            cartButton = <CheckoutButton/>
         }
         let mainMenu = '';
         if (CommonUtils.findMenuItem(this.state.menuItems, 'main')) {

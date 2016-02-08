@@ -18,6 +18,10 @@ import FormActionCreators from'../../../actions/FormActionCreators';
 var RuleAdminHome = React.createClass({
     displayName: 'RuleAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             rules: []
@@ -47,12 +51,12 @@ var RuleAdminHome = React.createClass({
     _onUpdateRule: function(rule) {
         let formId = 'com.networknt.light.rule.update';
         FormActionCreators.setFormModel(formId, rule);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onAddRule: function() {
         let formId = 'com.networknt.light.rule.add';
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     render: function() {

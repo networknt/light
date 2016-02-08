@@ -17,6 +17,10 @@ import RaisedButton from 'material-ui/lib/raised-button';
 var CatalogProduct = React.createClass({
     displayName: 'CatalogProduct',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             product: {},
@@ -61,7 +65,7 @@ var CatalogProduct = React.createClass({
 
     _onUpdateProduct: function () {
         //console.log("_onUpdateProduct is called");
-        this.props.history.push('/catalog/productUpdate/' + this.props.params.entityId);
+        this.context.router.push('/catalog/productUpdate/' + this.props.params.entityId);
     },
 
     _onDeleteProduct: function () {
@@ -69,7 +73,7 @@ var CatalogProduct = React.createClass({
     },
 
     _routeToTag: function(tagId) {
-        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+        this.context.router.push('/tag/' + encodeURIComponent(tagId));
     },
 
     render: function() {

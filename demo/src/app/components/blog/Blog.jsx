@@ -16,6 +16,10 @@ import BlogSummary from './BlogSummary';
 var Blog = React.createClass({
     displayName: 'Blog',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         let rid = null;
         if(BlogCategoryStore.getCategory().length  !== 0) {
@@ -82,12 +86,12 @@ var Blog = React.createClass({
     },
 
     _routeToPost: function(entityId) {
-        this.props.history.push('/blog/' + this.props.params.categoryId + '/' + entityId);
+        this.context.router.push('/blog/' + this.props.params.categoryId + '/' + entityId);
     },
 
     _onAddPost: function () {
         //console.log("_onAddPost is called");
-        this.props.history.push('/blog/postAdd/' + this.props.params.categoryId);
+        this.context.router.push('/blog/postAdd/' + this.props.params.categoryId);
     },
 
     _onPageNoChange: function (key) {

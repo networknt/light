@@ -36,6 +36,10 @@ function getStateFromStores() {
 
 var CheckoutButton = React.createClass({
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: () => getStateFromStores(),
 
     handleCartClose: function() {
@@ -51,7 +55,7 @@ var CheckoutButton = React.createClass({
         if(AuthStore.isLoggedIn()) {
             this.setState({cartOpen: true});
         } else {
-            this.props.history.push('login');
+            this.context.router.push('login');
         }
 
     },

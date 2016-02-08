@@ -17,6 +17,10 @@ import RaisedButton from 'material-ui/lib/raised-button';
 var NewsPost = React.createClass({
     displayName: 'NewsPost',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             post: {},
@@ -60,7 +64,7 @@ var NewsPost = React.createClass({
 
     _onUpdatePost: function () {
         console.log("_onUpdatePost is called");
-        this.props.history.push('/news/postUpdate/' + this.props.params.entityId);
+        this.context.router.push('/news/postUpdate/' + this.props.params.entityId);
     },
 
     _onDeletePost: function () {
@@ -69,7 +73,7 @@ var NewsPost = React.createClass({
     },
 
     _routeToTag: function(tagId) {
-        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+        this.context.router.push('/tag/' + encodeURIComponent(tagId));
     },
 
     render: function() {

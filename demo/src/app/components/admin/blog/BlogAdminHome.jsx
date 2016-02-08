@@ -15,6 +15,10 @@ import FormActionCreators from'../../../actions/FormActionCreators';
 var BlogAdminHome = React.createClass({
     displayName: 'BlogAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             blogs: [],
@@ -45,12 +49,12 @@ var BlogAdminHome = React.createClass({
         //console.log("_onUpdateBlog", blog);
         let formId = 'com.networknt.light.blog.update';
         FormActionCreators.setFormModel(formId, blog);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onAddBlog: function() {
         let formId = 'com.networknt.light.blog.add';
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     render: function() {

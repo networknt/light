@@ -24,6 +24,10 @@ import ProductSummary from './ProductSummary';
 var Catalog = React.createClass({
     displayName: 'Catalog',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             products: [],
@@ -74,11 +78,11 @@ var Catalog = React.createClass({
     },
 
     _routeToProduct: function(entityId) {
-        this.props.history.push('/catalog/' + this.props.params.categoryId + '/' + entityId);
+        this.context.router.push('/catalog/' + this.props.params.categoryId + '/' + entityId);
     },
 
     _onAddProduct: function () {
-        this.props.history.push('/catalog/productAdd/' + this.props.params.categoryId);
+        this.context.router.push('/catalog/productAdd/' + this.props.params.categoryId);
     },
 
     _onPageNoChange: function (key) {

@@ -18,6 +18,10 @@ import FormActionCreators from '../../../actions/FormActionCreators';
 var MenuAdminHome = React.createClass({
     displayName: 'MenuAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             menus: [],
@@ -53,23 +57,23 @@ var MenuAdminHome = React.createClass({
     _onUpdateMenu: function(menu) {
         let formId = 'com.networknt.light.menu.updateMenu';
         FormActionCreators.setFormModel(formId, menu);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onUpdateMenuItem: function(menuItem) {
         let formId = 'com.networknt.light.menu.updateMenuItem';
         FormActionCreators.setFormModel(formId, menuItem);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onAddMenu: function() {
         let formId = 'com.networknt.light.menu.addMenu';
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onAddMenuItem: function() {
         let formId = 'com.networknt.light.menu.addMenuItem';
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     render: function() {

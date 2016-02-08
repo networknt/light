@@ -16,6 +16,10 @@ import NewsSummary from './NewsSummary';
 var NewsRecentPost = React.createClass({
     displayName: 'NewsRecentPost',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             posts: [],
@@ -42,7 +46,7 @@ var NewsRecentPost = React.createClass({
     },
 
     _routeToPost: function(categoryId, entityId) {
-        this.props.history.push('/news/' + categoryId + '/' + entityId);
+        this.context.router.push('/news/' + categoryId + '/' + entityId);
     },
 
     _onPageNoChange: function (key) {

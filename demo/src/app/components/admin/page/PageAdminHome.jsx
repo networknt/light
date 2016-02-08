@@ -15,6 +15,10 @@ import PageActionCreators from '../../../actions/PageActionCreators';
 var PageAdminHome = React.createClass({
     displayName: 'PageAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             pages: []
@@ -44,12 +48,12 @@ var PageAdminHome = React.createClass({
     _onUpdatePage: function(page) {
         let formId = 'com.networknt.light.page.update';
         FormActionCreators.setFormModel(formId, page);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onAddPage: function() {
         let formId = 'com.networknt.light.page.add';
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     render: function() {
