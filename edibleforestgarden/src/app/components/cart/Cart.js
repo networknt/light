@@ -6,16 +6,13 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var CartItem = require('./CartItem');
-var CartStore = require('../../stores/CartStore');
-var CartActionCreators = require('../../actions/CartActionCreators.js');
 
 var Cart = React.createClass({
 
-
     render: function() {
-        //console.log('cartItems = ', this.props.cartItems);
-        var cartItems = this.props.cartItems.map(function(cartItem) {
-            return <CartItem key={cartItem.index} cartItem={cartItem} />
+        var cartItems = this.props.cartItems.map((cartItem, index) => {
+            console.log(index, cartItem);
+            return <CartItem key={index} cartItem={cartItem} />
         });
 
         var shipping;

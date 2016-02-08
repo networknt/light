@@ -1,3 +1,6 @@
+/**
+ * Created by steve on 7/31/2015.
+ */
 var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var EventEmitter = require('events').EventEmitter;
@@ -6,9 +9,10 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _result;
+var _users = [];
+var _total;
 
-var PostStore = assign({}, EventEmitter.prototype, {
+var UserAdminStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -22,23 +26,26 @@ var PostStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getResult: function() {
-        return _result;
+    getUsers: function() {
+        return _users;
+    },
+
+    getTotal: function() {
+        return _total;
     }
 });
 
-PostStore.dispatchToken = AppDispatcher.register(function(payload) {
+UserAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.ADD_POST_RESPONSE:
-        case ActionTypes.UPD_POST_RESPONSE:
-        case ActionTypes.DEL_POST_RESPONSE:
-            _result = payload.json;
-            PostStore.emitChange();
+        case ActionTypes.GET_ALL_USER_RESPONSE:
+            _users = payload.json.users;
+            _total = payload.json.total;
+            UserAdminStore.emitChange();
             break;
     }
 
     return true;
 });
 
-module.exports = PostStore;
+module.exports = UserAdminStore;

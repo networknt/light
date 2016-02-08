@@ -1,3 +1,6 @@
+/**
+ * Created by steve on 7/31/2015.
+ */
 var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var EventEmitter = require('events').EventEmitter;
@@ -6,9 +9,10 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _result;
+var _menus = [];
+var _menuItems = [];
 
-var PostStore = assign({}, EventEmitter.prototype, {
+var MenuAdminStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -22,23 +26,26 @@ var PostStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getResult: function() {
-        return _result;
+    getMenus: function() {
+        return _menus;
+    },
+
+    getMenuItems: function() {
+        return _menuItems;
     }
 });
 
-PostStore.dispatchToken = AppDispatcher.register(function(payload) {
+MenuAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.ADD_POST_RESPONSE:
-        case ActionTypes.UPD_POST_RESPONSE:
-        case ActionTypes.DEL_POST_RESPONSE:
-            _result = payload.json;
-            PostStore.emitChange();
+        case ActionTypes.GET_ALL_MENU_RESPONSE:
+            _menus = payload.json.menus;
+            _menuItems = payload.json.menuItems;
+            MenuAdminStore.emitChange();
             break;
     }
 
     return true;
 });
 
-module.exports = PostStore;
+module.exports = MenuAdminStore;

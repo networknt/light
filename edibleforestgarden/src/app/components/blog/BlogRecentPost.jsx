@@ -75,7 +75,7 @@ var BlogRecentPost = React.createClass({
                                 var boundClick = this._routeToPost.bind(this, post.parentId, post.entityId);
                                 return (
                                     <span key={index}>
-                                        <BlogSummary post = {post} onClick = {boundClick} />
+                                        <BlogSummary post={post} onClick ={boundClick} />
                                     </span>
                                 );
                             }, this)

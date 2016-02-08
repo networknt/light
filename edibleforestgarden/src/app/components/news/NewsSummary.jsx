@@ -4,7 +4,7 @@ import Gravatar from '../Gravatar';
 import Markdown from '../Markdown';
 import moment from 'moment';
 
-class BlogSummary extends React.Component {
+class NewsSummary extends React.Component {
 
     render() {
         let time = moment(this.props.post.createDate).format("DD-MM-YYYY HH:mm:ss");
@@ -20,9 +20,9 @@ class BlogSummary extends React.Component {
     }
 }
 
-BlogSummary.propTypes = {
+NewsSummary.propTypes = {
     post: React.PropTypes.object.isRequired,
     onClick: React.PropTypes.func.isRequired
 };
 
-export default BlogSummary;
+export default NewsSummary;

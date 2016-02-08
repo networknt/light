@@ -4,8 +4,6 @@ var BlogStore = require('../../stores/BlogStore');
 import BlogCategoryStore from '../../stores/BlogCategoryStore';
 var BlogActionCreators = require('../../actions/BlogActionCreators');
 var classNames = require('classnames');
-import Paper from 'material-ui/lib/paper';
-import Markdown from '../Markdown';
 import RaisedButton from 'material-ui/lib/raised-button';
 require('rc-pagination/assets/index.css');
 import Pagination from 'rc-pagination';
@@ -13,6 +11,7 @@ import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
+import BlogSummary from './BlogSummary';
 
 var Blog = React.createClass({
     displayName: 'Blog',
@@ -123,13 +122,7 @@ var Blog = React.createClass({
                                 var boundClick = this._routeToPost.bind(this, post.entityId);
                                 return (
                                     <span key={index}>
-                                        <Paper className="blogPostPaper">
-                                            <div className="blogPost">
-                                                <h2 className="title"><a onClick={boundClick}>{post.title}</a></h2>
-                                                <span>Submitted by {post.createUserId} on {post.createDate}</span>
-                                                <Markdown text={post.summary} />
-                                            </div>
-                                        </Paper>
+                                        <BlogSummary post={post} onClick ={boundClick} />
                                     </span>
                                 );
                             }, this)

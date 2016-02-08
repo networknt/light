@@ -8,17 +8,30 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    receiveLogin: function(json, error) {
+    signInUserResponse: function(json) {
         AppDispatcher.dispatch({
-            type: ActionTypes.LOGIN_RESPONSE,
-            json: json,
-            error: error
+            type: ActionTypes.SIGNIN_USER_RESPONSE,
+            json: json
+        });
+    },
+
+    signUpUserResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.SIGNUP_USER_RESPONSE,
+            json: json
         });
     },
 
     getMenuResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_MENU_RESPONSE,
+            json: json
+        });
+    },
+
+    getAllMenuResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_MENU_RESPONSE,
             json: json
         });
     },
@@ -30,9 +43,24 @@ module.exports = {
         });
     },
 
-    delRoleResponse: function(json) {
+    delRoleResponse: function(rid) {
+        console.log('ServerActionCreators.delRoleResponse', rid);
         AppDispatcher.dispatch({
             type: ActionTypes.DEL_ROLE_RESPONSE,
+            rid: rid
+        });
+    },
+
+    getPostResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_POST_RESPONSE,
+            json: json
+        });
+    },
+
+    getProductResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_PRODUCT_RESPONSE,
             json: json
         });
     },
@@ -40,6 +68,13 @@ module.exports = {
     getAllAccessResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_ALL_ACCESS_RESPONSE,
+            json: json
+        });
+    },
+
+    getAllUserResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_USER_RESPONSE,
             json: json
         });
     },
@@ -285,6 +320,27 @@ module.exports = {
             type: ActionTypes.DOWNLOAD_EVENT_RESPONSE,
             json: json,
             error: error
+        });
+    },
+
+    getAllFormResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_FORM_RESPONSE,
+            json: json
+        });
+    },
+
+    getAllPageResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_PAGE_RESPONSE,
+            json: json
+        });
+    },
+
+    getRuleResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_RULE_RESPONSE,
+            json: json
         });
     }
 

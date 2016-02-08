@@ -1,3 +1,6 @@
+/**
+ * Created by steve on 7/31/2015.
+ */
 var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var EventEmitter = require('events').EventEmitter;
@@ -6,9 +9,9 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _result;
+var _pages = [];
 
-var PostStore = assign({}, EventEmitter.prototype, {
+var PageAdminStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -22,23 +25,22 @@ var PostStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getResult: function() {
-        return _result;
+    getPages: function() {
+        return _pages;
     }
+
 });
 
-PostStore.dispatchToken = AppDispatcher.register(function(payload) {
+PageAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.ADD_POST_RESPONSE:
-        case ActionTypes.UPD_POST_RESPONSE:
-        case ActionTypes.DEL_POST_RESPONSE:
-            _result = payload.json;
-            PostStore.emitChange();
+        case ActionTypes.GET_ALL_PAGE_RESPONSE:
+            _pages = payload.json;
+            PageAdminStore.emitChange();
             break;
     }
 
     return true;
 });
 
-module.exports = PostStore;
+module.exports = PageAdminStore;

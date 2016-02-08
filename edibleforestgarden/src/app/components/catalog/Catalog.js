@@ -10,10 +10,6 @@ var CartActionCreators = require('../../actions/CartActionCreators');
 
 var classNames = require('classnames');
 var _ = require('lodash');
-
-import VariantSelect from './VariantSelect';
-import Paper from 'material-ui/lib/paper';
-import Markdown from '../Markdown';
 import RaisedButton from 'material-ui/lib/raised-button';
 require('rc-pagination/assets/index.css');
 import Pagination from 'rc-pagination';
@@ -22,6 +18,7 @@ require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CatalogCategoryStore from '../../stores/CatalogCategoryStore';
 import CommonUtils from '../../utils/CommonUtils';
+import ProductSummary from './ProductSummary';
 
 
 var Catalog = React.createClass({
@@ -80,12 +77,6 @@ var Catalog = React.createClass({
         this.props.history.push('/catalog/' + this.props.params.categoryId + '/' + entityId);
     },
 
-    _onAddCart: function(index) {
-        //console.log('_onAddCart', index);
-        var product = this.state.products[index];
-        CartActionCreators.addToCart(product);
-    },
-
     _onAddProduct: function () {
         this.props.history.push('/catalog/productAdd/' + this.props.params.categoryId);
     },
@@ -119,38 +110,9 @@ var Catalog = React.createClass({
                         {
                             this.state.products.map(function(product, index) {
                                 var boundClick = this._routeToProduct.bind(this, product.entityId);
-                                var boundAddCart = this._onAddCart.bind(this, index);
-                                //console.log("Catalog.render", product);
-                                var variants = product.variants;
-                                var i = product.variantIndex;
-                                var inventory = variants[i].inventory;
-                                var price = variants[i].price.toFixed(2);
-                                var variantProps = {
-                                    variants: product.variants,
-                                    index: index
-                                };
                                 return (
                                     <span key={index}>
-                                        <Paper className="blogPostPaper">
-                                            <div className="blogPost">
-
-                                                <img src={'/assets/images/' + product.variants[i].image} className="img-responsive productImage" />
-                                                <h3><a onClick={boundClick}>{product.name}</a></h3>
-                                                <h4>{ '$' + price}</h4>
-                                                <div className="cbp-vm-details">
-                                                    {product.description}
-                                                </div>
-                                                <div className="cbp-vm-variants">
-                                                    {(_.size(variants) > 1) ?
-                                                        <VariantSelect {...variantProps} /> : product.variants[i].type + ' $' + price}
-                                                </div>
-                                                <RaisedButton label={inventory > 0 ? 'Add to cart' : 'Sold Out!'}
-                                                              primary = {true}
-                                                              onTouchTap={boundAddCart}
-                                                              disabled={inventory === 0} />
-                                            </div>
-                                        </Paper>
-                                        <hr />
+                                        <ProductSummary product={product} onClick={boundClick} />
                                     </span>
                                 );
                             }, this)

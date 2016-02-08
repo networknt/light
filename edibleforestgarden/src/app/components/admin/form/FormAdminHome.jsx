@@ -9,47 +9,46 @@ import TableRowColumn from 'material-ui/lib/table/table-row-column';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Dialog from 'material-ui/lib/dialog';
 import CircularProgress from 'material-ui/lib/circular-progress';
-import RoleAdminStore from '../../../stores/RoleAdminStore';
-import RoleActionCreators from '../../../actions/RoleActionCreators';
+import FormAdminStore from '../../../stores/FormAdminStore';
 import FormActionCreators from '../../../actions/FormActionCreators';
 
-var RoleAdminHome = React.createClass({
-    displayName: 'RoleAdminHome',
+var FormAdminHome = React.createClass({
+    displayName: 'FormAdminHome',
 
     getInitialState: function() {
         return {
-            roles: []
+            forms: []
         };
     },
 
     componentWillMount: function() {
-        RoleAdminStore.addChangeListener(this._onRoleChange);
-        RoleActionCreators.getRole();
+        FormAdminStore.addChangeListener(this._onFormChange);
+        FormActionCreators.getAllForm();
     },
 
     componentWillUnmount: function() {
-        RoleAdminStore.removeChangeListener(this._onRoleChange);
+        FormAdminStore.removeChangeListener(this._onFormChange);
     },
 
-    _onRoleChange: function() {
-        console.log('RoleAdminHome._onRoleChange', RoleAdminStore.getRoles());
+    _onFormChange: function() {
+        console.log('FormAdminHome._onFormChange', FormAdminStore.getForms());
         this.setState({
-            roles: RoleAdminStore.getRoles()
+            forms: FormAdminStore.getForms()
         });
     },
 
-    _onDeleteRole: function(role) {
-        RoleActionCreators.delRole(role['@rid']);
+    _onDeleteForm: function(form) {
+        FormActionCreators.delForm(form['@rid']);
     },
 
-    _onUpdateRole: function(role) {
-        let formId = 'com.networknt.light.role.update';
-        FormActionCreators.setFormModel(formId, role);
+    _onUpdateForm: function(form) {
+        let formId = 'com.networknt.light.form.update';
+        FormActionCreators.setFormModel(formId, form);
         this.props.history.push('/form/' + formId);
     },
 
-    _onAddRole: function() {
-        let formId = 'com.networknt.light.role.add';
+    _onAddForm: function() {
+        let formId = 'com.networknt.light.form.add';
         this.props.history.push('/form/' + formId);
     },
 
@@ -64,15 +63,14 @@ var RoleAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="10" tooltip='Roles' style={{textAlign: 'center'}}>
-                                Roles
+                            <TableHeaderColumn colSpan="11" tooltip='Forms' style={{textAlign: 'center'}}>
+                                Forms
                             </TableHeaderColumn>
                         </TableRow>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Role Id'>Role Id</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Description' colSpan="3">Description</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Form Id' colSpan="3">Form Id</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Host' colSpan="3">Host</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
@@ -84,19 +82,18 @@ var RoleAdminHome = React.createClass({
                         showRowHover={true}
                         stripedRows={true}>
 
-                        {this.state.roles.map((role, index) => {
-                            let boundDelete = this._onDeleteRole.bind(this, role);
-                            let boundUpdate = this._onUpdateRole.bind(this, role);
+                        {this.state.forms.map((form, index) => {
+                            let boundDelete = this._onDeleteForm.bind(this, form);
+                            let boundUpdate = this._onUpdateForm.bind(this, form);
                             return (
                                 <TableRow key={index}>
                                     <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn><a onClick={boundUpdate}>{role.roleId}</a></TableRowColumn>
-                                    <TableRowColumn>{role.host}</TableRowColumn>
-                                    <TableRowColumn colSpan="3">{role.description}</TableRowColumn>
-                                    <TableRowColumn>{role.createUserId}</TableRowColumn>
-                                    <TableRowColumn>{role.createDate}</TableRowColumn>
-                                    <TableRowColumn>{role.updateUserId}</TableRowColumn>
-                                    <TableRowColumn>{role.updateDate}</TableRowColumn>
+                                    <TableRowColumn colSpan="3"><a onClick={boundUpdate}>{form.formId}</a></TableRowColumn>
+                                    <TableRowColumn colSpan="3">{form.host}</TableRowColumn>
+                                    <TableRowColumn>{form.createUserId}</TableRowColumn>
+                                    <TableRowColumn>{form.createDate}</TableRowColumn>
+                                    <TableRowColumn>{form.updateUserId}</TableRowColumn>
+                                    <TableRowColumn>{form.updateDate}</TableRowColumn>
                                 </TableRow>
                             );
                         })}
@@ -106,17 +103,16 @@ var RoleAdminHome = React.createClass({
                     <TableFooter>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Role Id'>Role Id</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Description' colSpan="3">Description</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Form Id' colSpan="3">Form Id</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Host' colSpan="3">Host</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                         <TableRow>
-                            <TableRowColumn colSpan="10" style={{textAlign: 'left'}}>
-                                <RaisedButton label="Add Role" primary={true} onTouchTap={this._onAddRole} />
+                            <TableRowColumn colSpan="11" style={{textAlign: 'left'}}>
+                                <RaisedButton label="Add Form" primary={true} onTouchTap={this._onAddForm} />
                             </TableRowColumn>
                         </TableRow>
 
@@ -127,4 +123,4 @@ var RoleAdminHome = React.createClass({
     }
 });
 
-module.exports = RoleAdminHome;
+module.exports = FormAdminHome;

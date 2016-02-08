@@ -8,9 +8,9 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import utils from 'react-schema-form/lib/utils';
 
-const id = 'com.networknt.light.user.signin';
+const id = 'com.networknt.light.user.signup';
 
-let Login = React.createClass({
+let Signup = React.createClass({
 
     getInitialState: function() {
         return {
@@ -34,9 +34,7 @@ let Login = React.createClass({
 
     _onModelChange: function(key, val) {
         utils.selectOrSet(key, this.state.user, val);
-        //this.forceUpdate();
     },
-
 
     _onFormChange: function() {
         let schema = FormStore.getForm(id) ? FormStore.getForm(id).schema : null;
@@ -59,11 +57,12 @@ let Login = React.createClass({
     },
 
     render: function() {
-        console.log('Login._onModelChange', this.state.user);
         if(this.state.schema) {
             const buttons = this.state.action.map((item, idx) => (
                 <RaisedButton key={idx} label={item.title} primary={true}
-                    onTouchTap = {(e) => (AuthActionCreators.login(this.state.user.userIdEmail, this.state.user.password, this.state.user.rememberMe))} />
+                              onTouchTap = {(e) => (AuthActionCreators.signup(this.state.user.email, this.state.user.userId,
+                               this.state.user.password, this.state.user.passwordConfirm, this.state.user.firstName,
+                               this.state.user.lastName))} />
             ));
 
             return (
@@ -78,4 +77,4 @@ let Login = React.createClass({
     }
 });
 
-module.exports = Login;
+module.exports = Signup;
