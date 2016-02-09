@@ -64,7 +64,7 @@ var RoleAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='Roles' style={{textAlign: 'center'}}>
+                            <TableHeaderColumn colSpan="10" tooltip='Roles' style={{textAlign: 'center'}}>
                                 Roles
                             </TableHeaderColumn>
                         </TableRow>
@@ -115,7 +115,7 @@ var RoleAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                         <TableRow>
-                            <TableRowColumn colSpan="6" style={{textAlign: 'left'}}>
+                            <TableRowColumn colSpan="10" style={{textAlign: 'left'}}>
                                 <RaisedButton label="Add Role" primary={true} onTouchTap={this._onAddRole} />
                             </TableRowColumn>
                         </TableRow>

@@ -24,19 +24,27 @@ module.exports = {
         SERVER_ERROR_RESPONSE: null,
 
         // Auth
-        LOGIN_REQUEST: null,
-        LOGIN_RESPONSE: null,
+        SIGNIN_USER_REQUEST: null,
+        SIGNIN_USER_RESPONSE: null,
+        SIGNUP_USER_RESPONSE: null,
         REFRESH: null,
         LOGOUT: null,
         INIT: null,
-        SIGNUP_REQUEST: null,
 
         // Menu
         GET_MENU: null,
         GET_MENU_RESPONSE: null,
+        GET_ALL_MENU_RESPONSE: null,
 
         // Role
         GET_ROLE_RESPONSE: null,
+        DEL_ROLE_RESPONSE: null,
+
+        // Post
+        GET_POST_RESPONSE: null,
+
+        // Product
+        GET_PRODUCT_RESPONSE: null,
 
         // Access
         GET_ALL_ACCESS_RESPONSE: null,
@@ -74,7 +82,6 @@ module.exports = {
         GET_FORUM_TREE_RESPONSE: null,
 
         // Catalog
-        GET_CATALOG_TREE: null,
         GET_CATALOG_TREE_RESPONSE: null,
         GET_CATALOG_PRODUCT_RESPONSE: null,
         ADD_PRODUCT_RESPONSE: null,
@@ -92,13 +99,17 @@ module.exports = {
 
         SELECT_CATALOG: null,
         LOAD_PRODUCTS: null,
+
+        // User
         RECEIVE_USER: null,
+        GET_ALL_USER_RESPONSE: null,
 
         // Form
         GET_FORM: null,
         RECEIVE_FORM: null,
         SUBMIT_FORM_RESPONSE: null,
         SET_FORM_MODEL: null,
+        GET_ALL_FORM_RESPONSE: null,
 
         // Page
         GET_PAGE: null,
@@ -122,8 +133,10 @@ module.exports = {
 
         // Db
         EXEC_QUERY_CMD_RESPONSE: null,
-        DOWNLOAD_EVENT_RESPONSE: null
+        DOWNLOAD_EVENT_RESPONSE: null,
 
+        // Rule
+        GET_RULE_RESPONSE: null
     }),
 
     monthNames: ["January", "February", "March", "April", "May", "June",

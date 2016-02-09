@@ -38,6 +38,10 @@ function getStateFromStores() {
 
 var CheckoutButton = React.createClass({
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: () => getStateFromStores(),
 
     handleCartClose: function() {
@@ -53,7 +57,7 @@ var CheckoutButton = React.createClass({
         if(AuthStore.isLoggedIn()) {
             this.setState({cartOpen: true});
         } else {
-            this.props.history.push('login');
+            this.context.router.push('login');
         }
 
     },
@@ -199,6 +203,7 @@ var CheckoutButton = React.createClass({
                     <IconButton iconClassName="material-icons" onTouchTap={this.handleCartTouchTap} iconStyle={{margin: 0}}>shopping_cart</IconButton>
                 </Badge>
                 <Dialog
+                    autoScrollBodyContent={true}
                     title={this.state.title}
                     actions={actions}
                     modal={true}

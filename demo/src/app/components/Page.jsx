@@ -44,7 +44,6 @@ let Page = React.createClass({
             return (
                 <div>
                     <Markdown text={this.state.content}/>
-                    <div>Posted by Steve Hu at {this.state.createDate}</div>
                 </div>
             )
         } else {

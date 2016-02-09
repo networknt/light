@@ -364,7 +364,7 @@ public class RestHandler implements HttpHandler {
         }
 
 
-        // TODO should I remove the port number here?
+        // If there is port number along with the host, take it as well.
         // inject host into the data in command if there is no host in the json map.
         // that means the rules to be accessed are common and host should be part of the data.
         // if there is host in the command, then the corresponding rule should be host specific

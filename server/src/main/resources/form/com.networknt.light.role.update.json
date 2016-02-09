@@ -6,7 +6,7 @@
         "name" : "updRole",
         "readOnly": false,
         "title": "Submit",
-        "success" : "/page/com-networknt-light-v-role-admin-home"
+        "success" : "/admin/roleAdmin"
     }],
     "schema": {
         "type": "object",

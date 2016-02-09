@@ -68,7 +68,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
         @Handler
         public void onMessage(Map<String, Object> eventMap) throws Exception {
             Map<String, Object> data = (Map<String, Object>)eventMap.get("data");
-            System.out.println("Received: " + eventMap);
+            //System.out.println("Received: " + eventMap);
             // which form has a drop down of rules that depending on addRule, delRule and impRule?
             // it is defined in subscribe data for this rule AbstractFormRule. remove the form from
             // cache so that the dropdown list can be enriched again when the form is called next

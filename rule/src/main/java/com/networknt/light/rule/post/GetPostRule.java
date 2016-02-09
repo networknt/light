@@ -27,28 +27,25 @@ import java.util.Map;
 /**
  * Created by steve on 27/11/14.
  *
- * Get post for post admin page? user?
+ * Get a post from post table by entityId
  *
- * AccessLevel R [owner, admin, ?]
+ * AccessLevel A  Anybody
+ *
  */
 public class GetPostRule extends AbstractPostRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        long total = DbService.getCount("Post", data);
-        if(total > 0) {
-            Map<String, Object> result = new HashMap<String, Object>();
-            result.put("total", total);
-            String posts = DbService.getData("Post", data);
-            List<Map<String, Object>> jsonList = mapper.readValue(posts,
-                    new TypeReference<List<HashMap<String, Object>>>() {
-                    });
-            result.put("posts", jsonList);
+        String entityId = (String)data.get("entityId");
+        if(entityId != null) {
+            // convert entityId to entityRid first
+            String entityRid = getEntityRid("Post", entityId);
+            Map<String, Object> result = getCategoryEntity(entityRid);
             inputMap.put("result", mapper.writeValueAsString(result));
             return true;
         } else {
-            inputMap.put("result", "No post can be found.");
-            inputMap.put("responseCode", 404);
+            inputMap.put("result", "entityId is required.");
+            inputMap.put("responseCode", 400);
             return false;
         }
     }

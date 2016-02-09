@@ -7,10 +7,13 @@ import AppConstants from '../../constants/AppConstants';
 import Paper from 'material-ui/lib/paper';
 import Markdown from '../Markdown';
 import BlogActionCreators from '../../actions/BlogActionCreators';
+import PostActionCreators from '../../actions/PostActionCreators';
 import BlogStore from '../../stores/BlogStore';
 import PostStore from '../../stores/PostStore';
+import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
+import moment from 'moment';
 
 import Toolbar from 'material-ui/lib/toolbar/toolbar';
 import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
@@ -19,6 +22,10 @@ import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 
 var BlogPost = React.createClass({
     displayName: 'BlogPost',
+
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
 
     getInitialState: function() {
         return {
@@ -29,17 +36,24 @@ var BlogPost = React.createClass({
 
     componentWillMount: function() {
         PostStore.addChangeListener(this._onPostChange);
+        EntityStore.addChangeListener(this._onEntityChange);
     },
 
     componentWillUnmount: function() {
         PostStore.removeChangeListener(this._onPostChange);
+        EntityStore.removeChangeListener(this._onEntityChange);
     },
 
     componentDidMount: function() {
+        let post = CommonUtils.findPost(BlogStore.getPosts(), this.props.params.entityId);
+        // get post from blog store as part of the list. If not there, get individual post.
+        if(!post) {
+            PostActionCreators.getPost(this.props.params.entityId);
+        }
         //console.log('BlogPost blogPosts', BlogStore.getPosts());
         //console.log('BlogPost index ', this.props.params.index);
         this.setState({
-            post: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.entityId),
+            post: post? post : {},
             allowUpdate: BlogStore.getAllowUpdate()
         })
     },
@@ -48,11 +62,18 @@ var BlogPost = React.createClass({
         console.log('BlogPost._onPostChange', PostStore.getResult(), PostStore.getErrors());
         // TODO display toaster
 
+
+    },
+
+    _onEntityChange: function() {
+        this.setState({
+            post: EntityStore.getEntity()
+        })
     },
 
     _onUpdatePost: function () {
         console.log("_onUpdatePost is called");
-        this.props.history.push('/blog/postUpdate/' + this.props.params.entityId);
+        this.context.router.push('/blog/postUpdate/' + this.props.params.entityId);
     },
 
     _onDeletePost: function () {
@@ -61,10 +82,11 @@ var BlogPost = React.createClass({
     },
 
     _routeToTag: function(tagId) {
-        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+        this.context.router.push('/tag/' + encodeURIComponent(tagId));
     },
 
     render: function() {
+        let time = moment(this.state.post.createDate).format("DD-MM-YYYY HH:mm:ss");
         let tags = '';
         if(this.state.post && this.state.post.tags) {
             tags = this.state.post.tags.map((tag, index) => {
@@ -93,7 +115,7 @@ var BlogPost = React.createClass({
                 <div className="leftColumn">
                     <div className="header">
                         <h2 className="headerContent">{this.state.post.title}</h2>
-                        <p className="headerSubContent">Submitted by {this.state.post.createUserId} on {this.state.post.createDate}</p>
+                        <p className="headerSubContent">Submitted by {this.state.post.createUserId} on {time}</p>
                     </div>
                     {updateSection}
                     <Paper className="postPaper">

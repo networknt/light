@@ -7,7 +7,6 @@ var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _result;
-var _errors;
 
 var PostStore = assign({}, EventEmitter.prototype, {
 
@@ -25,12 +24,7 @@ var PostStore = assign({}, EventEmitter.prototype, {
 
     getResult: function() {
         return _result;
-    },
-
-    getErrors: function() {
-        return _errors;
     }
-
 });
 
 PostStore.dispatchToken = AppDispatcher.register(function(payload) {
@@ -40,7 +34,6 @@ PostStore.dispatchToken = AppDispatcher.register(function(payload) {
         case ActionTypes.UPD_POST_RESPONSE:
         case ActionTypes.DEL_POST_RESPONSE:
             _result = payload.json;
-            _errors = payload.error;
             PostStore.emitChange();
             break;
     }

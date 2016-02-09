@@ -4,8 +4,6 @@ var NewsStore = require('../../stores/NewsStore');
 import NewsCategoryStore from '../../stores/NewsCategoryStore';
 var NewsActionCreators = require('../../actions/NewsActionCreators');
 var classNames = require('classnames');
-import Paper from 'material-ui/lib/paper';
-import Markdown from '../Markdown';
 import RaisedButton from 'material-ui/lib/raised-button';
 require('rc-pagination/assets/index.css');
 import Pagination from 'rc-pagination';
@@ -13,7 +11,7 @@ import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
-
+import NewsSummary from './NewsSummary';
 
 var News = React.createClass({
     displayName: 'News',
@@ -110,13 +108,7 @@ var News = React.createClass({
                                 var boundClick = this._routeToPost.bind(this, post.entityId);
                                 return (
                                     <span key={index}>
-                                        <Paper className="blogPostPaper">
-                                            <div className="blogPost">
-                                                <h2 className="title"><a onClick={boundClick}>{post.title}</a></h2>
-                                                <span>Submitted by {post.createUserId} on {post.createDate}</span>
-                                                <Markdown text={post.summary} />
-                                            </div>
-                                        </Paper>
+                                        <NewsSummary post={post} onClick ={boundClick} />
                                     </span>
                                 );
                             }, this)
@@ -134,16 +126,3 @@ var News = React.createClass({
 });
 
 module.exports = News;
-
-
-/*
- <div className="rightColumn">
- <div className="blogInfo">
- <h1>News Information</h1>
- <p>In this section, you will see some information and references pertaining to the opened blog.</p>
- <p>Also, having the screen width be less then 64em will hide it, leaving reading room for mobile users only concerned with reading post content on the go.</p>
- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci alias cum, cumque cupiditate ea eum itaque, minus molestias necessitatibus nihil pariatur perspiciatis quam quas quod rem repellat, sint voluptate.</p>
- </div>
- </div>
-
- */

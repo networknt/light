@@ -6,7 +6,7 @@
         "name" : "addMenuItem",
         "readOnly": false,
         "title": "Submit",
-        "success" : "/page/com-networknt-light-v-menu-admin-home"
+        "success" : "/admin/menuAdmin"
     }],
     "schema": {
         "type": "object",
@@ -17,62 +17,51 @@
                 "title": "Menu Item Id",
                 "type": "string"
             },
-            "label" : {
-                "title": "Label",
-                "type": "string"
-            },
             "host": {
                 "title": "Host",
                 "type": "string"
             },
-            "path": {
-                "title": "Path",
+            "text" : {
+                "title": "Text",
                 "type": "string"
             },
-            "tpl": {
-                "title": "Template",
+            "route": {
+                "title": "Route",
                 "type": "string"
-            },
-            "ctrl": {
-                "title": "Controller",
-                "type": "string"
-            },
-            "left": {
-                "title": "Position Left",
-                "type": "boolean"
             },
             "roles": {
                 "title": "Roles",
-                "type": "array",
-                "format": "strapselectdynamic"
+                "type": "array"
             },
             "out_Own": {
                 "type": "array",
-                "title": "Menu Items",
-                "format": "strapselectdynamic"
+                "title": "Menu Items"
             }
         }
     },
     "form": [
         "menuItemId",
-        "label",
         "host",
-        "path",
-        "tpl",
-        "ctrl",
-        "left",
+        "text",
+        "route",
         {
             "key": "roles",
-            "options": {
-                "category": "role",
-                "name": "getRoleDropdown"
+            "type": "rc-select",
+            "multiple": true,
+            "action" : {
+                "get": {
+                    "url": "/api/rs?cmd={\"category\": \"role\", \"name\": \"getRoleDropdown\", \"readOnly\": true}"
+                }
             }
         },
         {
             "key": "out_Own",
-            "options": {
-                "category": "menu",
-                "name": "getMenuItemMap"
+            "type": "rc-select",
+            "multiple": true,
+            "action" : {
+                "get": {
+                    "url": "/api/rs?cmd={\"category\": \"menu\", \"name\": \"getMenuItemMap\", \"readOnly\": true}"
+                }
             }
         }
     ]

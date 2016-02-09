@@ -17,8 +17,8 @@ let Home = React.createClass({
         return(
             <div>
                 <div className="leftColumn">
-                    <NewsRecentPost history={this.props.history} />
-                    <BlogRecentPost history={this.props.history} />
+                    <NewsRecentPost/>
+                    <BlogRecentPost/>
                 </div>
                 <div className="rightColumn">
                 </div>

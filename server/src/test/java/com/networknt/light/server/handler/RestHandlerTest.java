@@ -88,16 +88,10 @@ public class RestHandlerTest extends TestCase {
     }
 
     public void setUp() throws Exception {
-        LightServer.start();
-        httpclient = HttpClients.createDefault();
-        // get owner token here
-        signInOwner();
         super.setUp();
     }
 
     public void tearDown() throws Exception {
-        LightServer.stop();
-        httpclient.close();
         super.tearDown();
     }
 
@@ -111,12 +105,6 @@ public class RestHandlerTest extends TestCase {
 
     public void testUser() throws Exception {
 
-        cleanUpUser();
-        signUpUser();
-        // sleep 100 ms in order to make sure that signUp user is available in this
-        // db connection. Orientdb sometimes needs to be synched between two calls
-        Thread.sleep(100);
-        signInUser();
         /*
         postGetUserByUserId();
         postGetUserByEmail();
@@ -154,6 +142,7 @@ public class RestHandlerTest extends TestCase {
      * Set ownerToken in case any action uses it to do update. For example delUser
      * @throws Exception
      */
+    /*
     private void signInOwner() throws Exception {
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(signInOwner);
@@ -181,11 +170,12 @@ public class RestHandlerTest extends TestCase {
             response.close();
         }
     }
-
+    */
     /**
      * Delete test user in order to run the same signUp again and again.
      * @throws Exception
      */
+    /*
     private void cleanUpUser() throws Exception {
         StatusLine statusLine = null;
         // getUser and check status
@@ -216,11 +206,12 @@ public class RestHandlerTest extends TestCase {
             delUser();
         }
     }
-
+    */
     /**
      * Delete user in clean up above if the test user exists
      * @throws Exception
      */
+    /*
     private void delUser() throws Exception {
         // getUser and check status
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
@@ -246,11 +237,12 @@ public class RestHandlerTest extends TestCase {
             response.close();
         }
     }
-
+    */
     /**
      * SignUp a new test user
      * @throws Exception
      */
+    /*
     private void signUpUser() throws Exception {
         // getUser and check status
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
@@ -275,11 +267,12 @@ public class RestHandlerTest extends TestCase {
             response.close();
         }
     }
-
+    */
     /**
      * Login as the new test user
      * @throws Exception
      */
+    /*
     private void signInUser() throws Exception {
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
         StringEntity input = new StringEntity(signInByUserId);
@@ -306,7 +299,8 @@ public class RestHandlerTest extends TestCase {
             response.close();
         }
     }
-
+    */
+    /*
     private void postGetUserByUserId() throws Exception {
         System.out.println("postGetUserByUserId starts");
         HttpPost httpPost = new HttpPost("http://example:8080/api/rs");
@@ -385,32 +379,6 @@ public class RestHandlerTest extends TestCase {
 
     }
 
-
-    private void getForm() {
-
-        /*
-        HttpGet httpGet = new HttpGet("http://targethost/homepage");
-        CloseableHttpResponse response1 = httpclient.execute(httpGet);
-        // The underlying HTTP connection is still held by the response object
-        // to allow the response content to be streamed directly from the network socket.
-        // In order to ensure correct deallocation of system resources
-        // the user MUST call CloseableHttpResponse#close() from a finally clause.
-        // Please note that if response content is not fully consumed the underlying
-        // connection cannot be safely re-used and will be shut down and discarded
-        // by the connection manager.
-        try {
-            System.out.println(response1.getStatusLine());
-            HttpEntity entity1 = response1.getEntity();
-            // do something useful with the response body
-            // and ensure it is fully consumed
-            EntityUtils.consume(entity1);
-        } finally {
-            response1.close();
-        }
-        */
-        boolean result = true;
-        assertTrue(result);
-    }
 
     private void postAddForm() throws Exception {
 
@@ -614,5 +582,5 @@ public class RestHandlerTest extends TestCase {
         }
         System.out.println("postGetFormVerifyDelete ends");
     }
-
+    */
 }

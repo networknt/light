@@ -14,6 +14,10 @@ let Form = React.createClass({
 
     displayName: 'Form',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             error: null,
@@ -36,7 +40,9 @@ let Form = React.createClass({
     },
 
     _onSubmissionChange: function() {
-        // TODO display error or success with toaster.
+        // It is 200 status code. route to the right uri. The same message is sent to Main to display snackbar.
+        console.log('Form._onSubmissionChange', this.state.success);
+        this.context.router.push(this.state.success);
     },
 
 
@@ -66,6 +72,7 @@ let Form = React.createClass({
             this.setState({error: validationResult.error.message});
         } else {
             action.data = this.state.model;
+            this.setState({success: action.success});
             FormActionCreators.submitForm(action);
         }
     },

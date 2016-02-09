@@ -19,6 +19,10 @@ import Summary from '../common/Summary.jsx';
 var BlogRecentPost = React.createClass({
     displayName: 'BlogRecentPost',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             posts: [],
@@ -46,7 +50,7 @@ var BlogRecentPost = React.createClass({
 
     _routeToPost: function(categoryId, entityId) {
         console.log('BlogRecentPost', categoryId, entityId);
-        this.props.history.push('/blog/' + categoryId + '/' + entityId);
+        this.context.router.push('/blog/' + categoryId + '/' + entityId);
     },
 
     _onPageNoChange: function (key) {

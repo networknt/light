@@ -1,0 +1,1 @@
+Thank you for signing up. You will receive an email shortly with a link to activate your account. Please check your Spam folder if you cannot find it in your primary folder.

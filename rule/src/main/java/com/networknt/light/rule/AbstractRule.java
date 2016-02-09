@@ -55,13 +55,13 @@ public abstract class AbstractRule implements Rule {
 
     protected void publishEvent(Map<String, Object> eventMap) throws Exception {
         // get class name
-        System.out.println(this.getClass().getPackage());
-        System.out.println(this.getClass().getName());
+        //System.out.println(this.getClass().getPackage());
+        //System.out.println(this.getClass().getName());
         // check if publisher is enabled.
         Map map = getRuleByRuleClass(this.getClass().getName());
         Object isPublisher = map.get("isPublisher");
         if(isPublisher != null && (boolean)isPublisher) {
-            System.out.println("isPublisher");
+            //System.out.println("isPublisher");
             MBassador<Map<String, Object>> eventBus = ServiceLocator.getInstance().getEventBus((String)eventMap.get("category"));
             eventBus.publish(eventMap);
         }

@@ -15,6 +15,10 @@ import FormActionCreators from'../../../actions/FormActionCreators';
 var NewsAdminHome = React.createClass({
     displayName: 'NewsAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             news: []
@@ -45,12 +49,12 @@ var NewsAdminHome = React.createClass({
         console.log("_onUpdateNews", news);
         let formId = 'com.networknt.light.news.update';
         FormActionCreators.setFormModel(formId, news);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onAddNews: function() {
         let formId = 'com.networknt.light.news.add';
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     render: function() {

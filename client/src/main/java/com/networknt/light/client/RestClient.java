@@ -93,7 +93,7 @@ public class RestClient {
     private AsyncRestTemplate asyncRestTemplate = null;
     private RestTemplate restTemplate = null;
 
-    private Map<String, Object> configMap = ServiceLocator.getInstance().getConfig(CONFIG_NAME);
+    private Map<String, Object> configMap = ServiceLocator.getInstance().getJsonMapConfig(CONFIG_NAME);
 
     // This eager initialization.
     private static final RestClient instance = new RestClient();

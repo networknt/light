@@ -196,6 +196,7 @@ var CheckoutButton = React.createClass({
                 <IconButton iconClassName="material-icons" onTouchTap={this.handleCartTouchTap}>shopping_cart</IconButton>
                 <span className={cartHeaderIconClasses}>{this.state.cartItemsCount}</span>
                 <Dialog
+                    autoScrollBodyContent={true}
                     title={this.state.title}
                     actions={actions}
                     modal={true}

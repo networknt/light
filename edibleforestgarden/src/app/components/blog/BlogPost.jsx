@@ -7,8 +7,10 @@ import AppConstants from '../../constants/AppConstants';
 import Paper from 'material-ui/lib/paper';
 import Markdown from '../Markdown';
 import BlogActionCreators from '../../actions/BlogActionCreators';
+import PostActionCreators from '../../actions/PostActionCreators';
 import BlogStore from '../../stores/BlogStore';
 import PostStore from '../../stores/PostStore';
+import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
 
@@ -24,17 +26,24 @@ var BlogPost = React.createClass({
 
     componentWillMount: function() {
         PostStore.addChangeListener(this._onPostChange);
+        EntityStore.addChangeListener(this._onEntityChange);
     },
 
     componentWillUnmount: function() {
         PostStore.removeChangeListener(this._onPostChange);
+        EntityStore.removeChangeListener(this._onEntityChange);
     },
 
     componentDidMount: function() {
+        let post = CommonUtils.findPost(BlogStore.getPosts(), this.props.params.entityId);
+        // get post from blog store as part of the list. If not there, get individual post.
+        if(!post) {
+            PostActionCreators.getPost(this.props.params.entityId);
+        }
         //console.log('BlogPost blogPosts', BlogStore.getPosts());
         //console.log('BlogPost index ', this.props.params.index);
         this.setState({
-            post: CommonUtils.findPost(BlogStore.getPosts(), this.props.params.entityId),
+            post: post? post : {},
             allowUpdate: BlogStore.getAllowUpdate()
         })
     },
@@ -43,6 +52,13 @@ var BlogPost = React.createClass({
         console.log('BlogPost._onPostChange', PostStore.getResult(), PostStore.getErrors());
         // TODO display toaster
 
+
+    },
+
+    _onEntityChange: function() {
+        this.setState({
+            post: EntityStore.getEntity()
+        })
     },
 
     _onUpdatePost: function () {
@@ -55,11 +71,16 @@ var BlogPost = React.createClass({
         BlogActionCreators.delPost(this.state.post.rid);
     },
 
+    _routeToTag: function(tagId) {
+        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+    },
+
     render: function() {
         let tags = '';
         if(this.state.post.tags) {
             tags = this.state.post.tags.map((tag, index) => {
-                return <span key={index}>{tag}&nbsp;&nbsp;&nbsp;</span>
+                let boundTagClick = this._routeToTag.bind(this, tag);
+                return <span key={index}><a href='#' onClick={boundTagClick}>{tag}</a>&nbsp;&nbsp;&nbsp;</span>
             });
         }
         let original = '';

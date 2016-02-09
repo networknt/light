@@ -9,20 +9,13 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    signup: function(email, username, password, passwordConfirmation) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.SIGNUP_REQUEST,
-            email: email,
-            username: username,
-            password: password,
-            passwordConfirmation: passwordConfirmation
-        });
-        WebAPIUtils.signup(email, username, password, passwordConfirmation);
+    signup: function(email, userId, password, passwordConfirm, firstName, lastName) {
+        WebAPIUtils.signup(email, userId, password, passwordConfirm, firstName, lastName);
     },
 
     login: function(userIdEmail, password, rememberMe) {
         AppDispatcher.dispatch({
-            type: ActionTypes.LOGIN_REQUEST,
+            type: ActionTypes.SIGNIN_USER_REQUEST,
             userIdEmail: userIdEmail,
             password: password,
             rememberMe: rememberMe

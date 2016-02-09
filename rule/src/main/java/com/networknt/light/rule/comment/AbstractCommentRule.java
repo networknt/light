@@ -107,7 +107,7 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
         if(whereClause != null && whereClause.length() > 0) {
             sb.append(whereClause);
         }
-        System.out.println("sql=" + sb);
+        //System.out.println("sql=" + sb);
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             total = ((ODocument)graph.getRawGraph().query(new OSQLSynchQuery<ODocument>(sb.toString())).get(0)).field("count");
@@ -140,7 +140,7 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             sb.append(" SKIP ").append((pageNo - 1) * pageSize);
             sb.append(" LIMIT ").append(pageSize);
         }
-        System.out.println("sql=" + sb);
+        //System.out.println("sql=" + sb);
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sb.toString());

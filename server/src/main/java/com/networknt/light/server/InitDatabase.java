@@ -26,12 +26,9 @@ import com.tinkerpop.blueprints.impls.orient.OrientEdgeType;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import com.tinkerpop.blueprints.impls.orient.OrientVertexType;
-import org.slf4j.LoggerFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +40,7 @@ import java.util.Map;
 public class InitDatabase {
     static final XLogger logger = XLoggerFactory.getXLogger(InitDatabase.class);
     static final String SERVER_CONFIG = "server";
-    static final Map<String, Object> serverConfig = ServiceLocator.getInstance().getConfig(SERVER_CONFIG);
+    static final Map<String, Object> serverConfig = ServiceLocator.getInstance().getJsonMapConfig(SERVER_CONFIG);
 
     public static void main(final String[] args) {
         initDb();
@@ -105,16 +102,6 @@ public class InitDatabase {
             // when 11 refresh token is created, the first one is removed for the client.
             // there is no expire date for refresh token unless it is removed by log out action from user.
             credential.createProperty("clientRefreshTokens", OType.EMBEDDEDMAP);
-
-            // activation code is in another table and it should be populated in the Rule not evRule as this
-            // won't be populated during replay. Every time this table is populated, it will try to remove
-            // entries older than 48 hours to keep this table smaller.
-            OrientVertexType activation = graph.createVertexType("Activation");
-            activation.createProperty("userId", OType.STRING);
-            activation.createProperty("code", OType.STRING);
-            activation.createProperty("createDate", OType.DATETIME);
-            graph.createKeyIndex("userId", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Activation"));
-
 
             OrientVertexType client = graph.createVertexType("Client");
             // www.networknt.com@Browser www.networknt.com@Android www.networknt.com@iOS
@@ -737,7 +724,7 @@ public class InitDatabase {
 
             // create rules to bootstrap the installation through event replay.
             // need signIn, replayEvent and impRule to start up.
-
+            // last sync time Feb 6, 2016.
             Vertex abstractRule = graph.addVertex("class:Rule",
                     "ruleClass", "com.networknt.light.rule.AbstractRule",
                     "sourceCode", "/*\n" +
@@ -797,14 +784,13 @@ public class InitDatabase {
                             "\n" +
                             "    protected void publishEvent(Map<String, Object> eventMap) throws Exception {\n" +
                             "        // get class name\n" +
-                            "        System.out.println(this.getClass().getPackage());\n" +
-                            "        System.out.println(this.getClass().getName());\n" +
-                            "        System.out.println(\"category = \" + eventMap.get(\"category\"));\n" +
+                            "        //System.out.println(this.getClass().getPackage());\n" +
+                            "        //System.out.println(this.getClass().getName());\n" +
                             "        // check if publisher is enabled.\n" +
                             "        Map map = getRuleByRuleClass(this.getClass().getName());\n" +
                             "        Object isPublisher = map.get(\"isPublisher\");\n" +
                             "        if(isPublisher != null && (boolean)isPublisher) {\n" +
-                            "            System.out.println(\"isPublisher\");\n" +
+                            "            //System.out.println(\"isPublisher\");\n" +
                             "            MBassador<Map<String, Object>> eventBus = ServiceLocator.getInstance().getEventBus((String)eventMap.get(\"category\"));\n" +
                             "            eventBus.publish(eventMap);\n" +
                             "        }\n" +
@@ -1653,6 +1639,8 @@ public class InitDatabase {
                             "            String password = (String)data.remove(\"password\");\n" +
                             "            OrientVertex credential = graph.addVertex(\"class:Credential\", \"password\", password);\n" +
                             "            data.put(\"credential\", credential);\n" +
+                            "            // calculate gravatar md5\n" +
+                            "            data.put(\"gravatar\", HashUtil.md5Hex((String)data.get(\"email\")));\n" +
                             "            user = graph.addVertex(\"class:User\", data);\n" +
                             "            graph.commit();\n" +
                             "        } catch (Exception e) {\n" +
@@ -1665,32 +1653,20 @@ public class InitDatabase {
                             "        return user;\n" +
                             "    }\n" +
                             "\n" +
-                            "    protected Vertex addActivation(String userId) throws Exception {\n" +
-                            "        Vertex activation = null;\n" +
-                            "        String code = HashUtil.generateUUID();\n" +
+                            "    protected String activateUser(Map<String, Object> data) throws Exception {\n" +
+                            "        String email = (String)data.get(\"email\");\n" +
+                            "        String code = (String)data.get(\"code\");\n" +
                             "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
                             "        try {\n" +
                             "            graph.begin();\n" +
-                            "            activation = graph.addVertex(\"class:Activation\", \"userId\", userId, \"code\", code, \"createDate\", new Date());\n" +
-                            "            graph.commit();\n" +
-                            "        } catch (Exception e) {\n" +
-                            "            logger.error(\"Exception:\", e);\n" +
-                            "            graph.rollback();\n" +
-                            "            throw e;\n" +
-                            "        } finally {\n" +
-                            "            graph.shutdown();\n" +
-                            "        }\n" +
-                            "        return activation;\n" +
-                            "    }\n" +
-                            "\n" +
-                            "    protected String getActivationCode(String userId) throws Exception {\n" +
-                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
-                            "        String code = null;\n" +
-                            "        try {\n" +
-                            "            Vertex activation = graph.getVertexByKey(\"Activation.userId\", userId);\n" +
-                            "            if(activation != null) {\n" +
-                            "                code = activation.getProperty(\"code\");\n" +
+                            "            Vertex user = graph.getVertexByKey(\"User.email\", email);\n" +
+                            "            if(user != null) {\n" +
+                            "                String s = user.getProperty(\"code\");\n" +
+                            "                if(code.equals(s)) {\n" +
+                            "                    user.removeProperty(\"code\");\n" +
+                            "                }\n" +
                             "            }\n" +
+                            "            graph.commit();\n" +
                             "        } catch (Exception e) {\n" +
                             "            logger.error(\"Exception:\", e);\n" +
                             "            graph.rollback();\n" +
@@ -1699,26 +1675,6 @@ public class InitDatabase {
                             "            graph.shutdown();\n" +
                             "        }\n" +
                             "        return code;\n" +
-                            "    }\n" +
-                            "\n" +
-                            "    protected void delActivation(String userId, String code) throws Exception {\n" +
-                            "        Vertex activation = null;\n" +
-                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
-                            "        try {\n" +
-                            "            graph.begin();\n" +
-                            "            activation = graph.getVertexByKey(\"Activation.userId\", userId);\n" +
-                            "            if(activation != null && code != null && code.equals(activation.getProperty(\"code\"))) {\n" +
-                            "                activation.remove();\n" +
-                            "            }\n" +
-                            "            \n" +
-                            "            graph.commit();\n" +
-                            "        } catch (Exception e) {\n" +
-                            "            logger.error(\"Exception:\", e);\n" +
-                            "            graph.rollback();\n" +
-                            "            throw e;\n" +
-                            "        } finally {\n" +
-                            "            graph.shutdown();\n" +
-                            "        }\n" +
                             "    }\n" +
                             "\n" +
                             "    protected void delUser(Map<String, Object> data) throws Exception {\n" +
@@ -2148,7 +2104,15 @@ public class InitDatabase {
                             "                    user = (OrientVertex)getUserByUserId(graph, userIdEmail);\n" +
                             "                }\n" +
                             "                if(user != null) {\n" +
-                            "                    if(checkPassword(graph, user, inputPassword)) {\n" +
+                            "                    // check if the user is activate already\n" +
+                            "                    if(user.getProperty(\"code\") != null) {\n" +
+                            "                        error = \"Account is not activated yet\";\n" +
+                            "                        inputMap.put(\"responseCode\", 400);\n" +
+                            "                    } else if (user.getProperty(\"locked\") != null && (boolean)user.getProperty(\"locked\")) {\n" +
+                            "                        // check if the user is locked already\n" +
+                            "                        error = \"Account is locked\";\n" +
+                            "                        inputMap.put(\"responseCode\", 400);\n" +
+                            "                    } else if(checkPassword(graph, user, inputPassword)){\n" +
                             "                        String jwt = generateToken(user, clientId, rememberMe);\n" +
                             "                        if(jwt != null) {\n" +
                             "                            Map eventMap = getEventMap(inputMap);\n" +
@@ -2281,6 +2245,8 @@ public class InitDatabase {
                             " *\n" +
                             " * Replay event file to create or recreate aggregation. This rule does update db but\n" +
                             " * there is no EvRule available. This is a very special rule or endpoint.\n" +
+                            " *\n" +
+                            " * Remember, the update has been done long ago and this is just replaying them again to rebuilt database.\n" +
                             " *\n" +
                             " * AccessLevel R [owner, admin, dbAdmin]\n" +
                             " *\n" +
@@ -2545,6 +2511,10 @@ public class InitDatabase {
                             "        Map<String, Object> eventMap = (Map<String, Object>) objects[0];\n" +
                             "        Map<String, Object> data = (Map<String, Object>) eventMap.get(\"data\");\n" +
                             "        impRule(data);\n" +
+                            "        // this is too notify readonly subsystem that the number of rules is changed.\n" +
+                            "        // if will only send out event when isPublisher is true for the Rule. Change\n" +
+                            "        // it from Rule Admin to enable it or disable it.\n" +
+                            "        publishEvent(eventMap);\n" +
                             "        return true;\n" +
                             "    }\n" +
                             "\n" +

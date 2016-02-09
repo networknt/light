@@ -17,11 +17,8 @@
 package com.networknt.light.rule.user;
 
 import com.networknt.light.rule.Rule;
+import com.networknt.light.util.EmailUtil;
 import com.networknt.light.util.HashUtil;
-import com.networknt.light.util.ServiceLocator;
-import com.tinkerpop.blueprints.impls.orient.OrientGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +36,7 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String email = (String) data.get("email");
         String userId = (String) data.get("userId");
+        String host = (String) data.get("host");
         String error = null;
 
         // need to make sure that email and userId are unique.
@@ -74,9 +72,12 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
                     eventData.put("roles", roles);
                     eventData.put("createDate", new java.util.Date());
 
-                    // populate activation schema and it will be removed once the user activate the account.
-                    addActivation(userId);
-                    inputMap.put("result", "{\"result\": \"Pending Activation\"}");
+                    // populate activation code here to indicate that this user is not acitvate yet.
+                    // you cannot login if there is an activation code in your user profile.
+                    String code = HashUtil.generateUUID();
+                    eventData.put("code", code);
+                    // send email for activation
+                    EmailUtil.sendSignupEmail(host, email, code);
                 }
             }
         }

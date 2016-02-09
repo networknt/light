@@ -16,6 +16,7 @@
 
 package com.networknt.light.rule.post;
 
+import com.networknt.light.rule.AbstractBfnRule;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.util.ServiceLocator;
@@ -31,7 +32,7 @@ import java.util.Map;
 /**
  * Created by steve on 27/11/14.
  */
-public abstract class AbstractPostRule extends AbstractRule implements Rule {
+public abstract class AbstractPostRule extends AbstractBfnRule implements Rule {
     static final Logger logger = LoggerFactory.getLogger(AbstractPostRule.class);
 
     public abstract boolean execute (Object ...objects) throws Exception;
@@ -79,4 +80,6 @@ public abstract class AbstractPostRule extends AbstractRule implements Rule {
             graph.shutdown();
         }
     }
+
+
 }

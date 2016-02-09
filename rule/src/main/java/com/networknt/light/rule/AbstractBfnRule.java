@@ -271,6 +271,20 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         }
     }
 
+    public String getEntityRid(String entityType, String entityId) {
+        String entityRid = null;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OrientVertex entity = (OrientVertex)graph.getVertexByKey(entityType + ".entityId", entityId);
+            entityRid = entity.getIdentity().toString();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+        } finally {
+            graph.shutdown();
+        }
+        return entityRid;
+    }
+
     public boolean updPost(String bfnType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
@@ -677,6 +691,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                         jsonMap.put("entityId", entity.getProperty("entityId"));
                         jsonMap.put("name", entity.getProperty("name"));
                         jsonMap.put("description", entity.getProperty("description"));
+                        jsonMap.put("content", entity.getProperty("content"));
                         jsonMap.put("variants", entity.getProperty("variants"));
                         iterable = entity.getProperty("in_HasProduct");
                         iterator = iterable.iterator();

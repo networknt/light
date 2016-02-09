@@ -8,7 +8,6 @@ import IconButton from 'material-ui/lib/icon-button';
 import Badge from 'material-ui/lib/badge';
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme';
-import Dialog from 'material-ui/lib/dialog';
 import Colors from 'material-ui/lib/styles/colors';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Snackbar from 'material-ui/lib/snackbar';
@@ -22,7 +21,7 @@ import ErrorStore from '../stores/ErrorStore';
 import MenuStore from '../stores/MenuStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
-import ProductActionCreators from '../actions/ProductActionCreators';
+import CatalogActionCreators from '../actions/CatalogActionCreators';
 import BlogActionCreators from '../actions/BlogActionCreators';
 import NewsActionCreators from '../actions/NewsActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
@@ -117,12 +116,12 @@ const Main = React.createClass({
         console.log('error', ErrorStore.getError());
         this.setState({
             snackbarOpen: true,
-            snackbarMessage: ErrorStore.getError().errorText
+            snackbarMessage: ErrorStore.getStatus() + " " + ErrorStore.getMessage()
         });
     },
 
     _onMenuChange: function() {
-        console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
+        //console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
         // only care about the first level menuItems here.
         this.setState({
             menuItems : MenuStore.getMenu().out_Own
@@ -157,7 +156,7 @@ const Main = React.createClass({
     },
 
     _catalogCategoryChange: function() {
-        console.log('Main._catalogCategoryChange', CatalogCategoryStore.getCategory());
+        //console.log('Main._catalogCategoryChange', CatalogCategoryStore.getCategory());
         this.setState({
             catalogCategory: CatalogCategoryStore.getCategory()
         });
@@ -251,7 +250,7 @@ const Main = React.createClass({
         //console.log('before workaround', this.props.location.pathname, secondPath, rid);
         if(secondPath != null && secondPath != categoryId) {
             //console.log('The main window has the same route, force to reload blogPost...');
-            ProductActionCreators.getCatalogProduct(node.props.category['@rid'], defaultPageNo, defaultPageSize);
+            CatalogActionCreators.getCatalogProduct(node.props.category['@rid'], defaultPageNo, defaultPageSize);
         }
     },
 
@@ -281,7 +280,7 @@ const Main = React.createClass({
     },
 
     handleSnackbarTouchTap() {
-        alert('Why am I here?');
+        this.setState({snackbarOpen: false})
     },
 
     render() {
@@ -298,7 +297,7 @@ const Main = React.createClass({
             loginMenuItems.push(<MenuItem key='logout' value='logout' primaryText='Sign out' />)
         } else {
             loginMenuItems.push(<MenuItem key='login' value='login' primaryText='Log in' />);
-            loginMenuItems.push(<MenuItem key='signup' value='signup' primaryText='Sign up' />);
+            loginMenuItems.push(<MenuItem key='signup' value='/form/com.networknt.light.user.signup' primaryText='Sign up' />);
         }
 
         let cartButton = '';
@@ -308,7 +307,7 @@ const Main = React.createClass({
         let mainMenu = '';
         if (CommonUtils.findMenuItem(this.state.menuItems, 'main')) {
             let mainMenuItems = CommonUtils.findMenuItem(this.state.menuItems, 'main').out_Own;
-            console.log('mainMenuItems', mainMenuItems);
+            //console.log('mainMenuItems', mainMenuItems);
             mainMenu = mainMenuItems.map((item, index) => {
                 if(CommonUtils.hasMenuAccess(item, AuthStore.getRoles())) {
                     return (

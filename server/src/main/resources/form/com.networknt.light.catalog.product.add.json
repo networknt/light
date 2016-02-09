@@ -7,7 +7,7 @@
       "name": "addProduct",
       "readOnly": false,
       "title": "Submit",
-      "success": "/page/com-networknt-light-v-blog-admin-home"
+      "success": "/catalog"
     }
   ],
   "schema": {
@@ -17,6 +17,7 @@
       "parentRid",
       "name",
       "description",
+      "content",
       "variants"
     ],
     "properties": {
@@ -31,6 +32,10 @@
       },
       "description": {
         "title": "Description",
+        "type": "string"
+      },
+      "content": {
+        "title": "Detail",
         "type": "string"
       },
       "tags": {
@@ -76,6 +81,11 @@
     "name",
     {
       "key": "description",
+      "type": "textarea",
+      "rows": 10
+    },
+    {
+      "key": "content",
       "type": "textarea",
       "rows": 20
     },

@@ -121,32 +121,20 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return user;
     }
 
-    protected Vertex addActivation(String userId) throws Exception {
-        Vertex activation = null;
-        String code = HashUtil.generateUUID();
+    protected String activateUser(Map<String, Object> data) throws Exception {
+        String email = (String)data.get("email");
+        String code = (String)data.get("code");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             graph.begin();
-            activation = graph.addVertex("class:Activation", "userId", userId, "code", code, "createDate", new Date());
-            graph.commit();
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-            graph.rollback();
-            throw e;
-        } finally {
-            graph.shutdown();
-        }
-        return activation;
-    }
-
-    protected String getActivationCode(String userId) throws Exception {
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        String code = null;
-        try {
-            Vertex activation = graph.getVertexByKey("Activation.userId", userId);
-            if(activation != null) {
-                code = activation.getProperty("code");
+            Vertex user = graph.getVertexByKey("User.email", email);
+            if(user != null) {
+                String s = user.getProperty("code");
+                if(code.equals(s)) {
+                    user.removeProperty("code");
+                }
             }
+            graph.commit();
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -155,26 +143,6 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
             graph.shutdown();
         }
         return code;
-    }
-
-    protected void delActivation(String userId, String code) throws Exception {
-        Vertex activation = null;
-        OrientGraph graph = ServiceLocator.getInstance().getGraph();
-        try {
-            graph.begin();
-            activation = graph.getVertexByKey("Activation.userId", userId);
-            if(activation != null && code != null && code.equals(activation.getProperty("code"))) {
-                activation.remove();
-            }
-            
-            graph.commit();
-        } catch (Exception e) {
-            logger.error("Exception:", e);
-            graph.rollback();
-            throw e;
-        } finally {
-            graph.shutdown();
-        }
     }
 
     protected void delUser(Map<String, Object> data) throws Exception {

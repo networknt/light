@@ -7,5 +7,10 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 module.exports = {
     getMenu: function() {
         WebAPIUtils.getMenu();
+    },
+
+    getAllMenu: function() {
+        WebAPIUtils.getAllMenu();
     }
+
 };

@@ -110,6 +110,7 @@ public class DbRuleTest extends TestCase {
             }
 
             // execute commands by remove Test class to clean up first.
+            /*
             {
                 jsonMap = mapper.readValue(delSchema,
                         new TypeReference<HashMap<String, Object>>() {
@@ -123,8 +124,9 @@ public class DbRuleTest extends TestCase {
                 ruleResult = evRule.execute(eventMap);
                 //assertTrue(ruleResult);
             }
-
+            */
             // execute commands to add Test class, property and index
+            /*
             {
                 jsonMap = mapper.readValue(addSchema,
                         new TypeReference<HashMap<String, Object>>() {
@@ -138,8 +140,9 @@ public class DbRuleTest extends TestCase {
                 ruleResult = evRule.execute(eventMap);
                 assertTrue(ruleResult);
             }
-
+            */
             // execute commands to add Vertex
+            /*
             {
                 jsonMap = mapper.readValue(addVertex,
                         new TypeReference<HashMap<String, Object>>() {
@@ -153,7 +156,7 @@ public class DbRuleTest extends TestCase {
                 ruleResult = evRule.execute(eventMap);
                 assertTrue(ruleResult);
             }
-
+            */
             /*
             TODO query doen't work yet.
             // execute commands to query Vertex
@@ -171,6 +174,7 @@ public class DbRuleTest extends TestCase {
             */
 
             // execute commands to delete Vertex
+            /*
             {
                 jsonMap = mapper.readValue(delVertex,
                         new TypeReference<HashMap<String, Object>>() {
@@ -184,7 +188,9 @@ public class DbRuleTest extends TestCase {
                 ruleResult = evRule.execute(eventMap);
                 assertTrue(ruleResult);
             }
+            */
             // execute commands by remove Test class
+            /*
             {
                 jsonMap = mapper.readValue(delSchema,
                         new TypeReference<HashMap<String, Object>>() {
@@ -198,7 +204,7 @@ public class DbRuleTest extends TestCase {
                 ruleResult = evRule.execute(eventMap);
                 assertTrue(ruleResult);
             }
-
+            */
         } catch (Exception e) {
             e.printStackTrace();
         }

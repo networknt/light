@@ -17,6 +17,10 @@ module.exports = {
         WebAPIUtils.getForm(formId);
     },
 
+    getAllForm: function() {
+        WebAPIUtils.getAllForm();
+    },
+
     receiveForm: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_FORM,

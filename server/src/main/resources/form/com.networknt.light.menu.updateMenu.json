@@ -6,7 +6,7 @@
         "name" : "updMenu",
         "readOnly": false,
         "title": "Submit",
-        "success" : "/page/com-networknt-light-v-menu-admin-home"
+        "success" : "/admin/menuAdmin"
     }],
     "schema": {
         "type": "object",
@@ -19,8 +19,7 @@
             },
             "out_Own": {
                 "type": "array",
-                "title": "Menu Items",
-                "format": "strapselectdynamic"
+                "title": "Menu Items"
             }
         }
     },
@@ -28,9 +27,12 @@
         "host",
         {
             "key": "out_Own",
-            "options": {
-                "category": "menu",
-                "name": "getMenuItemMap"
+            "type": "rc-select",
+            "multiple": true,
+            "action" : {
+                "get": {
+                    "url": "/api/rs?cmd={\"category\": \"menu\", \"name\": \"getMenuItemMap\", \"readOnly\": true}"
+                }
             }
         }
     ]

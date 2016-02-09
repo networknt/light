@@ -18,24 +18,24 @@ module.exports = {
         });
     },
 
-    setQty: function(qty, sku) {
+    setQty: function(cartItem, qty) {
         AppDispatcher.dispatch({
             type: ActionTypes.SET_QTY,
-            qty: qty,
-            sku: sku
+            cartItem: cartItem,
+            qty: qty
         });
     },
 
-    remove: function(sku) {
+    remove: function(cartItem) {
         AppDispatcher.dispatch({
             type: ActionTypes.REMOVE_CART_ITEM,
-            sku: sku
+            cartItem: cartItem
         });
     },
 
     reset: function () {
         AppDispatcher.dispatch({
-            type: ActionTypes.RESET_CART_ITEM,
+            type: ActionTypes.RESET_CART_ITEM
         });
     },
 

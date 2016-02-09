@@ -4,7 +4,8 @@
         "category" : "user",
         "name" : "signUpUser",
         "readOnly": false,
-        "title": "Register"
+        "title": "Register",
+        "success": "/page/com-networknt-light-v-user-signup"
     }],
     "schema": {
         "type": "object",
@@ -19,6 +20,7 @@
             "email": {
                 "title": "Email",
                 "type": "string",
+                "pattern": "^\\S+@\\S+$",
                 "description": "Email can be used to log in."
             },
             "password": {
@@ -41,10 +43,7 @@
     },
     "form": [
         "userId",
-        {
-            "key": "email",
-            "type": "email"
-        },
+        "email",
         {
             "key": "password",
             "type": "password"

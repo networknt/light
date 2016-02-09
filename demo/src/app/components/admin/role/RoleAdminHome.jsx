@@ -16,6 +16,10 @@ import FormActionCreators from '../../../actions/FormActionCreators';
 var RoleAdminHome = React.createClass({
     displayName: 'RoleAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             roles: []
@@ -45,12 +49,12 @@ var RoleAdminHome = React.createClass({
     _onUpdateRole: function(role) {
         let formId = 'com.networknt.light.role.update';
         FormActionCreators.setFormModel(formId, role);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onAddRole: function() {
         let formId = 'com.networknt.light.role.add';
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     render: function() {
@@ -64,7 +68,7 @@ var RoleAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='Roles' style={{textAlign: 'center'}}>
+                            <TableHeaderColumn colSpan="10" tooltip='Roles' style={{textAlign: 'center'}}>
                                 Roles
                             </TableHeaderColumn>
                         </TableRow>
@@ -115,7 +119,7 @@ var RoleAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                         <TableRow>
-                            <TableRowColumn colSpan="6" style={{textAlign: 'left'}}>
+                            <TableRowColumn colSpan="10" style={{textAlign: 'left'}}>
                                 <RaisedButton label="Add Role" primary={true} onTouchTap={this._onAddRole} />
                             </TableRowColumn>
                         </TableRow>

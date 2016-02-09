@@ -6,7 +6,7 @@
         "name" : "addMenu",
         "readOnly": false,
         "title": "Submit",
-        "success" : "/page/com-networknt-light-v-menu-admin-home"
+        "success" : "/admin/menuAdmin"
     }],
     "schema": {
         "type": "object",
@@ -27,9 +27,12 @@
         "host",
         {
             "key": "out_Own",
-            "options": {
-                "category": "menu",
-                "name": "getMenuItemMap"
+            "type": "rc-select",
+            "multiple": true,
+            "action" : {
+                "get": {
+                    "url": "/api/rs?cmd={\"category\": \"menu\", \"name\": \"getMenuItemMap\", \"readOnly\": true}"
+                }
             }
         }
     ]

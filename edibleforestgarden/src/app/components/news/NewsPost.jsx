@@ -7,8 +7,10 @@ import AppConstants from '../../constants/AppConstants';
 import Paper from 'material-ui/lib/paper';
 import Markdown from '../Markdown';
 import NewsActionCreators from '../../actions/NewsActionCreators';
+import PostActionCreators from '../../actions/PostActionCreators';
 import NewsStore from '../../stores/NewsStore';
 import PostStore from '../../stores/PostStore';
+import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
 
@@ -24,17 +26,22 @@ var NewsPost = React.createClass({
 
     componentWillMount: function() {
         PostStore.addChangeListener(this._onPostChange);
+        EntityStore.addChangeListener(this._onEntityChange);
     },
 
     componentWillUnmount: function() {
         PostStore.removeChangeListener(this._onPostChange);
+        EntityStore.removeChangeListener(this._onEntityChange);
     },
 
     componentDidMount: function() {
-        //console.log('NewsPost blogPosts', NewsStore.getNewsPosts());
-        //console.log('NewsPost index ', this.props.params.index);
+        let post = CommonUtils.findPost(NewsStore.getPosts(), this.props.params.entityId);
+        // get post from news store as part of the list. If not there, get individual post.
+        if(!post) {
+            PostActionCreators.getPost(this.props.params.entityId);
+        }
         this.setState({
-            post: CommonUtils.findPost(NewsStore.getPosts(), this.props.params.entityId),
+            post: post? post : {},
             allowUpdate: NewsStore.getAllowUpdate()
         })
     },
@@ -43,6 +50,12 @@ var NewsPost = React.createClass({
         console.log('NewsPost._onPostChange', PostStore.getResult(), PostStore.getErrors());
         // TODO display toaster
 
+    },
+
+    _onEntityChange: function() {
+        this.setState({
+            post: EntityStore.getEntity()
+        })
     },
 
     _onUpdatePost: function () {
@@ -55,11 +68,16 @@ var NewsPost = React.createClass({
         NewsActionCreators.delPost(this.state.post.rid);
     },
 
+    _routeToTag: function(tagId) {
+        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+    },
+
     render: function() {
         let tags = '';
         if(this.state.post.tags) {
             tags = this.state.post.tags.map((tag, index) => {
-                return <span key={index}>{tag}&nbsp;&nbsp;&nbsp;</span>
+                let boundTagClick = this._routeToTag.bind(this, tag);
+                return <span key={index}><a href='#' onClick={boundTagClick}>{tag}</a>&nbsp;&nbsp;&nbsp;</span>
             });
         }
         let original = '';

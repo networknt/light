@@ -15,7 +15,7 @@ class AdminMenu extends React.Component {
     _onItemTouchTap(event, item) {
         console.log('AdminMenu props', this.props);
         console.log('AdminMenu._onItemTouchTap', item.props.value);
-        this.props.history.push(item.props.value);
+        this.context.router.push(item.props.value);
     }
 
     render() {
@@ -49,5 +49,9 @@ class AdminMenu extends React.Component {
         );
     }
 }
+
+AdminMenu.contextTypes = {
+    router: React.PropTypes.object.isRequired
+};
 
 export default AdminMenu;

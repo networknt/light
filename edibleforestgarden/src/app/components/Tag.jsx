@@ -13,6 +13,11 @@ require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../utils/CommonUtils';
 import Gravatar from './Gravatar';
+import BlogSummary from './blog/BlogSummary';
+import NewsSummary from './news/NewsSummary';
+import ProductSummary from './catalog/ProductSummary';
+import CartActionCreators from '../actions/CartActionCreators';
+
 
 var Tag = React.createClass({
     displayName: 'Tag',
@@ -43,8 +48,12 @@ var Tag = React.createClass({
     },
 
     _routeToEntity: function(parentType, categoryId, entityId) {
-        console.log('Tag._routeToEntity', categoryId, entityId);
+        console.log('Tag._routeToEntity', parentType, categoryId, entityId);
         this.props.history.push('/' + parentType.toLowerCase() + '/' + categoryId + '/' + entityId);
+    },
+
+    _onAddCart: function (product) {
+        CartActionCreators.addToCart(product);
     },
 
     _onPageNoChange: function (key) {
@@ -64,6 +73,29 @@ var Tag = React.createClass({
     },
 
     render: function() {
+        let entities = this.state.entities.map((entity, index) => {
+            let boundClick = this._routeToEntity.bind(this, entity.parentType, entity.parentId, entity.entityId);
+            if(entity.parentType === 'Blog') {
+                return (
+                    <span key={index}>
+                        <BlogSummary post={entity} onClick={boundClick} />
+                    </span>
+                );
+            } else if(entity.parentType === 'News') {
+                return (
+                    <span key={index}>
+                        <NewsSummary post={entity} onClick={boundClick} />
+                    </span>
+                );
+            } else if(entity.parentType === 'Catalog') {
+                let boundAddCart = this._onAddCart.bind(this, entity);
+                return (
+                    <span key={index}>
+                        <ProductSummary index={index} product={entity} onClick={boundClick} onAddCart={boundAddCart} />
+                    </span>
+                );
+            }
+        });
         return (
             <div>
                 <div className="blogHeader">
@@ -71,22 +103,7 @@ var Tag = React.createClass({
                 </div>
                 <div className="blogRoot">
                     <div className="leftColumn">
-                        {
-                            this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.parentId, post.entityId);
-                                return (
-                                    <span key={index}>
-                                        <Paper className="blogPostPaper">
-                                            <div className="blogPost">
-                                                <Gravatar md5={post.gravatar} /><h2 className="title"><a onClick={boundClick}>{post.title}</a></h2>
-                                                <span>Submitted by {post.createUserId} on {post.createDate}</span>
-                                                <Markdown text={post.summary} />
-                                            </div>
-                                        </Paper>
-                                    </span>
-                                );
-                            }, this)
-                        }
+                        {entities}
                         <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                     </div>
                 </div>

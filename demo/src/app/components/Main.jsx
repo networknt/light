@@ -8,7 +8,6 @@ import IconButton from 'material-ui/lib/icon-button';
 import Badge from 'material-ui/lib/badge';
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import LightRawTheme from 'material-ui/lib/styles/raw-themes/light-raw-theme';
-import Dialog from 'material-ui/lib/dialog';
 import Colors from 'material-ui/lib/styles/colors';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Snackbar from 'material-ui/lib/snackbar';
@@ -22,7 +21,7 @@ import ErrorStore from '../stores/ErrorStore';
 import MenuStore from '../stores/MenuStore';
 import CheckoutButton from './cart/CheckoutButton';
 import TreeNode from './TreeNode';
-import ProductActionCreators from '../actions/ProductActionCreators';
+import CatalogActionCreators from '../actions/CatalogActionCreators';
 import BlogActionCreators from '../actions/BlogActionCreators';
 import NewsActionCreators from '../actions/NewsActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
@@ -43,6 +42,10 @@ const Main = React.createClass({
 
     childContextTypes : {
         muiTheme: React.PropTypes.object
+    },
+
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
     },
 
     getInitialState() {
@@ -110,19 +113,19 @@ const Main = React.createClass({
     },
 
     _onTitleTouchTap: function() {
-        this.props.history.push('/');
+        this.context.router.push('/');
     },
 
     _onErrorChange: function() {
         console.log('error', ErrorStore.getError());
         this.setState({
             snackbarOpen: true,
-            snackbarMessage: ErrorStore.getError().errorText
+            snackbarMessage: ErrorStore.getStatus() + " " + ErrorStore.getMessage()
         });
     },
 
     _onMenuChange: function() {
-        console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
+        //console.log('Main._onMenuChange', JSON.stringify( MenuStore.getMenu(), undefined, 2));
         // only care about the first level menuItems here.
         this.setState({
             menuItems : MenuStore.getMenu().out_Own
@@ -157,7 +160,7 @@ const Main = React.createClass({
     },
 
     _catalogCategoryChange: function() {
-        console.log('Main._catalogCategoryChange', CatalogCategoryStore.getCategory());
+        //console.log('Main._catalogCategoryChange', CatalogCategoryStore.getCategory());
         this.setState({
             catalogCategory: CatalogCategoryStore.getCategory()
         });
@@ -190,7 +193,7 @@ const Main = React.createClass({
         }
         // route to Blog with a specific categoryId in the path
         let categoryId = node.props.category.categoryId;
-        this.props.history.push('/blog/' + categoryId);
+        this.context.router.push('/blog/' + categoryId);
         // if the current location is blog/:categoryId and has different categoryId then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
@@ -217,7 +220,7 @@ const Main = React.createClass({
         }
         // route to News with a specific categoryId in the path
         let categoryId = node.props.category.categoryId;
-        this.props.history.push('/news/' + categoryId);
+        this.context.router.push('/news/' + categoryId);
         // if the current location is blog/:blogRid and has different blogRid then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
@@ -244,21 +247,21 @@ const Main = React.createClass({
         }
         // route to Catalog with a specific categoryId in the path
         let categoryId = node.props.category.categoryId;
-        this.props.history.push('/catalog/' + categoryId);
+        this.context.router.push('/catalog/' + categoryId);
         // if the current location is blog/:blogRid and has different blogRid then the component won't
         // be mount again and there is no way for the component to reload the blogPost. Work around here.
         let secondPath = this.getSecondPath(this.props.location.pathname);
         //console.log('before workaround', this.props.location.pathname, secondPath, rid);
         if(secondPath != null && secondPath != categoryId) {
             //console.log('The main window has the same route, force to reload blogPost...');
-            ProductActionCreators.getCatalogProduct(node.props.category['@rid'], defaultPageNo, defaultPageSize);
+            CatalogActionCreators.getCatalogProduct(node.props.category['@rid'], defaultPageNo, defaultPageSize);
         }
     },
 
     handleItemTouchTap(event, item) {
         // clear category as context has switched. waiting for the new category to be loaded.
         this.setState({leftNavOpen: false, category: []});
-        this.props.history.push(item.props.value);
+        this.context.router.push(item.props.value);
     },
 
     getFirstPath(path) {
@@ -281,7 +284,7 @@ const Main = React.createClass({
     },
 
     handleSnackbarTouchTap() {
-        alert('Why am I here?');
+        this.setState({snackbarOpen: false})
     },
 
     render() {
@@ -298,17 +301,17 @@ const Main = React.createClass({
             loginMenuItems.push(<MenuItem key='logout' value='logout' primaryText='Sign out' />)
         } else {
             loginMenuItems.push(<MenuItem key='login' value='login' primaryText='Log in' />);
-            loginMenuItems.push(<MenuItem key='signup' value='signup' primaryText='Sign up' />);
+            loginMenuItems.push(<MenuItem key='signup' value='/form/com.networknt.light.user.signup' primaryText='Sign up' />);
         }
 
         let cartButton = '';
         if (CommonUtils.findMenuItem(this.state.menuItems, 'cart')) {
-            cartButton = <CheckoutButton history={this.props.history} />
+            cartButton = <CheckoutButton/>
         }
         let mainMenu = '';
         if (CommonUtils.findMenuItem(this.state.menuItems, 'main')) {
             let mainMenuItems = CommonUtils.findMenuItem(this.state.menuItems, 'main').out_Own;
-            console.log('mainMenuItems', mainMenuItems);
+            //console.log('mainMenuItems', mainMenuItems);
             mainMenu = mainMenuItems.map((item, index) => {
                 if(CommonUtils.hasMenuAccess(item, AuthStore.getRoles())) {
                     return (

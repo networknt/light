@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router} from 'react-router';
+import {Router, browserHistory} from 'react-router';
 import AppRoutes from './app-routes.jsx';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import createHistory from 'history/lib/createBrowserHistory';
 
 import AuthActionCreators from './actions/AuthActionCreators';
 import AuthStore from './stores/AuthStore';
@@ -121,7 +120,7 @@ injectTapEventPlugin();
  */
 ReactDOM.render(
   <Router
-    history={createHistory()}
+    history={browserHistory}
     onUpdate={() => window.scrollTo(0, 0)}
   >
     {AppRoutes}

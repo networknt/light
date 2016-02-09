@@ -2,9 +2,10 @@ import React from 'react';
 import FormStore from '../stores/FormStore';
 import AuthStore from '../stores/AuthStore';
 import FormActionCreators from '../actions/FormActionCreators';
+import AuthActionCreators from '../actions/AuthActionCreators';
 import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import RaisedButton from 'material-ui/lib/raised-button';
-import WebAPIUtils from '../utils/WebAPIUtils';
+import CircularProgress from 'material-ui/lib/circular-progress';
 import utils from 'react-schema-form/lib/utils';
 
 const id = 'com.networknt.light.user.signin';
@@ -34,7 +35,6 @@ let Login = React.createClass({
     _onModelChange: function(key, val) {
         utils.selectOrSet(key, this.state.user, val);
         //this.forceUpdate();
-        console.log('Login._onModelChange', this.state.user);
     },
 
 
@@ -43,9 +43,6 @@ let Login = React.createClass({
         if(schema) {
             let form = FormStore.getForm(id).form;
             let action = FormStore.getForm(id).action;
-            //console.log('schema = ', schema);
-            //console.log('form = ', form);
-            //console.log('action = ', action);
             this.setState({
                 schema: schema,
                 form: form,
@@ -57,7 +54,7 @@ let Login = React.createClass({
     _onAuthChange: function() {
         // route to user page once it is logged in.
         if(AuthStore.isLoggedIn()) {
-            this.props.history.push('user');
+            this.props.history.push('profile');
         }
     },
 
@@ -66,7 +63,7 @@ let Login = React.createClass({
         if(this.state.schema) {
             const buttons = this.state.action.map((item, idx) => (
                 <RaisedButton key={idx} label={item.title} primary={true}
-                    onTouchTap = {(e) => (WebAPIUtils.login(this.state.user.userIdEmail, this.state.user.password, this.state.user.rememberMe))} />
+                    onTouchTap = {(e) => (AuthActionCreators.login(this.state.user.userIdEmail, this.state.user.password, this.state.user.rememberMe))} />
             ));
 
             return (
@@ -76,7 +73,7 @@ let Login = React.createClass({
                 </div>
             )
         } else {
-            return <div>Loading...</div>
+            return (<CircularProgress mode="indeterminate"/>);
         }
     }
 });
