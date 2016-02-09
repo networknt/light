@@ -7,7 +7,7 @@
       "name": "updPost",
       "readOnly": false,
       "title": "Submit",
-      "success": "/page/com-networknt-light-v-blog-admin-home"
+      "success": "/news"
     }
   ],
   "schema": {
