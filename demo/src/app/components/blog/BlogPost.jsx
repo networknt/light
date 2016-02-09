@@ -13,6 +13,7 @@ import PostStore from '../../stores/PostStore';
 import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
+import moment from 'moment';
 
 var BlogPost = React.createClass({
     displayName: 'BlogPost',
@@ -80,6 +81,7 @@ var BlogPost = React.createClass({
     },
 
     render: function() {
+        let time = moment(this.state.post.createDate).format("DD-MM-YYYY HH:mm:ss");
         let tags = '';
         if(this.state.post.tags) {
             tags = this.state.post.tags.map((tag, index) => {
@@ -100,7 +102,7 @@ var BlogPost = React.createClass({
                 <Paper className="blogPostPaper">
                     <div className="blogPost">
                         <h2 className="title">{this.state.post.title}</h2>
-                        <span>Submitted by {this.state.post.createUserId} on {this.state.post.createDate}</span>
+                        <span>Submitted by {this.state.post.createUserId} on {time}</span>
                         <div>{tags}</div>
                         {original}
                         <Markdown text={this.state.post.content} />
