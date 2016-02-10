@@ -22,7 +22,8 @@ var AccessAdminHome = React.createClass({
 
     getInitialState: function() {
         return {
-            accesses: []
+            accesses: [],
+            filter: {}
         };
     },
 
@@ -51,6 +52,19 @@ var AccessAdminHome = React.createClass({
         this.context.router.push('/form/' + formId);
     },
 
+    _onFilterChange: function (event) {
+        let filter = {
+            ruleClass: this.refs.ruleClass.value,
+            accessLevel: this.refs.accessLevel.value,
+            createUserId: this.refs.createUserId.value
+        };
+        console.log('_onFilterChange', filter);
+        if(this._throttleTimeout) {
+            clearTimeout(this._throttleTimeout);
+        }
+        this._throttleTimeout = setTimeout(() => this.setState({filter: filter}), 200);
+    },
+
     render: function() {
         return (
             <span>
@@ -74,6 +88,15 @@ var AccessAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Roles' colSpan="2">Roles</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Users'>Users</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
+                        </TableRow>
+                        <TableRow>
+                            <TableHeaderColumn></TableHeaderColumn>
+                            <TableHeaderColumn colSpan="4"><input type="text" ref="ruleClass" onChange={this._onFilterChange}/></TableHeaderColumn>
+                            <TableHeaderColumn><input type="text" ref="accessLevel" onChange={this._onFilterChange}/></TableHeaderColumn>
+                            <TableHeaderColumn></TableHeaderColumn>
+                            <TableHeaderColumn colSpan="2"></TableHeaderColumn>
+                            <TableHeaderColumn></TableHeaderColumn>
+                            <TableHeaderColumn><input type="text" ref="createUserId" onChange={this._onFilterChange}/></TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody
