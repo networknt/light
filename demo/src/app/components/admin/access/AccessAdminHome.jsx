@@ -62,21 +62,18 @@ var AccessAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='Access' style={{textAlign: 'center'}}>
+                            <TableHeaderColumn colSpan="11" tooltip='Access' style={{textAlign: 'center'}}>
                                 Access
                             </TableHeaderColumn>
                         </TableRow>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Rule Class' colSpan="5">Rule Class</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Rule Class' colSpan="4">Rule Class</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Access Level'>Access Level</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Clients'>Clients</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Roles'>Roles</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Roles' colSpan="2">Roles</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Users'>Users</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody
@@ -90,15 +87,12 @@ var AccessAdminHome = React.createClass({
                             return (
                                 <TableRow key={index}>
                                     <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn colSpan="5"><a onClick={boundUpdate}>{access.ruleClass}</a></TableRowColumn>
+                                    <TableRowColumn colSpan="4"><a onClick={boundUpdate}>{access.ruleClass}</a></TableRowColumn>
                                     <TableRowColumn>{access.accessLevel}</TableRowColumn>
                                     <TableRowColumn>{access.clients}</TableRowColumn>
-                                    <TableRowColumn>{access.roles}</TableRowColumn>
+                                    <TableRowColumn  colSpan="2">{access.roles? access.roles.toString(): ''}</TableRowColumn>
                                     <TableRowColumn>{access.users}</TableRowColumn>
                                     <TableRowColumn>{access.createUserId}</TableRowColumn>
-                                    <TableRowColumn>{access.createDate}</TableRowColumn>
-                                    <TableRowColumn>{access.updateUserId}</TableRowColumn>
-                                    <TableRowColumn>{access.updateDate}</TableRowColumn>
                                 </TableRow>
                             );
                         })}
@@ -108,15 +102,12 @@ var AccessAdminHome = React.createClass({
                     <TableFooter>
                         <TableRow>
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Rule Class' colSpan="5">Rule Class</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Rule Class' colSpan="4">Rule Class</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Access Level'>Access Level</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Clients'>Clients</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Roles'>Roles</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Roles'  colSpan="2">Roles</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Users'>Users</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                     </TableFooter>
                 </Table>
