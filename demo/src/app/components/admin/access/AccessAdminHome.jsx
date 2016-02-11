@@ -66,6 +66,34 @@ var AccessAdminHome = React.createClass({
     },
 
     render: function() {
+        let content = this.state.accesses.map((access, index) => {
+            let matched = true;
+            for(var key in this.state.filter) {
+                if(this.state.filter.hasOwnProperty(key) && this.state.filter[key].length > 0) {
+                    let regex = new RegExp(this.state.filter[key], 'i');
+                    if(access[key].search(regex) == -1) {
+                        matched = false;
+                        break;
+                    }
+                }
+            }
+            if(matched) {
+                let boundDelete = this._onDeleteAccess.bind(this, access);
+                let boundUpdate = this._onUpdateAccess.bind(this, access);
+                return (
+                    <TableRow key={index}>
+                        <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
+                        <TableRowColumn colSpan="4"><a onClick={boundUpdate}>{access.ruleClass}</a></TableRowColumn>
+                        <TableRowColumn>{access.accessLevel}</TableRowColumn>
+                        <TableRowColumn>{access.clients}</TableRowColumn>
+                        <TableRowColumn  colSpan="2">{access.roles? access.roles.toString(): ''}</TableRowColumn>
+                        <TableRowColumn>{access.users}</TableRowColumn>
+                        <TableRowColumn>{access.createUserId}</TableRowColumn>
+                    </TableRow>
+                );
+            }
+        });
+
         return (
             <span>
                 <Table
@@ -103,23 +131,7 @@ var AccessAdminHome = React.createClass({
                         deselectOnClickaway={false}
                         showRowHover={true}
                         stripedRows={true}>
-
-                        {this.state.accesses.map((access, index) => {
-                            let boundDelete = this._onDeleteAccess.bind(this, access);
-                            let boundUpdate = this._onUpdateAccess.bind(this, access);
-                            return (
-                                <TableRow key={index}>
-                                    <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn colSpan="4"><a onClick={boundUpdate}>{access.ruleClass}</a></TableRowColumn>
-                                    <TableRowColumn>{access.accessLevel}</TableRowColumn>
-                                    <TableRowColumn>{access.clients}</TableRowColumn>
-                                    <TableRowColumn  colSpan="2">{access.roles? access.roles.toString(): ''}</TableRowColumn>
-                                    <TableRowColumn>{access.users}</TableRowColumn>
-                                    <TableRowColumn>{access.createUserId}</TableRowColumn>
-                                </TableRow>
-                            );
-                        })}
-
+                        {content}
                     </TableBody>
 
                     <TableFooter>
