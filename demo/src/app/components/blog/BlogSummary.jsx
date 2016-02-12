@@ -20,7 +20,7 @@ class BlogSummary extends React.Component {
         return (
             <Paper>
                 <Card>
-                    <CardHeader title={"Created by: " + this.props.post.createUserId} subtitle= {"On: " + time} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
+                    <CardHeader title={"Created by: " + this.props.post.createUserId} subtitle= {'Submitted by ' + this.props.post.createUserId + "On: " + time} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
                     <CardTitle title={this.props.post.title}/>
                     <CardText>
                         <Markdown text={this.props.post.summary} />

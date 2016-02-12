@@ -10,15 +10,16 @@ import CardTitle from 'material-ui/lib/card/card-title';
 import CardText from 'material-ui/lib/card/card-text';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Avatar from 'material-ui/lib/avatar';
+import moment from 'moment';
 
 class Summary extends React.Component {
 
     render() {
+        let time = moment(this.props.post.createDate).format("DD-MM-YYYY HH:mm:ss");
         return (
             <Paper className="summaryPaper">
                 <Card>
-                    <CardHeader title={"Created by: " + this.props.post.createUserId} subtitle= {"On: " + this.props.post.createDate} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
-                    <CardTitle title={this.props.post.title}/>
+                    <CardHeader title={this.props.post.title} subtitle={'Submitted by ' + this.props.post.createUserId + " on " + time} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
                     <CardText>
                         <Markdown text={this.props.post.summary} />
                     </CardText>
