@@ -1154,5 +1154,25 @@
     "createDate": "2016-02-06T15:55:37.526",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:7",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10008,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T08:42:13.724",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.demo.GetDropdownRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T08:42:13.724",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
+
 ]

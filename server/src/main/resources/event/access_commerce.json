@@ -55,5 +55,410 @@
     "createDate": "2015-04-30T01:23:26.643",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:6",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10007,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T08:41:29.717",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.order.AddOrderRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T08:41:29.717",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:14",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10015,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T08:51:41.821",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.payment.GetClientTokenRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T08:51:41.821",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:16",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10017,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T08:53:58.396",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.shipping.UpdAddressRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T08:53:58.396",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:17",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10018,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T08:54:29.170",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.shipping.CnfAddressRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T08:54:29.170",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:20",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10021,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T08:58:31.540",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.product.GetProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T08:58:31.540",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:21",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10022,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T08:59:06.204",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.product.UpProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T08:59:06.204",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:22",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10023,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T08:59:35.679",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.product.DownProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T08:59:35.679",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:23",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10024,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:01:18.021",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.catalog.GetProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:01:18.021",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:24",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10025,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:02:03.428",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "catalogAdmin",
+        "productAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.AddProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:02:03.428",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:25",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10026,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:02:35.242",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "catalogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.AddCatalogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:02:35.242",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:26",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10027,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:03:06.653",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "catalogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.DelProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:03:06.653",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:27",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10028,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:03:33.089",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.UpCatalogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:03:33.089",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:28",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10029,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:03:58.933",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.DownCatalogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:03:58.933",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:29",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10030,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:04:32.247",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.catalog.GetRecentProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:04:32.247",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:30",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10031,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:05:28.417",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "catalogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.GetCatalogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:05:28.417",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:31",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10032,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:06:05.263",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "catalogAdmin",
+        "productAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.UpdProductRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:06:05.263",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:32",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10033,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:06:41.991",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "catalogAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.UpdCatalogRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:06:41.991",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:33",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10034,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-13T09:07:16.328",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "catalogAdmin",
+        "productAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.catalog.GetCatalogDropdownRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-13T09:07:16.328",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
+
 ]
