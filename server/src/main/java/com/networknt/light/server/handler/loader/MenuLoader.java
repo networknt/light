@@ -38,7 +38,7 @@ public class MenuLoader extends Loader {
     static public String menuFolder = "menu";
     static CloseableHttpClient httpclient = null;
 
-    public static void loadForm() throws Exception {
+    public static void loadMenu() throws Exception {
         File folder = getFileFromResourceFolder(menuFolder);
         if(folder != null) {
             LightServer.start();
@@ -80,34 +80,6 @@ public class MenuLoader extends Loader {
             } finally {
                 response.close();
             }
-            /*
-            ODatabaseDocumentTx db = ServiceLocator.getInstance().getDb();
-            OSchema schema = db.getMetadata().getSchema();
-            for (OClass oClass : schema.getClasses()) {
-                System.out.println(oClass.getName());
-            }
-            String formId = file.getName();
-            try {
-                db.begin();
-                // remove the document for the class if there are any.
-                OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>("select from Form where id = ?");
-                List<ODocument> result = db.command(query).execute(formId);
-                for (ODocument form : result) {
-                    form.delete();
-                }
-                ODocument doc = new ODocument(schema.getClass("Form"));
-                doc.field("id", formId);
-                doc.field("content", content);
-                doc.save();
-                db.commit();
-                System.out.println("Form " + formId + " is loaded!");
-            } catch (Exception e) {
-                db.rollback();
-                e.printStackTrace();
-            } finally {
-                db.close();
-            }
-            */
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {

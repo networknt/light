@@ -54,6 +54,7 @@ import MenuAdminHome from './components/admin/menu/MenuAdminHome';
 import FormAdminHome from './components/admin/form/FormAdminHome';
 import PageAdminHome from './components/admin/page/PageAdminHome';
 import RuleAdminHome from './components/admin/rule/RuleAdminHome';
+import HostAdminHome from './components/admin/host/HostAdminHome';
 
 /**
  * Routes: https://github.com/rackt/react-router/blob/master/docs/api/components/Route.md
@@ -117,6 +118,7 @@ const AppRoutes = (
     <Route path='/admin/formAdmin' component={FormAdminHome} />
     <Route path='/admin/pageAdmin' component={PageAdminHome} />
     <Route path='/admin/ruleAdmin' component={RuleAdminHome} />
+    <Route path='/admin/hostAdmin' component={HostAdminHome} />
 
     <IndexRoute component={Home}/>
 

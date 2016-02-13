@@ -6,13 +6,18 @@
     "name" : "updHost",
     "readOnly": false,
     "title": "Submit",
-    "success" : "/page/com-networknt-light-v-host-admin-home"
+    "success" : "/admin/hostAdmin"
   }],
   "schema": {
     "type": "object",
     "title": "Host",
-    "required": ["base", "transferMinSize"],
+    "required": ["hostId", "base", "transferMinSize"],
     "properties": {
+      "hostId": {
+        "title": "Host Id",
+        "type": "string",
+        "readOnly": true
+      },
       "base": {
         "title": "Base",
         "type": "string"
@@ -24,8 +29,8 @@
     }
   },
   "form": [
+    "hostId",
     "base",
     "transferMinSize"
   ]
 }
-

@@ -3,18 +3,18 @@
     "base" : "/home/edibleforestgarden/web",
     "transferMinSize" : "100",
     "supportDevices" : [ "Browser", "Android", "iOS" ],
-    "id" : "www.edibleforestgarden.ca"
+    "hostId" : "www.edibleforestgarden.ca"
   },
   "local.networknt.com" : {
     "base" : "/home/networknt/web",
     "transferMinSize" : "100",
     "supportDevices" : [ "Browser", "Android", "iOS" ],
-    "id" : "www.networknt.com"
+    "hostId" : "www.networknt.com"
   },
   "example" : {
     "base" : "/home/example/web",
     "transferMinSize" : "100",
     "supportDevices" : [ "Browser", "Android", "iOS" ],
-    "id" : "example"
+    "hostId" : "example"
   }
 }

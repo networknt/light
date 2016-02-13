@@ -34,26 +34,24 @@ public class UpdHostRule extends AbstractHostRule implements Rule {
         String error = null;
         // check if the host exists or not.
         Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
-        if(hostMap.containsKey(data.get("id"))) {
+        if(hostMap.containsKey(data.get("hostId"))) {
             // host exists
             // TODO update host into virtualhost.json here in the command or in event?
+            // In event is OK due to update multiple times is fine.
             Map eventMap = getEventMap(inputMap);
             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
             inputMap.put("eventMap", eventMap);
-            eventData.put("id", data.get("id"));
+            eventData.put("hostId", data.get("hostId"));
             eventData.put("base", data.get("base"));
             eventData.put("transferMinSize", data.get("transferMinSize"));
             eventData.put("createDate", new java.util.Date());
             eventData.put("createUserId", user.get("userId"));
+            return true;
         } else {
-            error = "Id for the host does not exist";
-            inputMap.put("responseCode", 400);
-        }
-        if(error != null) {
+            error = "HostId does not exist";
+            inputMap.put("responseCode", 404);
             inputMap.put("result", error);
             return false;
-        } else {
-            return true;
         }
     }
 }

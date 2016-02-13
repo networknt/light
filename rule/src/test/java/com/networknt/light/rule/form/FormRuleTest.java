@@ -154,7 +154,7 @@ public class FormRuleTest extends TestCase {
 
             assertTrue(jsonMap.containsKey("schema"));
             assertTrue(jsonMap.containsKey("form"));
-            assertTrue(jsonMap.containsKey("id"));
+            assertTrue(jsonMap.containsKey("formId"));
         }
     }
     */
@@ -264,7 +264,7 @@ public class FormRuleTest extends TestCase {
 
                 assertTrue(jsonMap.containsKey("schema"));
                 assertTrue(jsonMap.containsKey("form"));
-                assertTrue(jsonMap.containsKey("id"));
+                assertTrue(jsonMap.containsKey("formId"));
             }
             // get all form
             {
@@ -330,7 +330,7 @@ public class FormRuleTest extends TestCase {
                 // make sure we have schema, form and id
                 assertTrue(jsonMap.containsKey("schema"));
                 assertTrue(jsonMap.containsKey("form"));
-                assertTrue(jsonMap.containsKey("id"));
+                assertTrue(jsonMap.containsKey("formId"));
 
                 Map<String, Object> schema = (Map<String, Object>)jsonMap.get("schema");
                 String title = (String)schema.get("title");

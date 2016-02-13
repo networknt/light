@@ -245,9 +245,6 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
     }
 
     protected void delPostDb(String bfnType, Map<String, Object> data) throws Exception {
-        String className = bfnType.substring(0, 1).toUpperCase() + bfnType.substring(1);
-        String id = bfnType + "Id";
-        String index = className + "." + id;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();

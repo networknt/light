@@ -84,7 +84,7 @@ public abstract class AbstractBlogRule extends AbstractRule implements Rule {
             OIndex<?> blogHostIdIdx = db.getMetadata().getIndexManager().getIndex("blogHostIdIdx");
             blog = new ODocument(schema.getClass("Blog"));
             blog.field("host", data.get("host"));
-            blog.field("id", data.get("id"));
+            blog.field("categoryId", data.get("categoryId"));
             if(data.get("description") != null) blog.field("description", data.get("description"));
             if(data.get("attributes") != null) blog.field("attributes", data.get("attributes"));
             blog.field("createDate", data.get("createDate"));
@@ -239,7 +239,7 @@ public abstract class AbstractBlogRule extends AbstractRule implements Rule {
         try {
             db.begin();
             OIndex<?> blogHostIdIdx = db.getMetadata().getIndexManager().getIndex("blogHostIdIdx");
-            OCompositeKey key = new OCompositeKey(data.get("host"), data.get("id"));
+            OCompositeKey key = new OCompositeKey(data.get("host"), data.get("categoryId"));
             OIdentifiable oid = (OIdentifiable) blogHostIdIdx.get(key);
             if (oid != null) {
                 ODocument blog = (ODocument) oid.getRecord();

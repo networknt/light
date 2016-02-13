@@ -342,6 +342,13 @@ module.exports = {
             type: ActionTypes.GET_RULE_RESPONSE,
             json: json
         });
+    },
+
+    getAllHostResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_HOST_RESPONSE,
+            json: json
+        });
     }
 
 };

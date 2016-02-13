@@ -29,6 +29,7 @@ import java.util.Map;
  * inject the new host into the virtualhosthandler. The server must be restarted in order
  * to load the newly added site.
  * TODO dynamically add a new host into virtualhosthandler without shutdonw server.
+ *
  */
 public class AddHostRule extends AbstractHostRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
@@ -40,24 +41,21 @@ public class AddHostRule extends AbstractHostRule implements Rule {
 
         // check if the host exists or not.
         Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
-        if(hostMap.containsKey(data.get("id"))) {
+        if(hostMap.containsKey(data.get("hostId"))) {
             // host exists
-            error = "Id for the host exists";
+            error = "HostId exists";
             inputMap.put("responseCode", 400);
+            inputMap.put("result", error);
+            return false;
         } else {
             Map eventMap = getEventMap(inputMap);
             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
             inputMap.put("eventMap", eventMap);
-            eventData.put("id", data.get("id"));
+            eventData.put("hostId", data.get("hostId"));
             eventData.put("base", data.get("base"));
             eventData.put("transferMinSize", data.get("transferMinSize"));
             eventData.put("createDate", new java.util.Date());
             eventData.put("createUserId", user.get("userId"));
-        }
-        if(error != null) {
-            inputMap.put("result", error);
-            return false;
-        } else {
             return true;
         }
     }

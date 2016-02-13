@@ -6,15 +6,15 @@
     "name" : "addHost",
     "readOnly": false,
     "title": "Submit",
-    "success" : "/page/com-networknt-light-v-host-admin-home"
+    "success" : "/admin/hostAdmin"
   }],
   "schema": {
     "type": "object",
     "title": "Host",
-    "required": ["id", "base", "transferMinSize"],
+    "required": ["hostId", "base", "transferMinSize"],
     "properties": {
-      "id": {
-        "title": "Id",
+      "hostId": {
+        "title": "Host Id",
         "type": "string"
       },
       "base": {
@@ -28,7 +28,7 @@
     }
   },
   "form": [
-    "id",
+    "hostId",
     "base",
     "transferMinSize"
   ]

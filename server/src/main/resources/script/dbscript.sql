@@ -22,22 +22,22 @@ How can I do a query on #11:0 to get the following JSON tree?
 [
   {
     "@RID": "#12:0",
-    "id": "1",
+    "commentId": "1",
     "content": "Comment1",
     "Has": [
       {
         "@RID": "#12:2",
-        "id": "11",
+        "commentId": "11",
         "content": "Comment11"
       },
       {
         "@RID": "#12:3",
-        "id": "12",
+        "commentId": "12",
         "content": "Comment12",
         "Has": [
           {
             "@RID": "#12:4",
-            "id": "121",
+            "commentId": "121",
             "content": "Comment121"
           }
         ]
@@ -46,7 +46,7 @@ How can I do a query on #11:0 to get the following JSON tree?
   },
   {
     "@RID": "#12:1",
-    "id": "2",
+    "commentId": "2",
     "content": "Comment2"
   }
 ]

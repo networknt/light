@@ -131,5 +131,24 @@
     "createDate": "2015-07-18T01:25:41.701",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:5",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10006,
+    "createUserId": "stevehu",
+    "data": {
+      "enableCors": true,
+      "updateDate": "2015-08-23T19:45:12.784",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.user.SignInUserRule"
+    },
+    "name": "updCors",
+    "category": "rule",
+    "createDate": "2015-08-23T19:45:12.781",
+    "ipAddress": "107.155.116.183",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

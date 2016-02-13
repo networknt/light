@@ -35,23 +35,20 @@ public class DelHostRule extends AbstractHostRule implements Rule {
 
         // check if the host exists or not.
         Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
-        if(hostMap.containsKey(data.get("id"))) {
+        if(hostMap.containsKey(data.get("hostId"))) {
             // host exists
             Map eventMap = getEventMap(inputMap);
             Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
             inputMap.put("eventMap", eventMap);
-            eventData.put("id", data.get("id"));
+            eventData.put("hostId", data.get("hostId"));
             eventData.put("updateDate", new java.util.Date());
             eventData.put("updateUserId", user.get("userId"));
+            return true;
         } else {
-            error = "Id for the host does not exist";
-            inputMap.put("responseCode", 400);
-        }
-        if(error != null) {
+            error = "HostId does not exist";
+            inputMap.put("responseCode", 404);
             inputMap.put("result", error);
             return false;
-        } else {
-            return true;
         }
     }
 }

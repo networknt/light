@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,8 @@ import java.util.Map;
  */
 public abstract class AbstractHostRule extends AbstractRule implements Rule {
     static final Logger logger = LoggerFactory.getLogger(ServiceLocator.class);
+    static final String CONFIG_FILE = "virtualhost.json";
+
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
     public abstract boolean execute (Object ...objects) throws Exception;
@@ -43,13 +46,13 @@ public abstract class AbstractHostRule extends AbstractRule implements Rule {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("base", data.get("base"));
         map.put("transferMinSize", data.get("transferMinSize"));
-        hostMap.put((String)data.get("id"), map);
+        hostMap.put((String)data.get("hostId"), map);
         writeHostMap(hostMap);
     }
 
     protected void updHost(Map<String, Object> data) throws Exception {
         Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
-        Map<String, Object> map = (Map<String, Object>)hostMap.get(data.get("id"));
+        Map<String, Object> map = (Map<String, Object>)hostMap.get(data.get("hostId"));
         map.put("base", data.get("base"));
         map.put("transferMinSize", data.get("transferMinSize"));
         writeHostMap(hostMap);
@@ -57,14 +60,20 @@ public abstract class AbstractHostRule extends AbstractRule implements Rule {
 
     protected void delHost(Map<String, Object> data) throws Exception {
         Map<String, Object> hostMap = ServiceLocator.getInstance().getHostMap();
-        hostMap.remove(data.get("id"));
+        hostMap.remove(data.get("hostId"));
         writeHostMap(hostMap);
     }
 
     private void writeHostMap(Map<String, Object> hostMap) {
         try {
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue((new File(System.getProperty("user.home") + "/virtualhost.json")), hostMap);
+            try {
+                File file = new File(System.getProperty("config.dir", "") + "/" + CONFIG_FILE);
+                mapper.writeValue(file, hostMap);
+            } catch (IOException ioe) {
+                logger.error("Host configuration should be externalized to config.dir system property folder");
+                mapper.writeValue((new File(System.getProperty("user.home") + "/virtualhost.json")), hostMap);
+            }
         } catch (IOException ioe) {
             logger.error("Exception:", ioe);
         }

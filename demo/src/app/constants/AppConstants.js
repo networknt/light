@@ -49,6 +49,9 @@ module.exports = {
         // Access
         GET_ALL_ACCESS_RESPONSE: null,
 
+        // Host
+        GET_ALL_HOST_RESPONSE: null,
+
         // Routes
         REDIRECT: null,
 
