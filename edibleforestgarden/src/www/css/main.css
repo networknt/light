@@ -13,18 +13,6 @@ a:hover {
   text-decoration: underline;
 }
 
-html {
-  font-family: 'Roboto', sans-serif;
-}
-
-body, h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-}
-
-body {
-  font-size: 15px;
-  line-height: 24px;
-}
 /* used for generic layout for the entire site. lefe column is always showing up and the right column will be hidden on small screen */
 .leftColumn {
   display: flex;

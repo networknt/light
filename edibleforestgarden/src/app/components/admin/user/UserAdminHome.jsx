@@ -22,6 +22,10 @@ import FormActionCreators from '../../../actions/FormActionCreators';
 var UserAdminHome = React.createClass({
     displayName: 'UserAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             users: [],
@@ -55,7 +59,7 @@ var UserAdminHome = React.createClass({
     _onUpdateUser: function(user) {
         let formId = 'com.networknt.light.user.update.profile';
         FormActionCreators.setFormModel(formId, user);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onPageNoChange: function (key) {

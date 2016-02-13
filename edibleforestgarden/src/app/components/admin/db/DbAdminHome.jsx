@@ -20,7 +20,7 @@ class DbAdminHome extends React.Component {
 
     _onItemTouchTap(event, item) {
         console.log('DbAdminHome props', this.props);
-        this.props.history.push(item.props.value);
+        this.context.router.push(item.props.value);
     }
 
     render() {
@@ -39,5 +39,9 @@ class DbAdminHome extends React.Component {
         );
     }
 }
+
+DbAdminHome.contextTypes = {
+    router: React.PropTypes.object.isRequired
+};
 
 export default DbAdminHome;

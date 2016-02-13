@@ -5,16 +5,31 @@ import BlogCategoryStore from '../../stores/BlogCategoryStore';
 var BlogActionCreators = require('../../actions/BlogActionCreators');
 var classNames = require('classnames');
 import RaisedButton from 'material-ui/lib/raised-button';
+import Toolbar from 'material-ui/lib/toolbar/toolbar';
+import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import ToolbarSeparator from 'material-ui/lib/toolbar/toolbar-separator';
+import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 require('rc-pagination/assets/index.css');
 import Pagination from 'rc-pagination';
 import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
-import BlogSummary from './BlogSummary';
+//import BlogSummary from './BlogSummary';
+import Summary from '../common/Summary.jsx';
+import List from 'material-ui/lib/lists/list';
+import ListItem from 'material-ui/lib/lists/list-item';
+import DropDownMenu from 'material-ui/lib/DropDownMenu';
+import MenuItem from 'material-ui/lib/menus/menu-item';
+import Menu from 'material-ui/lib/menus/menu';
+import ArrowDropRight from 'material-ui/lib/svg-icons/navigation-arrow-drop-right';
 
 var Blog = React.createClass({
     displayName: 'Blog',
+
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
 
     getInitialState: function() {
         let rid = null;
@@ -82,12 +97,12 @@ var Blog = React.createClass({
     },
 
     _routeToPost: function(entityId) {
-        this.props.history.push('/blog/' + this.props.params.categoryId + '/' + entityId);
+        this.context.router.push('/blog/' + this.props.params.categoryId + '/' + entityId);
     },
 
     _onAddPost: function () {
         //console.log("_onAddPost is called");
-        this.props.history.push('/blog/postAdd/' + this.props.params.categoryId);
+        this.context.router.push('/blog/postAdd/' + this.props.params.categoryId);
     },
 
     _onPageNoChange: function (key) {
@@ -107,32 +122,38 @@ var Blog = React.createClass({
         BlogActionCreators.getBlogPost(this.state.rid, this.state.pageNo, pageSize);
     },
 
+    handledropdownChange : function (event, index, value) {
+        this.setState({dropdownvalue: value})
+    },
+
     render: function() {
         console.log('Blog.render', this.state.total, this.state.pageNo, this.state.pageSize);
-        let addButton = this.state.allowUpdate? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
+        let addButton = this.state.allowUpdate ? <RaisedButton label="Add Post" primary={true} onTouchTap={this._onAddPost} /> : '';
+
         return (
             <div>
-                <div className="blogHeader">
-                    <h2>Blogs{addButton}</h2>
-                </div>
-                <div className="blogRoot">
-                    <div className="leftColumn">
-                        {
-                            this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.entityId);
-                                return (
-                                    <span key={index}>
-                                        <BlogSummary post={post} onClick ={boundClick} />
-                                    </span>
-                                );
-                            }, this)
-                        }
-                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
+                <div className="leftColumn">
+                    <div className="header">
+                        <h2 className="headerContent">Blog</h2>
                     </div>
-                    <div className="rightColumn">
-                        <div className="blogInfo">
-                        </div>
-                    </div>
+                    <Toolbar>
+                        <ToolbarGroup float="left">
+                            <ToolbarTitle text={this.props.params.categoryId} />
+                        </ToolbarGroup>
+                        <ToolbarGroup float="right">
+                            <ToolbarSeparator />
+                            {addButton}
+                        </ToolbarGroup>
+                    </Toolbar>
+                    {
+                        this.state.posts.map(function(post, index) {
+                            var boundClick = this._routeToPost.bind(this, post.entityId);
+                            return (
+                                <Summary post={post} onClick ={boundClick} key={index}/>
+                            );
+                        }, this)
+                    }
+                    <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                 </div>
             </div>
         );

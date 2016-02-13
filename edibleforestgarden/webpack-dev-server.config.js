@@ -2,13 +2,14 @@ const webpack = require('webpack');
 const path = require('path');
 const buildPath = path.resolve(__dirname, 'src/www');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const config = {
   //Entry point to the project
   entry: [
     'webpack/hot/dev-server',
     'webpack/hot/only-dev-server',
-    path.join(__dirname, '/src/app/app.jsx'),
+    path.join(__dirname, '/src/app/app.jsx')
   ],
   //Webpack config options on how to obtain modules
   resolve: {
@@ -21,8 +22,8 @@ const config = {
       'node_modules',
       path.resolve(__dirname, '../src'),
       path.resolve(__dirname, 'src/app/components/raw-code'),
-      path.resolve(__dirname, 'src/app/components/markdown'),
-    ],
+      path.resolve(__dirname, 'src/app/components/markdown')
+    ]
   },
 
   //Configuration for dev server
@@ -53,21 +54,24 @@ const config = {
   //Output file config
   output: {
     path: buildPath,    //Path of output file
-    filename: 'app.js',  //Name of output file
+    filename: 'app.js'  //Name of output file
   },
   plugins: [
     //Used to include index.html in build folder
     new HtmlWebpackPlugin({
       inject: false,
-      template: path.join(__dirname, '/src/www/index.html'),
+      template: path.join(__dirname, '/src/www/index.html')
     }),
     //Allows for sync with browser while developing (like BorwserSync)
     new webpack.HotModuleReplacementPlugin(),
     //Allows error warninggs but does not stop compiling. Will remove when eslint is added
     new webpack.NoErrorsPlugin(),
+    new ExtractTextPlugin(path.resolve(__dirname,'/style.css') , {
+      allChunks: true
+    })
   ],
   externals: {
-    fs: 'js', // To remove once https://github.com/benjamn/recast/pull/238 is released
+    fs: 'js' // To remove once https://github.com/benjamn/recast/pull/238 is released
   },
   module: {
     //eslint loader
@@ -78,9 +82,9 @@ const config = {
         include: [path.resolve(__dirname, '../src')],
         exclude: [
           path.resolve(__dirname, '../src/svg-icons'),
-          path.resolve(__dirname, '../src/utils/modernizr.custom.js'),
-        ],
-      },
+          path.resolve(__dirname, '../src/utils/modernizr.custom.js')
+        ]
+      }
     ],
     //Allow loading of non-es
     loaders: [
@@ -88,34 +92,42 @@ const config = {
         test: /\.jsx$/,
         loaders: [
           'react-hot',
-          'babel-loader',
+          'babel-loader'
         ],
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
       {
         test: /\.txt$/,
         loader: 'raw-loader',
-        include: path.resolve(__dirname, 'src/app/components/raw-code'),
+        include: path.resolve(__dirname, 'src/app/components/raw-code')
       },
       {
         test: /\.md$/,
         loader: 'raw-loader',
-        include: path.resolve(__dirname, 'src/app/components'),
+        include: path.resolve(__dirname, 'src/app/components')
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader',
+        loaders: [
+          "style-loader",
+          "css-loader",
+          "autoprefixer-loader?browsers=last 2 versions"
+        ]
       },
-    ],
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=" + path.resolve(__dirname, "/src/www/assets/stylesheets"))
+      }
+    ]
   },
   eslint: {
-    configFile: '../.eslintrc',
-  },
+    configFile: '../.eslintrc'
+  }
 };
 
 module.exports = config;

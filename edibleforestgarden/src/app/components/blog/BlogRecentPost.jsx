@@ -11,10 +11,17 @@ import Locale from 'rc-pagination/lib/locale/en_US';
 require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
-import BlogSummary from './BlogSummary';
+
+// Using the general Summary component for News/Blog/Forum summaries.
+// import BlogSummary from './BlogSummary';
+import Summary from '../common/Summary.jsx';
 
 var BlogRecentPost = React.createClass({
     displayName: 'BlogRecentPost',
+
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
 
     getInitialState: function() {
         return {
@@ -43,7 +50,7 @@ var BlogRecentPost = React.createClass({
 
     _routeToPost: function(categoryId, entityId) {
         console.log('BlogRecentPost', categoryId, entityId);
-        this.props.history.push('/blog/' + categoryId + '/' + entityId);
+        this.context.router.push('/blog/' + categoryId + '/' + entityId);
     },
 
     _onPageNoChange: function (key) {
@@ -65,23 +72,21 @@ var BlogRecentPost = React.createClass({
     render: function() {
         return (
             <div>
-                <div className="blogHeader">
-                    <h2>Recent Blog Posts</h2>
+                <div className="header">
+                    <h2 className="headerContent">Recent Blog Posts</h2>
                 </div>
-                <div className="blogRoot">
-                    <div className="leftColumn">
-                        {
-                            this.state.posts.map(function(post, index) {
-                                var boundClick = this._routeToPost.bind(this, post.parentId, post.entityId);
-                                return (
-                                    <span key={index}>
-                                        <BlogSummary post={post} onClick ={boundClick} />
-                                    </span>
-                                );
-                            }, this)
-                        }
-                        <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
-                    </div>
+                <div className="leftColumn">
+                    {
+                        this.state.posts.map(function(post, index) {
+                            var boundClick = this._routeToPost.bind(this, post.parentId, post.entityId);
+                            return (
+                                <span key={index}>
+                                    <Summary post={post} onClick={boundClick} />
+                                </span>
+                            );
+                        }, this)
+                    }
+                    <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
                 </div>
             </div>
         );

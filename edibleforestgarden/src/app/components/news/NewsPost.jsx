@@ -13,9 +13,19 @@ import PostStore from '../../stores/PostStore';
 import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
+import moment from 'moment';
+
+import Toolbar from 'material-ui/lib/toolbar/toolbar';
+import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
+import ToolbarSeparator from 'material-ui/lib/toolbar/toolbar-separator';
+import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 
 var NewsPost = React.createClass({
     displayName: 'NewsPost',
+
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
 
     getInitialState: function() {
         return {
@@ -60,7 +70,7 @@ var NewsPost = React.createClass({
 
     _onUpdatePost: function () {
         console.log("_onUpdatePost is called");
-        this.props.history.push('/news/postUpdate/' + this.props.params.entityId);
+        this.context.router.push('/news/postUpdate/' + this.props.params.entityId);
     },
 
     _onDeletePost: function () {
@@ -69,10 +79,11 @@ var NewsPost = React.createClass({
     },
 
     _routeToTag: function(tagId) {
-        this.props.history.push('/tag/' + encodeURIComponent(tagId));
+        this.context.router.push('/tag/' + encodeURIComponent(tagId));
     },
 
     render: function() {
+        let time = moment(this.state.post.createDate).format("DD-MM-YYYY HH:mm:ss");
         let tags = '';
         if(this.state.post.tags) {
             tags = this.state.post.tags.map((tag, index) => {
@@ -82,25 +93,38 @@ var NewsPost = React.createClass({
         }
         let original = '';
         if(this.state.post.originalAuthor && this.state.post.originalSite && this.state.post.originalUrl) {
-            original = <div><a href={this.state.post.originalUrl} target="_blank">Submitted by {this.state.post.originalAuthor} via {this.state.post.originalSite}</a></div>
+            original = <p className="headerAdditionalContent">Original Author: {this.state.post.originalAuthor} Source: <a href={this.state.post.originalUrl}>{this.state.post.originalSite}</a></p>;
         }
-        let updateButton = this.state.allowUpdate? <RaisedButton label="Update Post" primary={true} onTouchTap={this._onUpdatePost} /> : '';
-        let deleteButton = this.state.allowUpdate? <RaisedButton label="Delete Post" primary={true} onTouchTap={this._onDeletePost} /> : '';
+        let updateSection = this.state.allowUpdate ?
+            <Toolbar>
+                <ToolbarGroup float="left">
+                    <ToolbarTitle text={this.state.post.title} />
+                </ToolbarGroup>
+                <ToolbarGroup float="right">
+                    <ToolbarSeparator />
+                    <RaisedButton label="Update Post" primary={true} onTouchTap={this._onUpdatePost} />
+                    <RaisedButton label="Delete Post" primary={true} onTouchTap={this._onDeletePost} />
+                </ToolbarGroup>
+            </Toolbar>
+            : '';
         return (
-            <span>
-                {updateButton}
-                {deleteButton}
-                <Paper className="blogPostPaper">
-                    <div className="blogPost">
-                        <h2 className="title">{this.state.post.title}</h2>
-                        <span>Submitted by {this.state.post.createUserId} on {this.state.post.createDate}</span>
-                        <div>{tags}</div>
+            <div>
+                <div className="leftColumn">
+                    <div className="header">
+                        <h2 className="headerContent">{this.state.post.title}</h2>
+                        <p className="headerSubContent">Submitted by {this.state.post.createUserId} on {time}</p>
                         {original}
-                        <Markdown text={this.state.post.content} />
                     </div>
-                </Paper>
-                <hr />
-            </span>
+                    {updateSection}
+                    <Paper className="postPaper">
+                        <div className="blogPost">
+                            <div>Tags: {tags}</div>
+                            <Markdown text={this.state.post.content} />
+                        </div>
+                    </Paper>
+                    <hr />
+                </div>
+            </div>
         )
 
     }

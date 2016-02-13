@@ -14,6 +14,10 @@ let Form = React.createClass({
 
     displayName: 'Form',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             error: null,
@@ -38,7 +42,7 @@ let Form = React.createClass({
     _onSubmissionChange: function() {
         // It is 200 status code. route to the right uri. The same message is sent to Main to display snackbar.
         console.log('Form._onSubmissionChange', this.state.success);
-        this.props.history.push(this.state.success);
+        this.context.router.push(this.state.success);
     },
 
 

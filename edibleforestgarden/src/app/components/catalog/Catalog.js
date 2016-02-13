@@ -24,6 +24,10 @@ import ProductSummary from './ProductSummary';
 var Catalog = React.createClass({
     displayName: 'Catalog',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             products: [],
@@ -74,11 +78,11 @@ var Catalog = React.createClass({
     },
 
     _routeToProduct: function(entityId) {
-        this.props.history.push('/catalog/' + this.props.params.categoryId + '/' + entityId);
+        this.context.router.push('/catalog/' + this.props.params.categoryId + '/' + entityId);
     },
 
     _onAddProduct: function () {
-        this.props.history.push('/catalog/productAdd/' + this.props.params.categoryId);
+        this.context.router.push('/catalog/productAdd/' + this.props.params.categoryId);
     },
 
     _onPageNoChange: function (key) {
@@ -118,14 +122,6 @@ var Catalog = React.createClass({
                             }, this)
                         }
                         <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
-                    </div>
-                    <div className="rightColumn">
-                        <div className="blogInfo">
-                            <h1>Blog Information</h1>
-                            <p>In this section, you will see some information and references pertaining to the opened blog.</p>
-                            <p>Also, having the screen width be less then 64em will hide it, leaving reading room for mobile users only concerned with reading post content on the go.</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci alias cum, cumque cupiditate ea eum itaque, minus molestias necessitatibus nihil pariatur perspiciatis quam quas quod rem repellat, sint voluptate.</p>
-                        </div>
                     </div>
                 </div>
             </div>

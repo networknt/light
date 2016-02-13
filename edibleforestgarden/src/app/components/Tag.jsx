@@ -22,6 +22,10 @@ import CartActionCreators from '../actions/CartActionCreators';
 var Tag = React.createClass({
     displayName: 'Tag',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             entities: [],
@@ -49,7 +53,7 @@ var Tag = React.createClass({
 
     _routeToEntity: function(parentType, categoryId, entityId) {
         console.log('Tag._routeToEntity', parentType, categoryId, entityId);
-        this.props.history.push('/' + parentType.toLowerCase() + '/' + categoryId + '/' + entityId);
+        this.context.router.push('/' + parentType.toLowerCase() + '/' + categoryId + '/' + entityId);
     },
 
     _onAddCart: function (product) {

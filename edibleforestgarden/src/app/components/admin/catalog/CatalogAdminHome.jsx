@@ -15,6 +15,10 @@ import FormActionCreators from'../../../actions/FormActionCreators';
 var CatalogAdminHome = React.createClass({
     displayName: 'CatalogAdminHome',
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             catalogs: []
@@ -45,12 +49,12 @@ var CatalogAdminHome = React.createClass({
         //console.log("_onUpdateCatalog", catalog);
         let formId = 'com.networknt.light.catalog.update';
         FormActionCreators.setFormModel(formId, catalog);
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     _onAddCatalog: function() {
         let formId = 'com.networknt.light.catalog.add';
-        this.props.history.push('/form/' + formId);
+        this.context.router.push('/form/' + formId);
     },
 
     render: function() {

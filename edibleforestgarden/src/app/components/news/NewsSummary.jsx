@@ -4,17 +4,31 @@ import Gravatar from '../Gravatar';
 import Markdown from '../Markdown';
 import moment from 'moment';
 
+import Card from 'material-ui/lib/card/card';
+import CardActions from 'material-ui/lib/card/card-actions';
+import CardHeader from 'material-ui/lib/card/card-header';
+import CardTitle from 'material-ui/lib/card/card-title';
+import CardText from 'material-ui/lib/card/card-text';
+import RaisedButton from 'material-ui/lib/raised-button';
+import Avatar from 'material-ui/lib/avatar';
+
+// Deprecated, use common/Summary instead.
 class NewsSummary extends React.Component {
 
     render() {
         let time = moment(this.props.post.createDate).format("DD-MM-YYYY HH:mm:ss");
         return (
-            <Paper className="blogPostPaper">
-                <div className="blogPost">
-                    <Gravatar md5={this.props.post.gravatar} /><h2 className="title"><a onClick={this.props.onClick}>{this.props.post.title}</a></h2>
-                    <span>Submitted by {this.props.post.createUserId} on {time}</span>
-                    <Markdown text={this.props.post.summary} />
-                </div>
+            <Paper>
+                <Card>
+                    <CardHeader title={"Created by: " + this.props.post.createUserId} subtitle= {"On: " + time} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
+                    <CardTitle title={this.props.post.title}/>
+                    <CardText>
+                        <Markdown text={this.props.post.summary} />
+                    </CardText>
+                    <CardActions>
+                        <RaisedButton label="Read More" primary={true} onClick={this.props.onClick}/>
+                    </CardActions>
+                </Card>
             </Paper>
         );
     }
