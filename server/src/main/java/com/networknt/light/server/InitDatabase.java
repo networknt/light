@@ -636,13 +636,6 @@ public class InitDatabase {
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_profile);
 
-            Vertex m_about = graph.addVertex("class:MenuItem",
-                    "menuItemId", "about",
-                    "text", "About",
-                    "route", "/about",
-                    "roles", "anonymous,user",
-                    "createDate", new java.util.Date());
-            userOwner.addEdge("Create", m_about);
 
             Vertex m_main = graph.addVertex("class:MenuItem",
                     "menuItemId", "main",
@@ -652,7 +645,6 @@ public class InitDatabase {
                     "createDate", new java.util.Date());
             m_main.addEdge("Own", m_home);
             m_main.addEdge("Own", m_profile);
-            m_main.addEdge("Own", m_about);
             m_main.addEdge("Own", m_admin);
             userOwner.addEdge("Create", m_main);
 

@@ -367,21 +367,4 @@ public abstract class AbstractMenuRule extends AbstractRule implements Rule {
             graph.shutdown();
         }
     }
-    protected String getMenuComponentByHost(OrientGraph graph, String host) throws Exception {
-        String sql = "SELECT FROM MenuComponent";
-        if(host != null) {
-            sql += " WHERE host = ?";
-        } else {
-            sql += " WHERE host is null"; // Host == null will be default menu component
-        }
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        for (Vertex menuComponent : (Iterable<Vertex>) graph.command(new OCommandSQL(sql)).execute(host)) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("menuComponentId", menuComponent.getId().toString());
-            map.put("host", (String)menuComponent.getProperty("host"));
-            map.put("source", (String)menuComponent.getProperty("source"));
-            list.add(map);
-        }
-        return mapper.writeValueAsString(list);
-    }
 }
