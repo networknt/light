@@ -3,6 +3,7 @@ const path = require('path');
 const buildPath = path.resolve(__dirname, 'build');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TransferWebpackPlugin = require('transfer-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const config = {
   //Entry point to the project
@@ -18,10 +19,8 @@ const config = {
       // We need /docs/node_modules to be resolved before /node_modules
       path.resolve(__dirname, 'node_modules'),
       'node_modules',
-      path.resolve(__dirname, '../src'),
-      path.resolve(__dirname, 'src/app/components/raw-code'),
-      path.resolve(__dirname, 'src/app/components/markdown'),
-    ],
+      path.resolve(__dirname, '../src')
+    ]
   },
   devtool: 'source-map',
   //Configuration for server
@@ -60,6 +59,9 @@ const config = {
       {from: 'www/css', to: 'css'},
       {from: 'www/images', to: 'images'},
     ], path.resolve(__dirname, 'src')),
+    new ExtractTextPlugin(path.resolve(__dirname,'/style.css') , {
+      allChunks: true
+    })
   ],
   externals: {
     fs: 'fs', // To remove once https://github.com/benjamn/recast/pull/238 is released
@@ -96,9 +98,17 @@ const config = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader',
+        loaders: [
+          "style-loader",
+          "css-loader",
+          "autoprefixer-loader?browsers=last 2 versions"
+        ]
       },
-    ],
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=" + path.resolve(__dirname, "/src/www/assets/stylesheets"))
+      }
+    ]
   },
   eslint: {
     configFile: '../.eslintrc',
