@@ -533,4 +533,61 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
         return json;
     }
 
+    protected void updReqTransform(Map<String, Object> data) throws Exception {
+        String ruleClass = (String)data.get("ruleClass");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            if(rule != null) {
+                rule.setProperty("reqTransforms", data.get("reqTransforms"));
+                rule.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                if(updateUser != null) {
+                    updateUser.addEdge("Update", rule);
+                }
+                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                if(cache != null) {
+                    cache.remove(ruleClass);
+                }
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void updResTransform(Map<String, Object> data) throws Exception {
+        String ruleClass = (String)data.get("ruleClass");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            graph.begin();
+            Vertex rule = graph.getVertexByKey("Rule.ruleClass", ruleClass);
+            if(rule != null) {
+                rule.setProperty("resTransforms", data.get("resTransforms"));
+                rule.setProperty("updateDate", data.get("updateDate"));
+                Vertex updateUser = graph.getVertexByKey("User.userId", data.get("updateUserId"));
+                if(updateUser != null) {
+                    updateUser.addEdge("Update", rule);
+                }
+                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
+                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
+                if(cache != null) {
+                    cache.remove(ruleClass);
+                }
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+    }
 }

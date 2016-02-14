@@ -30,7 +30,7 @@ public class UpdSubscriberRule extends AbstractRuleRule implements Rule {
         Map eventMap = getEventMap(inputMap);
         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
         inputMap.put("eventMap", eventMap);
-        String error = updateValidation(inputMap, eventMap);
+        String error = updateValidation(inputMap, eventData);
         if(error != null) {
             inputMap.put("result", error);
             return false;
