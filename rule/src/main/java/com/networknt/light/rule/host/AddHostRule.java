@@ -54,6 +54,7 @@ public class AddHostRule extends AbstractHostRule implements Rule {
             eventData.put("hostId", data.get("hostId"));
             eventData.put("base", data.get("base"));
             eventData.put("transferMinSize", data.get("transferMinSize"));
+            eventData.put("supportDevices", data.get("supportDevices"));
             eventData.put("createDate", new java.util.Date());
             eventData.put("createUserId", user.get("userId"));
             return true;

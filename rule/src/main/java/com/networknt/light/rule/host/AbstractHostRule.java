@@ -46,6 +46,8 @@ public abstract class AbstractHostRule extends AbstractRule implements Rule {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("base", data.get("base"));
         map.put("transferMinSize", data.get("transferMinSize"));
+        map.put("supportDevices", data.get("supportDevices"));
+        map.put("hostId", data.get("hostId"));
         hostMap.put((String)data.get("hostId"), map);
         writeHostMap(hostMap);
     }
@@ -55,6 +57,8 @@ public abstract class AbstractHostRule extends AbstractRule implements Rule {
         Map<String, Object> map = (Map<String, Object>)hostMap.get(data.get("hostId"));
         map.put("base", data.get("base"));
         map.put("transferMinSize", data.get("transferMinSize"));
+        map.put("supportDevices", data.get("supportDevices"));
+        map.put("hostId", data.get("hostId"));
         writeHostMap(hostMap);
     }
 

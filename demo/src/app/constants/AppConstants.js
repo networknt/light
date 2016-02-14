@@ -51,6 +51,7 @@ module.exports = {
 
         // Host
         GET_ALL_HOST_RESPONSE: null,
+        DEL_HOST_RESPONSE: null,
 
         // Routes
         REDIRECT: null,

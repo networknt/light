@@ -6,8 +6,8 @@ module.exports = {
         WebAPIUtils.getAllHost();
     },
 
-    delHost: function(host) {
-        WebAPIUtils.delHost(host);
+    delHost: function(hostId) {
+        WebAPIUtils.delHost(hostId);
     }
 
 };

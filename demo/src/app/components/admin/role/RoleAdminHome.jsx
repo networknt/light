@@ -36,7 +36,7 @@ var RoleAdminHome = React.createClass({
     },
 
     _onRoleChange: function() {
-        console.log('RoleAdminHome._onRoleChange', RoleAdminStore.getRoles());
+        //console.log('RoleAdminHome._onRoleChange', RoleAdminStore.getRoles());
         this.setState({
             roles: RoleAdminStore.getRoles()
         });

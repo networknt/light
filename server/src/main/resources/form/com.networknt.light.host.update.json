@@ -11,7 +11,7 @@
   "schema": {
     "type": "object",
     "title": "Host",
-    "required": ["hostId", "base", "transferMinSize"],
+    "required": ["hostId", "base", "transferMinSize", "supportDevices"],
     "properties": {
       "hostId": {
         "title": "Host Id",
@@ -25,12 +25,26 @@
       "transferMinSize": {
         "title": "Transfer Min Size",
         "type": "string"
+      },
+      "supportDevices": {
+        "title": "Support Devices",
+        "type": "array"
       }
     }
   },
   "form": [
     "hostId",
     "base",
-    "transferMinSize"
+    "transferMinSize",
+    {
+      "key": "supportDevices",
+      "type": "rc-select",
+      "multiple": true,
+      "items": [
+        {"value": "Browser", "label": "Browser"},
+        {"value": "Android", "label": "Android"},
+        {"value": "iOS", "label": "iOS"}
+      ]
+    }
   ]
 }

@@ -35,6 +35,17 @@ HostAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
             _hosts = payload.json;
             HostAdminStore.emitChange();
             break;
+
+        case ActionTypes.DEL_HOST_RESPONSE:
+            // remove the deleted one from the list.
+            let hostId = payload.hostId;
+            console.log('HostAdminStore.DEL_HOST_RESPONSE', payload);
+            _hosts.splice(_.findIndex(_hosts, function(host) {
+                return host.hostId === hostId;
+            }), 1);
+            HostAdminStore.emitChange();
+            break;
+
     }
 
     return true;

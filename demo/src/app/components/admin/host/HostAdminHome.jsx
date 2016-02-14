@@ -44,7 +44,7 @@ var HostAdminHome = React.createClass({
     },
 
     _onDeleteHost: function(host) {
-        HostActionCreators.delHost(host);
+        HostActionCreators.delHost(host.hostId);
     },
 
     _onUpdateHost: function(host) {
