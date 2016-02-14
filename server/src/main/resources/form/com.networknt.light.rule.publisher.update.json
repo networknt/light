@@ -6,7 +6,7 @@
     "name" : "updPublisher",
     "readOnly": false,
     "title" : "Update",
-    "success" : "/page/com-networknt-light-v-rule-admin-home"
+    "success" : "/admin/ruleAdmin"
   }],
   "schema": {
     "type": "object",

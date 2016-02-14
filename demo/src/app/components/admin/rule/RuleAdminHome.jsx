@@ -49,14 +49,80 @@ var RuleAdminHome = React.createClass({
         RuleActionCreators.delRule(rule);
     },
 
-    _onUpdateRule: function(rule) {
+    _onUpdateRule: function() {
         let formId = 'com.networknt.light.rule.update';
+        let rule = this.state.rules[this.selectIndex];
+        console.log('rule=', rule);
         FormActionCreators.setFormModel(formId, rule);
         this.context.router.push('/form/' + formId);
     },
 
     _onAddRule: function() {
         let formId = 'com.networknt.light.rule.add';
+        this.context.router.push('/form/' + formId);
+    },
+
+    _onReqTransform: function() {
+        let formId = 'com.networknt.light.rule.req.transform_d';
+        let rule = this.state.rules[this.selectIndex];
+        if(rule.reqTransforms) {
+            rule.reqTransforms.forEach(function(transform) {
+                if(transform.transformData) {
+                    transform.transformData = JSON.stringify(transform.transformData, undefined, 2);
+                }
+            });
+        }
+        FormActionCreators.setFormModel(formId, rule);
+        this.context.router.push('/form/' + formId);
+    },
+
+    _onResTransform: function() {
+        let formId = 'com.networknt.light.rule.res.transform_d';
+        let rule = this.state.rules[this.selectIndex];
+        if(rule.resTransforms) {
+            rule.resTransforms.forEach(function(transform) {
+                if(transform.transformData) {
+                    transform.transformData = JSON.stringify(transform.transformData, undefined, 2);
+                }
+            });
+        }
+        FormActionCreators.setFormModel(formId, rule);
+        this.context.router.push('/form/' + formId);
+    },
+
+    _onPublisher: function() {
+        let formId = 'com.networknt.light.rule.publisher.update';
+        let rule = this.state.rules[this.selectIndex];
+        FormActionCreators.setFormModel(formId, rule);
+        this.context.router.push('/form/' + formId);
+    },
+
+    _onSubscriber: function() {
+        let formId = 'com.networknt.light.rule.subscriber.update';
+        let rule = this.state.rules[this.selectIndex];
+        FormActionCreators.setFormModel(formId, rule);
+        this.context.router.push('/form/' + formId);
+    },
+
+    _onCORS: function() {
+        let formId = 'com.networknt.light.rule.cors.update';
+        let rule = this.state.rules[this.selectIndex];
+        FormActionCreators.setFormModel(formId, rule);
+        this.context.router.push('/form/' + formId);
+    },
+
+    _onETag: function() {
+        let formId = 'com.networknt.light.rule.etag.update';
+        let rule = this.state.rules[this.selectIndex];
+        FormActionCreators.setFormModel(formId, rule);
+        this.context.router.push('/form/' + formId);
+    },
+
+    _onSchema: function() {
+        let formId = 'com.networknt.light.rule.schema.update';
+        let rule = this.state.rules[this.selectIndex];
+        rule.schema = JSON.stringify(rule.schema, undefined, 2);
+        FormActionCreators.setFormModel(formId, rule);
         this.context.router.push('/form/' + formId);
     },
 
@@ -71,6 +137,11 @@ var RuleAdminHome = React.createClass({
         this._throttleTimeout = setTimeout(() => this.setState({filter: filter}), 200);
     },
 
+    _onRowSelection: function(selectedRows) {
+        console.log('RuleAdminHome._onRowSelection', selectedRows);
+        this.selectIndex = selectedRows[0];
+        console.log('selectIndex', this.selectIndex);
+    },
 
     render: function() {
         let content = this.state.rules.map((rule, index) => {
@@ -103,7 +174,8 @@ var RuleAdminHome = React.createClass({
                     height={'1080px'}
                     fixedHeader={true}
                     fixedFooter={true}
-                    selectable={false}
+                    selectable={true}
+                    onRowSelection={this._onRowSelection}
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
@@ -138,7 +210,15 @@ var RuleAdminHome = React.createClass({
                         </TableRow>
                         <TableRow>
                             <TableRowColumn colSpan="5" style={{textAlign: 'left'}}>
-                                <RaisedButton label="Add Rule" primary={true} onTouchTap={this._onAddRule} />
+                                <RaisedButton label="Add" primary={true} onTouchTap={this._onAddRule} />
+                                <RaisedButton label="Update" primary={true} onTouchTap={this._onUpdateRule} />
+                                <RaisedButton label="ReqTransform" primary={true} onTouchTap={this._onReqTransform} />
+                                <RaisedButton label="ResTransform" primary={true} onTouchTap={this._onResTransform} />
+                                <RaisedButton label="Publisher" primary={true} onTouchTap={this._onPublisher} />
+                                <RaisedButton label="Subscriber" primary={true} onTouchTap={this._onSubscriber} />
+                                <RaisedButton label="CORS" primary={true} onTouchTap={this._onCORS} />
+                                <RaisedButton label="ETag" primary={true} onTouchTap={this._onETag} />
+                                <RaisedButton label="Schema" primary={true} onTouchTap={this._onSchema} />
                             </TableRowColumn>
                         </TableRow>
 

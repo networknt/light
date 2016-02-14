@@ -120,6 +120,7 @@ const AppRoutes = (
     <Route path='/admin/ruleAdmin' component={RuleAdminHome} />
     <Route path='/admin/hostAdmin' component={HostAdminHome} />
 
+
     <IndexRoute component={Home}/>
 
   </Route>

@@ -6,7 +6,7 @@
     "name" : "updSubscriber",
     "readOnly": false,
     "title" : "Update",
-    "success" : "/page/com-networknt-light-v-rule-admin-home"
+    "success" : "/admin/ruleAdmin"
   }],
   "schema": {
     "type": "object",
@@ -18,7 +18,7 @@
         "type": "string",
         "readOnly": true
       },
-      "isPublisher": {
+      "isSubscriber": {
         "title": "Subscribe Event?",
         "type": "boolean"
       }

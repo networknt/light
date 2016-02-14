@@ -6,7 +6,7 @@
     "name" : "updSchema",
     "readOnly": false,
     "title" : "Update",
-    "success" : "/page/com-networknt-light-v-rule-admin-home"
+    "success" : "/admin/ruleAdmin"
   }],
   "schema": {
     "type": "object",
@@ -28,11 +28,8 @@
     "ruleClass",
     {
       "key": "schema",
-      "type": "ace",
-      "aceOptions": {
-        "theme": "eclipse",
-        "mode" : "json"
-      }
+      "type": "textarea",
+      "rows": 40
     }
   ]
 }

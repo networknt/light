@@ -144,6 +144,8 @@ public class InitDatabase {
              *
              */
             rule.createProperty("schema",OType.EMBEDDEDMAP); // validation schema
+            rule.createProperty("reqTransforms", OType.EMBEDDEDLIST);
+            rule.createProperty("resTransforms", OType.EMBEDDEDLIST);
             rule.createProperty("createDate", OType.DATETIME);
             rule.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("ruleClass", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Rule"));
@@ -182,25 +184,6 @@ public class InitDatabase {
             page.createProperty("createDate", OType.DATETIME);
             page.createProperty("updateDate", OType.DATETIME);
             graph.createKeyIndex("pageId", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Page"));
-
-            OrientVertexType transformRequest = graph.createVertexType("TransformRequest");
-            transformRequest.createProperty("ruleClass", OType.STRING);
-            transformRequest.createProperty("sequence", OType.INTEGER);
-            transformRequest.createProperty("transformRule", OType.STRING);
-            transformRequest.createProperty("transformData", OType.EMBEDDEDMAP);
-            transformRequest.createProperty("createDate", OType.DATETIME);
-            transformRequest.createProperty("updateDate", OType.DATETIME);
-            transformRequest.createIndex("ReqRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
-
-            OrientVertexType transformResponse = graph.createVertexType("TransformResponse");
-            transformResponse.createProperty("ruleClass", OType.STRING);
-            transformResponse.createProperty("sequence", OType.INTEGER);
-            transformResponse.createProperty("transformRule", OType.STRING);
-            transformResponse.createProperty("transformData", OType.EMBEDDEDMAP);
-            transformResponse.createProperty("createDate", OType.DATETIME);
-            transformResponse.createProperty("updateDate", OType.DATETIME);
-            transformResponse.createIndex("ResRuleSequenceIdx", OClass.INDEX_TYPE.UNIQUE, "ruleClass", "sequence");
-
 
             OrientVertexType access = graph.createVertexType("Access");
             access.createProperty("ruleClass", OType.STRING);
@@ -806,9 +789,6 @@ public class InitDatabase {
                             "    }\n" +
                             "\n" +
                             "    public static Map<String, Object> getRuleByRuleClass(String ruleClass) throws Exception {\n" +
-                            "        String sqlTransformReq = \"SELECT FROM TransformRequest WHERE ruleClass = '\" + ruleClass + \"' ORDER BY sequence\";\n" +
-                            "        String sqlTransformRes = \"SELECT FROM TransformResponse WHERE ruleClass = '\" + ruleClass + \"' ORDER BY sequence\";\n" +
-                            "\n" +
                             "        Map<String, Object> map = null;\n" +
                             "        Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
                             "        ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
@@ -835,35 +815,6 @@ public class InitDatabase {
                             "                        JsonSchema schema = schemaFactory.getJsonSchema(schemaNode);\n" +
                             "                        map.put(\"schema\", schema);\n" +
                             "                    }\n" +
-                            "                    OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sqlTransformReq);\n" +
-                            "                    List<ODocument> docs = graph.getRawGraph().command(query).execute();\n" +
-                            "                    List<Map<String, Object>> reqTransforms = new ArrayList<Map<String, Object>>();\n" +
-                            "                    if(docs != null) {\n" +
-                            "                        for(ODocument doc: docs) {\n" +
-                            "                            Map<String, Object> reqTransform = new HashMap<String, Object> ();\n" +
-                            "                            reqTransform.put(\"sequence\", doc.field(\"sequence\"));\n" +
-                            "                            reqTransform.put(\"transformRule\", doc.field(\"transformRule\"));\n" +
-                            "                            reqTransform.put(\"transformData\", doc.field(\"transformData\"));\n" +
-                            "                            reqTransform.put(\"createUserId\", doc.field(\"createUserId\"));\n" +
-                            "                            reqTransforms.add(reqTransform);\n" +
-                            "                        }\n" +
-                            "                    }\n" +
-                            "                    map.put(\"reqTransforms\", reqTransforms);\n" +
-                            "\n" +
-                            "                    query = new OSQLSynchQuery<>(sqlTransformRes);\n" +
-                            "                    docs = graph.getRawGraph().command(query).execute();\n" +
-                            "                    List<Map<String, Object>> resTransforms = new ArrayList<Map<String, Object>> ();\n" +
-                            "                    if(docs != null) {\n" +
-                            "                        for(ODocument doc: docs) {\n" +
-                            "                            Map<String, Object> resTransform = new HashMap<String, Object> ();\n" +
-                            "                            resTransform.put(\"sequence\", doc.field(\"sequence\"));\n" +
-                            "                            resTransform.put(\"transformRule\", doc.field(\"transformRule\"));\n" +
-                            "                            resTransform.put(\"transformData\", doc.field(\"transformData\"));\n" +
-                            "                            resTransform.put(\"createUserId\", doc.field(\"createUserId\"));\n" +
-                            "                            resTransforms.add(resTransform);\n" +
-                            "                        }\n" +
-                            "                    }\n" +
-                            "                    map.put(\"resTransforms\", resTransforms);\n" +
                             "\n" +
                             "                    logger.debug(\"map = \" + map);\n" +
                             "                    cache.put(ruleClass, map);\n" +
@@ -1515,6 +1466,63 @@ public class InitDatabase {
                             "        return json;\n" +
                             "    }\n" +
                             "\n" +
+                            "    protected void updReqTransform(Map<String, Object> data) throws Exception {\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "            if(rule != null) {\n" +
+                            "                rule.setProperty(\"reqTransforms\", data.get(\"reqTransforms\"));\n" +
+                            "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
+                            "                Vertex updateUser = graph.getVertexByKey(\"User.userId\", data.get(\"updateUserId\"));\n" +
+                            "                if(updateUser != null) {\n" +
+                            "                    updateUser.addEdge(\"Update\", rule);\n" +
+                            "                }\n" +
+                            "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
+                            "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
+                            "                if(cache != null) {\n" +
+                            "                    cache.remove(ruleClass);\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "            graph.commit();\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    protected void updResTransform(Map<String, Object> data) throws Exception {\n" +
+                            "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
+                            "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
+                            "        try {\n" +
+                            "            graph.begin();\n" +
+                            "            Vertex rule = graph.getVertexByKey(\"Rule.ruleClass\", ruleClass);\n" +
+                            "            if(rule != null) {\n" +
+                            "                rule.setProperty(\"resTransforms\", data.get(\"resTransforms\"));\n" +
+                            "                rule.setProperty(\"updateDate\", data.get(\"updateDate\"));\n" +
+                            "                Vertex updateUser = graph.getVertexByKey(\"User.userId\", data.get(\"updateUserId\"));\n" +
+                            "                if(updateUser != null) {\n" +
+                            "                    updateUser.addEdge(\"Update\", rule);\n" +
+                            "                }\n" +
+                            "                Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage(\"ruleMap\");\n" +
+                            "                ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get(\"cache\");\n" +
+                            "                if(cache != null) {\n" +
+                            "                    cache.remove(ruleClass);\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "            graph.commit();\n" +
+                            "        } catch (Exception e) {\n" +
+                            "            logger.error(\"Exception:\", e);\n" +
+                            "            graph.rollback();\n" +
+                            "            throw e;\n" +
+                            "        } finally {\n" +
+                            "            graph.shutdown();\n" +
+                            "        }\n" +
+                            "    }\n" +
                             "}\n",
                     "createDate", new java.util.Date());
                     userOwner.addEdge("Create", abstractRuleRule);

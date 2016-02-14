@@ -1,1 +1,70 @@
-
+{
+  "formId": "com.networknt.light.rule.req.transform_d",
+  "version": 1,
+  "action": [
+    {
+      "category": "rule",
+      "name": "updReqTransform",
+      "readOnly": false,
+      "title": "Submit",
+      "success": "/admin/ruleAdmin"
+    }
+  ],
+  "schema": {
+    "type": "object",
+    "title": "Update Request Transform",
+    "required": ["ruleClass"],
+    "properties": {
+      "ruleClass": {
+        "title": "Rule Class",
+        "type": "string",
+        "readOnly": true
+      },
+      "reqTransforms": {
+        "type": "array",
+        "maxItems": 10,
+        "items": {
+          "type": "object",
+          "properties": {
+            "transformRule": {
+              "title": "Transform Rule",
+              "type": "string"
+            },
+            "transformData": {
+              "title": "Transform Data",
+              "type": "string"
+            }
+          },
+          "required": ["transformRule"]
+        }
+      }
+    }
+  },
+  "form": [
+    "ruleClass",
+    {
+      "key": "reqTransforms",
+      "add": "New",
+      "items": [
+        {
+          "key": "reqTransforms[].transformRule",
+          "type": "rc-select",
+          "items": [
+            {
+              "label": "dynamic",
+              "value": {
+                "category": "rule",
+                "name": "getRuleDropdown"
+              }
+            }
+          ]
+        },
+        {
+          "key": "reqTransforms[].transformData",
+          "type": "textarea",
+          "rows": 10
+        }
+      ]
+    }
+  ]
+}
