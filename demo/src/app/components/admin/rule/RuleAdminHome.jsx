@@ -24,7 +24,8 @@ var RuleAdminHome = React.createClass({
 
     getInitialState: function() {
         return {
-            rules: []
+            rules: [],
+            filter: {}
         };
     },
 
@@ -44,7 +45,7 @@ var RuleAdminHome = React.createClass({
     },
 
     _onDeleteRule: function(rule) {
-        console.log("_onDeleteRule", rule);
+        //console.log("_onDeleteRule", rule);
         RuleActionCreators.delRule(rule);
     },
 
@@ -59,7 +60,43 @@ var RuleAdminHome = React.createClass({
         this.context.router.push('/form/' + formId);
     },
 
+    _onFilterChange: function (event) {
+        let filter = {
+            ruleClass: this.refs.ruleClass.value,
+            createUserId: this.refs.createUserId.value
+        };
+        if(this._throttleTimeout) {
+            clearTimeout(this._throttleTimeout);
+        }
+        this._throttleTimeout = setTimeout(() => this.setState({filter: filter}), 200);
+    },
+
+
     render: function() {
+        let content = this.state.rules.map((rule, index) => {
+            let matched = true;
+            for(var key in this.state.filter) {
+                if(this.state.filter.hasOwnProperty(key) && this.state.filter[key].length > 0) {
+                    let regex = new RegExp(this.state.filter[key], 'i');
+                    if(rule[key].search(regex) == -1) {
+                        matched = false;
+                        break;
+                    }
+                }
+            }
+            if(matched) {
+                let boundDelete = this._onDeleteRule.bind(this, rule);
+                let boundUpdate = this._onUpdateRule.bind(this, rule);
+                return (
+                    <TableRow key={index}>
+                        <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
+                        <TableRowColumn colSpan="3"><a onClick={boundUpdate}>{rule.ruleClass}</a></TableRowColumn>
+                        <TableRowColumn>{rule.createUserId}</TableRowColumn>
+                    </TableRow>
+                );
+            }
+        });
+
         return (
             <span>
                 <Table
@@ -70,7 +107,7 @@ var RuleAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="10" tooltip='Rules' style={{textAlign: 'center'}}>
+                            <TableHeaderColumn colSpan="5" tooltip='Rules' style={{textAlign: 'center'}}>
                                 Rules
                             </TableHeaderColumn>
                         </TableRow>
@@ -78,31 +115,19 @@ var RuleAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Rule Class' colSpan="3">Rule Class</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
+                        <TableRow>
+                            <TableHeaderColumn></TableHeaderColumn>
+                            <TableHeaderColumn colSpan="3"><input type="text" ref="ruleClass" onChange={this._onFilterChange}/></TableHeaderColumn>
+                            <TableHeaderColumn><input type="text" ref="createUserId" onChange={this._onFilterChange}/></TableHeaderColumn>
+                        </TableRow>
+
                     </TableHeader>
                     <TableBody
                         deselectOnClickaway={false}
                         showRowHover={true}
                         stripedRows={true}>
-
-                        {this.state.rules.map((rule, index) => {
-                            let boundDelete = this._onDeleteRule.bind(this, rule);
-                            let boundUpdate = this._onUpdateRule.bind(this, rule);
-                            return (
-                                <TableRow key={index}>
-                                    <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn colSpan="3"><a onClick={boundUpdate}>{rule.ruleClass}</a></TableRowColumn>
-                                    <TableRowColumn>{rule.createUserId}</TableRowColumn>
-                                    <TableRowColumn>{rule.createDate}</TableRowColumn>
-                                    <TableRowColumn>{rule.updateUserId}</TableRowColumn>
-                                    <TableRowColumn>{rule.updateDate}</TableRowColumn>
-                                </TableRow>
-                            );
-                        })}
-
+                        {content}
                     </TableBody>
 
                     <TableFooter>
@@ -110,12 +135,9 @@ var RuleAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Rule Class' colSpan="3">Rule Class</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create UserId'>Create UserId</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update UserId'>Update UserId</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                         <TableRow>
-                            <TableRowColumn colSpan="10" style={{textAlign: 'left'}}>
+                            <TableRowColumn colSpan="5" style={{textAlign: 'left'}}>
                                 <RaisedButton label="Add Rule" primary={true} onTouchTap={this._onAddRule} />
                             </TableRowColumn>
                         </TableRow>
