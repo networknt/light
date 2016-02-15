@@ -39,7 +39,7 @@ BlogAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
         case ActionTypes.GET_BLOG_RESPONSE:
             error = payload.error;
-            console.log('error', error);
+            //console.log('error', error);
             if(!error) {
                 _blogs = payload.json;
             }

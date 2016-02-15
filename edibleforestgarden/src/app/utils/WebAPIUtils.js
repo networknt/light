@@ -223,6 +223,50 @@ module.exports = {
         });
     },
 
+    getAllHost: function() {
+        let getAllHost = {
+            category : 'host',
+            name : 'getAllHost',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(getAllHost),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.getAllHostResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delHost: function(hostId) {
+        let delHost = {
+            category : 'host',
+            name : 'delHost',
+            readOnly: false,
+            data: {
+                hostId: hostId
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(delHost),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delHostResponse(data);
+        }).fail(function(error) {
+            if(error.status === 200) {
+                ServerActionCreators.delHostResponse(hostId);
+            }
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getBlogTree: function() {
         let getBlogTree = {
             category: 'blog',

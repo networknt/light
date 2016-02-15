@@ -1,6 +1,3 @@
-/**
- * Created by steve on 7/31/2015.
- */
 var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var EventEmitter = require('events').EventEmitter;
@@ -9,10 +6,9 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _roles = [];
 var _hosts = [];
 
-var RoleAdminStore = assign({}, EventEmitter.prototype, {
+var HostAdminStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -26,36 +22,33 @@ var RoleAdminStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getRoles: function() {
-        return _roles;
-    },
-
     getHosts: function() {
         return _hosts;
     }
 
 });
 
-RoleAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
+HostAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.GET_ROLE_RESPONSE:
-            _roles = payload.json.roles;
-            _hosts = payload.json.hosts;
-            RoleAdminStore.emitChange();
+        case ActionTypes.GET_ALL_HOST_RESPONSE:
+            _hosts = payload.json;
+            HostAdminStore.emitChange();
             break;
-        case ActionTypes.DEL_ROLE_RESPONSE:
+
+        case ActionTypes.DEL_HOST_RESPONSE:
             // remove the deleted one from the list.
-            let rid = payload.rid;
-            //console.log('RoleAdminStore.DEL_ROLE_RESPONSE', rid, _roles);
-            _roles.splice(_.findIndex(_roles, function(role) {
-                return role['@rid'] === rid;
+            let hostId = payload.hostId;
+            console.log('HostAdminStore.DEL_HOST_RESPONSE', payload);
+            _hosts.splice(_.findIndex(_hosts, function(host) {
+                return host.hostId === hostId;
             }), 1);
-            RoleAdminStore.emitChange();
+            HostAdminStore.emitChange();
             break;
+
     }
 
     return true;
 });
 
-module.exports = RoleAdminStore;
+module.exports = HostAdminStore;

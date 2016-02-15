@@ -16,8 +16,8 @@
 var keyMirror = require('fbjs/lib/keyMirror');
 
 module.exports = {
-    APIRoot:  '/api/rs',
     ClientId: 'edibleforestgarden.ca@Browser',
+    Site: 'Edible Forest Garden',
 
     ActionTypes: keyMirror({
         // Server

@@ -3,6 +3,7 @@
  */
 var React = require('react');
 var OrderStore = require('../../stores/OrderStore');
+import AppConstants from '../../constants/AppConstants';
 
 var CheckoutDone = React.createClass({
 
@@ -10,7 +11,7 @@ var CheckoutDone = React.createClass({
 
         return (
             <div>
-                Thanks for ordering from Edible Forest Garden. Your order number is {OrderStore.getOrderId()}.
+                Thanks for ordering from {AppConstants.Site}. Your order number is {OrderStore.getOrderId()}.
             </div>
         )
     }

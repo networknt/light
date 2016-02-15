@@ -44,7 +44,6 @@ module.exports = {
     },
 
     delRoleResponse: function(rid) {
-        console.log('ServerActionCreators.delRoleResponse', rid);
         AppDispatcher.dispatch({
             type: ActionTypes.DEL_ROLE_RESPONSE,
             rid: rid
@@ -341,6 +340,21 @@ module.exports = {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_RULE_RESPONSE,
             json: json
+        });
+    },
+
+    getAllHostResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_HOST_RESPONSE,
+            json: json
+        });
+    },
+
+    delHostResponse: function(hostId) {
+        console.log('ServerActionCreators.delHostResponse', hostId);
+        AppDispatcher.dispatch({
+            type: ActionTypes.DEL_HOST_RESPONSE,
+            hostId: hostId
         });
     }
 

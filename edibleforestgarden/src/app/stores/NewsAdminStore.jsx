@@ -39,7 +39,7 @@ NewsAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
         case ActionTypes.GET_NEWS_RESPONSE:
             error = payload.error;
-            console.log('error', error);
+            //console.log('error', error);
             if(!error) {
                 _news = payload.json;
             }

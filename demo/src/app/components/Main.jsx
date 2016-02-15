@@ -28,6 +28,7 @@ import AuthActionCreators from '../actions/AuthActionCreators';
 import MenuActionCreators from '../actions/MenuActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import CommonUtils from '../utils/CommonUtils';
+import AppConstants from '../constants/AppConstants';
 
 const defaultPageNo = 1;
 const defaultPageSize = 10;
@@ -405,7 +406,7 @@ const Main = React.createClass({
                     {leftNavContent}
                 </LeftNav>
                 <header>
-                    <AppBar title='Edible Forest Garden' onTitleTouchTap={this._onTitleTouchTap} onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0} className="mainAppBar"/>
+                    <AppBar title={AppConstants.Site} onTitleTouchTap={this._onTitleTouchTap} onLeftIconButtonTouchTap={this.handleLeftNavToggle} iconElementRight={rightMenu} zDepth={0} className="mainAppBar"/>
                 </header>
                 <Snackbar open={this.state.snackbarOpen} message={this.state.snackbarMessage} action="Close" autoHideDuration={3000} onActionTouchTap={this.handleSnackbarTouchTap} onRequestClose={this.handleSnackbarClose} />
                 <span className="mainRoot">
