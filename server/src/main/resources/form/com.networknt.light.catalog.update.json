@@ -7,7 +7,7 @@
       "name": "updCatalog",
       "readOnly": false,
       "title": "Submit",
-      "success": "/page/com-networknt-light-v-catalog-admin-home"
+      "success": "/admin/catalogAdmin"
     }
   ],
   "schema": {
@@ -20,7 +20,8 @@
     "properties": {
       "categoryId": {
         "title": "Catalog Id",
-        "type": "string"
+        "type": "string",
+        "readOnly": true
       },
       "description": {
         "title": "Description",

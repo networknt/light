@@ -12,6 +12,10 @@
         "title": "Download Events",
         "required": ["createDateFrom"],
         "properties": {
+            "category": {
+                "title": "Event Category",
+                "type": "string"
+            },
             "name": {
                 "title": "Event Name",
                 "type": "string"

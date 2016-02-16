@@ -78,11 +78,13 @@
     "originalUrl",
     {
       "key": "summary",
-      "type": "textarea"
+      "type": "textarea",
+      "rows": 3
     },
     {
       "key": "content",
-      "type": "textarea"
+      "type": "textarea",
+      "rows": 10
     },
     {
       "key": "tags",

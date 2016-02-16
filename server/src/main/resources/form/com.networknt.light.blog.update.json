@@ -7,7 +7,7 @@
       "name": "updBlog",
       "readOnly": false,
       "title": "Submit",
-      "success": "/page/com-networknt-light-v-blog-admin-home"
+      "success": "/admin/blogAdmin"
     }
   ],
   "schema": {
@@ -20,7 +20,8 @@
     "properties": {
       "categoryId": {
         "title": "Blog Id",
-        "type": "string"
+        "type": "string",
+        "readOnly": true
       },
       "description": {
         "title": "Description",

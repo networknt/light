@@ -84,6 +84,30 @@
     {
       "description": "This file contains edibleforestgarden site catalog product data for commerce",
       "location": "event/edibleforestgarden/catalog_product.json"
+    },
+    {
+      "description": "This file contains networknt site blog category data for cms",
+      "location": "event/networknt/blog.json"
+    },
+    {
+      "description": "This file contains networknt site blog post data for cms",
+      "location": "event/networknt/blog_post.json"
+    },
+    {
+      "description": "This file contains networknt site news category data for cms",
+      "location": "event/networknt/news.json"
+    },
+    {
+      "description": "This file contains networknt site news post data for cms",
+      "location": "event/networknt/news_post.json"
+    },
+    {
+      "description": "This file contains networknt site catalog data for commerce",
+      "location": "event/networknt/catalog.json"
+    },
+    {
+      "description": "This file contains networknt site catalog product data for commerce",
+      "location": "event/networknt/catalog_product.json"
     }
   ]
 }
