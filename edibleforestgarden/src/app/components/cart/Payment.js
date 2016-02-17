@@ -78,6 +78,7 @@ var Payment = React.createClass({
 
         return (
             <div>
+                <div>The following is embedded braintree sandbox. User credit card 4111111111111111 or paypal to test.</div>
                 {body}
             </div>
         )
