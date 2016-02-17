@@ -22,6 +22,9 @@ import IconButton from 'material-ui/lib/icon-button';
 import Dialog from 'material-ui/lib/dialog';
 import Badge from 'material-ui/lib/badge';
 import NotificationsIcon from 'material-ui/lib/svg-icons/social/notifications';
+import FormActionCreators from '../../actions/FormActionCreators';
+import FormStore from '../../stores/FormStore';
+import CircularProgress from 'material-ui/lib/circular-progress';
 
 
 function getStateFromStores() {
@@ -36,6 +39,7 @@ function getStateFromStores() {
     };
 }
 
+const id = 'com.networknt.light.user.address';
 var CheckoutButton = React.createClass({
 
     contextTypes: {
@@ -89,22 +93,25 @@ var CheckoutButton = React.createClass({
 
     onUpdateShippingAddress: function() {
         var data = {};
-
         data.shippingAddress = this.state.shippingAddress;
         data.cartTotal = this.state.cartTotal;
         data.cartItems = this.state.cartItems;
-
-        AddressActionCreators.updateShippingAddress(data);
-        this.setState({
-            screen: 'shippingTax',
-            title: 'Shipping and Tax'
-        })
+        // validate the address here.
+        let validationResult = utils.validateBySchema(this.state.schema, this.state.shippingAddress);
+        if(!validationResult.valid) {
+            console.log('error = ', validationResult.error.message);
+            this.setState({error: validationResult.error.message});
+        } else {
+            AddressActionCreators.updateShippingAddress(data);
+            this.setState({
+                screen: 'shippingTax',
+                title: 'Shipping and Tax'
+            })
+        }
     },
 
     onShippingAddressChange: function(key, val) {
-        //console.log('ExamplePage.onModelChange:', key);
-        //console.log('ExamplePage.onModelChange:', val);
-        this.setState({shippingAddress: utils.selectOrSet(key, this.state.shippingAddress, val)});
+        utils.selectOrSet(key, this.state.shippingAddress, val);
     },
 
     onPayment: function() {
@@ -153,14 +160,24 @@ var CheckoutButton = React.createClass({
         })
     },
 
+    _onFormStoreChange: function() {
+        this.setState({
+            schema: FormStore.getForm(id).schema,
+            form: FormStore.getForm(id).form
+        });
+    },
+
     componentDidMount: function() {
         CartStore.addChangeListener(this._onCartStoreChange);
         AuthStore.addChangeListener(this._onAuthStoreChange);
+        FormStore.addChangeListener(this._onFormStoreChange);
+        FormActionCreators.getForm(id);
     },
 
     componentWillUnmount: function() {
         CartStore.removeChangeListener(this._onCartStoreChange);
         AuthStore.removeChangeListener(this._onAuthStoreChange);
+        FormStore.removeChangeListener(this._onFormStoreChange);
     },
 
 
@@ -169,11 +186,20 @@ var CheckoutButton = React.createClass({
         var contents;
 
         if(this.state.screen === 'cart') {
-            contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />
-            actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onShipping} />)
+            contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
+            actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onShipping} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />)
         } else if (this.state.screen === 'shippingAddress') {
-            contents =  <ShippingAddress shippingAddress={this.state.shippingAddress} onShippingAddressChange={this.onShippingAddressChange} />
+            if(this.state.schema) {
+                contents =
+                    (<div>
+                        <pre>{this.state.error}</pre>
+                        <ShippingAddress shippingAddress={this.state.shippingAddress} schema={this.state.schema} form={this.state.form} onShippingAddressChange={this.onShippingAddressChange} />
+                        <pre>{this.state.error}</pre>
+                    </div>);
+            } else {
+                contents = <CircularProgress mode="indeterminate"/>;
+            }
             actions.length = 0;
             actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateShippingAddress} />);
             if(AuthStore.getShippingAddress()) {

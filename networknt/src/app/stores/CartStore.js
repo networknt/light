@@ -162,7 +162,6 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
             //console.log('shippingAddress update res ', payload.json);
             _shipping = payload.json.shipping;
             _taxes = payload.json.taxes;
-
             CartStore.emitChange();
             break;
 

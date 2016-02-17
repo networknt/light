@@ -239,19 +239,17 @@ module.exports = {
         });
     },
 
-    updateShippingAddressResponse: function(json, error) {
+    updateShippingAddressResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.UPDATE_SHIPPING_ADDRESS_RESPONSE,
-            json: json,
-            error: error
+            json: json
         });
     },
 
-    confirmShippingAddressResponse: function(json, error) {
+    confirmShippingAddressResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.CONFIRM_SHIPPING_ADDRESS_RESPONSE,
-            json: json,
-            error: error
+            json: json
         });
     },
 

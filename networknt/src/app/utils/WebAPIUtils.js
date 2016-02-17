@@ -745,12 +745,12 @@ module.exports = {
         });
     },
 
-    updateShippingAddress: function(data) {
+    updateShippingAddress: function(address) {
         var updAddress = {
             category: 'shipping',
             name: 'updAddress',
             readOnly: false,
-            data: data
+            data: address
         };
         $.ajax({
             type: 'POST',
@@ -759,20 +759,20 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            //console.log('updShippingAddress done', data);
-            ServerActionCreators.updateShippingAddressResponse(data, null);
+            data.shippingAddress = address;
+            console.log('updShippingAddress done', data);
+            ServerActionCreators.updateShippingAddressResponse(data);
         }).fail(function(error) {
-            //console.log('updShippingAddress error', error);
-            ServerActionCreators.updateShippingAddressResponse(null, error);
-        });
+            console.log('updShippingAddress error', error);
+            ErrorActionCreators.serverErrorResponse(error);        });
     },
 
-    confirmShippingAddress: function(data) {
+    confirmShippingAddress: function(address) {
         var confirmAddress = {
             category: 'shipping',
             name: 'cnfAddress',
             readOnly: true,
-            data: data
+            data: address
         };
         $.ajax({
             type: 'POST',
@@ -781,9 +781,10 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            ServerActionCreators.confirmShippingAddressResponse(data, null);
+            data.shippingAddress = address;
+            ServerActionCreators.confirmShippingAddressResponse(data);
         }).fail(function(error) {
-            ServerActionCreators.confirmShippingAddressResponse(null, error);
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 

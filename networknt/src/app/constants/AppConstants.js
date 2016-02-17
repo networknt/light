@@ -109,7 +109,6 @@ module.exports = {
         GET_ALL_USER_RESPONSE: null,
 
         // Form
-        GET_FORM: null,
         RECEIVE_FORM: null,
         SUBMIT_FORM_RESPONSE: null,
         SET_FORM_MODEL: null,
@@ -120,9 +119,7 @@ module.exports = {
         GET_PAGE_RESPONSE: null,
 
         // Address
-        UPDATE_SHIPPING_ADDRESS: null,
         UPDATE_SHIPPING_ADDRESS_RESPONSE: null,
-        CONFIRM_SHIPPING_ADDRESS: null,
         CONFIRM_SHIPPING_ADDRESS_RESPONSE: null,
 
         // Payment
