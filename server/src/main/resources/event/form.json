@@ -5419,5 +5419,2947 @@
     "createDate": "2016-02-14T15:53:26.025",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:12",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10013,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.news.update",
+      "schema": {
+        "type": "object",
+        "title": "News",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "News Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "out_Own",
+          "type": "rc-select",
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "news",
+          "name": "updNews",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/admin/newsAdmin"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.529"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.529",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:13",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10014,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.db.downloadEvent",
+      "schema": {
+        "type": "object",
+        "title": "Download Events",
+        "required": [
+          "createDateFrom"
+        ],
+        "properties": {
+          "category": {
+            "title": "Event Category",
+            "type": "string"
+          },
+          "name": {
+            "title": "Event Name",
+            "type": "string"
+          },
+          "createDateFrom": {
+            "title": "Event From Date",
+            "type": "date"
+          },
+          "createDateTo": {
+            "title": "Event To Date",
+            "type": "date"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "*"
+      ],
+      "action": [
+        {
+          "category": "db",
+          "name": "downloadEvent",
+          "readOnly": true,
+          "title": "Download Events"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.540"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.540",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:14",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10015,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.update",
+      "schema": {
+        "type": "object",
+        "title": "Blog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Blog Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "out_Own",
+          "type": "rc-select",
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "updBlog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/admin/blogAdmin"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.583"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.583",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:15",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10016,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.news.add",
+      "schema": {
+        "type": "object",
+        "title": "News",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "News Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "out_Own",
+          "type": "rc-select",
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "news",
+          "name": "addNews",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/admin/newsAdmin"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.615"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.615",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:16",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10017,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.post.update",
+      "schema": {
+        "type": "object",
+        "title": "Blog Post Update",
+        "required": [
+          "entityId",
+          "title",
+          "summary",
+          "content"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string"
+          },
+          "entityId": {
+            "title": "Post Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "originalAuthor": {
+            "title": "Original Author",
+            "type": "string"
+          },
+          "originalSite": {
+            "title": "Original Site",
+            "type": "string"
+          },
+          "originalUrl": {
+            "title": "Original Url",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "parentRid",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        "entityId",
+        "title",
+        "originalAuthor",
+        "originalSite",
+        "originalUrl",
+        {
+          "key": "summary",
+          "type": "textarea",
+          "rows": 3
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "updPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/blog"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.643"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.643",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:17",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10018,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.product.add",
+      "schema": {
+        "type": "object",
+        "title": "Catalog Product",
+        "required": [
+          "parentRid",
+          "name",
+          "description",
+          "content",
+          "variants"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          },
+          "variants": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "title": "Sku",
+                  "type": "string"
+                },
+                "type": {
+                  "title": "Type",
+                  "type": "string"
+                },
+                "price": {
+                  "title": "Price",
+                  "type": "number"
+                },
+                "image": {
+                  "title": "Image",
+                  "type": "string"
+                },
+                "inventory": {
+                  "title": "Inventory",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "type",
+                "price"
+              ]
+            }
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "parentRid",
+        "name",
+        {
+          "key": "description",
+          "type": "textarea",
+          "rows": 5
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 15
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "variants",
+          "add": "New",
+          "style": {
+            "add": "btn-success"
+          },
+          "items": [
+            "variants[].sku",
+            "variants[].type",
+            "variants[].price",
+            "variants[].image",
+            "variants[].inventory"
+          ]
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "addProduct",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/catalog"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.707"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.707",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:18",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10019,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.news.post.update",
+      "schema": {
+        "type": "object",
+        "title": "News Post Update",
+        "required": [
+          "entityId",
+          "title",
+          "summary",
+          "content"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string"
+          },
+          "entityId": {
+            "title": "Post Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "originalAuthor": {
+            "title": "Original Author",
+            "type": "string"
+          },
+          "originalSite": {
+            "title": "Original Site",
+            "type": "string"
+          },
+          "originalUrl": {
+            "title": "Original Url",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "parentRid",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        "entityId",
+        "title",
+        "originalAuthor",
+        "originalSite",
+        "originalUrl",
+        {
+          "key": "summary",
+          "type": "textarea",
+          "rows": 3
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "news",
+          "name": "updPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/news"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.767"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.767",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:19",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10020,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.product.update",
+      "schema": {
+        "type": "object",
+        "title": "Catalog Product Update",
+        "required": [
+          "entityId",
+          "name",
+          "description",
+          "content",
+          "variants"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string"
+          },
+          "entityId": {
+            "title": "Product Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          },
+          "variants": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "title": "Sku",
+                  "type": "string"
+                },
+                "type": {
+                  "title": "Type",
+                  "type": "string"
+                },
+                "price": {
+                  "title": "Price",
+                  "type": "number"
+                },
+                "image": {
+                  "title": "Image",
+                  "type": "string"
+                },
+                "inventory": {
+                  "title": "Inventory",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "type",
+                "price"
+              ]
+            }
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "parentRid",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        "entityId",
+        "name",
+        {
+          "key": "description",
+          "type": "textarea",
+          "rows": 5
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 15
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "variants",
+          "add": "New",
+          "style": {
+            "add": "btn-success"
+          },
+          "items": [
+            "variants[].sku",
+            "variants[].type",
+            "variants[].price",
+            "variants[].image",
+            "variants[].inventory"
+          ]
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "updProduct",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/catalog"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.822"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.822",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:20",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10021,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.post.add",
+      "schema": {
+        "type": "object",
+        "title": "Blog Post",
+        "required": [
+          "parentRid",
+          "title",
+          "summary",
+          "content"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "originalAuthor": {
+            "title": "Original Author",
+            "type": "string"
+          },
+          "originalSite": {
+            "title": "Original Site",
+            "type": "string"
+          },
+          "originalUrl": {
+            "title": "Original Url",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "parentRid",
+        "title",
+        "originalAuthor",
+        "originalSite",
+        "originalUrl",
+        {
+          "key": "summary",
+          "type": "textarea",
+          "rows": 3
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "addPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/blog"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.857"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.857",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:21",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10022,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.update",
+      "schema": {
+        "type": "object",
+        "title": "Catalog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Catalog Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "out_Own",
+          "type": "rc-select",
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "updCatalog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/admin/catalogAdmin"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.910"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.910",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:22",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10023,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.add",
+      "schema": {
+        "type": "object",
+        "title": "Blog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Blog Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "out_Own",
+          "type": "rc-select",
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "addBlog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/admin/blogAdmin"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:06.964"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:06.964",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:23",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10024,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.class.feed",
+      "schema": {
+        "type": "object",
+        "required": [
+          "environment",
+          "messageNumber",
+          "hppInd",
+          "centreCode"
+        ],
+        "title": "class",
+        "properties": {
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "enum": [
+              "LOCAL",
+              "IDT5N",
+              "SIT1N",
+              "SIT2N",
+              "SIT3N",
+              "UAT1N",
+              "UAT2N"
+            ]
+          },
+          "requestId": {
+            "type": "number",
+            "title": "Request Id",
+            "maxLength": 10
+          },
+          "messageNumber": {
+            "type": "string",
+            "title": "Message Number",
+            "enum": [
+              "E0500",
+              "E0450",
+              "E0220",
+              "E0130",
+              "E0110",
+              "E0014",
+              "E0012",
+              "E0010",
+              "A0120",
+              "A0090"
+            ]
+          },
+          "loanNumber": {
+            "type": "string",
+            "title": "Loan Number",
+            "maxLength": 10
+          },
+          "pid": {
+            "type": "string",
+            "title": "PID",
+            "enum": [
+              "263",
+              "701",
+              "702",
+              "703",
+              "704",
+              "705",
+              "706",
+              "798",
+              "799",
+              "233",
+              "237",
+              "262",
+              "265",
+              "232",
+              "257",
+              "248",
+              "238",
+              "900",
+              "910",
+              "999",
+              "259",
+              "131",
+              "600",
+              "601",
+              "602",
+              "603",
+              "697",
+              "698",
+              "699",
+              "141",
+              "142",
+              "152",
+              "232",
+              "257",
+              "800",
+              "899"
+            ]
+          },
+          "hppInd": {
+            "type": "string",
+            "title": "HPP Indicator",
+            "enum": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ]
+          },
+          "loanCategroy": {
+            "title": "Loan Category",
+            "type": "string",
+            "enum": [
+              "CMHC",
+              "COL1",
+              "COL2",
+              "COL3",
+              "ANEW",
+              "ANUT",
+              "AUSE",
+              "AUUT",
+              "MCYC",
+              "MOHO",
+              "TCCN",
+              "TCCU",
+              "GPIN",
+              "GPIV"
+            ],
+            "default": "CHMC"
+          },
+          "debtConsolidation": {
+            "title": "Debt Consolidation",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "incomeVerification": {
+            "title": "Income Verification",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "liabilityType": {
+            "title": "Liability Type",
+            "type": "string",
+            "enum": [
+              "701",
+              "700",
+              "602",
+              "603",
+              "601",
+              "600",
+              "302",
+              "301",
+              "300",
+              "BSC",
+              "CLN",
+              "PLC",
+              "MTG",
+              "REN",
+              "DC0"
+            ]
+          },
+          "plcPurposeCode": {
+            "title": "Plc PurposeCode",
+            "type": "string",
+            "enum": [
+              "000",
+              "001",
+              "002",
+              "003",
+              "004",
+              "005",
+              "006",
+              "009"
+            ]
+          },
+          "fullLiabilityIndicator": {
+            "title": "Full Liability Indicator",
+            "type": "string",
+            "enum": [
+              "1",
+              "4"
+            ]
+          },
+          "solicitorName": {
+            "title": "Solicitor Name",
+            "type": "string",
+            "maxLength": 25
+          },
+          "propertyProvCode": {
+            "title": "Property Prov Code",
+            "type": "string",
+            "enum": [
+              "QC",
+              "NS",
+              "NU",
+              "MB",
+              "BC",
+              "PE",
+              "NT",
+              "YT",
+              "ON",
+              "SK",
+              "AB",
+              "NB"
+            ],
+            "default": "ON"
+          },
+          "centreCode": {
+            "title": "Centre Code",
+            "type": "string",
+            "enum": [
+              "TO",
+              "VA",
+              "CA",
+              "TB",
+              "REBO",
+              "Bank@Work",
+              "WP",
+              "HL",
+              "Training",
+              "MT",
+              "RISK"
+            ],
+            "default": "TO"
+          },
+          "processingDate": {
+            "title": "Processing Date",
+            "type": "string",
+            "format": "date"
+          },
+          "reportDate": {
+            "title": "Report Date",
+            "type": "string",
+            "format": "date"
+          },
+          "customerName": {
+            "title": "Customer Name",
+            "type": "string",
+            "maxLength": 250,
+            "default": "New Injector"
+          },
+          "postNumber": {
+            "title": "Post Number",
+            "type": "string",
+            "maxLength": 3,
+            "default": "123"
+          },
+          "transit": {
+            "title": "Transit",
+            "type": "string",
+            "maxLength": 5,
+            "default": "00001"
+          },
+          "cid": {
+            "title": "CID",
+            "type": "string",
+            "maxLength": 3,
+            "default": "100"
+          },
+          "fundsDisbursed": {
+            "title": "Funds Disbursed",
+            "type": "number",
+            "default": 1000
+          },
+          "relationship": {
+            "title": "Relationship",
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "default": "1"
+          },
+          "marketingSourceCode": {
+            "title": "Marketing Source Code",
+            "type": "string",
+            "enum": [
+              "DWPV",
+              "PBCY",
+              "BFIN",
+              "BFCE",
+              "BDLG",
+              "OFFN",
+              "BLAK",
+              "EQLH",
+              "OFFB",
+              "NEW2",
+              "FCBC",
+              "JJ99",
+              "AHBL",
+              "CASE",
+              "NRES",
+              "BTOB",
+              "GENL",
+              "ABL1",
+              "RP22",
+              "RP99",
+              "EQL1"
+            ],
+            "default": "RP99"
+          },
+          "provinceCode": {
+            "title": "Province Code",
+            "type": "string",
+            "enum": [
+              "QC",
+              "NS",
+              "NU",
+              "MB",
+              "BC",
+              "PE",
+              "NT",
+              "YT",
+              "ON",
+              "SK",
+              "AB",
+              "NB"
+            ],
+            "default": "ON"
+          },
+          "newConstructionInd": {
+            "title": "New Construction Ind",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "processTypeCd": {
+            "title": "Process Type",
+            "type": "string"
+          },
+          "processSubtypeCd": {
+            "title": "Process Sub Type",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags[Maximum 5 tags separated by ,]",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "type": "help",
+          "helpvalue": "<h4>Class Feed Example</h4>"
+        },
+        "environment",
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for injection rules</h4>"
+        },
+        "messageNumber",
+        "hppInd",
+        {
+          "type": "conditional",
+          "condition": "modelData.hppInd==='0'",
+          "items": [
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0012' || modelData.messageNumber === 'E0014'",
+              "items": [
+                "pid"
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0010'",
+              "items": [
+                "pid",
+                {
+                  "key": "debtConsolidation",
+                  "type": "radiobuttons"
+                },
+                "loanCategroy"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "condition": "modelData.hppInd !== '0'",
+          "items": [
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0012'",
+              "items": [
+                "plcPurposeCode",
+                "fullLiabilityIndicator",
+                "solicitorName",
+                "propertyProvCode"
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber === 'E0014'",
+              "items": [
+                "plcPurposeCode",
+                "solicitorName",
+                "propertyProvCode"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for epi mappings</h4>"
+        },
+        "loanNumber",
+        "customerName",
+        "postNumber",
+        "transit",
+        "cid",
+        "fundsDisbursed",
+        "relationship",
+        "marketingSourceCode",
+        {
+          "key": "incomeVerification",
+          "type": "radios",
+          "titleMap": {
+            "Y": "Income Verification is requried.",
+            "N": "Income Verification is not required."
+          }
+        },
+        "centreCode",
+        "provinceCode",
+        "newConstructionInd",
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for feed storage and retrieval only</h4>"
+        },
+        "processTypeCd",
+        "processSubtypeCd",
+        {
+          "key": "tags",
+          "type": "textarea"
+        }
+      ],
+      "action": [
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "injClassFeed",
+          "readOnly": false,
+          "title": "Inject",
+          "success": "/"
+        },
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "updFeedMeta",
+          "readOnly": false,
+          "title": "Update Meta",
+          "success": "/"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:07.010"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:07.010",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:24",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10025,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.add",
+      "schema": {
+        "type": "object",
+        "title": "Catalog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Catalog Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "out_Own",
+          "type": "rc-select",
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "addCatalog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/admin/catalogAdmin"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:07.038"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:07.038",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:25",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10026,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.news.post.add",
+      "schema": {
+        "type": "object",
+        "title": "News Post",
+        "required": [
+          "parentRid",
+          "title",
+          "summary",
+          "content"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "originalAuthor": {
+            "title": "Original Author",
+            "type": "string"
+          },
+          "originalSite": {
+            "title": "Original Site",
+            "type": "string"
+          },
+          "originalUrl": {
+            "title": "Original Url",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "parentRid",
+        "title",
+        "originalAuthor",
+        "originalSite",
+        "originalUrl",
+        {
+          "key": "summary",
+          "type": "textarea",
+          "rows": 3
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "news",
+          "name": "addPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/news"
+        }
+      ],
+      "createDate": "2016-02-17T02:20:07.077"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:20:07.077",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:27",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10028,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.db.downloadEvent",
+      "schema": {
+        "type": "object",
+        "title": "Download Events",
+        "required": [
+          "createDateFrom"
+        ],
+        "properties": {
+          "category": {
+            "title": "Event Category",
+            "type": "string"
+          },
+          "name": {
+            "title": "Event Name",
+            "type": "string"
+          },
+          "createDateFrom": {
+            "title": "Event From Date",
+            "type": "date"
+          },
+          "createDateTo": {
+            "title": "Event To Date",
+            "type": "date"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "*"
+      ],
+      "action": [
+        {
+          "category": "db",
+          "name": "downloadEvent",
+          "readOnly": true,
+          "title": "Download Events"
+        }
+      ],
+      "createDate": "2016-02-17T02:21:14.150"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:21:14.150",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:28",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10029,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.update",
+      "schema": {
+        "type": "object",
+        "title": "Blog",
+        "required": [
+          "categoryId",
+          "description"
+        ],
+        "properties": {
+          "categoryId": {
+            "title": "Blog Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "in_Own": {
+            "title": "Parent",
+            "type": "array",
+            "maxItems": 1
+          },
+          "out_Own": {
+            "title": "Children",
+            "type": "array"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "categoryId",
+        "description",
+        {
+          "key": "in_Own",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "out_Own",
+          "type": "rc-select",
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "updBlog",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/admin/blogAdmin"
+        }
+      ],
+      "createDate": "2016-02-17T02:21:14.198"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:21:14.198",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:29",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10030,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.post.update",
+      "schema": {
+        "type": "object",
+        "title": "Blog Post Update",
+        "required": [
+          "entityId",
+          "title",
+          "summary",
+          "content"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string"
+          },
+          "entityId": {
+            "title": "Post Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "originalAuthor": {
+            "title": "Original Author",
+            "type": "string"
+          },
+          "originalSite": {
+            "title": "Original Site",
+            "type": "string"
+          },
+          "originalUrl": {
+            "title": "Original Url",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "parentRid",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        "entityId",
+        "title",
+        "originalAuthor",
+        "originalSite",
+        "originalUrl",
+        {
+          "key": "summary",
+          "type": "textarea",
+          "rows": 3
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "updPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/blog"
+        }
+      ],
+      "createDate": "2016-02-17T02:21:14.253"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:21:14.253",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:30",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10031,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.product.add",
+      "schema": {
+        "type": "object",
+        "title": "Catalog Product",
+        "required": [
+          "parentRid",
+          "name",
+          "description",
+          "content",
+          "variants"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          },
+          "variants": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "title": "Sku",
+                  "type": "string"
+                },
+                "type": {
+                  "title": "Type",
+                  "type": "string"
+                },
+                "price": {
+                  "title": "Price",
+                  "type": "number"
+                },
+                "image": {
+                  "title": "Image",
+                  "type": "string"
+                },
+                "inventory": {
+                  "title": "Inventory",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "type",
+                "price"
+              ]
+            }
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "parentRid",
+        "name",
+        {
+          "key": "description",
+          "type": "textarea",
+          "rows": 5
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 15
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "variants",
+          "add": "New",
+          "style": {
+            "add": "btn-success"
+          },
+          "items": [
+            "variants[].sku",
+            "variants[].type",
+            "variants[].price",
+            "variants[].image",
+            "variants[].inventory"
+          ]
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "addProduct",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/catalog"
+        }
+      ],
+      "createDate": "2016-02-17T02:21:14.285"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:21:14.285",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:31",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10032,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.product.update",
+      "schema": {
+        "type": "object",
+        "title": "Catalog Product Update",
+        "required": [
+          "entityId",
+          "name",
+          "description",
+          "content",
+          "variants"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string"
+          },
+          "entityId": {
+            "title": "Product Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          },
+          "variants": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "title": "Sku",
+                  "type": "string"
+                },
+                "type": {
+                  "title": "Type",
+                  "type": "string"
+                },
+                "price": {
+                  "title": "Price",
+                  "type": "number"
+                },
+                "image": {
+                  "title": "Image",
+                  "type": "string"
+                },
+                "inventory": {
+                  "title": "Inventory",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "type",
+                "price"
+              ]
+            }
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "parentRid",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        "entityId",
+        "name",
+        {
+          "key": "description",
+          "type": "textarea",
+          "rows": 5
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 15
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "variants",
+          "add": "New",
+          "style": {
+            "add": "btn-success"
+          },
+          "items": [
+            "variants[].sku",
+            "variants[].type",
+            "variants[].price",
+            "variants[].image",
+            "variants[].inventory"
+          ]
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "updProduct",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/catalog"
+        }
+      ],
+      "createDate": "2016-02-17T02:21:14.331"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:21:14.331",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:32",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10033,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.blog.post.add",
+      "schema": {
+        "type": "object",
+        "title": "Blog Post",
+        "required": [
+          "parentRid",
+          "title",
+          "summary",
+          "content"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "originalAuthor": {
+            "title": "Original Author",
+            "type": "string"
+          },
+          "originalSite": {
+            "title": "Original Site",
+            "type": "string"
+          },
+          "originalUrl": {
+            "title": "Original Url",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "parentRid",
+        "title",
+        "originalAuthor",
+        "originalSite",
+        "originalUrl",
+        {
+          "key": "summary",
+          "type": "textarea",
+          "rows": 3
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "blog",
+          "name": "addPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/blog"
+        }
+      ],
+      "createDate": "2016-02-17T02:21:14.358"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:21:14.358",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:33",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10034,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.class.feed",
+      "schema": {
+        "type": "object",
+        "required": [
+          "environment",
+          "messageNumber",
+          "hppInd",
+          "centreCode"
+        ],
+        "title": "class",
+        "properties": {
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "enum": [
+              "LOCAL",
+              "IDT5N",
+              "SIT1N",
+              "SIT2N",
+              "SIT3N",
+              "UAT1N",
+              "UAT2N"
+            ]
+          },
+          "requestId": {
+            "type": "number",
+            "title": "Request Id",
+            "maxLength": 10
+          },
+          "messageNumber": {
+            "type": "string",
+            "title": "Message Number",
+            "enum": [
+              "E0500",
+              "E0450",
+              "E0220",
+              "E0130",
+              "E0110",
+              "E0014",
+              "E0012",
+              "E0010",
+              "A0120",
+              "A0090"
+            ]
+          },
+          "loanNumber": {
+            "type": "string",
+            "title": "Loan Number",
+            "maxLength": 10
+          },
+          "pid": {
+            "type": "string",
+            "title": "PID",
+            "enum": [
+              "263",
+              "701",
+              "702",
+              "703",
+              "704",
+              "705",
+              "706",
+              "798",
+              "799",
+              "233",
+              "237",
+              "262",
+              "265",
+              "232",
+              "257",
+              "248",
+              "238",
+              "900",
+              "910",
+              "999",
+              "259",
+              "131",
+              "600",
+              "601",
+              "602",
+              "603",
+              "697",
+              "698",
+              "699",
+              "141",
+              "142",
+              "152",
+              "232",
+              "257",
+              "800",
+              "899"
+            ]
+          },
+          "hppInd": {
+            "type": "string",
+            "title": "HPP Indicator",
+            "enum": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ]
+          },
+          "loanCategroy": {
+            "title": "Loan Category",
+            "type": "string",
+            "enum": [
+              "CMHC",
+              "COL1",
+              "COL2",
+              "COL3",
+              "ANEW",
+              "ANUT",
+              "AUSE",
+              "AUUT",
+              "MCYC",
+              "MOHO",
+              "TCCN",
+              "TCCU",
+              "GPIN",
+              "GPIV"
+            ],
+            "default": "CHMC"
+          },
+          "debtConsolidation": {
+            "title": "Debt Consolidation",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "incomeVerification": {
+            "title": "Income Verification",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "liabilityType": {
+            "title": "Liability Type",
+            "type": "string",
+            "enum": [
+              "701",
+              "700",
+              "602",
+              "603",
+              "601",
+              "600",
+              "302",
+              "301",
+              "300",
+              "BSC",
+              "CLN",
+              "PLC",
+              "MTG",
+              "REN",
+              "DC0"
+            ]
+          },
+          "plcPurposeCode": {
+            "title": "Plc PurposeCode",
+            "type": "string",
+            "enum": [
+              "000",
+              "001",
+              "002",
+              "003",
+              "004",
+              "005",
+              "006",
+              "009"
+            ]
+          },
+          "fullLiabilityIndicator": {
+            "title": "Full Liability Indicator",
+            "type": "string",
+            "enum": [
+              "1",
+              "4"
+            ]
+          },
+          "solicitorName": {
+            "title": "Solicitor Name",
+            "type": "string",
+            "maxLength": 25
+          },
+          "propertyProvCode": {
+            "title": "Property Prov Code",
+            "type": "string",
+            "enum": [
+              "QC",
+              "NS",
+              "NU",
+              "MB",
+              "BC",
+              "PE",
+              "NT",
+              "YT",
+              "ON",
+              "SK",
+              "AB",
+              "NB"
+            ],
+            "default": "ON"
+          },
+          "centreCode": {
+            "title": "Centre Code",
+            "type": "string",
+            "enum": [
+              "TO",
+              "VA",
+              "CA",
+              "TB",
+              "REBO",
+              "Bank@Work",
+              "WP",
+              "HL",
+              "Training",
+              "MT",
+              "RISK"
+            ],
+            "default": "TO"
+          },
+          "processingDate": {
+            "title": "Processing Date",
+            "type": "string",
+            "format": "date"
+          },
+          "reportDate": {
+            "title": "Report Date",
+            "type": "string",
+            "format": "date"
+          },
+          "customerName": {
+            "title": "Customer Name",
+            "type": "string",
+            "maxLength": 250,
+            "default": "New Injector"
+          },
+          "postNumber": {
+            "title": "Post Number",
+            "type": "string",
+            "maxLength": 3,
+            "default": "123"
+          },
+          "transit": {
+            "title": "Transit",
+            "type": "string",
+            "maxLength": 5,
+            "default": "00001"
+          },
+          "cid": {
+            "title": "CID",
+            "type": "string",
+            "maxLength": 3,
+            "default": "100"
+          },
+          "fundsDisbursed": {
+            "title": "Funds Disbursed",
+            "type": "number",
+            "default": 1000
+          },
+          "relationship": {
+            "title": "Relationship",
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "default": "1"
+          },
+          "marketingSourceCode": {
+            "title": "Marketing Source Code",
+            "type": "string",
+            "enum": [
+              "DWPV",
+              "PBCY",
+              "BFIN",
+              "BFCE",
+              "BDLG",
+              "OFFN",
+              "BLAK",
+              "EQLH",
+              "OFFB",
+              "NEW2",
+              "FCBC",
+              "JJ99",
+              "AHBL",
+              "CASE",
+              "NRES",
+              "BTOB",
+              "GENL",
+              "ABL1",
+              "RP22",
+              "RP99",
+              "EQL1"
+            ],
+            "default": "RP99"
+          },
+          "provinceCode": {
+            "title": "Province Code",
+            "type": "string",
+            "enum": [
+              "QC",
+              "NS",
+              "NU",
+              "MB",
+              "BC",
+              "PE",
+              "NT",
+              "YT",
+              "ON",
+              "SK",
+              "AB",
+              "NB"
+            ],
+            "default": "ON"
+          },
+          "newConstructionInd": {
+            "title": "New Construction Ind",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "processTypeCd": {
+            "title": "Process Type",
+            "type": "string"
+          },
+          "processSubtypeCd": {
+            "title": "Process Sub Type",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags[Maximum 5 tags separated by ,]",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "type": "help",
+          "helpvalue": "<h4>Class Feed Example</h4>"
+        },
+        "environment",
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for injection rules</h4>"
+        },
+        "messageNumber",
+        "hppInd",
+        {
+          "type": "conditional",
+          "condition": "modelData.hppInd==='0'",
+          "items": [
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0012' || modelData.messageNumber === 'E0014'",
+              "items": [
+                "pid"
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0010'",
+              "items": [
+                "pid",
+                {
+                  "key": "debtConsolidation",
+                  "type": "radiobuttons"
+                },
+                "loanCategroy"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "condition": "modelData.hppInd !== '0'",
+          "items": [
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0012'",
+              "items": [
+                "plcPurposeCode",
+                "fullLiabilityIndicator",
+                "solicitorName",
+                "propertyProvCode"
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber === 'E0014'",
+              "items": [
+                "plcPurposeCode",
+                "solicitorName",
+                "propertyProvCode"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for epi mappings</h4>"
+        },
+        "loanNumber",
+        "customerName",
+        "postNumber",
+        "transit",
+        "cid",
+        "fundsDisbursed",
+        "relationship",
+        "marketingSourceCode",
+        {
+          "key": "incomeVerification",
+          "type": "radios",
+          "titleMap": {
+            "Y": "Income Verification is requried.",
+            "N": "Income Verification is not required."
+          }
+        },
+        "centreCode",
+        "provinceCode",
+        "newConstructionInd",
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for feed storage and retrieval only</h4>"
+        },
+        "processTypeCd",
+        "processSubtypeCd",
+        {
+          "key": "tags",
+          "type": "textarea"
+        }
+      ],
+      "action": [
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "injClassFeed",
+          "readOnly": false,
+          "title": "Inject",
+          "success": "/"
+        },
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "updFeedMeta",
+          "readOnly": false,
+          "title": "Update Meta",
+          "success": "/"
+        }
+      ],
+      "createDate": "2016-02-17T02:21:14.391"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:21:14.391",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:34",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10035,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.news.post.add",
+      "schema": {
+        "type": "object",
+        "title": "News Post",
+        "required": [
+          "parentRid",
+          "title",
+          "summary",
+          "content"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string",
+            "readOnly": true
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "originalAuthor": {
+            "title": "Original Author",
+            "type": "string"
+          },
+          "originalSite": {
+            "title": "Original Site",
+            "type": "string"
+          },
+          "originalUrl": {
+            "title": "Original Url",
+            "type": "string"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "parentRid",
+        "title",
+        "originalAuthor",
+        "originalSite",
+        "originalUrl",
+        {
+          "key": "summary",
+          "type": "textarea",
+          "rows": 3
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 10
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        }
+      ],
+      "action": [
+        {
+          "category": "news",
+          "name": "addPost",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/news"
+        }
+      ],
+      "createDate": "2016-02-17T02:21:14.434"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-17T02:21:14.434",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]
