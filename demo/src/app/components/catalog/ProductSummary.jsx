@@ -69,7 +69,7 @@ var ProductSummary = React.createClass ({
                     <a onClick={this.props.onClick}><CardTitle title={this.state.product.name} /></a>
                     <CardText>
                         <div className="productLeft">
-                            <a onClick={this.props.onClick}><img src={'/assets/images/' + this.state.product.variants[i].image} className="img-responsive productImage" /></a>
+                            <a onClick={this.props.onClick}><img src={'/images/' + this.state.product.variants[i].image} className="img-responsive productImage" /></a>
                             <div className="cbp-vm-variants">
                                 {(_.size(this.state.product.variants) > 1) ?
                                     <VariantSelect variants={this.state.product.variants} onVariantSelect={this._onVariantSelect} /> :
