@@ -24,6 +24,8 @@ import Badge from 'material-ui/lib/badge';
 import NotificationsIcon from 'material-ui/lib/svg-icons/social/notifications';
 import FormActionCreators from '../../actions/FormActionCreators';
 import FormStore from '../../stores/FormStore';
+import UserStore from '../../stores/UserStore';
+import UserActionCreators from '../../actions/UserActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 
@@ -33,7 +35,6 @@ function getStateFromStores() {
         cartItemsCount: CartStore.getCartItemsCount(),
         cartTotal: CartStore.getCartTotal(),
         cartOpen: CartStore.getCartStatus(),
-        shippingAddress: AuthStore.getShippingAddress() || {},
         screen: 'cart',
         title: 'Cart'
     };
@@ -154,9 +155,9 @@ var CheckoutButton = React.createClass({
         })
     },
 
-    _onAuthStoreChange: function() {
+    _onUserStoreChange: function() {
         this.setState({
-            shippingAddress: AuthStore.getShippingAddress() || {}
+            shippingAddress: UserStore.getUser().shippingAddress || {}
         })
     },
 
@@ -169,14 +170,21 @@ var CheckoutButton = React.createClass({
 
     componentDidMount: function() {
         CartStore.addChangeListener(this._onCartStoreChange);
-        AuthStore.addChangeListener(this._onAuthStoreChange);
+        UserStore.addChangeListener(this._onUserStoreChange);
         FormStore.addChangeListener(this._onFormStoreChange);
         FormActionCreators.getForm(id);
+        if(UserStore.getUser()) {
+            this.setState({
+                shippingAddress: UserStore.getUser().shippingAddress || {}
+            })
+        } else {
+            UserActionCreators.getUser(AuthStore.getUserId());
+        }
     },
 
     componentWillUnmount: function() {
         CartStore.removeChangeListener(this._onCartStoreChange);
-        AuthStore.removeChangeListener(this._onAuthStoreChange);
+        UserStore.removeChangeListener(this._onUserStoreChange);
         FormStore.removeChangeListener(this._onFormStoreChange);
     },
 
@@ -202,7 +210,7 @@ var CheckoutButton = React.createClass({
             }
             actions.length = 0;
             actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateShippingAddress} />);
-            if(AuthStore.getShippingAddress()) {
+            if(UserStore.getUser() && UserStore.getUser().shippingAddress) {
                 actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmShippingAddress}/>);
             }
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
