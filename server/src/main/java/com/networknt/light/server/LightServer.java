@@ -110,8 +110,9 @@ public class LightServer {
                     .addHost(
                             host,
                             Handlers.predicates(
+                                PredicatedHandlersParser.parse("not path-prefix('/assets', '/css', '/api', '/app.', 'style.') -> rewrite('/index.html')"
                                 //PredicatedHandlersParser.parse("not path-suffix['.js', '.html', '.css'] -> rewrite['/index.html']"
-                                PredicatedHandlersParser.parse("path-prefix['/page', '/form'] -> rewrite['/index.html']"
+                                //PredicatedHandlersParser.parse("path-prefix['/home', '/page', '/form'] -> rewrite['/index.html']"
                                 , LightServer.class.getClassLoader()),
                                     new PathHandler(resource(new FileResourceManager(
                                             new File(base), Integer
