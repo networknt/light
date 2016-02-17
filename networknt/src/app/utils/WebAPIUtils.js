@@ -707,18 +707,16 @@ module.exports = {
                 userId: userId
             }
         };
-        //console.log('WebAPIUtils getUser is called');
         $.ajax({
             type: 'GET',
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getUser))}
         }).done(function(data) {
-            //console.log('retrieveUserProfile user', data);
-            ServerActionCreators.receiveUser(data, null);
+            ServerActionCreators.getUserResponse(data);
 
         }).fail(function(error) {
             //console.log('retrieveUserProfile error', error);
-            ServerActionCreators.receiveUser(null, error);
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 

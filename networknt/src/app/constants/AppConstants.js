@@ -105,7 +105,7 @@ module.exports = {
         LOAD_PRODUCTS: null,
 
         // User
-        RECEIVE_USER: null,
+        GET_USER_RESPONSE: null,
         GET_ALL_USER_RESPONSE: null,
 
         // Form

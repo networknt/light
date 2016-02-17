@@ -231,11 +231,10 @@ module.exports = {
         });
     },
 
-    receiveUser: function(json, error) {
+    getUserResponse: function(json) {
         AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_USER,
-            json: json,
-            error: error
+            type: ActionTypes.GET_USER_RESPONSE,
+            json: json
         });
     },
 

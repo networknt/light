@@ -11,6 +11,9 @@ module.exports = {
 
     delUser: function(rid) {
         WebAPIUtils.delUser(rid);
-    }
+    },
 
+    getUser: function(userId) {
+        WebAPIUtils.getUser(userId);
+    }
 };
