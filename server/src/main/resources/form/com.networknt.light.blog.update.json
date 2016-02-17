@@ -54,6 +54,7 @@
     {
       "key": "out_Own",
       "type": "rc-select",
+      "multiple": true,
       "action" : {
         "get": {
           "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
