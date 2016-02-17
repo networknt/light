@@ -17,12 +17,14 @@
           "sku": "standard_api",
           "type": "Standard",
           "price": 5,
+          "image": "hosting/cloud160.jpg",
           "inventory": 100000
         },
         {
           "sku": "customized_api",
           "type": "Customized",
           "price": 50,
+          "image": "hosting/cloud160.jpg",
           "inventory": 10000
         }
       ],
@@ -54,12 +56,14 @@
           "sku": "standard_site",
           "type": "Standard",
           "price": 10,
+          "image": "hosting/cloud160.jpg",
           "inventory": 10000
         },
         {
           "sku": "customized_site",
           "type": "Customized",
           "price": 100,
+          "image": "hosting/cloud160.jpg",
           "inventory": 10000
         }
       ],
