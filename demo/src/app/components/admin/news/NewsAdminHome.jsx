@@ -68,7 +68,7 @@ var NewsAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='News' style={{textAlign: 'center'}}>
+                            <TableHeaderColumn colSpan="4" tooltip='News' style={{textAlign: 'center'}}>
                                 News
                             </TableHeaderColumn>
                         </TableRow>
@@ -77,8 +77,6 @@ var NewsAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Category Id'>Category Id</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Description'>Description</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody
@@ -95,8 +93,6 @@ var NewsAdminHome = React.createClass({
                                     <TableRowColumn>{news.host}</TableRowColumn>
                                     <TableRowColumn><a onClick={boundUpdate}>{news.categoryId}</a></TableRowColumn>
                                     <TableRowColumn>{news.description}</TableRowColumn>
-                                    <TableRowColumn>{news.createDate}</TableRowColumn>
-                                    <TableRowColumn>{news.updateDate}</TableRowColumn>
                                 </TableRow>
                             );
                         })}
@@ -109,11 +105,9 @@ var NewsAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Category Id'>Category Id</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Description'>Description</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                         <TableRow>
-                            <TableRowColumn colSpan="6" style={{textAlign: 'left'}}>
+                            <TableRowColumn colSpan="4" style={{textAlign: 'left'}}>
                                 <RaisedButton label="Add News" primary={true} onTouchTap={this._onAddNews} />
                             </TableRowColumn>
                         </TableRow>

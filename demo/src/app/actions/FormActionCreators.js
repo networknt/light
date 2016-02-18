@@ -10,10 +10,6 @@ var ActionTypes = AppConstants.ActionTypes;
 module.exports = {
 
     getForm: function(formId) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.GET_FORM,
-            formId: formId
-        });
         WebAPIUtils.getForm(formId);
     },
 

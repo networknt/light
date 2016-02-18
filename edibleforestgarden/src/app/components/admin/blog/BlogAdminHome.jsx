@@ -68,7 +68,7 @@ var BlogAdminHome = React.createClass({
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='Blogs' style={{textAlign: 'center'}}>
+                            <TableHeaderColumn colSpan="4" tooltip='Blogs' style={{textAlign: 'center'}}>
                                 Blogs
                             </TableHeaderColumn>
                         </TableRow>
@@ -77,8 +77,6 @@ var BlogAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Category Id'>Category Id</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Description'>Description</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
                     <TableBody
@@ -95,8 +93,6 @@ var BlogAdminHome = React.createClass({
                                     <TableRowColumn>{blog.host}</TableRowColumn>
                                     <TableRowColumn><a onClick={boundUpdate}>{blog.categoryId}</a></TableRowColumn>
                                     <TableRowColumn>{blog.description}</TableRowColumn>
-                                    <TableRowColumn>{blog.createDate}</TableRowColumn>
-                                    <TableRowColumn>{blog.updateDate}</TableRowColumn>
                                 </TableRow>
                             );
                         })}
@@ -109,11 +105,9 @@ var BlogAdminHome = React.createClass({
                             <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Category Id'>Category Id</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Description'>Description</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Update Date'>Update Date</TableHeaderColumn>
                         </TableRow>
                         <TableRow>
-                            <TableRowColumn colSpan="6" style={{textAlign: 'left'}}>
+                            <TableRowColumn colSpan="4" style={{textAlign: 'left'}}>
                                 <RaisedButton label="Add Blog" primary={true} onTouchTap={this._onAddBlog} />
                             </TableRowColumn>
                         </TableRow>

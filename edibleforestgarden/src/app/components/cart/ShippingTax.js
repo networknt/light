@@ -5,7 +5,7 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
-var Cart = require('./Cart')
+var Cart = require('./Cart');
 
 var ShippingTax = React.createClass({
 

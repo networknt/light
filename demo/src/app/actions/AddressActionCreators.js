@@ -10,18 +10,10 @@ var ActionTypes = AppConstants.ActionTypes;
 module.exports = {
 
     updateShippingAddress: function(data) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.UPDATE_SHIPPING_ADDRESS,
-            data: data
-        });
         WebAPIUtils.updateShippingAddress(data);
     },
 
     confirmShippingAddress: function(data) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.CONFIRM_SHIPPING_ADDRESS,
-            data: data
-        });
         WebAPIUtils.confirmShippingAddress(data);
     }
 

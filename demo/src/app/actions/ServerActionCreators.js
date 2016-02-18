@@ -231,27 +231,24 @@ module.exports = {
         });
     },
 
-    receiveUser: function(json, error) {
+    getUserResponse: function(json) {
         AppDispatcher.dispatch({
-            type: ActionTypes.RECEIVE_USER,
-            json: json,
-            error: error
+            type: ActionTypes.GET_USER_RESPONSE,
+            json: json
         });
     },
 
-    updateShippingAddressResponse: function(json, error) {
+    updateShippingAddressResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.UPDATE_SHIPPING_ADDRESS_RESPONSE,
-            json: json,
-            error: error
+            json: json
         });
     },
 
-    confirmShippingAddressResponse: function(json, error) {
+    confirmShippingAddressResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.CONFIRM_SHIPPING_ADDRESS_RESPONSE,
-            json: json,
-            error: error
+            json: json
         });
     },
 

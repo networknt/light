@@ -110,7 +110,7 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                     localStorage.setItem('refreshToken', _refreshToken);
                 }
                 _rid = payload.json.rid;
-                console.log('_rid = ', _rid);
+                //console.log('_rid = ', _rid);
                 //console.log('AuthStore.LOGIN_RESPONSE shippingAddress', payload.json.shippingAddress);
                 if(payload.json.shippingAddress) {
                     _shippingAddress = payload.json.shippingAddress;
