@@ -61,6 +61,7 @@ var CheckoutButton = React.createClass({
     handleCartTouchTap(event) {
         if(AuthStore.isLoggedIn()) {
             this.setState({cartOpen: true});
+            console.log('CheckoutButton.handleCartTouchTap state is set to open');
         } else {
             this.context.router.push('login');
         }

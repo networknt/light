@@ -1,6 +1,26 @@
 [
   {
     "@type": "d",
+    "@rid": "#17:25",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10026,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "www.networknt.com",
+      "description": "All",
+      "createUserId": "stevehu",
+      "categoryId": "All",
+      "createDate": "2016-02-16T18:17:46.983"
+    },
+    "name": "addNews",
+    "category": "news",
+    "createDate": "2016-02-16T18:17:46.983",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
     "@rid": "#17:16",
     "@version": 1,
     "@class": "Event",
@@ -10,6 +30,9 @@
       "host": "www.networknt.com",
       "description": "Light Framework",
       "createUserId": "stevehu",
+      "in_Own": [
+        "All"
+      ],
       "categoryId": "LightFramework",
       "createDate": "2016-02-16T18:14:34.851"
     },
@@ -30,6 +53,9 @@
       "host": "www.networknt.com",
       "description": "Light CMS",
       "createUserId": "stevehu",
+      "in_Own": [
+        "All"
+      ],
       "categoryId": "LightCMS",
       "createDate": "2016-02-16T18:15:12.473"
     },
@@ -50,6 +76,9 @@
       "host": "www.networknt.com",
       "description": "Light Commerce",
       "createUserId": "stevehu",
+      "in_Own": [
+        "All"
+      ],
       "categoryId": "LightCommerce",
       "createDate": "2016-02-16T18:16:51.225"
     },
@@ -70,58 +99,15 @@
       "host": "www.networknt.com",
       "description": "React Schema Form",
       "createUserId": "stevehu",
+      "in_Own": [
+        "All"
+      ],
       "categoryId": "ReactSchemaForm",
       "createDate": "2016-02-16T18:17:15.392"
     },
     "name": "addNews",
     "category": "news",
     "createDate": "2016-02-16T18:17:15.392",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:25",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10026,
-    "createUserId": "stevehu",
-    "data": {
-      "host": "www.networknt.com",
-      "description": "Add-on",
-      "createUserId": "stevehu",
-      "in_Own": [
-        "ReactSchemaForm"
-      ],
-      "categoryId": "AddOn",
-      "createDate": "2016-02-16T18:17:46.983"
-    },
-    "name": "addNews",
-    "category": "news",
-    "createDate": "2016-02-16T18:17:46.983",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:26",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10027,
-    "createUserId": "stevehu",
-    "data": {
-      "host": "www.networknt.com",
-      "description": "Rc-Select",
-      "createUserId": "stevehu",
-      "in_Own": [
-        "AddOn"
-      ],
-      "categoryId": "RcSelect",
-      "createDate": "2016-02-16T18:18:23.027"
-    },
-    "name": "addNews",
-    "category": "news",
-    "createDate": "2016-02-16T18:18:23.027",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   }

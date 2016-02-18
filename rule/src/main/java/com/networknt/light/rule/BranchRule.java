@@ -108,7 +108,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                                         inputMap.put("responseCode", 404);
                                         break;
                                     } else {
-                                        out_Own.add((String)child.getProperty("CategoryId"));
+                                        out_Own.add(child.getProperty("categoryId"));
                                     }
                                 }
                             }
@@ -330,12 +330,12 @@ public abstract class BranchRule extends AbstractRule implements Rule {
                                 inputMap.put("responseCode", 404);
                                 return false;
                             } else {
-                                inputChildren.add((String)child.getProperty("categoryId"));
+                                inputChildren.add(child.getProperty("categoryId"));
                             }
                         }
                         Set<String> storedChildren = new HashSet<String>();
                         for (Vertex vertex : (Iterable<Vertex>) branch.getVertices(Direction.OUT, "Own")) {
-                            storedChildren.add((String)vertex.getProperty("categoryId"));
+                            storedChildren.add(vertex.getProperty("categoryId"));
                         }
 
                         Set<String> addChildren = new HashSet<String>(inputChildren);

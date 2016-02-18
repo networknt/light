@@ -10,25 +10,32 @@
       "createUserId": "stevehu",
       "name": "API Hosting",
       "host": "www.networknt.com",
+      "delivery": "RS",
       "description": "APIs provided by the Light Framework, Light CMS and Light Commerce.",
       "entityId": "UFrz76lcSNSHQ9dgXGPanA",
       "variants": [
         {
-          "sku": "standard_api",
+          "sku": "api-standard",
           "type": "Standard",
           "price": 5,
-          "image": "hosting/cloud160.jpg",
+          "image": "/images/hosting/light160.jpg",
           "inventory": 100000
         },
         {
-          "sku": "customized_api",
+          "sku": "api-customized",
           "type": "Customized",
           "price": 50,
-          "image": "hosting/cloud160.jpg",
+          "image": "/images/hosting/light160.jpg",
           "inventory": 10000
         }
       ],
-      "content": "APIs out of the box without customization and this is the easiest way to bring up a site of your own that has all common functionalities along with content management and e-commence. All you need to do is to find a host for your static site and even github.com should work. ",
+      "content": "APIs out of the box without customization and this is the easiest way to bring up a site of your own that has all common functionalities along with content management and e-commence. All you need to do is to find a host for your static site and even github.com should work.",
+      "tags": [
+        "API",
+        "Site",
+        "Hosting",
+        "Host"
+      ],
       "parentId": "Hosting",
       "createDate": "2016-02-16T19:12:51.237"
     },
@@ -49,21 +56,22 @@
       "createUserId": "stevehu",
       "name": "Site Hosting",
       "host": "www.networknt.com",
+      "delivery": "RS",
       "description": "Host your entire site including APIs and static contents. Price is on monthly subscription basis.",
       "entityId": "PUKkvBmETRGCSPPKNvl4SA",
       "variants": [
         {
-          "sku": "standard_site",
+          "sku": "site-standard",
           "type": "Standard",
           "price": 10,
-          "image": "hosting/cloud160.jpg",
+          "image": "/images/hosting/light160.jpg",
           "inventory": 10000
         },
         {
-          "sku": "customized_site",
+          "sku": "site-customized",
           "type": "Customized",
           "price": 100,
-          "image": "hosting/cloud160.jpg",
+          "image": "/images/hosting/light160.jpg",
           "inventory": 10000
         }
       ],
@@ -71,7 +79,9 @@
       "parentId": "Hosting",
       "tags": [
         "API",
-        "Site"
+        "Site",
+        "Hosting",
+        "Host"
       ],
       "createDate": "2016-02-16T19:22:21.170"
     },

@@ -17,6 +17,7 @@
       "parentRid",
       "name",
       "description",
+      "delivery",
       "content",
       "variants"
     ],
@@ -32,6 +33,10 @@
       },
       "description": {
         "title": "Description",
+        "type": "string"
+      },
+      "delivery": {
+        "title": "Delivery",
         "type": "string"
       },
       "content": {
@@ -83,6 +88,20 @@
       "key": "description",
       "type": "textarea",
       "rows": 5
+    },
+    {
+      "key": "delivery",
+      "type": "rc-select",
+      "multiple": false,
+      "items": [
+        {"value": "SO", "label": "Shipping only"},
+        {"value": "PO", "label": "Pickup only"},
+        {"value": "SP", "label": "Shipping or Pickup"},
+        {"value": "DL", "label": "Download"},
+        {"value": "EM", "label": "Email"},
+        {"value": "OS", "label": "One time subscription"},
+        {"value": "RS", "label": "Recurring subscription"}
+      ]
     },
     {
       "key": "content",
