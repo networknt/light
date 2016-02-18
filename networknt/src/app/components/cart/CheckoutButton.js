@@ -72,7 +72,20 @@ var CheckoutButton = React.createClass({
         this.setState({cartOpen: true});
     },
 
-    onShipping: function() {
+    onDelivery: function() {
+        // calculate what delivery options available based on the items in the cart.
+
+
+        this.setState({
+            screen: 'shippingPickup',
+            title: 'Shipping or Pickup'
+        });
+
+        this.setState({
+            screen: 'pickupAddress',
+            title: 'Pickup Address'
+        });
+
         this.setState({
             screen: 'shippingAddress',
             title: 'Shipping Address'
@@ -196,7 +209,7 @@ var CheckoutButton = React.createClass({
 
         if(this.state.screen === 'cart') {
             contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
-            actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onShipping} />);
+            actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onDelivery} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />)
         } else if (this.state.screen === 'shippingAddress') {
             if(this.state.schema) {
