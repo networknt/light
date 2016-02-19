@@ -5,44 +5,40 @@
         "category" : "config",
         "name" : "updConfig",
         "readOnly": false,
-        "title": "Update"
+        "title": "Submit",
+        "success": "/admin/configAdmin"
     }],
     "schema": {
         "type": "object",
         "required": [
-            "host",
-            "app"
+            "configId",
+            "properties"
         ],
-        "title": "Configuration",
+        "title": "Config",
         "properties": {
-            "host": {
+            "configId": {
                 "type": "string",
-                "title": "Host",
-                "enum": [
-                    "injector",
-                    "www.networknt.com",
-                    "www.edibleforestgarden.ca"
-                ]
+                "title": "Config Id",
+                "readOnly": true
             },
-            "app": {
+            "description": {
                 "type": "string",
-                "title": "Application",
-                "enum": [
-                    "main",
-                    "blog"
-                ]
+                "title": "Description"
             },
-            "blogCacheSize": {
-                "type": "number",
-                "title" : "Blog Cache Size (number of blogs cached for the entire server. max 9999)",
-                "maxLength": 4
+            "properties": {
+                "type": "string",
+                "title" : "Properties"
             }
         }
     },
     "form": [
-        "host",
-        "app",
-        "blogCacheSize"
+        "configId",
+        "description",
+        {
+            "key": "properties",
+            "type": "textarea",
+            "rows": 15
+        }
     ]
 }
 

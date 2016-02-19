@@ -1,0 +1,42 @@
+{
+  "formId": "com.networknt.light.config.add",
+  "version": 1,
+  "action" : [{
+    "category" : "config",
+    "name" : "addConfig",
+    "readOnly": false,
+    "title": "Submit",
+    "success": "/admin/configAdmin"
+  }],
+  "schema": {
+    "type": "object",
+    "required": [
+      "configId",
+      "properties"
+    ],
+    "title": "Config",
+    "properties": {
+      "configId": {
+        "type": "string",
+        "title": "Config Id"
+      },
+      "description": {
+        "type": "string",
+        "title": "Description"
+      },
+      "properties": {
+        "type": "string",
+        "title" : "Properties"
+      }
+    }
+  },
+  "form": [
+    "configId",
+    "description",
+    {
+      "key": "properties",
+      "type": "textarea",
+      "rows": 15
+    }
+  ]
+}

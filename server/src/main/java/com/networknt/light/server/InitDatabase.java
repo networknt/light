@@ -510,6 +510,14 @@ public class InitDatabase {
                     "credential", credentialTest,
                     "createDate", new java.util.Date());
 
+            Vertex m_configAdmin = graph.addVertex("class:MenuItem",
+                    "menuItemId", "configAdmin",
+                    "text", "Config Admin",
+                    "route", "/admin/configAdmin",
+                    "roles", "configAdmin,admin,owner",
+                    "createDate", new java.util.Date());
+            userOwner.addEdge("Create", m_configAdmin);
+
             Vertex m_accessAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "accessAdmin",
                     "text", "Access Admin",
@@ -598,6 +606,8 @@ public class InitDatabase {
             m_admin.addEdge("Own", m_menuAdmin);
             m_admin.addEdge("Own", m_formAdmin);
             m_admin.addEdge("Own", m_pageAdmin);
+            m_admin.addEdge("Own", m_configAdmin);
+
             userOwner.addEdge("Create", m_admin);
 
             Vertex m_home = graph.addVertex("class:MenuItem",
