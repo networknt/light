@@ -995,6 +995,44 @@ module.exports = {
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });
+    },
+
+    getConfig: function(configId) {
+        var getConfig = {
+            category: 'config',
+            name: 'getConfig',
+            readOnly: true,
+            data: {
+                configId: configId
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getConfig))}
+        }).done(function(data) {
+            ServerActionCreators.getConfigResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getAllConfig: function() {
+        var getAllConfig = {
+            category: 'config',
+            name: 'getAllConfig',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getAllConfig))}
+        }).done(function(data) {
+            console.log('getAllForm', data);
+            ServerActionCreators.getAllConfigResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
     }
 
 };

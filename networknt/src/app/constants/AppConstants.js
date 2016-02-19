@@ -31,6 +31,10 @@ module.exports = {
         LOGOUT: null,
         INIT: null,
 
+        // Config
+        GET_CONFIG_RESPONSE: null,
+        GET_ALL_CONFIG_RESPONSE: null,
+
         // Menu
         GET_MENU: null,
         GET_MENU_RESPONSE: null,
