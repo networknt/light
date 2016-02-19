@@ -25,7 +25,9 @@ import NotificationsIcon from 'material-ui/lib/svg-icons/social/notifications';
 import FormActionCreators from '../../actions/FormActionCreators';
 import FormStore from '../../stores/FormStore';
 import UserStore from '../../stores/UserStore';
+import ConfigStore from '../../stores/ConfigStore';
 import UserActionCreators from '../../actions/UserActionCreators';
+import ConfigActionCreators from '../../actions/ConfigActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 
@@ -41,6 +43,8 @@ function getStateFromStores() {
 }
 
 const id = 'com.networknt.light.user.address';
+const configId = 'default.delivery';
+
 var CheckoutButton = React.createClass({
 
     contextTypes: {
@@ -69,27 +73,40 @@ var CheckoutButton = React.createClass({
     },
 
     open: function() {
+        console.log('open is called');
         this.setState({cartOpen: true});
     },
 
     onDelivery: function() {
-        // calculate what delivery options available based on the items in the cart.
+        // first get delivery method from host config, if the host config can be overwritten
+        // check each item in the cart for delivery method and details.
+        let screen;
+        let title;
+        switch(this.state.delivery.method) {
+            case "SP":
+                screen = 'shippingPickup';
+                title = 'Shipping or Pickup';
+                break;
+            case "SO":
+                screen = 'shippingAddress';
+                title = 'Shipping Address';
+                break;
+            case "PO":
+                screen = 'pickupAddress';
+                title = 'Pickup Address';
+                break;
+            default:
+                screen = 'payment';
+                title = 'BrainTree Payment Gateway';
+        }
+        if(this.state.delivery.overwrite) {
+            // TODO iterate all items in the cart to figure out the delivery method
 
-
+        }
         this.setState({
-            screen: 'shippingPickup',
-            title: 'Shipping or Pickup'
+            screen: screen,
+            title: title
         });
-
-        this.setState({
-            screen: 'pickupAddress',
-            title: 'Pickup Address'
-        });
-
-        this.setState({
-            screen: 'shippingAddress',
-            title: 'Shipping Address'
-        })
     },
 
     onConfirmShippingAddress: function() {
@@ -182,11 +199,20 @@ var CheckoutButton = React.createClass({
         });
     },
 
+    _onConfigStoreChange: function() {
+        console.log('_onConfigStoreChange, default.delivery', ConfigStore.getConfig(configId));
+        this.setState({
+            delivery: ConfigStore.getConfig(configId)
+        });
+    },
+
     componentDidMount: function() {
         CartStore.addChangeListener(this._onCartStoreChange);
         UserStore.addChangeListener(this._onUserStoreChange);
         FormStore.addChangeListener(this._onFormStoreChange);
         FormActionCreators.getForm(id);
+        ConfigStore.addChangeListener(this._onConfigStoreChange);
+        ConfigActionCreators.getConfig(configId);
         if(UserStore.getUser()) {
             this.setState({
                 shippingAddress: UserStore.getUser().shippingAddress || {}
@@ -200,17 +226,18 @@ var CheckoutButton = React.createClass({
         CartStore.removeChangeListener(this._onCartStoreChange);
         UserStore.removeChangeListener(this._onUserStoreChange);
         FormStore.removeChangeListener(this._onFormStoreChange);
+        ConfigStore.removeChangeListener(this._onConfigStoreChange);
     },
-
 
     render: function() {
         var actions = [];
         var contents;
-
+        console.log('render is called');
         if(this.state.screen === 'cart') {
             contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
             actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onDelivery} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />)
+            console.log('screen is cart');
         } else if (this.state.screen === 'shippingAddress') {
             if(this.state.schema) {
                 contents =
