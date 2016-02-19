@@ -9,7 +9,7 @@ import com.networknt.light.rule.Rule;
  * AccessLevel R [owner, admin, configAdmin]
  *
  */
-public class DelConfigRule extends AbstractBfnRule implements Rule {
+public class DelConfigRule extends AbstractConfigRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         return delConfig(objects);
     }

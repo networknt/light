@@ -65,6 +65,7 @@ public class InitDatabase {
             OrientVertexType config = graph.createVertexType("Config");
             config.createProperty("host", OType.STRING);
             config.createProperty("configId", OType.STRING);
+            config.createProperty("description", OType.STRING);
             config.createProperty("properties", OType.EMBEDDEDMAP);
             config.createProperty("createDate", OType.DATETIME);
             config.createProperty("updateDate", OType.DATETIME);
