@@ -10,7 +10,7 @@ var OrderActionCreators = require('../../actions/OrderActionCreators');
 var Cart = require('./Cart');
 var CheckoutCart = require('./CheckoutCart');
 var ShippingAddress = require('./ShippingAddress');
-var DeliveryTax = require('./DeliveryTax');
+var ShippingTax = require('./ShippingTax');
 var CheckoutDone = require('./CheckoutDone');
 var Payment = require('./Payment');
 var AuthStore = require('../../stores/AuthStore');
@@ -22,18 +22,12 @@ import IconButton from 'material-ui/lib/icon-button';
 import Dialog from 'material-ui/lib/dialog';
 import Badge from 'material-ui/lib/badge';
 import NotificationsIcon from 'material-ui/lib/svg-icons/social/notifications';
-<<<<<<< HEAD
-
-=======
 import FormActionCreators from '../../actions/FormActionCreators';
 import FormStore from '../../stores/FormStore';
 import UserStore from '../../stores/UserStore';
-import ConfigStore from '../../stores/ConfigStore';
 import UserActionCreators from '../../actions/UserActionCreators';
-import ConfigActionCreators from '../../actions/ConfigActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
-import BillingAddress from './BillingAddress';
->>>>>>> origin/develop
+
 
 function getStateFromStores() {
     return {
@@ -41,19 +35,17 @@ function getStateFromStores() {
         cartItemsCount: CartStore.getCartItemsCount(),
         cartTotal: CartStore.getCartTotal(),
         cartOpen: CartStore.getCartStatus(),
-        shippingAddress: AuthStore.getShippingAddress() || {},
         screen: 'cart',
         title: 'Cart'
     };
 }
 
-<<<<<<< HEAD
-=======
 const id = 'com.networknt.light.user.address';
-const configId = 'default.delivery';
-
->>>>>>> origin/develop
 var CheckoutButton = React.createClass({
+
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
 
     getInitialState: () => getStateFromStores(),
 
@@ -69,55 +61,35 @@ var CheckoutButton = React.createClass({
     handleCartTouchTap(event) {
         if(AuthStore.isLoggedIn()) {
             this.setState({cartOpen: true});
+            console.log('CheckoutButton.handleCartTouchTap state is set to open');
         } else {
-            this.props.history.push('login');
+            this.context.router.push('login');
         }
 
     },
 
     open: function() {
-        console.log('open is called');
         this.setState({cartOpen: true});
     },
 
-<<<<<<< HEAD
-    onShipping: function() {
+    onDelivery: function() {
+        // calculate what delivery options available based on the items in the cart.
+
+
+        this.setState({
+            screen: 'shippingPickup',
+            title: 'Shipping or Pickup'
+        });
+
+        this.setState({
+            screen: 'pickupAddress',
+            title: 'Pickup Address'
+        });
+
         this.setState({
             screen: 'shippingAddress',
             title: 'Shipping Address'
         })
-=======
-    onDelivery: function() {
-        // first get delivery method from host config, if the host config can be overwritten
-        // check each item in the cart for delivery method and details.
-        let screen;
-        let title;
-        switch(this.state.delivery.method) {
-            case "SP":
-                screen = 'shippingPickup';
-                title = 'Shipping or Pickup';
-                break;
-            case "SO":
-                screen = 'shippingAddress';
-                title = 'Shipping Address';
-                break;
-            case "PO":
-                screen = 'pickupAddress';
-                title = 'Pickup Address';
-                break;
-            default:
-                screen = 'billingAddress';
-                title = 'Billing Address';
-        }
-        if(this.state.delivery.overwrite) {
-            // TODO iterate all items in the cart to figure out the delivery method
-
-        }
-        this.setState({
-            screen: screen,
-            title: title
-        });
->>>>>>> origin/develop
     },
 
     onConfirmShippingAddress: function() {
@@ -136,64 +108,25 @@ var CheckoutButton = React.createClass({
 
     onUpdateShippingAddress: function() {
         var data = {};
-
         data.shippingAddress = this.state.shippingAddress;
         data.cartTotal = this.state.cartTotal;
         data.cartItems = this.state.cartItems;
-
-        AddressActionCreators.updateShippingAddress(data);
-        this.setState({
-            screen: 'shippingTax',
-            title: 'Shipping and Tax'
-        })
-    },
-
-<<<<<<< HEAD
-    onShippingAddressChange: function(key, val) {
-        //console.log('ExamplePage.onModelChange:', key);
-        //console.log('ExamplePage.onModelChange:', val);
-        this.setState({shippingAddress: utils.selectOrSet(key, this.state.shippingAddress, val)});
-=======
-    onBillingAddressChange: function(key, val) {
-        utils.selectOrSet(key, this.state.billingAddress, val);
-    },
-
-    onConfirmBillingAddress: function() {
-        var data = {};
-
-        data.billingAddress = this.state.billingAddress;
-        data.cartTotal = this.state.cartTotal;
-        data.cartItems = this.state.cartItems;
-
-        AddressActionCreators.confirmBillingAddress(data);
-        this.setState({
-            screen: 'deliveryTax',
-            title: 'Delivery and Tax'
-        })
-    },
-
-    onUpdateBillingAddress: function() {
-        var data = {};
-        data.billingAddress = this.state.billingAddress;
-        data.cartTotal = this.state.cartTotal;
-        data.cartItems = this.state.cartItems;
         // validate the address here.
-        let validationResult = utils.validateBySchema(this.state.schema, this.state.billingAddress);
+        let validationResult = utils.validateBySchema(this.state.schema, this.state.shippingAddress);
         if(!validationResult.valid) {
             console.log('error = ', validationResult.error.message);
             this.setState({error: validationResult.error.message});
         } else {
-            AddressActionCreators.updateBillingAddress(data);
+            AddressActionCreators.updateShippingAddress(data);
             this.setState({
-                screen: 'deliveryTax',
-                title: 'delivery and Tax'
+                screen: 'shippingTax',
+                title: 'Shipping and Tax'
             })
         }
     },
 
-    onBillingAddressChange: function(key, val) {
-        utils.selectOrSet(key, this.state.billingAddress, val);
->>>>>>> origin/develop
+    onShippingAddressChange: function(key, val) {
+        utils.selectOrSet(key, this.state.shippingAddress, val);
     },
 
     onPayment: function() {
@@ -211,7 +144,6 @@ var CheckoutButton = React.createClass({
             items.push(item);
         });
         order.items = items;
-        order.delivery = this.state.delivery;
         //console.log('order', order);
 
         OrderActionCreators.addOrder(order);
@@ -237,19 +169,9 @@ var CheckoutButton = React.createClass({
         })
     },
 
-    _onAuthStoreChange: function() {
+    _onUserStoreChange: function() {
         this.setState({
-<<<<<<< HEAD
-            shippingAddress: AuthStore.getShippingAddress() || {}
-        })
-    },
-
-    componentDidMount: function() {
-        CartStore.addChangeListener(this._onCartStoreChange);
-        AuthStore.addChangeListener(this._onAuthStoreChange);
-=======
-            shippingAddress: UserStore.getUser().shippingAddress || {},
-            billingAddress: UserStore.getUser().billingAddress || {}
+            shippingAddress: UserStore.getUser().shippingAddress || {}
         })
     },
 
@@ -260,78 +182,54 @@ var CheckoutButton = React.createClass({
         });
     },
 
-    _onConfigStoreChange: function() {
-        console.log('_onConfigStoreChange, default.delivery', ConfigStore.getConfig(configId));
-        this.setState({
-            delivery: ConfigStore.getConfig(configId)
-        });
-    },
-
     componentDidMount: function() {
         CartStore.addChangeListener(this._onCartStoreChange);
         UserStore.addChangeListener(this._onUserStoreChange);
         FormStore.addChangeListener(this._onFormStoreChange);
         FormActionCreators.getForm(id);
-        ConfigStore.addChangeListener(this._onConfigStoreChange);
-        ConfigActionCreators.getConfig(configId);
         if(UserStore.getUser()) {
             this.setState({
-                shippingAddress: UserStore.getUser().shippingAddress || {},
-                billingAddress: UserStore.getUser().billingAddress || {}
+                shippingAddress: UserStore.getUser().shippingAddress || {}
             })
         } else {
             UserActionCreators.getUser(AuthStore.getUserId());
         }
->>>>>>> origin/develop
     },
 
     componentWillUnmount: function() {
         CartStore.removeChangeListener(this._onCartStoreChange);
-<<<<<<< HEAD
-        AuthStore.removeChangeListener(this._onAuthStoreChange);
-=======
         UserStore.removeChangeListener(this._onUserStoreChange);
         FormStore.removeChangeListener(this._onFormStoreChange);
-        ConfigStore.removeChangeListener(this._onConfigStoreChange);
->>>>>>> origin/develop
     },
+
 
     render: function() {
         var actions = [];
         var contents;
-        console.log('render is called');
+
         if(this.state.screen === 'cart') {
-            contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />
-            actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onShipping} />)
+            contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
+            actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onDelivery} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />)
-            console.log('screen is cart');
         } else if (this.state.screen === 'shippingAddress') {
-            contents =  <ShippingAddress shippingAddress={this.state.shippingAddress} onShippingAddressChange={this.onShippingAddressChange} />
-            actions.length = 0;
-            actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateShippingAddress} />);
-            if(AuthStore.getShippingAddress()) {
-                actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmShippingAddress}/>);
-            }
-            actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
-        } else if (this.state.screen === 'billingAddress') {
             if(this.state.schema) {
                 contents =
                     (<div>
                         <pre>{this.state.error}</pre>
-                        <BillingAddress billingAddress={this.state.billingAddress} schema={this.state.schema} form={this.state.form} onBillingAddressChange={this.onBillingAddressChange} />
+                        <ShippingAddress shippingAddress={this.state.shippingAddress} schema={this.state.schema} form={this.state.form} onShippingAddressChange={this.onShippingAddressChange} />
                         <pre>{this.state.error}</pre>
                     </div>);
             } else {
                 contents = <CircularProgress mode="indeterminate"/>;
             }
             actions.length = 0;
-            actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateBillingAddress} />);
-            if(UserStore.getUser() && UserStore.getUser().billingAddress) {
-                actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmBillingAddress}/>);
+            actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateShippingAddress} />);
+            if(UserStore.getUser() && UserStore.getUser().shippingAddress) {
+                actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmShippingAddress}/>);
             }
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
-        } else if (this.state.screen === 'deliveryTax') {
-            contents =  <DeliveryTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
+        } else if (this.state.screen === 'shippingTax') {
+            contents =  <ShippingTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
             actions.length = 0;
             actions.push(<RaisedButton label="Check out" primary={true} onTouchTap={this.onPayment} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
@@ -353,6 +251,7 @@ var CheckoutButton = React.createClass({
                     <IconButton iconClassName="material-icons" onTouchTap={this.handleCartTouchTap} iconStyle={{margin: 0}}>shopping_cart</IconButton>
                 </Badge>
                 <Dialog
+                    autoScrollBodyContent={true}
                     title={this.state.title}
                     actions={actions}
                     modal={true}

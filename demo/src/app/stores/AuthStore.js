@@ -157,14 +157,11 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             }
             AuthStore.emitChange();
             break;
-<<<<<<< HEAD
         case ActionTypes.UPDATE_SHIPPING_ADDRESS:
             _shippingAddress = payload.data;
             //console.log('AuthStore UPDATE_SHIPPING_ADDRESS', _shippingAddress);
             AuthStore.emitChange();
             break;
-=======
->>>>>>> origin/develop
         default:
     }
 
