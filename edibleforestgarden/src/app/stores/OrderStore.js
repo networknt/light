@@ -8,7 +8,7 @@ var CHANGE_EVENT = 'change';
 
 var _total;
 var _orderId;
-var _order;
+var _orderCompleted;
 var _errors = [];
 
 var OrderStore = assign({}, EventEmitter.prototype, {
@@ -33,8 +33,8 @@ var OrderStore = assign({}, EventEmitter.prototype, {
         return _orderId;
     },
 
-    getOrder: function() {
-        return _order;
+    getOrderCompleted: function() {
+        return _orderCompleted;
     },
 
     getErrors: function() {
@@ -53,8 +53,11 @@ OrderStore.dispatchToken = AppDispatcher.register(function(payload) {
             OrderStore.emitChange();
             break;
         case ActionTypes.RECEIVE_ADD_TRANSACTION:
-            //console.log('OrderStore RECEIVE_ADD_TRANSACTION order = ', payload.json)
-            _order = payload.json;
+            _orderCompleted = true;
+            OrderStore.emitChange();
+            break;
+        case ActionTypes.ADD_SUBSCRIPTION_RESPONSE:
+            _orderCompleted = true;
             OrderStore.emitChange();
             break;
     }

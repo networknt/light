@@ -18,7 +18,6 @@ var _rid;
 var _rememberMe = false;
 var _accessToken = '';
 var _refreshToken = '';
-var _shippingAddress;
 var _paymentAddress;
 var _errors = [];
 
@@ -65,10 +64,6 @@ var AuthStore = assign({}, EventEmitter.prototype, {
         return _rememberMe;
     },
 
-    getShippingAddress: function() {
-        return _shippingAddress;
-    },
-
     getPaymentAddress: function() {
         return _paymentAddress;
     },
@@ -111,11 +106,6 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                 }
                 _rid = payload.json.rid;
                 //console.log('_rid = ', _rid);
-                //console.log('AuthStore.LOGIN_RESPONSE shippingAddress', payload.json.shippingAddress);
-                if(payload.json.shippingAddress) {
-                    _shippingAddress = payload.json.shippingAddress;
-                }
-
                 // Redirect to the attempted url if the login page was redirected upon 401 and 403 error.
                 // httpBuffer.redirectToAttemptedUrl();
 
@@ -167,11 +157,14 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             }
             AuthStore.emitChange();
             break;
+<<<<<<< HEAD
         case ActionTypes.UPDATE_SHIPPING_ADDRESS:
             _shippingAddress = payload.data;
             //console.log('AuthStore UPDATE_SHIPPING_ADDRESS', _shippingAddress);
             AuthStore.emitChange();
             break;
+=======
+>>>>>>> origin/develop
         default:
     }
 

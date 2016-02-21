@@ -34,6 +34,15 @@ ErrorStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
         case ActionTypes.SERVER_ERROR_RESPONSE:
             _error = payload.error;
+<<<<<<< HEAD
+=======
+            _status = _error.status;
+            if(_status === 200) {
+                _message = _error.statusText;
+            } else {
+                _message = _error.responseJSON? _error.responseJSON.error : _error.responseText;
+            }
+>>>>>>> origin/develop
             ErrorStore.emitChange();
             break;
     }

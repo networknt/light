@@ -6,10 +6,9 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
+var _configs = {};
 
-var _error = null;
-
-var ErrorStore = assign({}, EventEmitter.prototype, {
+var ConfigStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -23,30 +22,20 @@ var ErrorStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getError: function() {
-        return _error;
+    getConfig: function(id) {
+        return _configs[id];
     }
-
 });
 
-ErrorStore.dispatchToken = AppDispatcher.register(function(payload) {
+ConfigStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.SERVER_ERROR_RESPONSE:
-            _error = payload.error;
-<<<<<<< HEAD
-=======
-            _status = _error.status;
-            if(_status === 200) {
-                _message = _error.statusText;
-            } else {
-                _message = _error.responseJSON? _error.responseJSON.error : _error.responseText;
-            }
->>>>>>> origin/develop
-            ErrorStore.emitChange();
+        case ActionTypes.GET_CONFIG_RESPONSE:
+            _configs[payload.json.configId] = payload.json.properties;
+            ConfigStore.emitChange();
             break;
     }
     return true;
 });
 
-module.exports = ErrorStore;
+module.exports = ConfigStore;

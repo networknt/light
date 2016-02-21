@@ -152,6 +152,18 @@ CartStore.dispatchToken = AppDispatcher.register(function(payload) {
             CartStore.emitChange();
             break;
 
+        case ActionTypes.UPDATE_BILLING_ADDRESS_RESPONSE:
+            console.log('billingAddress update res ', payload.json);
+            _taxes = payload.json.taxes;
+            CartStore.emitChange();
+            break;
+
+        case ActionTypes.CONFIRM_BILLING_ADDRESS_RESPONSE:
+            console.log('billingAddress confirm res ', payload.json);
+            _taxes = payload.json.taxes;
+            CartStore.emitChange();
+            break;
+
         case ActionTypes.RECEIVE_CLIENT_TOKEN:
             _clientToken = payload.json.clientToken;
             CartStore.emitChange();

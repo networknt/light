@@ -13,9 +13,14 @@ var Cart = React.createClass({
 
 
     render: function() {
+<<<<<<< HEAD
         //console.log('cartItems = ', this.props.cartItems);
         var cartItems = this.props.cartItems.map(function(cartItem) {
             return <CartItem key={cartItem.index} cartItem={cartItem} />
+=======
+        var cartItems = this.props.cartItems.map((cartItem, index) => {
+            return <CartItem key={index} cartItem={cartItem} />
+>>>>>>> origin/develop
         });
 
         var shipping;
@@ -77,7 +82,6 @@ var Cart = React.createClass({
             </table>
         )
     }
-
 });
 
 module.exports = Cart;

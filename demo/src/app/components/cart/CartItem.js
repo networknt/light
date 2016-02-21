@@ -21,13 +21,13 @@ var CartItem = React.createClass({
         var options = _.times(cartItem.initialInventory, n =>
                 <option key={n} value={n+1}>{n+1}</option>
         );
-
+        console.log('rendering cartItem');
         return (
             <tr>
                 <td>
                     <div className="media">
                         <a className="thumbnail pull-left" href="#">
-                            <img className="media-object" src={'/assets/images/' + cartItem.image} />
+                            <img className="media-object" src={cartItem.image} />
                         </a>
                         <div className="media-body">
                             <h4 className="media-heading">

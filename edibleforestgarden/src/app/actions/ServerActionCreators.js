@@ -221,6 +221,20 @@ module.exports = {
         });
     },
 
+    updateBillingAddressResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPDATE_BILLING_ADDRESS_RESPONSE,
+            json: json
+        });
+    },
+
+    confirmBillingAddressResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.CONFIRM_BILLING_ADDRESS_RESPONSE,
+            json: json
+        });
+    },
+
     receiveForm: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.RECEIVE_FORM,
@@ -261,6 +275,14 @@ module.exports = {
             type: ActionTypes.RECEIVE_ADD_TRANSACTION,
             json: json,
             error: error
+        });
+    },
+
+    addSubscriptionResponse: function(json) {
+        console.log('ServerActionCreator addSubscriptionResponse is callled', json);
+        AppDispatcher.dispatch({
+            type: ActionTypes.ADD_SUBSCRIPTION_RESPONSE,
+            json: json
         });
     },
 
