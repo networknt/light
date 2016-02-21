@@ -20,6 +20,8 @@ import CatalogCategoryStore from '../../stores/CatalogCategoryStore';
 import CommonUtils from '../../utils/CommonUtils';
 import ProductSummary from './ProductSummary';
 
+import Toggle from 'material-ui/lib/toggle';
+
 
 var Catalog = React.createClass({
     displayName: 'Catalog',
@@ -31,7 +33,8 @@ var Catalog = React.createClass({
             allowUpdate: false,
             total: 0,
             pageSize: 10,
-            pageNo: 1
+            pageNo: 1,
+            displayAsGrid: false,
         };
     },
 
@@ -102,9 +105,17 @@ var Catalog = React.createClass({
         CatalogActionCreators.getCatalogProduct(this.state.rid, this.state.pageNo, pageSize);
     },
 
+    _onDisplayFormatChange: function () {
+        this.setState({
+            displayAsGrid: !this.state.displayAsGrid
+        });
+    },
+
     render: function() {
         //console.log('total', this.state.total);
         let addButton = this.state.allowUpdate? <RaisedButton label="Add Product" primary={true} onTouchTap={this._onAddProduct} /> : '';
+
+        const itemsRootClass = this.state.displayAsGrid ? "gridListRoot" : "";
 
         return (
             <div>
@@ -113,14 +124,14 @@ var Catalog = React.createClass({
                 </div>
                 <div className="columnRoot">
                     <div className="leftColumn">
-                        <div className="gridListRoot">
+                        <div className={itemsRootClass}>
                             {
                                 this.state.products.map(function(product, index) {
                                     var boundClick = this._routeToProduct.bind(this, product.entityId);
                                     var boundAddCart = this._onAddCart.bind(this, index);
                                     return (
                                         <span key={index}>
-                                            <ProductSummary index={index} product={product} onClick={boundClick} onAddCart={boundAddCart} />
+                                            <ProductSummary index={index} product={product} onClick={boundClick} onAddCart={boundAddCart} displayAsGrid={this.state.displayAsGrid} />
                                         </span>
                                     );
                                 }, this)
@@ -131,6 +142,7 @@ var Catalog = React.createClass({
                     <div className="rightColumn">
                         <div className="blogInfo">
                             <h1>Catalog Information</h1>
+                            <Toggle label="Display as grid:" toggled={this.state.displayAsGrid} onToggle={this._onDisplayFormatChange} style={{maxWidth: '150'}} />
                             <p>In this section, you will see some information and references pertaining to the opened catalog.</p>
                             <p>Also, having the screen width be less then 64em will hide it, leaving reading room for mobile users only concerned with reading post content on the go.</p>
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad adipisci alias cum, cumque cupiditate ea eum itaque, minus molestias necessitatibus nihil pariatur perspiciatis quam quas quod rem repellat, sint voluptate.</p>

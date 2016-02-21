@@ -17,10 +17,13 @@ class ProductSummary extends React.Component {
             index: this.props.index
         };
 
+        const rootClass = this.props.displayAsGrid ? "gridList" : "";
+        const productClass = this.props.displayAsGrid ? "productItemGrid" : "productItemList";
+
         return (
-            <div className="gridList">
+            <div className={rootClass}>
                 <Paper className="summaryPaper">
-                    <div className="productItem">
+                    <div className={productClass}>
                         <img src={'/assets/images/' + this.props.product.variants[i].image} className="img-responsive productImage" />
                         <h3><a onClick={this.props.onClick}>{this.props.product.name}</a></h3>
                         <h4>{ '$' + price}</h4>
@@ -46,7 +49,8 @@ ProductSummary.propTypes = {
     product: React.PropTypes.object.isRequired,
     index: React.PropTypes.number.isRequired,
     onClick: React.PropTypes.func.isRequired,
-    onAddCart: React.PropTypes.func.isRequired
+    onAddCart: React.PropTypes.func.isRequired,
+    displayAsGrid: React.PropTypes.bool.isRequired
 };
 
 export default ProductSummary;
