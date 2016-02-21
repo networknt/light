@@ -74,12 +74,6 @@ public class SignInUserRule extends AbstractUserRule implements Rule {
                             inputMap.put("eventMap", eventMap);
                             Map<String, Object> tokens = new HashMap<String, Object>();
                             tokens.put("accessToken", jwt);
-                            if(user.getProperty("shippingAddress") != null) {
-                                tokens.put("shippingAddress", user.getProperty("shippingAddress"));
-                            }
-                            if(user.getProperty("paymentAddress") != null) {
-                                tokens.put("paymentAddress", user.getProperty("paymentAddress"));
-                            }
                             tokens.put("rid", user.getIdentity().toString());
                             if(rememberMe) {
                                 // generate refreshToken

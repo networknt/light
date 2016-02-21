@@ -86,6 +86,10 @@
       "location": "event/edibleforestgarden/catalog_product.json"
     },
     {
+      "description": "This file contains networknt site config data",
+      "location": "event/networknt/config.json"
+    },
+    {
       "description": "This file contains networknt site blog category data for cms",
       "location": "event/networknt/blog.json"
     },

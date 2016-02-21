@@ -19,14 +19,14 @@
           "type": "Standard",
           "price": 5,
           "image": "/images/hosting/light160.jpg",
-          "inventory": 100000
+          "inventory": 5
         },
         {
           "sku": "api-customized",
           "type": "Customized",
           "price": 50,
           "image": "/images/hosting/light160.jpg",
-          "inventory": 10000
+          "inventory": 5
         }
       ],
       "content": "APIs out of the box without customization and this is the easiest way to bring up a site of your own that has all common functionalities along with content management and e-commence. All you need to do is to find a host for your static site and even github.com should work.",
@@ -65,14 +65,14 @@
           "type": "Standard",
           "price": 10,
           "image": "/images/hosting/light160.jpg",
-          "inventory": 10000
+          "inventory": 5
         },
         {
           "sku": "site-customized",
           "type": "Customized",
           "price": 100,
           "image": "/images/hosting/light160.jpg",
-          "inventory": 10000
+          "inventory": 5
         }
       ],
       "content": "Standard package contains the following:\n1. All the standard APIs provided by the Framework, Content Management and E-Commerce.\n2. Static Site Template with ability to customize. \n\nCustomized package contains the following:\n1. Everything Standard package offers\n2. Customized APIs\n\n",

@@ -2,7 +2,9 @@ package com.networknt.light.rule.payment;
 
 import com.braintreegateway.*;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
+import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.ext.XLogger;
@@ -34,6 +36,7 @@ public class AddSubscriptionRule extends AbstractPaymentRule implements Rule {
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String)data.get("host");
         String userId = (String)user.get("userId"); // this will be customer_id
+        String rid = (String)user.get("@rid");
         Integer orderId = (Integer)data.get("orderId");
         Map<String, Object> tran = (Map<String, Object>)data.get("transaction");
         String nonce = (String)tran.get("nonce");
@@ -50,11 +53,16 @@ public class AddSubscriptionRule extends AbstractPaymentRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.putAll(data);
-                List<Map<String, Object>> subscriptions = new ArrayList<Map<String, Object>>();
+                eventData.put("createDate", new java.util.Date());
+                eventData.put("createUserId", userId);
 
-                // first need to create a payment method for the customer.
+                List<Map<String, Object>> subscriptions = new ArrayList<Map<String, Object>>();
+                // first get braintree customer id from user profile. The customerId was created when
+                // billing address is created.
+                Vertex userVertex = DbService.getVertexByRid(graph, rid);
+                String braintreeCustomerId = userVertex.getProperty("braintreeCustomerId");
                 PaymentMethodRequest paymentMethodRequest = new PaymentMethodRequest()
-                .customerId(userId)
+                .customerId(braintreeCustomerId)
                 .paymentMethodNonce(nonce);
                 Result<? extends PaymentMethod> paymentMethodResult = gatewayMap.get(host).paymentMethod().create(paymentMethodRequest);
                 if(paymentMethodResult.isSuccess()) {
@@ -72,50 +80,26 @@ public class AddSubscriptionRule extends AbstractPaymentRule implements Rule {
                             sub.put("sku", item.get("sku"));
                             sub.put("subscriptionId", subscription.getId());
                             subscriptions.add(sub);
-
                         } else {
-                            Subscription subscription = subscriptionResult.getTarget();
-                            error = subscription.getStatus()
+                            ValidationErrors validationErrors = subscriptionResult.getErrors();
+                            List<ValidationError> errors = validationErrors.getAllDeepValidationErrors();
+                            error = "Validation Error:";
+                            for(ValidationError e: errors) {
+                                error = error + " " + e.getCode() + " " + e.getMessage();
+                            }
+                            inputMap.put("responseCode", 400);
                         }
                     }
                     eventData.put("subscriptions", subscriptions);
-                    // TODO return the subscription id/sku info to the UI.
+                    Map<String, Object> result = new HashMap<String, Object>();
+                    result.put("orderId", orderId);
+                    result.put("subscriptions", subscriptions);
+                    inputMap.put("result", mapper.writeValueAsString(result));
 
-                }
-
-                TransactionRequest request = new TransactionRequest()
-                        .amount(total)
-                        .paymentMethodNonce(nonce)
-                        .options()
-                        .submitForSettlement(true)
-                        .done();
-                Result<Transaction> result = gatewayMap.get(host).transaction().sale(request);
-                if (result.isSuccess()) {
-                    // return the order to ui in order to render the summary page.
-                    String json = order.getRecord().toJSON();
-                    inputMap.put("result", json);
-                } else if (result.getTransaction() != null) {
-                    Transaction transaction = result.getTransaction();
-                    error = "Error processing transaction. Status: " + transaction.getStatus() +
-                            " Code: " + transaction.getProcessorResponseCode() +
-                            " Text: " + transaction.getProcessorResponseText();
-                    inputMap.put("responseCode", 400);
-                    //System.out.println("Error processing transaction:");
-                    //System.out.println("  Status: " + transaction.getStatus());
-                    //System.out.println("  Code: " + transaction.getProcessorResponseCode());
-                    //System.out.println("  Text: " + transaction.getProcessorResponseText());
                 } else {
-                    inputMap.put("responseCode", 400);
-                    for (ValidationError validationError : result.getErrors().getAllDeepValidationErrors()) {
-                        error = error + "Attribute: " + validationError.getAttribute() +
-                                " Code: " + validationError.getCode() +
-                                " Message: " + validationError.getMessage() + "\n";
-                        //System.out.println("Attribute: " + validationError.getAttribute());
-                        //System.out.println("  Code: " + validationError.getCode());
-                        //System.out.println("  Message: " + validationError.getMessage());
-                    }
-                }
+                    // payment method failed
 
+                }
                 // TODO send an email with order info to the customer here. Assuming payment status is paid here.
 
             } else {

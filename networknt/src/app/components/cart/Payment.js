@@ -5,9 +5,12 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var PaymentStore = require('../../stores/PaymentStore');
 var OrderStore = require('../../stores/OrderStore');
+import ConfigStore from '../../stores/ConfigStore';
 var PaymentActionCreators = require('../../actions/PaymentActionCreators');
 var DropIn = require('braintree-react').DropIn;
 var braintree = require('braintree-web');
+
+const configId = 'default.delivery';
 
 var Payment = React.createClass({
 
@@ -27,8 +30,17 @@ var Payment = React.createClass({
 
     onPaymentMethodReceived: function (payload) {
         //console.log(payload);
-        PaymentActionCreators.addTransaction(payload, OrderStore.getOrderId());
-        //this.props.onPlaceOrder();
+        let delivery = ConfigStore.getConfig(configId);
+        console.log('delivery', delivery);
+        switch(delivery.method) {
+            case "RS":
+                console.log('RS subscription');
+                PaymentActionCreators.addSubscription(payload, OrderStore.getOrderId());
+                break;
+            default:
+                console.log('One time payment');
+                PaymentActionCreators.addTransaction(payload, OrderStore.getOrderId());
+        }
     },
 
     componentDidMount: function() {
@@ -50,8 +62,7 @@ var Payment = React.createClass({
     },
 
     _onChangeOrderStore: function() {
-        //console.log('OrderStore is changed', OrderStore.getOrder());
-        if(OrderStore.getOrder()) {
+        if(OrderStore.getOrderCompleted()) {
             this.props.onPlaceOrder();
         }
     },

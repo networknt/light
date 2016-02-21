@@ -15,6 +15,14 @@ module.exports = {
 
     confirmShippingAddress: function(data) {
         WebAPIUtils.confirmShippingAddress(data);
+    },
+
+    updateBillingAddress: function(data) {
+        WebAPIUtils.updateBillingAddress(data);
+    },
+
+    confirmBillingAddress: function(data) {
+        WebAPIUtils.confirmBillingAddress(data);
     }
 
 };

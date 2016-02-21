@@ -291,7 +291,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         }
     }
 
-    protected String getConfig(String host, String configId) throws Exception {
+    public String getConfig(String host, String configId) throws Exception {
         String json  = null;
         Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");

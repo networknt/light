@@ -1,14 +1,8 @@
 package com.networknt.light.rule.tag;
 
-import com.networknt.light.rule.shipping.AbstractAddressRule;
-import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by steve on 31/01/16.

@@ -745,8 +745,8 @@ module.exports = {
 
     updateShippingAddress: function(address) {
         var updAddress = {
-            category: 'shipping',
-            name: 'updAddress',
+            category: 'address',
+            name: 'updShippingAddress',
             readOnly: false,
             data: address
         };
@@ -758,29 +758,67 @@ module.exports = {
             dataType: 'json'
         }).done(function(data) {
             data.shippingAddress = address;
-            console.log('updShippingAddress done', data);
             ServerActionCreators.updateShippingAddressResponse(data);
         }).fail(function(error) {
-            console.log('updShippingAddress error', error);
-            ErrorActionCreators.serverErrorResponse(error);        });
+            ErrorActionCreators.serverErrorResponse(error);
+        });
     },
 
     confirmShippingAddress: function(address) {
-        var confirmAddress = {
-            category: 'shipping',
-            name: 'cnfAddress',
+        var cnfAddress = {
+            category: 'address',
+            name: 'cnfShippingAddress',
             readOnly: true,
             data: address
         };
         $.ajax({
             type: 'POST',
             url: '/api/rs',
-            data: JSON.stringify(confirmAddress),
+            data: JSON.stringify(cnfAddress),
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            data.shippingAddress = address;
             ServerActionCreators.confirmShippingAddressResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    updateBillingAddress: function(address) {
+        var updAddress = {
+            category: 'address',
+            name: 'updBillingAddress',
+            readOnly: false,
+            data: address
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(updAddress),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.updateBillingAddressResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    confirmBillingAddress: function(address) {
+        var cnfAddress = {
+            category: 'address',
+            name: 'cnfBillingAddress',
+            readOnly: true,
+            data: address
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(cnfAddress),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.confirmBillingAddressResponse(data);
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });
@@ -930,6 +968,29 @@ module.exports = {
             ServerActionCreators.receiveAddTransaction(data, null);
         }).fail(function(error) {
             ServerActionCreators.receiveAddTransaction(null, error);
+        });
+    },
+
+    addSubscription: function(transaction, orderId) {
+        var addSubscription = {
+            category: 'payment',
+            name: 'addSubscription',
+            readOnly: false,
+            data: {
+                transaction: transaction,
+                orderId: orderId
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(addSubscription),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.addSubscriptionResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 

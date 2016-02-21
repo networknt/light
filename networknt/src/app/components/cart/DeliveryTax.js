@@ -7,7 +7,7 @@ var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
 var Cart = require('./Cart');
 
-var ShippingTax = React.createClass({
+var DeliveryTax = React.createClass({
 
     render: function() {
         return (
@@ -16,4 +16,4 @@ var ShippingTax = React.createClass({
     }
 });
 
-module.exports = ShippingTax;
+module.exports = DeliveryTax;

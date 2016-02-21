@@ -17,7 +17,6 @@
       "entityId",
       "name",
       "description",
-      "delivery",
       "content",
       "variants"
     ],

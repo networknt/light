@@ -47,7 +47,7 @@ ErrorStore.dispatchToken = AppDispatcher.register(function(payload) {
             if(_status === 200) {
                 _message = _error.statusText;
             } else {
-                _message = _error.responseJSON.error;
+                _message = _error.responseJSON? _error.responseJSON.error : _error.responseText;
             }
             ErrorStore.emitChange();
             break;

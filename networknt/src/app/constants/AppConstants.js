@@ -125,12 +125,15 @@ module.exports = {
         // Address
         UPDATE_SHIPPING_ADDRESS_RESPONSE: null,
         CONFIRM_SHIPPING_ADDRESS_RESPONSE: null,
+        UPDATE_BILLING_ADDRESS_RESPONSE: null,
+        CONFIRM_BILLING_ADDRESS_RESPONSE: null,
 
         // Payment
         GET_CLIENT_TOKEN: null,
         RECEIVE_CLIENT_TOKEN: null,
         ADD_TRANSACTION: null,
         RECEIVE_ADD_TRANSACTION: null,
+        ADD_SUBSCRIPTION_RESPONSE: null,
 
         // Order
         ADD_ORDER: null,
