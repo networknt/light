@@ -10,7 +10,7 @@ var OrderActionCreators = require('../../actions/OrderActionCreators');
 var Cart = require('./Cart');
 var CheckoutCart = require('./CheckoutCart');
 var ShippingAddress = require('./ShippingAddress');
-var ShippingTax = require('./ShippingTax');
+var DeliveryTax = require('./DeliveryTax');
 var CheckoutDone = require('./CheckoutDone');
 var Payment = require('./Payment');
 var AuthStore = require('../../stores/AuthStore');
@@ -25,9 +25,11 @@ import NotificationsIcon from 'material-ui/lib/svg-icons/social/notifications';
 import FormActionCreators from '../../actions/FormActionCreators';
 import FormStore from '../../stores/FormStore';
 import UserStore from '../../stores/UserStore';
+import ConfigStore from '../../stores/ConfigStore';
 import UserActionCreators from '../../actions/UserActionCreators';
+import ConfigActionCreators from '../../actions/ConfigActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
-
+import BillingAddress from './BillingAddress';
 
 function getStateFromStores() {
     return {
@@ -41,6 +43,8 @@ function getStateFromStores() {
 }
 
 const id = 'com.networknt.light.user.address';
+const configId = 'default.delivery';
+
 var CheckoutButton = React.createClass({
 
     contextTypes: {
@@ -69,27 +73,40 @@ var CheckoutButton = React.createClass({
     },
 
     open: function() {
+        console.log('open is called');
         this.setState({cartOpen: true});
     },
 
     onDelivery: function() {
-        // calculate what delivery options available based on the items in the cart.
+        // first get delivery method from host config, if the host config can be overwritten
+        // check each item in the cart for delivery method and details.
+        let screen;
+        let title;
+        switch(this.state.delivery.method) {
+            case "SP":
+                screen = 'shippingPickup';
+                title = 'Shipping or Pickup';
+                break;
+            case "SO":
+                screen = 'shippingAddress';
+                title = 'Shipping Address';
+                break;
+            case "PO":
+                screen = 'pickupAddress';
+                title = 'Pickup Address';
+                break;
+            default:
+                screen = 'billingAddress';
+                title = 'Billing Address';
+        }
+        if(this.state.delivery.overwrite) {
+            // TODO iterate all items in the cart to figure out the delivery method
 
-
+        }
         this.setState({
-            screen: 'shippingPickup',
-            title: 'Shipping or Pickup'
+            screen: screen,
+            title: title
         });
-
-        this.setState({
-            screen: 'pickupAddress',
-            title: 'Pickup Address'
-        });
-
-        this.setState({
-            screen: 'shippingAddress',
-            title: 'Shipping Address'
-        })
     },
 
     onConfirmShippingAddress: function() {
@@ -125,8 +142,45 @@ var CheckoutButton = React.createClass({
         }
     },
 
-    onShippingAddressChange: function(key, val) {
-        utils.selectOrSet(key, this.state.shippingAddress, val);
+    onBillingAddressChange: function(key, val) {
+        utils.selectOrSet(key, this.state.billingAddress, val);
+    },
+
+    onConfirmBillingAddress: function() {
+        var data = {};
+
+        data.billingAddress = this.state.billingAddress;
+        data.cartTotal = this.state.cartTotal;
+        data.cartItems = this.state.cartItems;
+
+        AddressActionCreators.confirmBillingAddress(data);
+        this.setState({
+            screen: 'deliveryTax',
+            title: 'Delivery and Tax'
+        })
+    },
+
+    onUpdateBillingAddress: function() {
+        var data = {};
+        data.billingAddress = this.state.billingAddress;
+        data.cartTotal = this.state.cartTotal;
+        data.cartItems = this.state.cartItems;
+        // validate the address here.
+        let validationResult = utils.validateBySchema(this.state.schema, this.state.billingAddress);
+        if(!validationResult.valid) {
+            console.log('error = ', validationResult.error.message);
+            this.setState({error: validationResult.error.message});
+        } else {
+            AddressActionCreators.updateBillingAddress(data);
+            this.setState({
+                screen: 'deliveryTax',
+                title: 'delivery and Tax'
+            })
+        }
+    },
+
+    onBillingAddressChange: function(key, val) {
+        utils.selectOrSet(key, this.state.billingAddress, val);
     },
 
     onPayment: function() {
@@ -144,6 +198,7 @@ var CheckoutButton = React.createClass({
             items.push(item);
         });
         order.items = items;
+        order.delivery = this.state.delivery;
         //console.log('order', order);
 
         OrderActionCreators.addOrder(order);
@@ -171,7 +226,8 @@ var CheckoutButton = React.createClass({
 
     _onUserStoreChange: function() {
         this.setState({
-            shippingAddress: UserStore.getUser().shippingAddress || {}
+            shippingAddress: UserStore.getUser().shippingAddress || {},
+            billingAddress: UserStore.getUser().billingAddress || {}
         })
     },
 
@@ -182,14 +238,24 @@ var CheckoutButton = React.createClass({
         });
     },
 
+    _onConfigStoreChange: function() {
+        console.log('_onConfigStoreChange, default.delivery', ConfigStore.getConfig(configId));
+        this.setState({
+            delivery: ConfigStore.getConfig(configId)
+        });
+    },
+
     componentDidMount: function() {
         CartStore.addChangeListener(this._onCartStoreChange);
         UserStore.addChangeListener(this._onUserStoreChange);
         FormStore.addChangeListener(this._onFormStoreChange);
         FormActionCreators.getForm(id);
+        ConfigStore.addChangeListener(this._onConfigStoreChange);
+        ConfigActionCreators.getConfig(configId);
         if(UserStore.getUser()) {
             this.setState({
-                shippingAddress: UserStore.getUser().shippingAddress || {}
+                shippingAddress: UserStore.getUser().shippingAddress || {},
+                billingAddress: UserStore.getUser().billingAddress || {}
             })
         } else {
             UserActionCreators.getUser(AuthStore.getUserId());
@@ -200,17 +266,18 @@ var CheckoutButton = React.createClass({
         CartStore.removeChangeListener(this._onCartStoreChange);
         UserStore.removeChangeListener(this._onUserStoreChange);
         FormStore.removeChangeListener(this._onFormStoreChange);
+        ConfigStore.removeChangeListener(this._onConfigStoreChange);
     },
-
 
     render: function() {
         var actions = [];
         var contents;
-
+        console.log('render is called');
         if(this.state.screen === 'cart') {
             contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
             actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onDelivery} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />)
+            console.log('screen is cart');
         } else if (this.state.screen === 'shippingAddress') {
             if(this.state.schema) {
                 contents =
@@ -228,8 +295,25 @@ var CheckoutButton = React.createClass({
                 actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmShippingAddress}/>);
             }
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
-        } else if (this.state.screen === 'shippingTax') {
-            contents =  <ShippingTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
+        } else if (this.state.screen === 'billingAddress') {
+            if(this.state.schema) {
+                contents =
+                    (<div>
+                        <pre>{this.state.error}</pre>
+                        <BillingAddress billingAddress={this.state.billingAddress} schema={this.state.schema} form={this.state.form} onBillingAddressChange={this.onBillingAddressChange} />
+                        <pre>{this.state.error}</pre>
+                    </div>);
+            } else {
+                contents = <CircularProgress mode="indeterminate"/>;
+            }
+            actions.length = 0;
+            actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateBillingAddress} />);
+            if(UserStore.getUser() && UserStore.getUser().billingAddress) {
+                actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmBillingAddress}/>);
+            }
+            actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
+        } else if (this.state.screen === 'deliveryTax') {
+            contents =  <DeliveryTax cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
             actions.length = 0;
             actions.push(<RaisedButton label="Check out" primary={true} onTouchTap={this.onPayment} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);

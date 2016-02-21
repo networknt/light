@@ -5,10 +5,11 @@ var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var CartStore = require('../../stores/CartStore');
 var CartActionCreators = require('../../actions/CartActionCreators');
-var Cart = require('./Cart')
+var Cart = require('./Cart');
 
 var CheckoutCart = React.createClass({
     render: function() {
+        console.log('rendering Checkoutcart');
         return (
             <Cart cartItems={ this.props.cartItems } totalPrice={ this.props.totalPrice } />
         )

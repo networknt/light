@@ -11,7 +11,6 @@ var Cart = React.createClass({
 
     render: function() {
         var cartItems = this.props.cartItems.map((cartItem, index) => {
-            console.log(index, cartItem);
             return <CartItem key={index} cartItem={cartItem} />
         });
 
@@ -74,7 +73,6 @@ var Cart = React.createClass({
             </table>
         )
     }
-
 });
 
 module.exports = Cart;
