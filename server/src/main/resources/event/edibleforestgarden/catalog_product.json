@@ -18,14 +18,14 @@
           "type": "One root",
           "price": 2,
           "image": "1.png",
-          "inventory": 100
+          "inventory": 5
         },
         {
           "sku": "comfrey_booking4_ten",
           "type": "Ten roots",
           "price": 15,
           "image": "2.png",
-          "inventory": 50
+          "inventory": 5
         }
       ],
       "parentId": "Herbaceous",
@@ -59,14 +59,14 @@
           "type": "One root",
           "price": 2,
           "image": "3.png",
-          "inventory": 100
+          "inventory": 5
         },
         {
           "sku": "comfrey_bocking14_ten",
           "type": "Ten roots",
           "price": 15,
           "image": "4.png",
-          "inventory": 50
+          "inventory": 5
         }
       ],
       "parentId": "Herbaceous",

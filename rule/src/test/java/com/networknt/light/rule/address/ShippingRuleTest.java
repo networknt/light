@@ -1,13 +1,11 @@
-package com.networknt.light.rule.shipping;
+package com.networknt.light.rule.address;
 
-import com.networknt.light.util.ServiceLocator;
 import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,6 +30,7 @@ public class ShippingRuleTest extends TestCase {
         super.tearDown();
     }
 
+    /*
     public void testCalculateShipping() throws Exception {
         BigDecimal subTotal = new BigDecimal(10.00);
         BigDecimal shipping = AbstractAddressRule.calculateShipping("ON", subTotal);
@@ -51,4 +50,5 @@ public class ShippingRuleTest extends TestCase {
         taxes = AbstractAddressRule.calculateTax("QC", subTotal);
         Assert.assertEquals(new BigDecimal("237239.81"), taxes.get("QST"));
     }
+    */
 }

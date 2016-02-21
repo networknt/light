@@ -1,7 +1,9 @@
-package com.networknt.light.rule.shipping;
+package com.networknt.light.rule.address;
 
-import com.networknt.light.rule.AbstractRule;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.networknt.light.rule.AbstractCommerceRule;
 import com.networknt.light.rule.Rule;
+import com.networknt.light.rule.config.GetConfigRule;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
@@ -11,13 +13,15 @@ import org.slf4j.ext.XLoggerFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Created by steve on 13/12/15.
+ * Created by steve on 20/02/16.
  */
-public abstract class AbstractAddressRule extends AbstractRule implements Rule {
+public abstract class AbstractAddressRule extends AbstractCommerceRule implements Rule {
     static final XLogger logger = XLoggerFactory.getXLogger(AbstractAddressRule.class);
+    static final String DEFAULT_TAX = "default.tax";
 
     public abstract boolean execute (Object ...objects) throws Exception;
 
@@ -32,9 +36,13 @@ public abstract class AbstractAddressRule extends AbstractRule implements Rule {
                 if(shippingAddress != null) {
                     user.setProperty("shippingAddress", shippingAddress);
                 }
-                Map<String, Object> paymentAddress = (Map<String, Object>)data.get("paymentAddress");
-                if(paymentAddress != null) {
-                    user.setProperty("paymentAddress", paymentAddress);
+                Map<String, Object> billingAddress = (Map<String, Object>)data.get("billingAddress");
+                if(billingAddress != null) {
+                    user.setProperty("billingAddress", billingAddress);
+                }
+                String braintreeCustomerId = (String)data.get("braintreeCustomerId");
+                if(braintreeCustomerId != null) {
+                    user.setProperty("braintreeCustomerId", braintreeCustomerId);
                 }
                 user.setProperty("updateDate", data.get("updateDate"));
             }
@@ -48,6 +56,30 @@ public abstract class AbstractAddressRule extends AbstractRule implements Rule {
         }
     }
 
+    /**
+     * Assuming that default delivery method will identify product type (goods vs services)
+     *
+     */
+    public static Map<String, BigDecimal> calculateTax(String host, Map<String, Object> address, List<Map<String, Object>> items, BigDecimal subTotal) throws Exception {
+        Map<String, BigDecimal> taxes = new HashMap<String, BigDecimal>();
+        GetConfigRule getConfigRule = new GetConfigRule();
+        String s = getConfigRule.getConfig(host, DEFAULT_TAX);
+        Map<String, Object> defaultTax = ServiceLocator.getInstance().getMapper().readValue(s, new TypeReference<HashMap<String, Object>>() {});
+        if(defaultTax != null) {
+            Map<String, Object> properties = (Map)defaultTax.get("properties");
+            if(properties != null) {
+                boolean taxIncluded = (boolean)properties.get("taxIncluded");
+                if(taxIncluded) {
+
+                } else {
+                    // TODO calculate taxes based on address and items.
+
+                }
+            }
+        }
+        return taxes;
+    }
+    // TODO calculate base on the rule defined in the config.
     public static Map<String, BigDecimal> calculateTax(String province, BigDecimal subTotal) {
         Map<String, BigDecimal> taxes = new HashMap<String, BigDecimal>();
         BigDecimal gst = subTotal.multiply(new BigDecimal(0.05));
@@ -121,10 +153,11 @@ public abstract class AbstractAddressRule extends AbstractRule implements Rule {
         return taxes;
     }
 
-    public static BigDecimal calculateShipping(String province, BigDecimal subTotal) {
+    // TODO calculate based on the rule defined in the config.
+    public static BigDecimal calculateShipping(String host, Map<String, Object> address, List<Map<String, Object>> items, BigDecimal subTotal) {
         BigDecimal b = subTotal.multiply(new BigDecimal(0.05));
         b = b.setScale(2, RoundingMode.HALF_UP);
-        return b.add(new BigDecimal(30.00));
+        return b.add(new BigDecimal(20.00));
     }
 
 }

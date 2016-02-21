@@ -17,6 +17,10 @@
       "parentRid",
       "name",
       "description",
+<<<<<<< HEAD
+=======
+      "content",
+>>>>>>> develop
       "variants"
     ],
     "properties": {

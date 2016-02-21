@@ -5,19 +5,15 @@ import com.braintreegateway.Transaction;
 import com.braintreegateway.TransactionRequest;
 import com.braintreegateway.ValidationError;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.shipping.AbstractAddressRule;
-import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
-import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by steve on 20/12/15.
@@ -70,28 +66,35 @@ public class AddTransactionRule extends AbstractPaymentRule implements Rule {
                     eventData.put("transactionId", transaction.getId());
                     eventData.put("createDate", new java.util.Date());
                     eventData.put("createUserId", user.get("userId"));
-                    // return the order to ui in order to render the summary page.
-                    String json = order.getRecord().toJSON();
-                    inputMap.put("result", json);
+
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("orderId", orderId);
+                    inputMap.put("result", mapper.writeValueAsString(map));
                 } else if (result.getTransaction() != null) {
                     Transaction transaction = result.getTransaction();
                     error = "Error processing transaction. Status: " + transaction.getStatus() +
                             " Code: " + transaction.getProcessorResponseCode() +
                             " Text: " + transaction.getProcessorResponseText();
                     inputMap.put("responseCode", 400);
+<<<<<<< HEAD
                     System.out.println("Error processing transaction:");
                     System.out.println("  Status: " + transaction.getStatus());
                     System.out.println("  Code: " + transaction.getProcessorResponseCode());
                     System.out.println("  Text: " + transaction.getProcessorResponseText());
+=======
+>>>>>>> develop
                 } else {
                     inputMap.put("responseCode", 400);
                     for (ValidationError validationError : result.getErrors().getAllDeepValidationErrors()) {
                         error = error + "Attribute: " + validationError.getAttribute() +
                                 " Code: " + validationError.getCode() +
                                 " Message: " + validationError.getMessage() + "\n";
+<<<<<<< HEAD
                         System.out.println("Attribute: " + validationError.getAttribute());
                         System.out.println("  Code: " + validationError.getCode());
                         System.out.println("  Message: " + validationError.getMessage());
+=======
+>>>>>>> develop
                     }
                 }
 

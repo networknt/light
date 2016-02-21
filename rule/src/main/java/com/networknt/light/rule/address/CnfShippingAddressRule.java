@@ -1,4 +1,4 @@
-package com.networknt.light.rule.shipping;
+package com.networknt.light.rule.address;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
@@ -10,19 +10,19 @@ import org.slf4j.ext.XLoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Created by steve on 13/12/15.
+ * Created by steve on 20/02/16.
  *
- * This rule is to confirm that the shipping address in profile is correct and nothing needs
- * to be updated. This is a readonly rule and shipping cost and tax will be calculated and returned.
+ * Confirm shipping address will only be called from shopping cart. So assume cartTotal is not null
  *
- * AccessLevel user
+ * AccessLevel R [user]
  *
  */
-public class CnfAddressRule extends AbstractAddressRule implements Rule {
-    static final XLogger logger = XLoggerFactory.getXLogger(UpdAddressRule.class);
+public class CnfShippingAddressRule extends AbstractAddressRule implements Rule {
+    static final XLogger logger = XLoggerFactory.getXLogger(CnfShippingAddressRule.class);
 
 
     @Override
@@ -35,6 +35,7 @@ public class CnfAddressRule extends AbstractAddressRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String rid = (String)user.get("@rid");
+        String host = (String)data.get("host");
         // expect a list of products in order to calculate shipping cost, shipping address etc.
         // the calculation will be done on the server side in order to avoid hack in the js.
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -43,12 +44,13 @@ public class CnfAddressRule extends AbstractAddressRule implements Rule {
             if(updateUser != null) {
                 // now return the shipping cost and tax according to the address.
                 BigDecimal cartTotal = new BigDecimal(data.get("cartTotal").toString());
+                List<Map<String, Object>> items = (List)data.get("cartItems");
                 resultMap = new HashMap<String, Object>();
                 Map<String, Object> shippingAddress = (Map<String, Object>)data.get("shippingAddress");
-                BigDecimal shipping = AbstractAddressRule.calculateShipping((String) shippingAddress.get("province"), cartTotal);
+                BigDecimal shipping = calculateShipping(host, shippingAddress, items, cartTotal);
                 resultMap.put("shipping", shipping);
                 // calculate taxes
-                Map<String, BigDecimal> taxes = calculateTax((String)shippingAddress.get("province"), cartTotal.add(shipping));
+                Map<String, BigDecimal> taxes = calculateTax(host, shippingAddress, items, cartTotal.add(shipping));
                 resultMap.put("taxes", taxes);
             } else {
                 error = "User with rid " + rid + " cannot be found.";
@@ -69,5 +71,4 @@ public class CnfAddressRule extends AbstractAddressRule implements Rule {
             return true;
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package com.networknt.light.rule.shipping;
+package com.networknt.light.rule.address;
 
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
@@ -10,19 +10,19 @@ import org.slf4j.ext.XLoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Created by steve on 13/12/15.
- * This rule will validate the shipping address against the address schema and calling event
- * rule to update user profile with the updated shippingAddress. It returns the calculated
- * shipping cost and tax according to the input.
+ * Created by steve on 20/02/16.
  *
- * AccessLevel user
+ * Confirm billing address can only be called from shopping cart. assume cartTotal is there.
+ *
+ * AccessLevel R [user]
  *
  */
-public class UpdAddressRule extends AbstractAddressRule implements Rule {
-    static final XLogger logger = XLoggerFactory.getXLogger(UpdAddressRule.class);
+public class CnfBillingAddressRule extends AbstractAddressRule implements Rule {
+    static final XLogger logger = XLoggerFactory.getXLogger(CnfBillingAddressRule.class);
 
 
     @Override
@@ -35,27 +35,19 @@ public class UpdAddressRule extends AbstractAddressRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String rid = (String)user.get("@rid");
-        // expect a list of products in order to calculate shipping cost, shipping address etc.
+        String host = (String)data.get("host");
+        // expect a list of products/services in order to calculate tax etc.
         // the calculation will be done on the server side in order to avoid hack in the js.
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             Vertex updateUser = DbService.getVertexByRid(graph, rid);
             if(updateUser != null) {
-                Map eventMap = getEventMap(inputMap);
-                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                inputMap.put("eventMap", eventMap);
-                eventData.putAll(data);
-                eventData.put("userId", updateUser.getProperty("userId"));
-                eventData.put("updateDate", new java.util.Date());
-
-                // now return the shipping cost and tax according to the address.
                 BigDecimal cartTotal = new BigDecimal(data.get("cartTotal").toString());
+                List<Map<String, Object>> items = (List)data.get("cartItems");
                 resultMap = new HashMap<String, Object>();
-                Map<String, Object> shippingAddress = (Map<String, Object>)data.get("shippingAddress");
-                BigDecimal shipping = AbstractAddressRule.calculateShipping((String) shippingAddress.get("province"), cartTotal);
-                resultMap.put("shipping", shipping);
+                Map<String, Object> billingAddress = (Map<String, Object>)data.get("billingAddress");
                 // calculate taxes
-                Map<String, BigDecimal> taxes = calculateTax((String)shippingAddress.get("province"), cartTotal.add(shipping));
+                Map<String, BigDecimal> taxes = calculateTax(host, billingAddress, items, cartTotal);
                 resultMap.put("taxes", taxes);
             } else {
                 error = "User with rid " + rid + " cannot be found.";
