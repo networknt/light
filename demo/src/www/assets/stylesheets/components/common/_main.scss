@@ -31,3 +31,12 @@
   padding-left: 20px;
   padding-top: 10px;
 }
+
+@media (max-width: 64em) {
+  .rightColumn {
+    display: none;
+  }
+  .leftColumn {
+    max-width: 100%;
+  }
+}
