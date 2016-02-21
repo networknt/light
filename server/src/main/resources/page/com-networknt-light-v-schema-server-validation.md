@@ -10,7 +10,7 @@ manipulated. A server side schema validation is the second defense line and it i
 Each API on Light Framework maps to a Java class that implements Rule interface. For the rules that
 are associated with schema forms, the validation schema will be loaded from schema forms automatically.
 
-Here is the code in impForm to update rule schema and remove the cache.
+Here is the code in impForm to update rule schema and remove the rule from the cache.
 ```
     // According to action in the list, populate validation schema.
     List<Map<String, Object>> actions = form.getProperty("action");
@@ -21,7 +21,7 @@ Here is the code in impForm to update rule schema and remove the cache.
             rule.setProperty("schema", data.get("schema"));
             Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
             ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
-            if(cache == null) {
+            if(cache != null) {
                 cache.remove(ruleClass);
             }
         }
@@ -29,4 +29,5 @@ Here is the code in impForm to update rule schema and remove the cache.
 
 ```
 
-##
+## Validation
+Server side schema validation is done in RestHandler
