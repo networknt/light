@@ -8,3 +8,26 @@
   left: 0;
   right: 0;
 }
+
+.columnRoot {
+  margin: 0;
+  width:100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+  min-width: 70%;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+  padding-left: 20px;
+  padding-top: 10px;
+}
