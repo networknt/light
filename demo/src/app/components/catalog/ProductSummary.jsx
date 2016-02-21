@@ -18,25 +18,26 @@ class ProductSummary extends React.Component {
         };
 
         return (
-            <Paper className="blogPostPaper">
-                <div className="blogPost">
-
-                    <img src={'/assets/images/' + this.props.product.variants[i].image} className="img-responsive productImage" />
-                    <h3><a onClick={this.props.onClick}>{this.props.product.name}</a></h3>
-                    <h4>{ '$' + price}</h4>
-                    <div className="cbp-vm-details">
-                        <Markdown text={this.props.product.description} />
+            <div className="gridList">
+                <Paper className="summaryPaper">
+                    <div className="productItem">
+                        <img src={'/assets/images/' + this.props.product.variants[i].image} className="img-responsive productImage" />
+                        <h3><a onClick={this.props.onClick}>{this.props.product.name}</a></h3>
+                        <h4>{ '$' + price}</h4>
+                        <div className="cbp-vm-details">
+                            <Markdown text={this.props.product.description} />
+                        </div>
+                        <div className="cbp-vm-variants">
+                            {(_.size(variants) > 1) ?
+                                <VariantSelect {...variantProps} /> : this.props.product.variants[i].type + ' $' + price}
+                        </div>
+                        <RaisedButton label={inventory > 0 ? 'Add to cart' : 'Sold Out!'}
+                                      primary = {true}
+                                      onTouchTap={this.props.onAddCart}
+                                      disabled={inventory === 0} />
                     </div>
-                    <div className="cbp-vm-variants">
-                        {(_.size(variants) > 1) ?
-                            <VariantSelect {...variantProps} /> : this.props.product.variants[i].type + ' $' + price}
-                    </div>
-                    <RaisedButton label={inventory > 0 ? 'Add to cart' : 'Sold Out!'}
-                                  primary = {true}
-                                  onTouchTap={this.props.onAddCart}
-                                  disabled={inventory === 0} />
-                </div>
-            </Paper>
+                </Paper>
+            </div>
         );
     }
 }

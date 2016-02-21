@@ -40,3 +40,16 @@
     max-width: 100%;
   }
 }
+
+.gridListRoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.gridList {
+  width: 500;
+  height: 400;
+  overflow-y: auto;
+  margin-bottom: 24;
+}
