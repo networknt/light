@@ -69,7 +69,6 @@ public class AddTransactionRule extends AbstractPaymentRule implements Rule {
 
                     Map<String, Object> map = new HashMap<String, Object>();
                     map.put("orderId", orderId);
-                    map.put("transactionId", transaction.getId());
                     inputMap.put("result", mapper.writeValueAsString(map));
                 } else if (result.getTransaction() != null) {
                     Transaction transaction = result.getTransaction();
@@ -77,19 +76,12 @@ public class AddTransactionRule extends AbstractPaymentRule implements Rule {
                             " Code: " + transaction.getProcessorResponseCode() +
                             " Text: " + transaction.getProcessorResponseText();
                     inputMap.put("responseCode", 400);
-                    //System.out.println("Error processing transaction:");
-                    //System.out.println("  Status: " + transaction.getStatus());
-                    //System.out.println("  Code: " + transaction.getProcessorResponseCode());
-                    //System.out.println("  Text: " + transaction.getProcessorResponseText());
                 } else {
                     inputMap.put("responseCode", 400);
                     for (ValidationError validationError : result.getErrors().getAllDeepValidationErrors()) {
                         error = error + "Attribute: " + validationError.getAttribute() +
                                 " Code: " + validationError.getCode() +
                                 " Message: " + validationError.getMessage() + "\n";
-                        //System.out.println("Attribute: " + validationError.getAttribute());
-                        //System.out.println("  Code: " + validationError.getCode());
-                        //System.out.println("  Message: " + validationError.getMessage());
                     }
                 }
 

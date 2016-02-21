@@ -93,7 +93,6 @@ public class AddSubscriptionRule extends AbstractPaymentRule implements Rule {
                     eventData.put("subscriptions", subscriptions);
                     Map<String, Object> result = new HashMap<String, Object>();
                     result.put("orderId", orderId);
-                    result.put("subscriptions", subscriptions);
                     inputMap.put("result", mapper.writeValueAsString(result));
 
                 } else {

@@ -247,9 +247,11 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                     rule.setProperty("schema", data.get("schema"));
                     Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
                     ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
-                    if(cache == null) {
+                    if(cache != null) {
                         cache.remove(ruleClass);
                     }
+                } else {
+                    logger.error("Could not find rule " + ruleClass);
                 }
             }
             graph.commit();
@@ -283,9 +285,11 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                         rule.removeProperty("schema");
                         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
                         ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
-                        if(cache == null) {
+                        if(cache != null) {
                             cache.remove(ruleClass);
                         }
+                    } else {
+                        logger.error("Could not find rule " + ruleClass);
                     }
                 }
                 graph.removeVertex(form);
@@ -330,9 +334,11 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                         rule.setProperty("schema", data.get("schema"));
                         Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
                         ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
-                        if(cache == null) {
+                        if(cache != null) {
                             cache.remove(ruleClass);
                         }
+                    } else {
+                        logger.error("Could not find rule " + ruleClass);
                     }
                 }
             }
@@ -375,9 +381,11 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
                     rule.setProperty("schema", data.get("schema"));
                     Map<String, Object> ruleMap = ServiceLocator.getInstance().getMemoryImage("ruleMap");
                     ConcurrentMap<String, Map<String, Object>> cache = (ConcurrentMap<String, Map<String, Object>>)ruleMap.get("cache");
-                    if(cache == null) {
+                    if(cache != null) {
                         cache.remove(ruleClass);
                     }
+                } else {
+                    logger.error("Could not find rule " + ruleClass);
                 }
             }
             graph.commit();
