@@ -21,6 +21,7 @@ var BlogPostAdd = React.createClass({
 
     getInitialState: function() {
         return {
+            error: null,
             schema: null,
             form: null,
             model: null,
@@ -55,9 +56,7 @@ var BlogPostAdd = React.createClass({
     },
 
     _onPostChange: function() {
-        console.log('BlogPostAdd._onPostChange', PostStore.getResult(), PostStore.getErrors());
         // TODO display toaster
-
     },
 
     _onModelChange: function(key, val) {
@@ -66,9 +65,13 @@ var BlogPostAdd = React.createClass({
     },
 
     _onTouchTap: function(action) {
-        console.log('ExecQueryCommand._onTouchTap', action, this.state.model);
-        action.data = this.state.model;
-        BlogActionCreators.addPost(action);
+        let validationResult = utils.validateBySchema(this.state.schema, this.state.model);
+        if(!validationResult.valid) {
+            this.setState({error: validationResult.error.message});
+        } else {
+            action.data = this.state.model;
+            BlogActionCreators.addPost(action);
+        }
     },
 
     render: function() {
@@ -80,7 +83,9 @@ var BlogPostAdd = React.createClass({
             })}
             return (
                 <div>
+                    <pre>{this.state.error}</pre>
                     <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
+                    <pre>{this.state.error}</pre>
                     {actions}
                     <Tabs initialSelectedIndex={1}>
                         <Tab label="Summary">

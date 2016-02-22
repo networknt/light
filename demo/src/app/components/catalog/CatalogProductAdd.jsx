@@ -1,6 +1,8 @@
 import React from 'react';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import RaisedButton from 'material-ui/lib/raised-button';
+import Tabs from 'material-ui/lib/tabs/tabs';
+import Tab from 'material-ui/lib/tabs/tab';
 import FormStore from '../../stores/FormStore';
 import ProductStore from '../../stores/ProductStore';
 import FormActionCreators from '../../actions/FormActionCreators';
@@ -11,6 +13,7 @@ import RcSelect from 'react-schema-form-rc-select/lib/RcSelect';
 require('rc-select/assets/index.css');
 import CatalogCategoryStore from '../../stores/CatalogCategoryStore';
 import CommonUtils from '../../utils/CommonUtils';
+import Markdown from '../Markdown';
 
 
 const id = 'com.networknt.light.catalog.product.add';
@@ -52,13 +55,14 @@ var CatalogProductAdd = React.createClass({
     },
 
     _onProductChange: function() {
-        console.log('CatalogProductAdd._onProductChange', ProductStore.getResult(), ProductStore.getErrors());
-        // TODO display toaster
 
+        // TODO display toaster
     },
 
     _onModelChange: function(key, val) {
         utils.selectOrSet(key, this.state.model, val);
+        // force update in order to refresh markdown rendering.
+        this.forceUpdate();
     },
 
     _onTouchTap: function(action) {
@@ -81,9 +85,18 @@ var CatalogProductAdd = React.createClass({
             })}
             return (
                 <div>
+                    <pre>{this.state.error}</pre>
                     <SchemaForm schema={this.state.schema} model={this.state.model} form={this.state.form} onModelChange={this._onModelChange} mapper= {{"rc-select": RcSelect}} />
                     <pre>{this.state.error}</pre>
                     {actions}
+                    <Tabs initialSelectedIndex={1}>
+                        <Tab label="Description">
+                            <Markdown text={this.state.model.description} />
+                        </Tab>
+                        <Tab label="Content">
+                            <Markdown text={this.state.model.content} />
+                        </Tab>
+                    </Tabs>
                 </div>
             )
         } else {

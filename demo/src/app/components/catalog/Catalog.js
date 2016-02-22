@@ -106,8 +106,8 @@ var Catalog = React.createClass({
 
         return (
             <div>
-                <div className="blogHeader">
-                    <h2>Catalog{addButton}</h2>
+                <div className="header">
+                    <h2 className="headerContent">Catalog {addButton}</h2>
                 </div>
                 <div className="blogRoot">
                     <div className="leftColumn">
