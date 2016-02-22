@@ -29,12 +29,13 @@
           "inventory": 5
         }
       ],
-      "content": "APIs out of the box without customization and this is the easiest way to bring up a site of your own that has all common functionalities along with content management and e-commence. All you need to do is to find a host for your static site - a single page React application. The React components are highly composable and can be embedded into your existing React application easily.  Another way to call the APIs is from your web server through HTTPS REST like requests. \n\n### Standard package contains the following:\n\nAll the standard APIs provided by the Framework, Content Management and E-Commerce configured for your own domain.\nAdministration interface to management your APIs with full access to your domain specific APIs.\n\n### Customized package contains the following:\n\nEverything Standard package offers\nAbility to deploy you own customized APIs only accessed by your own domain.\nCan access development cloud to test your APIs\n",
+      "content": "APIs out of the box without customization and this is the easiest way to bring up a site of your own that has all common functionalities along with content management and e-commence. All you need to do is to find a host for your static site - a single page React application. The React components are highly composable and can be embedded into your existing React application easily.  Another way to call the APIs is from your web server through HTTPS REST like requests. \n\n### Standard package contains the following:\n\n* All the standard APIs provided by the Framework, Content Management and E-Commerce configured for your own domain.\n* Administration interface to management your APIs with full access to your domain specific APIs.\n\n### Customized package contains the following:\n\n* Everything Standard package offers\n* Ability to deploy you own customized APIs only accessed by your own domain.\n* Can access development cloud to test your APIs\n",
       "tags": [
         "API",
         "Site",
         "Hosting",
-        "Host"
+        "Host",
+        "Light Framework"
       ],
       "parentId": "Hosting",
       "createDate": "2016-02-16T19:12:51.237"
@@ -75,13 +76,14 @@
           "inventory": 5
         }
       ],
-      "content": "### Standard package contains the following:\n1. All the standard APIs provided by the Framework, Content Management and E-Commerce configured for your own domain.\n2. Administration interface to management your APIs and Site with full access to your domain specific APIs.\n3. Static Site Template with ability to customize. Default client is a single page React application currently and will provide Android and iOS native applications in the future.\n\n### Customized package contains the following:\n1. Everything Standard package offers\n2. Ability to deploy you own customized APIs only accessed by your own domain. \n3. Can access development cloud to test your APIs and site.\n\n",
+      "content": "### Standard package contains the following:\n* All the standard APIs provided by the Framework, Content Management and E-Commerce configured for your own domain.\n* Administration interface to management your APIs and Site with full access to your domain specific APIs.\n* Static Site Template with ability to customize. Default client is a single page React application currently and will provide Android and iOS native applications in the future.\n\n### Customized package contains the following:\n* Everything Standard package offers\n* Ability to deploy you own customized APIs only accessed by your own domain. \n* Can access development cloud to test your APIs and site.\n\n",
       "parentId": "Hosting",
       "tags": [
         "API",
         "Site",
         "Hosting",
-        "Host"
+        "Host",
+        "Light Framework"
       ],
       "createDate": "2016-02-16T19:22:21.170"
     },
