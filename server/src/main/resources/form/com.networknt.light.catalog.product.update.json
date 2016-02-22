@@ -34,16 +34,8 @@
         "title": "Name",
         "type": "string"
       },
-      "description": {
-        "title": "Description",
-        "type": "string"
-      },
       "delivery": {
         "title": "Delivery",
-        "type": "string"
-      },
-      "content": {
-        "title": "Detail",
         "type": "string"
       },
       "tags": {
@@ -85,6 +77,14 @@
             "price"
           ]
         }
+      },
+      "description": {
+        "title": "Description",
+        "type": "string"
+      },
+      "content": {
+        "title": "Detail",
+        "type": "string"
       }
     }
   },
@@ -102,11 +102,6 @@
     "entityId",
     "name",
     {
-      "key": "description",
-      "type": "textarea",
-      "rows": 5
-    },
-    {
       "key": "delivery",
       "type": "rc-select",
       "multiple": false,
@@ -119,11 +114,6 @@
         {"value": "OS", "label": "One time subscription"},
         {"value": "RS", "label": "Recurring subscription"}
       ]
-    },
-    {
-      "key": "content",
-      "type": "textarea",
-      "rows": 15
     },
     {
       "key": "tags",
@@ -149,6 +139,16 @@
         "variants[].image",
         "variants[].inventory"
       ]
+    },
+    {
+      "key": "description",
+      "type": "textarea",
+      "rows": 5
+    },
+    {
+      "key": "content",
+      "type": "textarea",
+      "rows": 15
     }
   ]
 }
