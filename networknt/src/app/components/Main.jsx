@@ -1,5 +1,6 @@
 import React from 'react';
 import AppBar from 'material-ui/lib/app-bar';
+import Footer from './Footer';
 import LeftNav from 'material-ui/lib/left-nav';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
@@ -412,6 +413,7 @@ const Main = React.createClass({
                 <span className="mainRoot">
                     {this.props.children}
                 </span>
+                <footer><Footer /></footer>
             </div>
         );
     }
