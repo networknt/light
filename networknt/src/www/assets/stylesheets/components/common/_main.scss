@@ -3,44 +3,45 @@
 }
 
 .mainRoot {
-  position: absolute;
+  position: relative;
   top: 64px;
   left: 0;
   right: 0;
 }
 
-#footer {
+.footer {
+  position: relative;
   width: 100%;
   background-color:#444444;
   float:left;
-  min-height:130px;
 }
+
 .footerFloat {
   width: 25%;
   float: left;
   min-width: 200px;
 }
+
 .footerFloat h5, .footerFloat h6, .footerFloat table {
   text-align: justify;
   margin-left: 10px;
   color:#fff;
 }
+
 .footerFloat ul {
   list-style: none;
   padding-left: 0;
   margin-left: 10px;
 }
+
 .footerFloat ul li a {
   color: #F2DEDE;
 }
+
 .footerFloat ul li a:hover {
   color: #fff;
 }
-.footer-container {
-  border-top: 1px solid #808080;
-  width: 100%;
-  background-color: #222222;
-  color: #F2DEDE;
-  margin:auto;
-  font-family:'Raleway', sans-serif;
+
+.copyright {
+  text-align: center;
 }

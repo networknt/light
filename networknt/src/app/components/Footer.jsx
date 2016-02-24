@@ -1,11 +1,13 @@
 import React from 'react';
+import IconButton from 'material-ui/lib/icon-button';
+import {darkWhite, lightWhite, grey900} from 'material-ui/lib/styles/colors';
 
 const Footer = React.createClass({
     render() {
         return (
             <div classNames="container-fluid">
-                <div id="footer">
-                    <div classNames="footerFloat">
+                <div className="footer">
+                    <div className="footerFloat">
                         <ul>
                             <li><a href="#">About Us</a></li>
                             <li><a href="#">Terms and Conditions</a></li>
@@ -13,14 +15,14 @@ const Footer = React.createClass({
                             <li><a href="#">Contact Us</a></li>
                         </ul>
                     </div>
-                    <div classNames="footerFloat">
+                    <div className="footerFloat">
                         <ul>
                             <li><a href="#">Support</a></li>
                             <li><a href="#">Abuse Report</a></li>
                             <li><a href="#">FAQ</a></li>
                         </ul>
                     </div>
-                    <div classNames="footerFloat">
+                    <div className="footerFloat">
                         <ul>
                             <li><a href="#">News</a></li>
                             <li><a href="#">Blog</a></li>
@@ -28,21 +30,20 @@ const Footer = React.createClass({
                             <li><a href="#">Catalog</a></li>
                         </ul>
                     </div>
-                    <div classNames="footerFloat">
-                        <h6>COPYRIGHTS &copy; 2016</h6>
-                        <h6>ALL RIGHTS RESERVED.</h6>
-                        <h6>Network New Technologies Inc.</h6>
+                    <div className="footerFloat">
                         <ul>
-                            <li><a href="http://twitter.com/shopify" title="React - Responsive Shopify Theme - Graphite on Twitter" classNames="icon-social twitter ir">Twitter</a></li>
-                            <li><a href="http://www.facebook.com/shopify" title="React - Responsive Shopify Theme - Graphite on Facebook" classNames="icon-social facebook ir">Facebook</a></li>
-                            <li><a href="http://plus.google.com/+shopify" title="React - Responsive Shopify Theme - Graphite on Google+" classNames="icon-social google ir">Google+</a></li>
-                            <li><a href="http://www.youtube.com/user/shopify" title="React - Responsive Shopify Theme - Graphite on YouTube" classNames="icon-social youtube ir">YouTube</a></li>
-                            <li><a href="http://vimeo.com/shopify" title="React - Responsive Shopify Theme - Graphite on Vimeo" classNames="icon-social vimeo ir">Vimeo</a></li>
-                            <li><a href="http://instagram.com/shopify" title="React - Responsive Shopify Theme - Graphite on Instagram" classNames="icon-social instagram ir">Instagram</a></li>
-                            <li><a href="http://pinterest.com/shopify/" title="React - Responsive Shopify Theme - Graphite on Pinterest" classNames="icon-social pinterest ir">Pinterest</a></li>
+                            <li>
+                            </li>
+                            <li><a href="http://twitter.com/shopify" title="React - Responsive Shopify Theme - Graphite on Twitter" className="icon-social twitter ir">Twitter</a></li>
+                            <li><a href="http://www.facebook.com/shopify" title="React - Responsive Shopify Theme - Graphite on Facebook" className="icon-social facebook ir">Facebook</a></li>
+                            <li><a href="http://plus.google.com/+shopify" title="React - Responsive Shopify Theme - Graphite on Google+" className="icon-social google ir">Google+</a></li>
+                            <li><a href="http://www.youtube.com/user/shopify" title="React - Responsive Shopify Theme - Graphite on YouTube" className="icon-social youtube ir">YouTube</a></li>
+                            <li><a href="http://vimeo.com/shopify" title="React - Responsive Shopify Theme - Graphite on Vimeo" className="icon-social vimeo ir">Vimeo</a></li>
                         </ul>
                     </div>
                 </div>
+
+                <div className="copyright">&copy; 2016 Network New Technoloigies Inc.</div>
             </div>
         )
     }

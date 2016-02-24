@@ -397,10 +397,6 @@ const Main = React.createClass({
                 leftNavContent = (<div>No Context Navigation</div>);
         }
 
-
-        //console.log('history', this.props.history);
-        //console.log('location', this.props.location);
-        //console.log('children', this.props.children);
         return (
             <div id="page_container">
                 <LeftNav open={this.state.leftNavOpen} docked={false} onRequestChange={leftNavOpen => this.setState({leftNavOpen})}>
