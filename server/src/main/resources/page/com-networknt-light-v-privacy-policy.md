@@ -1,11 +1,12 @@
 # NetworkNT Privacy Policy
+
 ## By creating an account, you agree to our Privacy Policy
 
 ### WHO WE ARE
 
 NetworkNT (“NetworkNT”) provides cloud-based solutions, including web hosting, web design, domain name registration and related products and services, to businesses, individuals, non-profit organizations and others. As a part of the The Endurance International Group, Inc. (“Endurance”), NetworkNT is able to provide a variety and range of products and services to help customers with their technological needs. To learn more about the Endurance corporate family, click here.
 
-NetworkNT is committed to protecting any data that it collects concerning you. By using our products and services or visiting our website located at www.ehost.com (collectively, the “Services”) you agree to the use of the data that we collect in accordance with this Privacy Policy. This Privacy Policy covers our collection, use and disclosure of information collected through your use of the Services. The purpose of this Privacy Policy is to enable you to understand what information of yours is collected, how and when we might use or share your information, and how you can correct any inaccuracies in the information. This Privacy Policy also explains our online information practices and your options concerning the way your information is collected and used.
+NetworkNT is committed to protecting any data that it collects concerning you. By using our products and services or visiting our website located at www.networknt.com (collectively, the “Services”) you agree to the use of the data that we collect in accordance with this Privacy Policy. This Privacy Policy covers our collection, use and disclosure of information collected through your use of the Services. The purpose of this Privacy Policy is to enable you to understand what information of yours is collected, how and when we might use or share your information, and how you can correct any inaccuracies in the information. This Privacy Policy also explains our online information practices and your options concerning the way your information is collected and used.
 
 ### INFORMATION WE COLLECT
 
@@ -60,15 +61,15 @@ We will not share your personal information with third parties other than as des
 
 ### YOUR OPTIONS
 
-* Correcting/Updating Personal Information. If your information changes or is incorrect, you may update or correct such information through our billing system at my.ehost.com/billing or by emailing us at privacy@ehost.com.
+* Correcting/Updating Personal Information. If your information changes or is incorrect, you may update or correct such information through our billing system at my.networknt.com/billing or by emailing us at privacy@networknt.com.
 
 * Data Retention. We will retain your information for as long as needed to provide you with the Services or as is necessary to comply with our legal obligations, resolve disputes, and enforce our agreements.
 
 * Opt Out. By default, you will receive invoices, any system updates, NetworkNT newsletters and other mailings. You are able to opt out of newsletters and mailings by using the unsubscribe link in any promotional email or as otherwise provided in the communication. Please note that customers may not opt out of receiving important system notifications or emails about their accounts.
 
-* Public Forums. Please remember that any information you may disclose or post on public areas of our websites or the Internet, becomes public information. You should exercise caution when deciding to disclose personal information in these public areas. To request the removal of your personal information from our community forums or testimonials, contact us at privacy@ehost.com. In some cases, we may not be able to remove your personal information, in which case we will let you know why we are unable to do so.
+* Public Forums. Please remember that any information you may disclose or post on public areas of our websites or the Internet, becomes public information. You should exercise caution when deciding to disclose personal information in these public areas. To request the removal of your personal information from our community forums or testimonials, contact us at privacy@networknt.com. In some cases, we may not be able to remove your personal information, in which case we will let you know why we are unable to do so.
 
-* Data Security. NetworkNT uses technical security measures to prevent the loss, misuse, altering or unauthorized disclosure of information under our control. Such security measures include but are not limited to: physical, electronic and managerial procedures to safeguard and secure the information we collect online. All sensitive information is collected on a secure server. When we ask customers to provide financial information (such as credit card numbers) that data is protected using Secure Sockets Layer ("SSL") technology. We follow generally accepted standards to protect the personal information submitted to us, both during transmission and once we receive it. However, no method of transmission over the Internet, or method of electronic storage, is 100% secure. Therefore, we cannot guarantee its absolute security. If you have any questions about the security of our Services, you can contact us at legal@ehost.com.
+* Data Security. NetworkNT uses technical security measures to prevent the loss, misuse, altering or unauthorized disclosure of information under our control. Such security measures include but are not limited to: physical, electronic and managerial procedures to safeguard and secure the information we collect online. All sensitive information is collected on a secure server. When we ask customers to provide financial information (such as credit card numbers) that data is protected using Secure Sockets Layer ("SSL") technology. We follow generally accepted standards to protect the personal information submitted to us, both during transmission and once we receive it. However, no method of transmission over the Internet, or method of electronic storage, is 100% secure. Therefore, we cannot guarantee its absolute security. If you have any questions about the security of our Services, you can contact us at legal@networknt.com.
 
 ### CHILDREN
 
