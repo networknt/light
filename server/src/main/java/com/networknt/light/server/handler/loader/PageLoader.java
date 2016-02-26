@@ -133,8 +133,8 @@ public class PageLoader extends Loader {
             String pageId = file.getName();
             pageId = pageId.substring(0, pageId.lastIndexOf('.'));
             if(content != null && !content.equals(pageMap.get(pageId))) {
-                //System.out.println(content);
-                //System.out.println(pageMap.get(id));
+                System.out.println(content);
+                System.out.println(pageMap.get(pageId));
                 Map<String, Object> inputMap = new HashMap<String, Object>();
                 inputMap.put("category", "page");
                 inputMap.put("name", "impPage");
@@ -165,7 +165,7 @@ public class PageLoader extends Loader {
                     response.close();
                 }
             } else {
-                System.out.println("Skip file " + pageId);
+                //System.out.println("Skip file " + pageId);
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();

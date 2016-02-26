@@ -8,7 +8,7 @@ Forest gardening is an idea whose time has come. We can consciously apply the pr
 of ecology to the design of gardens that mimic forest ecosystem structure and function,
 but grow food, fuel, fiber, fodder, fertilizer, medicinals and fun. Indeed, we must
 begin learning to apply ecological principles to the design of our food production
-systems now—we have surpassed the peak of planetary oil production, so the world of
+systems now as we have surpassed the peak of planetary oil production, so the world of
 energy descent lies upon us. This sea change in our culture will require that we learn
 to live within our energetic means and rebuild ecosystems that support human and humane
 lives without diminishing the ability of the ecosystem to support our children and

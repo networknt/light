@@ -1,0 +1,25 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:76",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10077,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "www.edibleforestgarden.ca",
+      "description": "default delivery",
+      "createUserId": "stevehu",
+      "configId": "default.delivery",
+      "properties": {
+        "method": "SP"
+      },
+      "createDate": "2016-02-26T03:48:06.135"
+    },
+    "name": "addConfig",
+    "category": "config",
+    "createDate": "2016-02-26T03:48:06.135",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

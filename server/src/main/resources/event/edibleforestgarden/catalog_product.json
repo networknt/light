@@ -11,24 +11,24 @@
       "entityId": "cJMhhZTuRf6QEUrxKDYxFQ",
       "name": "Comfrey Bocking 4",
       "host": "www.edibleforestgarden.ca",
-      "delivery": "SP",
       "description": "Russian comfrey bocking 4",
       "variants": [
         {
           "sku": "comfrey_bocking4_one",
           "type": "One root",
           "price": 2,
-          "image": "1.png",
+          "image": "/images/herbaceous/bocking4-160x160.jpg",
           "inventory": 5
         },
         {
           "sku": "comfrey_booking4_ten",
           "type": "Ten roots",
           "price": 15,
-          "image": "2.png",
+          "image": "/images/herbaceous/bocking4-160x160.jpg",
           "inventory": 5
         }
       ],
+      "content": "Comfrey Bocking 4",
       "parentId": "Herbaceous",
       "tags": [
         "dynamic accumulator"
@@ -53,24 +53,24 @@
       "entityId": "Kit_ZByXQruXl49R8Rrq8g",
       "name": "Comfrey Bocking 14",
       "host": "www.edibleforestgarden.ca",
-      "delivery": "SP",
       "description": "Russian Comfrey Bocking 14",
       "variants": [
         {
           "sku": "comfrey_bocking14_one",
           "type": "One root",
           "price": 2,
-          "image": "3.png",
+          "image": "/images/herbaceous/bocking14-160x160.jpg",
           "inventory": 5
         },
         {
           "sku": "comfrey_bocking14_ten",
           "type": "Ten roots",
           "price": 15,
-          "image": "4.png",
+          "image": "/images/herbaceous/bocking14-160x160.jpg",
           "inventory": 5
         }
       ],
+      "content": "Comfrey Bocking 14",
       "parentId": "Herbaceous",
       "tags": [
         "dynamic accumulator"

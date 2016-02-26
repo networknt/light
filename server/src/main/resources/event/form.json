@@ -9990,5 +9990,854 @@
     "createDate": "2016-02-19T02:45:33.974",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:18",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10019,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.product.add",
+      "schema": {
+        "type": "object",
+        "title": "Catalog Product",
+        "required": [
+          "parentRid",
+          "name",
+          "description",
+          "content",
+          "variants"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "delivery": {
+            "title": "Delivery",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          },
+          "variants": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "title": "Sku",
+                  "type": "string"
+                },
+                "type": {
+                  "title": "Type",
+                  "type": "string"
+                },
+                "price": {
+                  "title": "Price",
+                  "type": "number"
+                },
+                "image": {
+                  "title": "Image",
+                  "type": "string"
+                },
+                "inventory": {
+                  "title": "Inventory",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "type",
+                "price"
+              ]
+            }
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "parentRid",
+        "name",
+        {
+          "key": "delivery",
+          "type": "rc-select",
+          "multiple": false,
+          "items": [
+            {
+              "value": "SO",
+              "label": "Shipping only"
+            },
+            {
+              "value": "PO",
+              "label": "Pickup only"
+            },
+            {
+              "value": "SP",
+              "label": "Shipping or Pickup"
+            },
+            {
+              "value": "DL",
+              "label": "Download"
+            },
+            {
+              "value": "EM",
+              "label": "Email"
+            },
+            {
+              "value": "OS",
+              "label": "One time subscription"
+            },
+            {
+              "value": "RS",
+              "label": "Recurring subscription"
+            }
+          ]
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "variants",
+          "add": "New",
+          "style": {
+            "add": "btn-success"
+          },
+          "items": [
+            "variants[].sku",
+            "variants[].type",
+            "variants[].price",
+            "variants[].image",
+            "variants[].inventory"
+          ]
+        },
+        {
+          "key": "description",
+          "type": "textarea",
+          "rows": 5
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 15
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "addProduct",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/catalog"
+        }
+      ],
+      "createDate": "2016-02-26T03:26:55.143"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-26T03:26:55.143",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:19",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10020,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.catalog.product.update",
+      "schema": {
+        "type": "object",
+        "title": "Catalog Product Update",
+        "required": [
+          "entityId",
+          "name",
+          "description",
+          "content",
+          "variants"
+        ],
+        "properties": {
+          "parentRid": {
+            "title": "Parent Rid",
+            "type": "string"
+          },
+          "entityId": {
+            "title": "Product Id",
+            "type": "string",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "delivery": {
+            "title": "Delivery",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags",
+            "type": "array",
+            "maxItems": 10
+          },
+          "variants": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "title": "Sku",
+                  "type": "string"
+                },
+                "type": {
+                  "title": "Type",
+                  "type": "string"
+                },
+                "price": {
+                  "title": "Price",
+                  "type": "number"
+                },
+                "image": {
+                  "title": "Image",
+                  "type": "string"
+                },
+                "inventory": {
+                  "title": "Inventory",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "sku",
+                "type",
+                "price"
+              ]
+            }
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "key": "parentRid",
+          "type": "rc-select",
+          "multiple": false,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        "entityId",
+        "name",
+        {
+          "key": "delivery",
+          "type": "rc-select",
+          "multiple": false,
+          "items": [
+            {
+              "value": "SO",
+              "label": "Shipping only"
+            },
+            {
+              "value": "PO",
+              "label": "Pickup only"
+            },
+            {
+              "value": "SP",
+              "label": "Shipping or Pickup"
+            },
+            {
+              "value": "DL",
+              "label": "Download"
+            },
+            {
+              "value": "EM",
+              "label": "Email"
+            },
+            {
+              "value": "OS",
+              "label": "One time subscription"
+            },
+            {
+              "value": "RS",
+              "label": "Recurring subscription"
+            }
+          ]
+        },
+        {
+          "key": "tags",
+          "type": "rc-select",
+          "tags": true,
+          "maxTagTextLength": 20,
+          "action": {
+            "get": {
+              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
+            }
+          }
+        },
+        {
+          "key": "variants",
+          "add": "New",
+          "style": {
+            "add": "btn-success"
+          },
+          "items": [
+            "variants[].sku",
+            "variants[].type",
+            "variants[].price",
+            "variants[].image",
+            "variants[].inventory"
+          ]
+        },
+        {
+          "key": "description",
+          "type": "textarea",
+          "rows": 5
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 15
+        }
+      ],
+      "action": [
+        {
+          "category": "catalog",
+          "name": "updProduct",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/catalog"
+        }
+      ],
+      "createDate": "2016-02-26T03:26:55.201"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-26T03:26:55.201",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:20",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10021,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.class.feed",
+      "schema": {
+        "type": "object",
+        "required": [
+          "environment",
+          "messageNumber",
+          "hppInd",
+          "centreCode"
+        ],
+        "title": "class",
+        "properties": {
+          "environment": {
+            "type": "string",
+            "title": "Environment",
+            "enum": [
+              "LOCAL",
+              "IDT5N",
+              "SIT1N",
+              "SIT2N",
+              "SIT3N",
+              "UAT1N",
+              "UAT2N"
+            ]
+          },
+          "requestId": {
+            "type": "number",
+            "title": "Request Id",
+            "maxLength": 10
+          },
+          "messageNumber": {
+            "type": "string",
+            "title": "Message Number",
+            "enum": [
+              "E0500",
+              "E0450",
+              "E0220",
+              "E0130",
+              "E0110",
+              "E0014",
+              "E0012",
+              "E0010",
+              "A0120",
+              "A0090"
+            ]
+          },
+          "loanNumber": {
+            "type": "string",
+            "title": "Loan Number",
+            "maxLength": 10
+          },
+          "pid": {
+            "type": "string",
+            "title": "PID",
+            "enum": [
+              "263",
+              "701",
+              "702",
+              "703",
+              "704",
+              "705",
+              "706",
+              "798",
+              "799",
+              "233",
+              "237",
+              "262",
+              "265",
+              "232",
+              "257",
+              "248",
+              "238",
+              "900",
+              "910",
+              "999",
+              "259",
+              "131",
+              "600",
+              "601",
+              "602",
+              "603",
+              "697",
+              "698",
+              "699",
+              "141",
+              "142",
+              "152",
+              "232",
+              "257",
+              "800",
+              "899"
+            ]
+          },
+          "hppInd": {
+            "type": "string",
+            "title": "HPP Indicator",
+            "enum": [
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ]
+          },
+          "loanCategroy": {
+            "title": "Loan Category",
+            "type": "string",
+            "enum": [
+              "CMHC",
+              "COL1",
+              "COL2",
+              "COL3",
+              "ANEW",
+              "ANUT",
+              "AUSE",
+              "AUUT",
+              "MCYC",
+              "MOHO",
+              "TCCN",
+              "TCCU",
+              "GPIN",
+              "GPIV"
+            ],
+            "default": "CHMC"
+          },
+          "debtConsolidation": {
+            "title": "Debt Consolidation",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "incomeVerification": {
+            "title": "Income Verification",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "liabilityType": {
+            "title": "Liability Type",
+            "type": "string",
+            "enum": [
+              "701",
+              "700",
+              "602",
+              "603",
+              "601",
+              "600",
+              "302",
+              "301",
+              "300",
+              "BSC",
+              "CLN",
+              "PLC",
+              "MTG",
+              "REN",
+              "DC0"
+            ]
+          },
+          "plcPurposeCode": {
+            "title": "Plc PurposeCode",
+            "type": "string",
+            "enum": [
+              "000",
+              "001",
+              "002",
+              "003",
+              "004",
+              "005",
+              "006",
+              "009"
+            ]
+          },
+          "fullLiabilityIndicator": {
+            "title": "Full Liability Indicator",
+            "type": "string",
+            "enum": [
+              "1",
+              "4"
+            ]
+          },
+          "solicitorName": {
+            "title": "Solicitor Name",
+            "type": "string",
+            "maxLength": 25
+          },
+          "propertyProvCode": {
+            "title": "Property Prov Code",
+            "type": "string",
+            "enum": [
+              "QC",
+              "NS",
+              "NU",
+              "MB",
+              "BC",
+              "PE",
+              "NT",
+              "YT",
+              "ON",
+              "SK",
+              "AB",
+              "NB"
+            ],
+            "default": "ON"
+          },
+          "centreCode": {
+            "title": "Centre Code",
+            "type": "string",
+            "enum": [
+              "TO",
+              "VA",
+              "CA",
+              "TB",
+              "REBO",
+              "Bank@Work",
+              "WP",
+              "HL",
+              "Training",
+              "MT",
+              "RISK"
+            ],
+            "default": "TO"
+          },
+          "processingDate": {
+            "title": "Processing Date",
+            "type": "string",
+            "format": "date"
+          },
+          "reportDate": {
+            "title": "Report Date",
+            "type": "string",
+            "format": "date"
+          },
+          "customerName": {
+            "title": "Customer Name",
+            "type": "string",
+            "maxLength": 250,
+            "default": "New Injector"
+          },
+          "postNumber": {
+            "title": "Post Number",
+            "type": "string",
+            "maxLength": 3,
+            "default": "123"
+          },
+          "transit": {
+            "title": "Transit",
+            "type": "string",
+            "maxLength": 5,
+            "default": "00001"
+          },
+          "cid": {
+            "title": "CID",
+            "type": "string",
+            "maxLength": 3,
+            "default": "100"
+          },
+          "fundsDisbursed": {
+            "title": "Funds Disbursed",
+            "type": "number",
+            "default": 1000
+          },
+          "relationship": {
+            "title": "Relationship",
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "default": "1"
+          },
+          "marketingSourceCode": {
+            "title": "Marketing Source Code",
+            "type": "string",
+            "enum": [
+              "DWPV",
+              "PBCY",
+              "BFIN",
+              "BFCE",
+              "BDLG",
+              "OFFN",
+              "BLAK",
+              "EQLH",
+              "OFFB",
+              "NEW2",
+              "FCBC",
+              "JJ99",
+              "AHBL",
+              "CASE",
+              "NRES",
+              "BTOB",
+              "GENL",
+              "ABL1",
+              "RP22",
+              "RP99",
+              "EQL1"
+            ],
+            "default": "RP99"
+          },
+          "provinceCode": {
+            "title": "Province Code",
+            "type": "string",
+            "enum": [
+              "QC",
+              "NS",
+              "NU",
+              "MB",
+              "BC",
+              "PE",
+              "NT",
+              "YT",
+              "ON",
+              "SK",
+              "AB",
+              "NB"
+            ],
+            "default": "ON"
+          },
+          "newConstructionInd": {
+            "title": "New Construction Ind",
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "default": "N"
+          },
+          "processTypeCd": {
+            "title": "Process Type",
+            "type": "string"
+          },
+          "processSubtypeCd": {
+            "title": "Process Sub Type",
+            "type": "string"
+          },
+          "tags": {
+            "title": "Tags[Maximum 5 tags separated by ,]",
+            "type": "string"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        {
+          "type": "help",
+          "helpvalue": "<h4>Class Feed Example</h4>"
+        },
+        "environment",
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for injection rules</h4>"
+        },
+        "messageNumber",
+        "hppInd",
+        {
+          "type": "conditional",
+          "condition": "modelData.hppInd==='0'",
+          "items": [
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0012' || modelData.messageNumber === 'E0014'",
+              "items": [
+                "pid"
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0010'",
+              "items": [
+                "pid",
+                {
+                  "key": "debtConsolidation",
+                  "type": "radiobuttons"
+                },
+                "loanCategroy"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "conditional",
+          "condition": "modelData.hppInd !== '0'",
+          "items": [
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber==='E0012'",
+              "items": [
+                "plcPurposeCode",
+                "fullLiabilityIndicator",
+                "solicitorName",
+                "propertyProvCode"
+              ]
+            },
+            {
+              "type": "conditional",
+              "condition": "modelData.messageNumber === 'E0014'",
+              "items": [
+                "plcPurposeCode",
+                "solicitorName",
+                "propertyProvCode"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for epi mappings</h4>"
+        },
+        "loanNumber",
+        "customerName",
+        "postNumber",
+        "transit",
+        "cid",
+        "fundsDisbursed",
+        "relationship",
+        "marketingSourceCode",
+        {
+          "key": "incomeVerification",
+          "type": "radios",
+          "titleMap": {
+            "Y": "Income Verification is requried.",
+            "N": "Income Verification is not required."
+          }
+        },
+        "centreCode",
+        "provinceCode",
+        "newConstructionInd",
+        {
+          "type": "help",
+          "helpvalue": "<h4>The following fields are for feed storage and retrieval only</h4>"
+        },
+        "processTypeCd",
+        "processSubtypeCd",
+        {
+          "key": "tags",
+          "type": "textarea"
+        }
+      ],
+      "action": [
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "injClassFeed",
+          "readOnly": false,
+          "title": "Inject",
+          "success": "/"
+        },
+        {
+          "host": "injector",
+          "app": "main",
+          "category": "feed",
+          "name": "updFeedMeta",
+          "readOnly": false,
+          "title": "Update Meta",
+          "success": "/"
+        }
+      ],
+      "createDate": "2016-02-26T03:26:55.251"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-26T03:26:55.251",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]
