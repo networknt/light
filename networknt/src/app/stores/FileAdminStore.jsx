@@ -27,7 +27,6 @@ var FileAdminStore = assign({}, EventEmitter.prototype, {
     },
 
     getFiles: function(path) {
-        console.log('FileAdminStore', _fileMap, path);
         return _fileMap[path];
     },
 

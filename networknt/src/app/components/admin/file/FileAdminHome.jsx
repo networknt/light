@@ -34,7 +34,7 @@ var FileAdminHome = React.createClass({
     },
 
     componentDidMount: function() {
-        console.log('this.uploadInput', this.uploadInput);
+        //console.log('this.uploadInput', this.uploadInput);
         this.uploadInput.addEventListener('change', this._onFileUpload(), false);
     },
 
@@ -50,7 +50,7 @@ var FileAdminHome = React.createClass({
         if(paths[paths.length - 1] != path) {
             paths = paths.concat([path]);
         }
-        console.log('_onFileChange', files, paths);
+        //console.log('_onFileChange', files, paths);
         this.setState({
             files: files,
             paths: paths
@@ -76,7 +76,6 @@ var FileAdminHome = React.createClass({
             if(slash != -1) {
                 newpath = path.substring(0, slash);
             }
-            console.log('newpath', newpath);
             FileActionCreators.getFile(newpath);
         }
     },
@@ -88,6 +87,11 @@ var FileAdminHome = React.createClass({
             var remove = confirm('Remove ' + type + ' ' + file.path + '?');
             if (remove) {
                 FileActionCreators.delFile(this._getCurrentPath(), file);
+                if(file.isdir === true) {
+                    // remove the path from paths in states so that it won't nav back to it.
+                    let filtered = this.state.paths.filter(e => e !== file.path);
+                    this.setState({paths: filtered});
+                }
             }
         } else {
             alert('Please select a file or folder.');
@@ -96,7 +100,6 @@ var FileAdminHome = React.createClass({
     },
 
     _onRename: function() {
-        console.log('this.selectIndex', this.selectIndex);
         if(typeof(this.selectIndex) != 'undefined') {
             let file = this.state.files[this.selectIndex];
             let oldName = file.name;
@@ -124,15 +127,12 @@ var FileAdminHome = React.createClass({
     _onFileUpload: function() {
         // a callback from event listener.
         return function(e) {
-            console.log('e', e);
             let file = e.target.files[0];
             let name = file.name;
             var reader = new FileReader();
             reader.onload = function(readerEvent) {
                 var binaryString = readerEvent.target.result;
-                console.log('binaryString', binaryString);
                 var base64String = btoa(binaryString);
-                console.log('base64String', base64String);
                 FileActionCreators.uplFile(name, this._getCurrentPath(), base64String);
             }.bind(this);
             reader.readAsBinaryString(file);
@@ -161,7 +161,7 @@ var FileAdminHome = React.createClass({
     _onOpenFolder: function() {
         if(typeof(this.selectIndex) != 'undefined') {
             let file = this.state.files[this.selectIndex];
-            console.log('file = ', file);
+            //console.log('file = ', file);
             if(file.isdir === true) {
                 FileActionCreators.getFile(file.path);
             } else {
@@ -233,7 +233,7 @@ var FileAdminHome = React.createClass({
 
     _onRowSelection: function(selectedRows) {
         this.selectIndex = selectedRows[0];
-        console.log('select index', this.selectIndex);
+        //console.log('select index', this.selectIndex);
     },
 
     render: function() {
