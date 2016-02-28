@@ -454,7 +454,7 @@ public class RestHandler implements HttpHandler {
         if(logger.isDebugEnabled()) {
             logger.debug("response ls: {} ", result);
         }
-        if(result != null) {
+        if(result != null && !exchange.isResponseComplete()) {
             exchange.getResponseSender().send(ByteBuffer.wrap(result.getBytes("utf-8")));
         }
     }

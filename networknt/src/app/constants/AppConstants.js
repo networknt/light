@@ -35,6 +35,11 @@ module.exports = {
         GET_CONFIG_RESPONSE: null,
         GET_ALL_CONFIG_RESPONSE: null,
 
+        // File
+        GET_FILE_RESPONSE: null,
+        UPD_PATH_RESPONSE: null,
+        UPL_FILE_RESPONSE: null,
+
         // Menu
         GET_MENU: null,
         GET_MENU_RESPONSE: null,

@@ -7,7 +7,7 @@
       "name" : "updRole",
       "readOnly": false,
       "title" : "Submit",
-      "success" : "/page/com-networknt-light-v-user-admin-home"
+      "success" : "/admin/userAdmin"
     }
   ],
   "schema": {
@@ -16,22 +16,24 @@
     "properties": {
       "roles": {
         "title": "Roles",
-        "type": "array",
-        "format": "uiselect",
-        "items": [
-          {
-            "label": "dynamic",
-            "value": {
-              "category": "role",
-              "name": "getRoleDropdown"
-            }
-          }
-        ]
+        "type": "array"
       }
     }
   },
   "form": [
-    "roles"
+    {
+      "key": "roles",
+      "type": "rc-select",
+      "multiple": true,
+      "items": [
+        {
+          "label": "dynamic",
+          "value": {
+            "category": "role",
+            "name": "getRoleDropdown"
+          }
+        }
+      ]
+    }
   ]
 }
-

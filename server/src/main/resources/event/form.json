@@ -1,10 +1,10 @@
 [
   {
     "@type": "d",
-    "@rid": "#17:259",
+    "@rid": "#17:280",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10260,
+    "eventId": 10281,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.req.transform_d",
@@ -79,20 +79,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.000"
+      "createDate": "2016-02-27T02:33:05.753"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.000",
+    "createDate": "2016-02-27T02:33:05.753",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:260",
+    "@rid": "#17:281",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10261,
+    "eventId": 10282,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.common.command",
@@ -177,20 +177,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.009"
+      "createDate": "2016-02-27T02:33:05.772"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.009",
+    "createDate": "2016-02-27T02:33:05.772",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:261",
+    "@rid": "#17:282",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10262,
+    "eventId": 10283,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.page.update",
@@ -232,20 +232,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.015"
+      "createDate": "2016-02-27T02:33:05.781"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.015",
+    "createDate": "2016-02-27T02:33:05.781",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:262",
+    "@rid": "#17:283",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10263,
+    "eventId": 10284,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.demo.strapselect_d",
@@ -376,20 +376,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.027"
+      "createDate": "2016-02-27T02:33:05.791"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.027",
+    "createDate": "2016-02-27T02:33:05.791",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:263",
+    "@rid": "#17:284",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10264,
+    "eventId": 10285,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.product.add",
@@ -514,20 +514,20 @@
           "success": "/page/com-networknt-light-v-product-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.034"
+      "createDate": "2016-02-27T02:33:05.802"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.034",
+    "createDate": "2016-02-27T02:33:05.802",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:264",
+    "@rid": "#17:285",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10265,
+    "eventId": 10286,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.product.update",
@@ -659,20 +659,20 @@
           "success": "/page/com-networknt-light-v-product-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.041"
+      "createDate": "2016-02-27T02:33:05.814"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.041",
+    "createDate": "2016-02-27T02:33:05.814",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:265",
+    "@rid": "#17:286",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10266,
+    "eventId": 10287,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.role.update_d",
@@ -709,20 +709,20 @@
           "success": "/page/com-networknt-light-v-user-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.059"
+      "createDate": "2016-02-27T02:33:05.823"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.059",
+    "createDate": "2016-02-27T02:33:05.823",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:266",
+    "@rid": "#17:287",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10267,
+    "eventId": 10288,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.news.update",
@@ -736,7 +736,8 @@
         "properties": {
           "categoryId": {
             "title": "News Id",
-            "type": "string"
+            "type": "string",
+            "readOnly": true
           },
           "description": {
             "title": "Description",
@@ -770,6 +771,7 @@
         {
           "key": "out_Own",
           "type": "rc-select",
+          "multiple": true,
           "action": {
             "get": {
               "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
@@ -783,23 +785,23 @@
           "name": "updNews",
           "readOnly": false,
           "title": "Submit",
-          "success": "/page/com-networknt-light-v-news-admin-home"
+          "success": "/admin/newsAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.065"
+      "createDate": "2016-02-27T02:33:05.832"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.065",
+    "createDate": "2016-02-27T02:33:05.832",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:267",
+    "@rid": "#17:288",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10268,
+    "eventId": 10289,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.execSchemaCommand",
@@ -833,20 +835,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.074"
+      "createDate": "2016-02-27T02:33:05.839"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.074",
+    "createDate": "2016-02-27T02:33:05.839",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:268",
+    "@rid": "#17:289",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10269,
+    "eventId": 10290,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.add",
@@ -886,20 +888,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.080"
+      "createDate": "2016-02-27T02:33:05.875"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.080",
+    "createDate": "2016-02-27T02:33:05.875",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:269",
+    "@rid": "#17:290",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10270,
+    "eventId": 10291,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.downloadEvent",
@@ -910,6 +912,10 @@
           "createDateFrom"
         ],
         "properties": {
+          "category": {
+            "title": "Event Category",
+            "type": "string"
+          },
           "name": {
             "title": "Event Name",
             "type": "string"
@@ -936,20 +942,20 @@
           "title": "Download Events"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.086"
+      "createDate": "2016-02-27T02:33:05.892"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.086",
+    "createDate": "2016-02-27T02:33:05.892",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:270",
+    "@rid": "#17:291",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10271,
+    "eventId": 10292,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.demo.uiselect_d",
@@ -1355,20 +1361,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.108"
+      "createDate": "2016-02-27T02:33:05.920"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.108",
+    "createDate": "2016-02-27T02:33:05.920",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:271",
+    "@rid": "#17:292",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10272,
+    "eventId": 10293,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.feeds",
@@ -1421,20 +1427,20 @@
           "title": "Inject"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.114"
+      "createDate": "2016-02-27T02:33:05.950"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.114",
+    "createDate": "2016-02-27T02:33:05.950",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:272",
+    "@rid": "#17:293",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10273,
+    "eventId": 10294,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.forum.post.update",
@@ -1605,20 +1611,20 @@
           "success": "/page/com-networknt-light-v-forum-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.122"
+      "createDate": "2016-02-27T02:33:05.976"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.122",
+    "createDate": "2016-02-27T02:33:05.976",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:273",
+    "@rid": "#17:294",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10274,
+    "eventId": 10295,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.import",
@@ -1655,20 +1661,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.129"
+      "createDate": "2016-02-27T02:33:05.995"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.129",
+    "createDate": "2016-02-27T02:33:05.995",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:274",
+    "@rid": "#17:295",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10275,
+    "eventId": 10296,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.forum.update",
@@ -1729,20 +1735,20 @@
           "success": "/page/com-networknt-light-v-forum-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.135"
+      "createDate": "2016-02-27T02:33:06.008"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.135",
+    "createDate": "2016-02-27T02:33:06.008",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:275",
+    "@rid": "#17:296",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10276,
+    "eventId": 10297,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.role.add",
@@ -1778,20 +1784,20 @@
           "success": "/admin/roleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.140"
+      "createDate": "2016-02-27T02:33:06.019"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.140",
+    "createDate": "2016-02-27T02:33:06.019",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:276",
+    "@rid": "#17:297",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10277,
+    "eventId": 10298,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.blog.update",
@@ -1805,7 +1811,8 @@
         "properties": {
           "categoryId": {
             "title": "Blog Id",
-            "type": "string"
+            "type": "string",
+            "readOnly": true
           },
           "description": {
             "title": "Description",
@@ -1839,6 +1846,7 @@
         {
           "key": "out_Own",
           "type": "rc-select",
+          "multiple": true,
           "action": {
             "get": {
               "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
@@ -1852,23 +1860,23 @@
           "name": "updBlog",
           "readOnly": false,
           "title": "Submit",
-          "success": "/page/com-networknt-light-v-blog-admin-home"
+          "success": "/admin/blogAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.146"
+      "createDate": "2016-02-27T02:33:06.026"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.146",
+    "createDate": "2016-02-27T02:33:06.026",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:277",
+    "@rid": "#17:298",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10278,
+    "eventId": 10299,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.execQueryCommand",
@@ -1902,20 +1910,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.151"
+      "createDate": "2016-02-27T02:33:06.035"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.151",
+    "createDate": "2016-02-27T02:33:06.035",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:278",
+    "@rid": "#17:299",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10279,
+    "eventId": 10300,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.role.update",
@@ -1952,20 +1960,20 @@
           "success": "/admin/roleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.163"
+      "createDate": "2016-02-27T02:33:06.043"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.163",
+    "createDate": "2016-02-27T02:33:06.043",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:279",
+    "@rid": "#17:300",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10280,
+    "eventId": 10301,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.news.add",
@@ -2013,6 +2021,7 @@
         {
           "key": "out_Own",
           "type": "rc-select",
+          "multiple": true,
           "action": {
             "get": {
               "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
@@ -2026,23 +2035,23 @@
           "name": "addNews",
           "readOnly": false,
           "title": "Submit",
-          "success": "/page/com-networknt-light-v-news-admin-home"
+          "success": "/admin/newsAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.168"
+      "createDate": "2016-02-27T02:33:06.054"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.168",
+    "createDate": "2016-02-27T02:33:06.054",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:280",
+    "@rid": "#17:301",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10281,
+    "eventId": 10302,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.forum.add",
@@ -2103,20 +2112,20 @@
           "success": "/page/com-networknt-light-v-forum-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.175"
+      "createDate": "2016-02-27T02:33:06.061"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.175",
+    "createDate": "2016-02-27T02:33:06.061",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:281",
+    "@rid": "#17:302",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10282,
+    "eventId": 10303,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.change.password",
@@ -2157,20 +2166,20 @@
           "title": "Change Password"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.184"
+      "createDate": "2016-02-27T02:33:06.068"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.184",
+    "createDate": "2016-02-27T02:33:06.068",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:282",
+    "@rid": "#17:303",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10283,
+    "eventId": 10304,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.address",
@@ -2258,20 +2267,20 @@
           "title": "New"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.195"
+      "createDate": "2016-02-27T02:33:06.091"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.195",
+    "createDate": "2016-02-27T02:33:06.091",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:283",
+    "@rid": "#17:304",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10284,
+    "eventId": 10305,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.blog.post.update",
@@ -2344,11 +2353,13 @@
         "originalUrl",
         {
           "key": "summary",
-          "type": "textarea"
+          "type": "textarea",
+          "rows": 3
         },
         {
           "key": "content",
-          "type": "textarea"
+          "type": "textarea",
+          "rows": 10
         },
         {
           "key": "tags",
@@ -2371,20 +2382,78 @@
           "success": "/blog"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.206"
+      "createDate": "2016-02-27T02:33:06.099"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.206",
+    "createDate": "2016-02-27T02:33:06.099",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:284",
+    "@rid": "#17:305",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10285,
+    "eventId": 10306,
+    "createUserId": "stevehu",
+    "data": {
+      "formId": "com.networknt.light.config.add",
+      "schema": {
+        "type": "object",
+        "required": [
+          "configId",
+          "properties"
+        ],
+        "title": "Config",
+        "properties": {
+          "configId": {
+            "type": "string",
+            "title": "Config Id"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "properties": {
+            "type": "string",
+            "title": "Properties"
+          }
+        }
+      },
+      "createUserId": "stevehu",
+      "form": [
+        "configId",
+        "description",
+        {
+          "key": "properties",
+          "type": "textarea",
+          "rows": 15
+        }
+      ],
+      "action": [
+        {
+          "category": "config",
+          "name": "addConfig",
+          "readOnly": false,
+          "title": "Submit",
+          "success": "/admin/configAdmin"
+        }
+      ],
+      "createDate": "2016-02-27T02:33:06.110"
+    },
+    "name": "impForm",
+    "category": "form",
+    "createDate": "2016-02-27T02:33:06.110",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:306",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10307,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.forum.post.add",
@@ -2474,20 +2543,20 @@
           "success": "/page/com-networknt-light-v-forum-post"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.218"
+      "createDate": "2016-02-27T02:33:06.119"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.218",
+    "createDate": "2016-02-27T02:33:06.119",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:285",
+    "@rid": "#17:307",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10286,
+    "eventId": 10308,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.page.add",
@@ -2529,20 +2598,20 @@
           "title": "Submit"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.227"
+      "createDate": "2016-02-27T02:33:06.126"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.227",
+    "createDate": "2016-02-27T02:33:06.126",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:286",
+    "@rid": "#17:308",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10287,
+    "eventId": 10309,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.replayEvent",
@@ -2576,20 +2645,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.234"
+      "createDate": "2016-02-27T02:33:06.133"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.234",
+    "createDate": "2016-02-27T02:33:06.133",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:287",
+    "@rid": "#17:309",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10288,
+    "eventId": 10310,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.catalog.product.add",
@@ -2613,12 +2682,8 @@
             "title": "Name",
             "type": "string"
           },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
+          "delivery": {
+            "title": "Delivery",
             "type": "string"
           },
           "tags": {
@@ -2660,6 +2725,14 @@
                 "price"
               ]
             }
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
+            "type": "string"
           }
         }
       },
@@ -2668,14 +2741,39 @@
         "parentRid",
         "name",
         {
-          "key": "description",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 20
+          "key": "delivery",
+          "type": "rc-select",
+          "multiple": false,
+          "items": [
+            {
+              "value": "SO",
+              "label": "Shipping only"
+            },
+            {
+              "value": "PO",
+              "label": "Pickup only"
+            },
+            {
+              "value": "SP",
+              "label": "Shipping or Pickup"
+            },
+            {
+              "value": "DL",
+              "label": "Download"
+            },
+            {
+              "value": "EM",
+              "label": "Email"
+            },
+            {
+              "value": "OS",
+              "label": "One time subscription"
+            },
+            {
+              "value": "RS",
+              "label": "Recurring subscription"
+            }
+          ]
         },
         {
           "key": "tags",
@@ -2701,6 +2799,16 @@
             "variants[].image",
             "variants[].inventory"
           ]
+        },
+        {
+          "key": "description",
+          "type": "textarea",
+          "rows": 5
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 15
         }
       ],
       "action": [
@@ -2712,20 +2820,20 @@
           "success": "/catalog"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.244"
+      "createDate": "2016-02-27T02:33:06.142"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.244",
+    "createDate": "2016-02-27T02:33:06.142",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:288",
+    "@rid": "#17:310",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10289,
+    "eventId": 10311,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.cors.update",
@@ -2767,20 +2875,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.252"
+      "createDate": "2016-02-27T02:33:06.152"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.252",
+    "createDate": "2016-02-27T02:33:06.152",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:289",
+    "@rid": "#17:311",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10290,
+    "eventId": 10312,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.form.import",
@@ -2811,20 +2919,20 @@
           "success": "/admin/formAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.262"
+      "createDate": "2016-02-27T02:33:06.158"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.262",
+    "createDate": "2016-02-27T02:33:06.158",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:290",
+    "@rid": "#17:312",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10291,
+    "eventId": 10313,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.page.import",
@@ -2861,20 +2969,20 @@
           "success": "/page/com-networknt-light-v-page-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.272"
+      "createDate": "2016-02-27T02:33:06.225"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.272",
+    "createDate": "2016-02-27T02:33:06.225",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:291",
+    "@rid": "#17:313",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10292,
+    "eventId": 10314,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.news.post.update",
@@ -2947,11 +3055,13 @@
         "originalUrl",
         {
           "key": "summary",
-          "type": "textarea"
+          "type": "textarea",
+          "rows": 3
         },
         {
           "key": "content",
-          "type": "textarea"
+          "type": "textarea",
+          "rows": 10
         },
         {
           "key": "tags",
@@ -2974,20 +3084,20 @@
           "success": "/news"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.278"
+      "createDate": "2016-02-27T02:33:06.235"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.278",
+    "createDate": "2016-02-27T02:33:06.235",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:292",
+    "@rid": "#17:314",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10293,
+    "eventId": 10315,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.host.add",
@@ -3053,20 +3163,20 @@
           "success": "/admin/hostAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.286"
+      "createDate": "2016-02-27T02:33:06.256"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.286",
+    "createDate": "2016-02-27T02:33:06.256",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:293",
+    "@rid": "#17:315",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10294,
+    "eventId": 10316,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.access.upd_d",
@@ -3188,20 +3298,20 @@
           "success": "/admin/accessAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.303"
+      "createDate": "2016-02-27T02:33:06.265"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.303",
+    "createDate": "2016-02-27T02:33:06.265",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:294",
+    "@rid": "#17:316",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10295,
+    "eventId": 10317,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.subscriber.update",
@@ -3238,20 +3348,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.308"
+      "createDate": "2016-02-27T02:33:06.273"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.308",
+    "createDate": "2016-02-27T02:33:06.273",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:295",
+    "@rid": "#17:317",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10296,
+    "eventId": 10318,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.host.update",
@@ -3318,20 +3428,20 @@
           "success": "/admin/hostAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.321"
+      "createDate": "2016-02-27T02:33:06.284"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.321",
+    "createDate": "2016-02-27T02:33:06.284",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:296",
+    "@rid": "#17:318",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10297,
+    "eventId": 10319,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.menu.addMenuItem",
@@ -3405,20 +3515,20 @@
           "success": "/admin/menuAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.332"
+      "createDate": "2016-02-27T02:33:06.295"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.332",
+    "createDate": "2016-02-27T02:33:06.295",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:297",
+    "@rid": "#17:319",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10298,
+    "eventId": 10320,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.schema.update",
@@ -3458,20 +3568,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.344"
+      "createDate": "2016-02-27T02:33:06.304"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.344",
+    "createDate": "2016-02-27T02:33:06.304",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:298",
+    "@rid": "#17:320",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10299,
+    "eventId": 10321,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.catalog.product.update",
@@ -3499,12 +3609,8 @@
             "title": "Name",
             "type": "string"
           },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
+          "delivery": {
+            "title": "Delivery",
             "type": "string"
           },
           "tags": {
@@ -3546,6 +3652,14 @@
                 "price"
               ]
             }
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "content": {
+            "title": "Detail",
+            "type": "string"
           }
         }
       },
@@ -3564,14 +3678,39 @@
         "entityId",
         "name",
         {
-          "key": "description",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 20
+          "key": "delivery",
+          "type": "rc-select",
+          "multiple": false,
+          "items": [
+            {
+              "value": "SO",
+              "label": "Shipping only"
+            },
+            {
+              "value": "PO",
+              "label": "Pickup only"
+            },
+            {
+              "value": "SP",
+              "label": "Shipping or Pickup"
+            },
+            {
+              "value": "DL",
+              "label": "Download"
+            },
+            {
+              "value": "EM",
+              "label": "Email"
+            },
+            {
+              "value": "OS",
+              "label": "One time subscription"
+            },
+            {
+              "value": "RS",
+              "label": "Recurring subscription"
+            }
+          ]
         },
         {
           "key": "tags",
@@ -3597,6 +3736,16 @@
             "variants[].image",
             "variants[].inventory"
           ]
+        },
+        {
+          "key": "description",
+          "type": "textarea",
+          "rows": 5
+        },
+        {
+          "key": "content",
+          "type": "textarea",
+          "rows": 15
         }
       ],
       "action": [
@@ -3608,20 +3757,20 @@
           "success": "/catalog"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.352"
+      "createDate": "2016-02-27T02:33:06.315"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.352",
+    "createDate": "2016-02-27T02:33:06.315",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:299",
+    "@rid": "#17:321",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10300,
+    "eventId": 10322,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.blog.post.add",
@@ -3680,11 +3829,13 @@
         "originalUrl",
         {
           "key": "summary",
-          "type": "textarea"
+          "type": "textarea",
+          "rows": 3
         },
         {
           "key": "content",
-          "type": "textarea"
+          "type": "textarea",
+          "rows": 10
         },
         {
           "key": "tags",
@@ -3707,20 +3858,20 @@
           "success": "/blog"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.362"
+      "createDate": "2016-02-27T02:33:06.328"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.362",
+    "createDate": "2016-02-27T02:33:06.328",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:300",
+    "@rid": "#17:322",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10301,
+    "eventId": 10323,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.etag.update",
@@ -3762,20 +3913,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.370"
+      "createDate": "2016-02-27T02:33:06.339"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.370",
+    "createDate": "2016-02-27T02:33:06.339",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:301",
+    "@rid": "#17:323",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10302,
+    "eventId": 10324,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.signin",
@@ -3820,20 +3971,20 @@
           "success": "/page/com-networknt-light-v-user-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.379"
+      "createDate": "2016-02-27T02:33:06.347"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.379",
+    "createDate": "2016-02-27T02:33:06.347",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:302",
+    "@rid": "#17:324",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10303,
+    "eventId": 10325,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.execUpdateCommand",
@@ -3867,20 +4018,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.388"
+      "createDate": "2016-02-27T02:33:06.362"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.388",
+    "createDate": "2016-02-27T02:33:06.362",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:303",
+    "@rid": "#17:325",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10304,
+    "eventId": 10326,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.catalog.update",
@@ -3894,7 +4045,8 @@
         "properties": {
           "categoryId": {
             "title": "Catalog Id",
-            "type": "string"
+            "type": "string",
+            "readOnly": true
           },
           "description": {
             "title": "Description",
@@ -3941,23 +4093,23 @@
           "name": "updCatalog",
           "readOnly": false,
           "title": "Submit",
-          "success": "/page/com-networknt-light-v-catalog-admin-home"
+          "success": "/admin/catalogAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.399"
+      "createDate": "2016-02-27T02:33:06.371"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.399",
+    "createDate": "2016-02-27T02:33:06.371",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:304",
+    "@rid": "#17:326",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10305,
+    "eventId": 10327,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.menu.addMenu",
@@ -4002,20 +4154,20 @@
           "success": "/admin/menuAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.405"
+      "createDate": "2016-02-27T02:33:06.384"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.405",
+    "createDate": "2016-02-27T02:33:06.384",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:305",
+    "@rid": "#17:327",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10306,
+    "eventId": 10328,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.res.transform_d",
@@ -4090,20 +4242,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.418"
+      "createDate": "2016-02-27T02:33:06.406"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.418",
+    "createDate": "2016-02-27T02:33:06.406",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:306",
+    "@rid": "#17:328",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10307,
+    "eventId": 10329,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.blog.add",
@@ -4151,6 +4303,7 @@
         {
           "key": "out_Own",
           "type": "rc-select",
+          "multiple": true,
           "action": {
             "get": {
               "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
@@ -4164,86 +4317,82 @@
           "name": "addBlog",
           "readOnly": false,
           "title": "Submit",
-          "success": "/page/com-networknt-light-v-blog-admin-home"
+          "success": "/admin/blogAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.428"
+      "createDate": "2016-02-27T02:33:06.417"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.428",
+    "createDate": "2016-02-27T02:33:06.417",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:307",
+    "@rid": "#17:329",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10308,
+    "eventId": 10330,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.config.update",
       "schema": {
         "type": "object",
         "required": [
-          "host",
-          "app"
+          "configId",
+          "properties"
         ],
-        "title": "Configuration",
+        "title": "Config",
         "properties": {
-          "host": {
+          "configId": {
             "type": "string",
-            "title": "Host",
-            "enum": [
-              "injector",
-              "www.networknt.com",
-              "www.edibleforestgarden.ca"
-            ]
+            "title": "Config Id",
+            "readOnly": true
           },
-          "app": {
+          "description": {
             "type": "string",
-            "title": "Application",
-            "enum": [
-              "main",
-              "blog"
-            ]
+            "title": "Description"
           },
-          "blogCacheSize": {
-            "type": "number",
-            "title": "Blog Cache Size (number of blogs cached for the entire server. max 9999)",
-            "maxLength": 4
+          "properties": {
+            "type": "string",
+            "title": "Properties"
           }
         }
       },
       "createUserId": "stevehu",
       "form": [
-        "host",
-        "app",
-        "blogCacheSize"
+        "configId",
+        "description",
+        {
+          "key": "properties",
+          "type": "textarea",
+          "rows": 15
+        }
       ],
       "action": [
         {
           "category": "config",
           "name": "updConfig",
           "readOnly": false,
-          "title": "Update"
+          "title": "Submit",
+          "success": "/admin/configAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.447"
+      "createDate": "2016-02-27T02:33:06.427"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.447",
+    "createDate": "2016-02-27T02:33:06.427",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:308",
+    "@rid": "#17:330",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10309,
+    "eventId": 10331,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.class.feed",
@@ -4715,20 +4864,20 @@
           "success": "/"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.472"
+      "createDate": "2016-02-27T02:33:06.444"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.472",
+    "createDate": "2016-02-27T02:33:06.444",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:309",
+    "@rid": "#17:331",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10310,
+    "eventId": 10332,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.update",
@@ -4762,20 +4911,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.482"
+      "createDate": "2016-02-27T02:33:06.454"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.482",
+    "createDate": "2016-02-27T02:33:06.454",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:310",
+    "@rid": "#17:332",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10311,
+    "eventId": 10333,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.catalog.add",
@@ -4836,23 +4985,23 @@
           "name": "addCatalog",
           "readOnly": false,
           "title": "Submit",
-          "success": "/page/com-networknt-light-v-catalog-admin-home"
+          "success": "/admin/catalogAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.496"
+      "createDate": "2016-02-27T02:33:06.469"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.496",
+    "createDate": "2016-02-27T02:33:06.469",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:311",
+    "@rid": "#17:333",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10312,
+    "eventId": 10334,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.update.profile",
@@ -4883,20 +5032,20 @@
           "title": "Update"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.506"
+      "createDate": "2016-02-27T02:33:06.511"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.506",
+    "createDate": "2016-02-27T02:33:06.511",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:312",
+    "@rid": "#17:334",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10313,
+    "eventId": 10335,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.news.post.add",
@@ -4955,11 +5104,13 @@
         "originalUrl",
         {
           "key": "summary",
-          "type": "textarea"
+          "type": "textarea",
+          "rows": 3
         },
         {
           "key": "content",
-          "type": "textarea"
+          "type": "textarea",
+          "rows": 10
         },
         {
           "key": "tags",
@@ -4982,20 +5133,20 @@
           "success": "/news"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.515"
+      "createDate": "2016-02-27T02:33:06.531"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.515",
+    "createDate": "2016-02-27T02:33:06.531",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:313",
+    "@rid": "#17:335",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10314,
+    "eventId": 10336,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.db.exportDb",
@@ -5025,20 +5176,20 @@
           "success": "/page/com-networknt-light-v-db-admin-home"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.520"
+      "createDate": "2016-02-27T02:33:06.544"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.520",
+    "createDate": "2016-02-27T02:33:06.544",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:314",
+    "@rid": "#17:336",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10315,
+    "eventId": 10337,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.signup",
@@ -5105,20 +5256,20 @@
           "success": "/page/com-networknt-light-v-user-signup"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.527"
+      "createDate": "2016-02-27T02:33:06.552"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.527",
+    "createDate": "2016-02-27T02:33:06.552",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:315",
+    "@rid": "#17:337",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10316,
+    "eventId": 10338,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.menu.updateMenu",
@@ -5162,20 +5313,20 @@
           "success": "/admin/menuAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.538"
+      "createDate": "2016-02-27T02:33:06.564"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.538",
+    "createDate": "2016-02-27T02:33:06.564",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:316",
+    "@rid": "#17:338",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10317,
+    "eventId": 10339,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.menu.updateMenuItem",
@@ -5250,20 +5401,20 @@
           "success": "/admin/menuAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.553"
+      "createDate": "2016-02-27T02:33:06.571"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.553",
+    "createDate": "2016-02-27T02:33:06.571",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:317",
+    "@rid": "#17:339",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10318,
+    "eventId": 10340,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.rule.publisher.update",
@@ -5300,20 +5451,20 @@
           "success": "/admin/ruleAdmin"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.561"
+      "createDate": "2016-02-27T02:33:06.584"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.561",
+    "createDate": "2016-02-27T02:33:06.584",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:318",
+    "@rid": "#17:340",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10319,
+    "eventId": 10341,
     "createUserId": "stevehu",
     "data": {
       "formId": "com.networknt.light.user.profile",
@@ -5362,5481 +5513,11 @@
           "title": "Update"
         }
       ],
-      "createDate": "2016-02-14T15:53:19.567"
+      "createDate": "2016-02-27T02:33:06.596"
     },
     "name": "impForm",
     "category": "form",
-    "createDate": "2016-02-14T15:53:19.567",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:320",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10321,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.role.update",
-      "schema": {
-        "type": "object",
-        "title": "Role",
-        "required": [
-          "roleId",
-          "description"
-        ],
-        "properties": {
-          "roleId": {
-            "title": "Role Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "roleId",
-        "description"
-      ],
-      "action": [
-        {
-          "category": "role",
-          "name": "updRole",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/roleAdmin"
-        }
-      ],
-      "createDate": "2016-02-14T15:53:26.025"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-14T15:53:26.025",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:12",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10013,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.news.update",
-      "schema": {
-        "type": "object",
-        "title": "News",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "News Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "news",
-          "name": "updNews",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/newsAdmin"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.529"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.529",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:13",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10014,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.db.downloadEvent",
-      "schema": {
-        "type": "object",
-        "title": "Download Events",
-        "required": [
-          "createDateFrom"
-        ],
-        "properties": {
-          "category": {
-            "title": "Event Category",
-            "type": "string"
-          },
-          "name": {
-            "title": "Event Name",
-            "type": "string"
-          },
-          "createDateFrom": {
-            "title": "Event From Date",
-            "type": "date"
-          },
-          "createDateTo": {
-            "title": "Event To Date",
-            "type": "date"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "*"
-      ],
-      "action": [
-        {
-          "category": "db",
-          "name": "downloadEvent",
-          "readOnly": true,
-          "title": "Download Events"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.540"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.540",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:14",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10015,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.update",
-      "schema": {
-        "type": "object",
-        "title": "Blog",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "Blog Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "updBlog",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/blogAdmin"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.583"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.583",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:15",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10016,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.news.add",
-      "schema": {
-        "type": "object",
-        "title": "News",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "News Id",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "news",
-          "name": "addNews",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/newsAdmin"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.615"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.615",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:16",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10017,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.post.update",
-      "schema": {
-        "type": "object",
-        "title": "Blog Post Update",
-        "required": [
-          "entityId",
-          "title",
-          "summary",
-          "content"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string"
-          },
-          "entityId": {
-            "title": "Post Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "originalAuthor": {
-            "title": "Original Author",
-            "type": "string"
-          },
-          "originalSite": {
-            "title": "Original Site",
-            "type": "string"
-          },
-          "originalUrl": {
-            "title": "Original Url",
-            "type": "string"
-          },
-          "summary": {
-            "title": "Summary",
-            "type": "string"
-          },
-          "content": {
-            "title": "Content",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "key": "parentRid",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        "entityId",
-        "title",
-        "originalAuthor",
-        "originalSite",
-        "originalUrl",
-        {
-          "key": "summary",
-          "type": "textarea",
-          "rows": 3
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "updPost",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/blog"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.643"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.643",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:17",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10018,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.add",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product",
-        "required": [
-          "parentRid",
-          "name",
-          "description",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "parentRid",
-        "name",
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "addProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.707"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.707",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:18",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10019,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.news.post.update",
-      "schema": {
-        "type": "object",
-        "title": "News Post Update",
-        "required": [
-          "entityId",
-          "title",
-          "summary",
-          "content"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string"
-          },
-          "entityId": {
-            "title": "Post Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "originalAuthor": {
-            "title": "Original Author",
-            "type": "string"
-          },
-          "originalSite": {
-            "title": "Original Site",
-            "type": "string"
-          },
-          "originalUrl": {
-            "title": "Original Url",
-            "type": "string"
-          },
-          "summary": {
-            "title": "Summary",
-            "type": "string"
-          },
-          "content": {
-            "title": "Content",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "key": "parentRid",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        "entityId",
-        "title",
-        "originalAuthor",
-        "originalSite",
-        "originalUrl",
-        {
-          "key": "summary",
-          "type": "textarea",
-          "rows": 3
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "news",
-          "name": "updPost",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/news"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.767"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.767",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:19",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10020,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.update",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product Update",
-        "required": [
-          "entityId",
-          "name",
-          "description",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string"
-          },
-          "entityId": {
-            "title": "Product Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "key": "parentRid",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        "entityId",
-        "name",
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "updProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.822"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.822",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:20",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10021,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.post.add",
-      "schema": {
-        "type": "object",
-        "title": "Blog Post",
-        "required": [
-          "parentRid",
-          "title",
-          "summary",
-          "content"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string",
-            "readOnly": true
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "originalAuthor": {
-            "title": "Original Author",
-            "type": "string"
-          },
-          "originalSite": {
-            "title": "Original Site",
-            "type": "string"
-          },
-          "originalUrl": {
-            "title": "Original Url",
-            "type": "string"
-          },
-          "summary": {
-            "title": "Summary",
-            "type": "string"
-          },
-          "content": {
-            "title": "Content",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "parentRid",
-        "title",
-        "originalAuthor",
-        "originalSite",
-        "originalUrl",
-        {
-          "key": "summary",
-          "type": "textarea",
-          "rows": 3
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "addPost",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/blog"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.857"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.857",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:21",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10022,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.update",
-      "schema": {
-        "type": "object",
-        "title": "Catalog",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "Catalog Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "updCatalog",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/catalogAdmin"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.910"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.910",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:22",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10023,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.add",
-      "schema": {
-        "type": "object",
-        "title": "Blog",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "Blog Id",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "addBlog",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/blogAdmin"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:06.964"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:06.964",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:23",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10024,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.class.feed",
-      "schema": {
-        "type": "object",
-        "required": [
-          "environment",
-          "messageNumber",
-          "hppInd",
-          "centreCode"
-        ],
-        "title": "class",
-        "properties": {
-          "environment": {
-            "type": "string",
-            "title": "Environment",
-            "enum": [
-              "LOCAL",
-              "IDT5N",
-              "SIT1N",
-              "SIT2N",
-              "SIT3N",
-              "UAT1N",
-              "UAT2N"
-            ]
-          },
-          "requestId": {
-            "type": "number",
-            "title": "Request Id",
-            "maxLength": 10
-          },
-          "messageNumber": {
-            "type": "string",
-            "title": "Message Number",
-            "enum": [
-              "E0500",
-              "E0450",
-              "E0220",
-              "E0130",
-              "E0110",
-              "E0014",
-              "E0012",
-              "E0010",
-              "A0120",
-              "A0090"
-            ]
-          },
-          "loanNumber": {
-            "type": "string",
-            "title": "Loan Number",
-            "maxLength": 10
-          },
-          "pid": {
-            "type": "string",
-            "title": "PID",
-            "enum": [
-              "263",
-              "701",
-              "702",
-              "703",
-              "704",
-              "705",
-              "706",
-              "798",
-              "799",
-              "233",
-              "237",
-              "262",
-              "265",
-              "232",
-              "257",
-              "248",
-              "238",
-              "900",
-              "910",
-              "999",
-              "259",
-              "131",
-              "600",
-              "601",
-              "602",
-              "603",
-              "697",
-              "698",
-              "699",
-              "141",
-              "142",
-              "152",
-              "232",
-              "257",
-              "800",
-              "899"
-            ]
-          },
-          "hppInd": {
-            "type": "string",
-            "title": "HPP Indicator",
-            "enum": [
-              "0",
-              "1",
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8"
-            ]
-          },
-          "loanCategroy": {
-            "title": "Loan Category",
-            "type": "string",
-            "enum": [
-              "CMHC",
-              "COL1",
-              "COL2",
-              "COL3",
-              "ANEW",
-              "ANUT",
-              "AUSE",
-              "AUUT",
-              "MCYC",
-              "MOHO",
-              "TCCN",
-              "TCCU",
-              "GPIN",
-              "GPIV"
-            ],
-            "default": "CHMC"
-          },
-          "debtConsolidation": {
-            "title": "Debt Consolidation",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "incomeVerification": {
-            "title": "Income Verification",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "liabilityType": {
-            "title": "Liability Type",
-            "type": "string",
-            "enum": [
-              "701",
-              "700",
-              "602",
-              "603",
-              "601",
-              "600",
-              "302",
-              "301",
-              "300",
-              "BSC",
-              "CLN",
-              "PLC",
-              "MTG",
-              "REN",
-              "DC0"
-            ]
-          },
-          "plcPurposeCode": {
-            "title": "Plc PurposeCode",
-            "type": "string",
-            "enum": [
-              "000",
-              "001",
-              "002",
-              "003",
-              "004",
-              "005",
-              "006",
-              "009"
-            ]
-          },
-          "fullLiabilityIndicator": {
-            "title": "Full Liability Indicator",
-            "type": "string",
-            "enum": [
-              "1",
-              "4"
-            ]
-          },
-          "solicitorName": {
-            "title": "Solicitor Name",
-            "type": "string",
-            "maxLength": 25
-          },
-          "propertyProvCode": {
-            "title": "Property Prov Code",
-            "type": "string",
-            "enum": [
-              "QC",
-              "NS",
-              "NU",
-              "MB",
-              "BC",
-              "PE",
-              "NT",
-              "YT",
-              "ON",
-              "SK",
-              "AB",
-              "NB"
-            ],
-            "default": "ON"
-          },
-          "centreCode": {
-            "title": "Centre Code",
-            "type": "string",
-            "enum": [
-              "TO",
-              "VA",
-              "CA",
-              "TB",
-              "REBO",
-              "Bank@Work",
-              "WP",
-              "HL",
-              "Training",
-              "MT",
-              "RISK"
-            ],
-            "default": "TO"
-          },
-          "processingDate": {
-            "title": "Processing Date",
-            "type": "string",
-            "format": "date"
-          },
-          "reportDate": {
-            "title": "Report Date",
-            "type": "string",
-            "format": "date"
-          },
-          "customerName": {
-            "title": "Customer Name",
-            "type": "string",
-            "maxLength": 250,
-            "default": "New Injector"
-          },
-          "postNumber": {
-            "title": "Post Number",
-            "type": "string",
-            "maxLength": 3,
-            "default": "123"
-          },
-          "transit": {
-            "title": "Transit",
-            "type": "string",
-            "maxLength": 5,
-            "default": "00001"
-          },
-          "cid": {
-            "title": "CID",
-            "type": "string",
-            "maxLength": 3,
-            "default": "100"
-          },
-          "fundsDisbursed": {
-            "title": "Funds Disbursed",
-            "type": "number",
-            "default": 1000
-          },
-          "relationship": {
-            "title": "Relationship",
-            "type": "string",
-            "enum": [
-              "1",
-              "2",
-              "3",
-              "4",
-              "5"
-            ],
-            "default": "1"
-          },
-          "marketingSourceCode": {
-            "title": "Marketing Source Code",
-            "type": "string",
-            "enum": [
-              "DWPV",
-              "PBCY",
-              "BFIN",
-              "BFCE",
-              "BDLG",
-              "OFFN",
-              "BLAK",
-              "EQLH",
-              "OFFB",
-              "NEW2",
-              "FCBC",
-              "JJ99",
-              "AHBL",
-              "CASE",
-              "NRES",
-              "BTOB",
-              "GENL",
-              "ABL1",
-              "RP22",
-              "RP99",
-              "EQL1"
-            ],
-            "default": "RP99"
-          },
-          "provinceCode": {
-            "title": "Province Code",
-            "type": "string",
-            "enum": [
-              "QC",
-              "NS",
-              "NU",
-              "MB",
-              "BC",
-              "PE",
-              "NT",
-              "YT",
-              "ON",
-              "SK",
-              "AB",
-              "NB"
-            ],
-            "default": "ON"
-          },
-          "newConstructionInd": {
-            "title": "New Construction Ind",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "processTypeCd": {
-            "title": "Process Type",
-            "type": "string"
-          },
-          "processSubtypeCd": {
-            "title": "Process Sub Type",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags[Maximum 5 tags separated by ,]",
-            "type": "string"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "type": "help",
-          "helpvalue": "<h4>Class Feed Example</h4>"
-        },
-        "environment",
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for injection rules</h4>"
-        },
-        "messageNumber",
-        "hppInd",
-        {
-          "type": "conditional",
-          "condition": "modelData.hppInd==='0'",
-          "items": [
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0012' || modelData.messageNumber === 'E0014'",
-              "items": [
-                "pid"
-              ]
-            },
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0010'",
-              "items": [
-                "pid",
-                {
-                  "key": "debtConsolidation",
-                  "type": "radiobuttons"
-                },
-                "loanCategroy"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "conditional",
-          "condition": "modelData.hppInd !== '0'",
-          "items": [
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0012'",
-              "items": [
-                "plcPurposeCode",
-                "fullLiabilityIndicator",
-                "solicitorName",
-                "propertyProvCode"
-              ]
-            },
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber === 'E0014'",
-              "items": [
-                "plcPurposeCode",
-                "solicitorName",
-                "propertyProvCode"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for epi mappings</h4>"
-        },
-        "loanNumber",
-        "customerName",
-        "postNumber",
-        "transit",
-        "cid",
-        "fundsDisbursed",
-        "relationship",
-        "marketingSourceCode",
-        {
-          "key": "incomeVerification",
-          "type": "radios",
-          "titleMap": {
-            "Y": "Income Verification is requried.",
-            "N": "Income Verification is not required."
-          }
-        },
-        "centreCode",
-        "provinceCode",
-        "newConstructionInd",
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for feed storage and retrieval only</h4>"
-        },
-        "processTypeCd",
-        "processSubtypeCd",
-        {
-          "key": "tags",
-          "type": "textarea"
-        }
-      ],
-      "action": [
-        {
-          "host": "injector",
-          "app": "main",
-          "category": "feed",
-          "name": "injClassFeed",
-          "readOnly": false,
-          "title": "Inject",
-          "success": "/"
-        },
-        {
-          "host": "injector",
-          "app": "main",
-          "category": "feed",
-          "name": "updFeedMeta",
-          "readOnly": false,
-          "title": "Update Meta",
-          "success": "/"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:07.010"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:07.010",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:24",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10025,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.add",
-      "schema": {
-        "type": "object",
-        "title": "Catalog",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "Catalog Id",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "addCatalog",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/catalogAdmin"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:07.038"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:07.038",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:25",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10026,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.news.post.add",
-      "schema": {
-        "type": "object",
-        "title": "News Post",
-        "required": [
-          "parentRid",
-          "title",
-          "summary",
-          "content"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string",
-            "readOnly": true
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "originalAuthor": {
-            "title": "Original Author",
-            "type": "string"
-          },
-          "originalSite": {
-            "title": "Original Site",
-            "type": "string"
-          },
-          "originalUrl": {
-            "title": "Original Url",
-            "type": "string"
-          },
-          "summary": {
-            "title": "Summary",
-            "type": "string"
-          },
-          "content": {
-            "title": "Content",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "parentRid",
-        "title",
-        "originalAuthor",
-        "originalSite",
-        "originalUrl",
-        {
-          "key": "summary",
-          "type": "textarea",
-          "rows": 3
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "news",
-          "name": "addPost",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/news"
-        }
-      ],
-      "createDate": "2016-02-17T02:20:07.077"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:20:07.077",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:27",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10028,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.db.downloadEvent",
-      "schema": {
-        "type": "object",
-        "title": "Download Events",
-        "required": [
-          "createDateFrom"
-        ],
-        "properties": {
-          "category": {
-            "title": "Event Category",
-            "type": "string"
-          },
-          "name": {
-            "title": "Event Name",
-            "type": "string"
-          },
-          "createDateFrom": {
-            "title": "Event From Date",
-            "type": "date"
-          },
-          "createDateTo": {
-            "title": "Event To Date",
-            "type": "date"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "*"
-      ],
-      "action": [
-        {
-          "category": "db",
-          "name": "downloadEvent",
-          "readOnly": true,
-          "title": "Download Events"
-        }
-      ],
-      "createDate": "2016-02-17T02:21:14.150"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:21:14.150",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:28",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10029,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.update",
-      "schema": {
-        "type": "object",
-        "title": "Blog",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "Blog Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "updBlog",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/blogAdmin"
-        }
-      ],
-      "createDate": "2016-02-17T02:21:14.198"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:21:14.198",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:29",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10030,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.post.update",
-      "schema": {
-        "type": "object",
-        "title": "Blog Post Update",
-        "required": [
-          "entityId",
-          "title",
-          "summary",
-          "content"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string"
-          },
-          "entityId": {
-            "title": "Post Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "originalAuthor": {
-            "title": "Original Author",
-            "type": "string"
-          },
-          "originalSite": {
-            "title": "Original Site",
-            "type": "string"
-          },
-          "originalUrl": {
-            "title": "Original Url",
-            "type": "string"
-          },
-          "summary": {
-            "title": "Summary",
-            "type": "string"
-          },
-          "content": {
-            "title": "Content",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "key": "parentRid",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        "entityId",
-        "title",
-        "originalAuthor",
-        "originalSite",
-        "originalUrl",
-        {
-          "key": "summary",
-          "type": "textarea",
-          "rows": 3
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "updPost",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/blog"
-        }
-      ],
-      "createDate": "2016-02-17T02:21:14.253"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:21:14.253",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:30",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10031,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.add",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product",
-        "required": [
-          "parentRid",
-          "name",
-          "description",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "parentRid",
-        "name",
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "addProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-17T02:21:14.285"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:21:14.285",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:31",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10032,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.update",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product Update",
-        "required": [
-          "entityId",
-          "name",
-          "description",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string"
-          },
-          "entityId": {
-            "title": "Product Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "key": "parentRid",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        "entityId",
-        "name",
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "updProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-17T02:21:14.331"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:21:14.331",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:32",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10033,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.post.add",
-      "schema": {
-        "type": "object",
-        "title": "Blog Post",
-        "required": [
-          "parentRid",
-          "title",
-          "summary",
-          "content"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string",
-            "readOnly": true
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "originalAuthor": {
-            "title": "Original Author",
-            "type": "string"
-          },
-          "originalSite": {
-            "title": "Original Site",
-            "type": "string"
-          },
-          "originalUrl": {
-            "title": "Original Url",
-            "type": "string"
-          },
-          "summary": {
-            "title": "Summary",
-            "type": "string"
-          },
-          "content": {
-            "title": "Content",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "parentRid",
-        "title",
-        "originalAuthor",
-        "originalSite",
-        "originalUrl",
-        {
-          "key": "summary",
-          "type": "textarea",
-          "rows": 3
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "addPost",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/blog"
-        }
-      ],
-      "createDate": "2016-02-17T02:21:14.358"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:21:14.358",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:33",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10034,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.class.feed",
-      "schema": {
-        "type": "object",
-        "required": [
-          "environment",
-          "messageNumber",
-          "hppInd",
-          "centreCode"
-        ],
-        "title": "class",
-        "properties": {
-          "environment": {
-            "type": "string",
-            "title": "Environment",
-            "enum": [
-              "LOCAL",
-              "IDT5N",
-              "SIT1N",
-              "SIT2N",
-              "SIT3N",
-              "UAT1N",
-              "UAT2N"
-            ]
-          },
-          "requestId": {
-            "type": "number",
-            "title": "Request Id",
-            "maxLength": 10
-          },
-          "messageNumber": {
-            "type": "string",
-            "title": "Message Number",
-            "enum": [
-              "E0500",
-              "E0450",
-              "E0220",
-              "E0130",
-              "E0110",
-              "E0014",
-              "E0012",
-              "E0010",
-              "A0120",
-              "A0090"
-            ]
-          },
-          "loanNumber": {
-            "type": "string",
-            "title": "Loan Number",
-            "maxLength": 10
-          },
-          "pid": {
-            "type": "string",
-            "title": "PID",
-            "enum": [
-              "263",
-              "701",
-              "702",
-              "703",
-              "704",
-              "705",
-              "706",
-              "798",
-              "799",
-              "233",
-              "237",
-              "262",
-              "265",
-              "232",
-              "257",
-              "248",
-              "238",
-              "900",
-              "910",
-              "999",
-              "259",
-              "131",
-              "600",
-              "601",
-              "602",
-              "603",
-              "697",
-              "698",
-              "699",
-              "141",
-              "142",
-              "152",
-              "232",
-              "257",
-              "800",
-              "899"
-            ]
-          },
-          "hppInd": {
-            "type": "string",
-            "title": "HPP Indicator",
-            "enum": [
-              "0",
-              "1",
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8"
-            ]
-          },
-          "loanCategroy": {
-            "title": "Loan Category",
-            "type": "string",
-            "enum": [
-              "CMHC",
-              "COL1",
-              "COL2",
-              "COL3",
-              "ANEW",
-              "ANUT",
-              "AUSE",
-              "AUUT",
-              "MCYC",
-              "MOHO",
-              "TCCN",
-              "TCCU",
-              "GPIN",
-              "GPIV"
-            ],
-            "default": "CHMC"
-          },
-          "debtConsolidation": {
-            "title": "Debt Consolidation",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "incomeVerification": {
-            "title": "Income Verification",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "liabilityType": {
-            "title": "Liability Type",
-            "type": "string",
-            "enum": [
-              "701",
-              "700",
-              "602",
-              "603",
-              "601",
-              "600",
-              "302",
-              "301",
-              "300",
-              "BSC",
-              "CLN",
-              "PLC",
-              "MTG",
-              "REN",
-              "DC0"
-            ]
-          },
-          "plcPurposeCode": {
-            "title": "Plc PurposeCode",
-            "type": "string",
-            "enum": [
-              "000",
-              "001",
-              "002",
-              "003",
-              "004",
-              "005",
-              "006",
-              "009"
-            ]
-          },
-          "fullLiabilityIndicator": {
-            "title": "Full Liability Indicator",
-            "type": "string",
-            "enum": [
-              "1",
-              "4"
-            ]
-          },
-          "solicitorName": {
-            "title": "Solicitor Name",
-            "type": "string",
-            "maxLength": 25
-          },
-          "propertyProvCode": {
-            "title": "Property Prov Code",
-            "type": "string",
-            "enum": [
-              "QC",
-              "NS",
-              "NU",
-              "MB",
-              "BC",
-              "PE",
-              "NT",
-              "YT",
-              "ON",
-              "SK",
-              "AB",
-              "NB"
-            ],
-            "default": "ON"
-          },
-          "centreCode": {
-            "title": "Centre Code",
-            "type": "string",
-            "enum": [
-              "TO",
-              "VA",
-              "CA",
-              "TB",
-              "REBO",
-              "Bank@Work",
-              "WP",
-              "HL",
-              "Training",
-              "MT",
-              "RISK"
-            ],
-            "default": "TO"
-          },
-          "processingDate": {
-            "title": "Processing Date",
-            "type": "string",
-            "format": "date"
-          },
-          "reportDate": {
-            "title": "Report Date",
-            "type": "string",
-            "format": "date"
-          },
-          "customerName": {
-            "title": "Customer Name",
-            "type": "string",
-            "maxLength": 250,
-            "default": "New Injector"
-          },
-          "postNumber": {
-            "title": "Post Number",
-            "type": "string",
-            "maxLength": 3,
-            "default": "123"
-          },
-          "transit": {
-            "title": "Transit",
-            "type": "string",
-            "maxLength": 5,
-            "default": "00001"
-          },
-          "cid": {
-            "title": "CID",
-            "type": "string",
-            "maxLength": 3,
-            "default": "100"
-          },
-          "fundsDisbursed": {
-            "title": "Funds Disbursed",
-            "type": "number",
-            "default": 1000
-          },
-          "relationship": {
-            "title": "Relationship",
-            "type": "string",
-            "enum": [
-              "1",
-              "2",
-              "3",
-              "4",
-              "5"
-            ],
-            "default": "1"
-          },
-          "marketingSourceCode": {
-            "title": "Marketing Source Code",
-            "type": "string",
-            "enum": [
-              "DWPV",
-              "PBCY",
-              "BFIN",
-              "BFCE",
-              "BDLG",
-              "OFFN",
-              "BLAK",
-              "EQLH",
-              "OFFB",
-              "NEW2",
-              "FCBC",
-              "JJ99",
-              "AHBL",
-              "CASE",
-              "NRES",
-              "BTOB",
-              "GENL",
-              "ABL1",
-              "RP22",
-              "RP99",
-              "EQL1"
-            ],
-            "default": "RP99"
-          },
-          "provinceCode": {
-            "title": "Province Code",
-            "type": "string",
-            "enum": [
-              "QC",
-              "NS",
-              "NU",
-              "MB",
-              "BC",
-              "PE",
-              "NT",
-              "YT",
-              "ON",
-              "SK",
-              "AB",
-              "NB"
-            ],
-            "default": "ON"
-          },
-          "newConstructionInd": {
-            "title": "New Construction Ind",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "processTypeCd": {
-            "title": "Process Type",
-            "type": "string"
-          },
-          "processSubtypeCd": {
-            "title": "Process Sub Type",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags[Maximum 5 tags separated by ,]",
-            "type": "string"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "type": "help",
-          "helpvalue": "<h4>Class Feed Example</h4>"
-        },
-        "environment",
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for injection rules</h4>"
-        },
-        "messageNumber",
-        "hppInd",
-        {
-          "type": "conditional",
-          "condition": "modelData.hppInd==='0'",
-          "items": [
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0012' || modelData.messageNumber === 'E0014'",
-              "items": [
-                "pid"
-              ]
-            },
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0010'",
-              "items": [
-                "pid",
-                {
-                  "key": "debtConsolidation",
-                  "type": "radiobuttons"
-                },
-                "loanCategroy"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "conditional",
-          "condition": "modelData.hppInd !== '0'",
-          "items": [
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0012'",
-              "items": [
-                "plcPurposeCode",
-                "fullLiabilityIndicator",
-                "solicitorName",
-                "propertyProvCode"
-              ]
-            },
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber === 'E0014'",
-              "items": [
-                "plcPurposeCode",
-                "solicitorName",
-                "propertyProvCode"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for epi mappings</h4>"
-        },
-        "loanNumber",
-        "customerName",
-        "postNumber",
-        "transit",
-        "cid",
-        "fundsDisbursed",
-        "relationship",
-        "marketingSourceCode",
-        {
-          "key": "incomeVerification",
-          "type": "radios",
-          "titleMap": {
-            "Y": "Income Verification is requried.",
-            "N": "Income Verification is not required."
-          }
-        },
-        "centreCode",
-        "provinceCode",
-        "newConstructionInd",
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for feed storage and retrieval only</h4>"
-        },
-        "processTypeCd",
-        "processSubtypeCd",
-        {
-          "key": "tags",
-          "type": "textarea"
-        }
-      ],
-      "action": [
-        {
-          "host": "injector",
-          "app": "main",
-          "category": "feed",
-          "name": "injClassFeed",
-          "readOnly": false,
-          "title": "Inject",
-          "success": "/"
-        },
-        {
-          "host": "injector",
-          "app": "main",
-          "category": "feed",
-          "name": "updFeedMeta",
-          "readOnly": false,
-          "title": "Update Meta",
-          "success": "/"
-        }
-      ],
-      "createDate": "2016-02-17T02:21:14.391"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:21:14.391",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:34",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10035,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.news.post.add",
-      "schema": {
-        "type": "object",
-        "title": "News Post",
-        "required": [
-          "parentRid",
-          "title",
-          "summary",
-          "content"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string",
-            "readOnly": true
-          },
-          "title": {
-            "title": "Title",
-            "type": "string"
-          },
-          "originalAuthor": {
-            "title": "Original Author",
-            "type": "string"
-          },
-          "originalSite": {
-            "title": "Original Site",
-            "type": "string"
-          },
-          "originalUrl": {
-            "title": "Original Url",
-            "type": "string"
-          },
-          "summary": {
-            "title": "Summary",
-            "type": "string"
-          },
-          "content": {
-            "title": "Content",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "parentRid",
-        "title",
-        "originalAuthor",
-        "originalSite",
-        "originalUrl",
-        {
-          "key": "summary",
-          "type": "textarea",
-          "rows": 3
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 10
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "news",
-          "name": "addPost",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/news"
-        }
-      ],
-      "createDate": "2016-02-17T02:21:14.434"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-17T02:21:14.434",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:13",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10014,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.news.update",
-      "schema": {
-        "type": "object",
-        "title": "News",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "News Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "multiple": true,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "news",
-          "name": "updNews",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/newsAdmin"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.364"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.364",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:14",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10015,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.update",
-      "schema": {
-        "type": "object",
-        "title": "Blog",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "Blog Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "multiple": true,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "updBlog",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/blogAdmin"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.393"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.393",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:15",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10016,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.news.add",
-      "schema": {
-        "type": "object",
-        "title": "News",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "News Id",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "multiple": true,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "news",
-          "name": "addNews",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/newsAdmin"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.415"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.415",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:16",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10017,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.config.add",
-      "schema": {
-        "type": "object",
-        "required": [
-          "configId",
-          "properties"
-        ],
-        "title": "Config",
-        "properties": {
-          "configId": {
-            "type": "string",
-            "title": "Config Id"
-          },
-          "description": {
-            "type": "string",
-            "title": "Description"
-          },
-          "properties": {
-            "type": "string",
-            "title": "Properties"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "configId",
-        "description",
-        {
-          "key": "properties",
-          "type": "textarea",
-          "rows": 15
-        }
-      ],
-      "action": [
-        {
-          "category": "config",
-          "name": "addConfig",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/configAdmin"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.436"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.436",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:17",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10018,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.add",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product",
-        "required": [
-          "parentRid",
-          "name",
-          "description",
-          "delivery",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "delivery": {
-            "title": "Delivery",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "parentRid",
-        "name",
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "delivery",
-          "type": "rc-select",
-          "multiple": false,
-          "items": [
-            {
-              "value": "SO",
-              "label": "Shipping only"
-            },
-            {
-              "value": "PO",
-              "label": "Pickup only"
-            },
-            {
-              "value": "SP",
-              "label": "Shipping or Pickup"
-            },
-            {
-              "value": "DL",
-              "label": "Download"
-            },
-            {
-              "value": "EM",
-              "label": "Email"
-            },
-            {
-              "value": "OS",
-              "label": "One time subscription"
-            },
-            {
-              "value": "RS",
-              "label": "Recurring subscription"
-            }
-          ]
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "addProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.476"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.476",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:18",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10019,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.update",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product Update",
-        "required": [
-          "entityId",
-          "name",
-          "description",
-          "delivery",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string"
-          },
-          "entityId": {
-            "title": "Product Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "delivery": {
-            "title": "Delivery",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "key": "parentRid",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        "entityId",
-        "name",
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "delivery",
-          "type": "rc-select",
-          "multiple": false,
-          "items": [
-            {
-              "value": "SO",
-              "label": "Shipping only"
-            },
-            {
-              "value": "PO",
-              "label": "Pickup only"
-            },
-            {
-              "value": "SP",
-              "label": "Shipping or Pickup"
-            },
-            {
-              "value": "DL",
-              "label": "Download"
-            },
-            {
-              "value": "EM",
-              "label": "Email"
-            },
-            {
-              "value": "OS",
-              "label": "One time subscription"
-            },
-            {
-              "value": "RS",
-              "label": "Recurring subscription"
-            }
-          ]
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "updProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.499"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.499",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:19",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10020,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.add",
-      "schema": {
-        "type": "object",
-        "title": "Blog",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "Blog Id",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "multiple": true,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "addBlog",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/blogAdmin"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.600"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.600",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:20",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10021,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.config.update",
-      "schema": {
-        "type": "object",
-        "required": [
-          "configId",
-          "properties"
-        ],
-        "title": "Config",
-        "properties": {
-          "configId": {
-            "type": "string",
-            "title": "Config Id",
-            "readOnly": true
-          },
-          "description": {
-            "type": "string",
-            "title": "Description"
-          },
-          "properties": {
-            "type": "string",
-            "title": "Properties"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "configId",
-        "description",
-        {
-          "key": "properties",
-          "type": "textarea",
-          "rows": 15
-        }
-      ],
-      "action": [
-        {
-          "category": "config",
-          "name": "updConfig",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/configAdmin"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.635"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.635",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:21",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10022,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.class.feed",
-      "schema": {
-        "type": "object",
-        "required": [
-          "environment",
-          "messageNumber",
-          "hppInd",
-          "centreCode"
-        ],
-        "title": "class",
-        "properties": {
-          "environment": {
-            "type": "string",
-            "title": "Environment",
-            "enum": [
-              "LOCAL",
-              "IDT5N",
-              "SIT1N",
-              "SIT2N",
-              "SIT3N",
-              "UAT1N",
-              "UAT2N"
-            ]
-          },
-          "requestId": {
-            "type": "number",
-            "title": "Request Id",
-            "maxLength": 10
-          },
-          "messageNumber": {
-            "type": "string",
-            "title": "Message Number",
-            "enum": [
-              "E0500",
-              "E0450",
-              "E0220",
-              "E0130",
-              "E0110",
-              "E0014",
-              "E0012",
-              "E0010",
-              "A0120",
-              "A0090"
-            ]
-          },
-          "loanNumber": {
-            "type": "string",
-            "title": "Loan Number",
-            "maxLength": 10
-          },
-          "pid": {
-            "type": "string",
-            "title": "PID",
-            "enum": [
-              "263",
-              "701",
-              "702",
-              "703",
-              "704",
-              "705",
-              "706",
-              "798",
-              "799",
-              "233",
-              "237",
-              "262",
-              "265",
-              "232",
-              "257",
-              "248",
-              "238",
-              "900",
-              "910",
-              "999",
-              "259",
-              "131",
-              "600",
-              "601",
-              "602",
-              "603",
-              "697",
-              "698",
-              "699",
-              "141",
-              "142",
-              "152",
-              "232",
-              "257",
-              "800",
-              "899"
-            ]
-          },
-          "hppInd": {
-            "type": "string",
-            "title": "HPP Indicator",
-            "enum": [
-              "0",
-              "1",
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8"
-            ]
-          },
-          "loanCategroy": {
-            "title": "Loan Category",
-            "type": "string",
-            "enum": [
-              "CMHC",
-              "COL1",
-              "COL2",
-              "COL3",
-              "ANEW",
-              "ANUT",
-              "AUSE",
-              "AUUT",
-              "MCYC",
-              "MOHO",
-              "TCCN",
-              "TCCU",
-              "GPIN",
-              "GPIV"
-            ],
-            "default": "CHMC"
-          },
-          "debtConsolidation": {
-            "title": "Debt Consolidation",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "incomeVerification": {
-            "title": "Income Verification",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "liabilityType": {
-            "title": "Liability Type",
-            "type": "string",
-            "enum": [
-              "701",
-              "700",
-              "602",
-              "603",
-              "601",
-              "600",
-              "302",
-              "301",
-              "300",
-              "BSC",
-              "CLN",
-              "PLC",
-              "MTG",
-              "REN",
-              "DC0"
-            ]
-          },
-          "plcPurposeCode": {
-            "title": "Plc PurposeCode",
-            "type": "string",
-            "enum": [
-              "000",
-              "001",
-              "002",
-              "003",
-              "004",
-              "005",
-              "006",
-              "009"
-            ]
-          },
-          "fullLiabilityIndicator": {
-            "title": "Full Liability Indicator",
-            "type": "string",
-            "enum": [
-              "1",
-              "4"
-            ]
-          },
-          "solicitorName": {
-            "title": "Solicitor Name",
-            "type": "string",
-            "maxLength": 25
-          },
-          "propertyProvCode": {
-            "title": "Property Prov Code",
-            "type": "string",
-            "enum": [
-              "QC",
-              "NS",
-              "NU",
-              "MB",
-              "BC",
-              "PE",
-              "NT",
-              "YT",
-              "ON",
-              "SK",
-              "AB",
-              "NB"
-            ],
-            "default": "ON"
-          },
-          "centreCode": {
-            "title": "Centre Code",
-            "type": "string",
-            "enum": [
-              "TO",
-              "VA",
-              "CA",
-              "TB",
-              "REBO",
-              "Bank@Work",
-              "WP",
-              "HL",
-              "Training",
-              "MT",
-              "RISK"
-            ],
-            "default": "TO"
-          },
-          "processingDate": {
-            "title": "Processing Date",
-            "type": "string",
-            "format": "date"
-          },
-          "reportDate": {
-            "title": "Report Date",
-            "type": "string",
-            "format": "date"
-          },
-          "customerName": {
-            "title": "Customer Name",
-            "type": "string",
-            "maxLength": 250,
-            "default": "New Injector"
-          },
-          "postNumber": {
-            "title": "Post Number",
-            "type": "string",
-            "maxLength": 3,
-            "default": "123"
-          },
-          "transit": {
-            "title": "Transit",
-            "type": "string",
-            "maxLength": 5,
-            "default": "00001"
-          },
-          "cid": {
-            "title": "CID",
-            "type": "string",
-            "maxLength": 3,
-            "default": "100"
-          },
-          "fundsDisbursed": {
-            "title": "Funds Disbursed",
-            "type": "number",
-            "default": 1000
-          },
-          "relationship": {
-            "title": "Relationship",
-            "type": "string",
-            "enum": [
-              "1",
-              "2",
-              "3",
-              "4",
-              "5"
-            ],
-            "default": "1"
-          },
-          "marketingSourceCode": {
-            "title": "Marketing Source Code",
-            "type": "string",
-            "enum": [
-              "DWPV",
-              "PBCY",
-              "BFIN",
-              "BFCE",
-              "BDLG",
-              "OFFN",
-              "BLAK",
-              "EQLH",
-              "OFFB",
-              "NEW2",
-              "FCBC",
-              "JJ99",
-              "AHBL",
-              "CASE",
-              "NRES",
-              "BTOB",
-              "GENL",
-              "ABL1",
-              "RP22",
-              "RP99",
-              "EQL1"
-            ],
-            "default": "RP99"
-          },
-          "provinceCode": {
-            "title": "Province Code",
-            "type": "string",
-            "enum": [
-              "QC",
-              "NS",
-              "NU",
-              "MB",
-              "BC",
-              "PE",
-              "NT",
-              "YT",
-              "ON",
-              "SK",
-              "AB",
-              "NB"
-            ],
-            "default": "ON"
-          },
-          "newConstructionInd": {
-            "title": "New Construction Ind",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "processTypeCd": {
-            "title": "Process Type",
-            "type": "string"
-          },
-          "processSubtypeCd": {
-            "title": "Process Sub Type",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags[Maximum 5 tags separated by ,]",
-            "type": "string"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "type": "help",
-          "helpvalue": "<h4>Class Feed Example</h4>"
-        },
-        "environment",
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for injection rules</h4>"
-        },
-        "messageNumber",
-        "hppInd",
-        {
-          "type": "conditional",
-          "condition": "modelData.hppInd==='0'",
-          "items": [
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0012' || modelData.messageNumber === 'E0014'",
-              "items": [
-                "pid"
-              ]
-            },
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0010'",
-              "items": [
-                "pid",
-                {
-                  "key": "debtConsolidation",
-                  "type": "radiobuttons"
-                },
-                "loanCategroy"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "conditional",
-          "condition": "modelData.hppInd !== '0'",
-          "items": [
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0012'",
-              "items": [
-                "plcPurposeCode",
-                "fullLiabilityIndicator",
-                "solicitorName",
-                "propertyProvCode"
-              ]
-            },
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber === 'E0014'",
-              "items": [
-                "plcPurposeCode",
-                "solicitorName",
-                "propertyProvCode"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for epi mappings</h4>"
-        },
-        "loanNumber",
-        "customerName",
-        "postNumber",
-        "transit",
-        "cid",
-        "fundsDisbursed",
-        "relationship",
-        "marketingSourceCode",
-        {
-          "key": "incomeVerification",
-          "type": "radios",
-          "titleMap": {
-            "Y": "Income Verification is requried.",
-            "N": "Income Verification is not required."
-          }
-        },
-        "centreCode",
-        "provinceCode",
-        "newConstructionInd",
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for feed storage and retrieval only</h4>"
-        },
-        "processTypeCd",
-        "processSubtypeCd",
-        {
-          "key": "tags",
-          "type": "textarea"
-        }
-      ],
-      "action": [
-        {
-          "host": "injector",
-          "app": "main",
-          "category": "feed",
-          "name": "injClassFeed",
-          "readOnly": false,
-          "title": "Inject",
-          "success": "/"
-        },
-        {
-          "host": "injector",
-          "app": "main",
-          "category": "feed",
-          "name": "updFeedMeta",
-          "readOnly": false,
-          "title": "Update Meta",
-          "success": "/"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:28.709"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:28.709",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:23",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10024,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.blog.update",
-      "schema": {
-        "type": "object",
-        "title": "Blog",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "Blog Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "multiple": true,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"blog\", \"name\": \"getBlogDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "blog",
-          "name": "updBlog",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/blogAdmin"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:33.936"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:33.936",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:24",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10025,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.news.add",
-      "schema": {
-        "type": "object",
-        "title": "News",
-        "required": [
-          "categoryId",
-          "description"
-        ],
-        "properties": {
-          "categoryId": {
-            "title": "News Id",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "in_Own": {
-            "title": "Parent",
-            "type": "array",
-            "maxItems": 1
-          },
-          "out_Own": {
-            "title": "Children",
-            "type": "array"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "categoryId",
-        "description",
-        {
-          "key": "in_Own",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "out_Own",
-          "type": "rc-select",
-          "multiple": true,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"news\", \"name\": \"getNewsDropdown\", \"readOnly\": true}"
-            }
-          }
-        }
-      ],
-      "action": [
-        {
-          "category": "news",
-          "name": "addNews",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/admin/newsAdmin"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:33.959"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:33.959",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:25",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10026,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.update",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product Update",
-        "required": [
-          "entityId",
-          "name",
-          "description",
-          "delivery",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string"
-          },
-          "entityId": {
-            "title": "Product Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "delivery": {
-            "title": "Delivery",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "key": "parentRid",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        "entityId",
-        "name",
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "delivery",
-          "type": "rc-select",
-          "multiple": false,
-          "items": [
-            {
-              "value": "SO",
-              "label": "Shipping only"
-            },
-            {
-              "value": "PO",
-              "label": "Pickup only"
-            },
-            {
-              "value": "SP",
-              "label": "Shipping or Pickup"
-            },
-            {
-              "value": "DL",
-              "label": "Download"
-            },
-            {
-              "value": "EM",
-              "label": "Email"
-            },
-            {
-              "value": "OS",
-              "label": "One time subscription"
-            },
-            {
-              "value": "RS",
-              "label": "Recurring subscription"
-            }
-          ]
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "updProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-19T02:45:33.974"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-19T02:45:33.974",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:18",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10019,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.add",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product",
-        "required": [
-          "parentRid",
-          "name",
-          "description",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "delivery": {
-            "title": "Delivery",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        "parentRid",
-        "name",
-        {
-          "key": "delivery",
-          "type": "rc-select",
-          "multiple": false,
-          "items": [
-            {
-              "value": "SO",
-              "label": "Shipping only"
-            },
-            {
-              "value": "PO",
-              "label": "Pickup only"
-            },
-            {
-              "value": "SP",
-              "label": "Shipping or Pickup"
-            },
-            {
-              "value": "DL",
-              "label": "Download"
-            },
-            {
-              "value": "EM",
-              "label": "Email"
-            },
-            {
-              "value": "OS",
-              "label": "One time subscription"
-            },
-            {
-              "value": "RS",
-              "label": "Recurring subscription"
-            }
-          ]
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        },
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "addProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-26T03:26:55.143"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-26T03:26:55.143",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:19",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10020,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.catalog.product.update",
-      "schema": {
-        "type": "object",
-        "title": "Catalog Product Update",
-        "required": [
-          "entityId",
-          "name",
-          "description",
-          "content",
-          "variants"
-        ],
-        "properties": {
-          "parentRid": {
-            "title": "Parent Rid",
-            "type": "string"
-          },
-          "entityId": {
-            "title": "Product Id",
-            "type": "string",
-            "readOnly": true
-          },
-          "name": {
-            "title": "Name",
-            "type": "string"
-          },
-          "delivery": {
-            "title": "Delivery",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags",
-            "type": "array",
-            "maxItems": 10
-          },
-          "variants": {
-            "type": "array",
-            "minItems": 1,
-            "maxItems": 10,
-            "items": {
-              "type": "object",
-              "properties": {
-                "sku": {
-                  "title": "Sku",
-                  "type": "string"
-                },
-                "type": {
-                  "title": "Type",
-                  "type": "string"
-                },
-                "price": {
-                  "title": "Price",
-                  "type": "number"
-                },
-                "image": {
-                  "title": "Image",
-                  "type": "string"
-                },
-                "inventory": {
-                  "title": "Inventory",
-                  "type": "number"
-                }
-              },
-              "required": [
-                "sku",
-                "type",
-                "price"
-              ]
-            }
-          },
-          "description": {
-            "title": "Description",
-            "type": "string"
-          },
-          "content": {
-            "title": "Detail",
-            "type": "string"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "key": "parentRid",
-          "type": "rc-select",
-          "multiple": false,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"catalog\", \"name\": \"getCatalogDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        "entityId",
-        "name",
-        {
-          "key": "delivery",
-          "type": "rc-select",
-          "multiple": false,
-          "items": [
-            {
-              "value": "SO",
-              "label": "Shipping only"
-            },
-            {
-              "value": "PO",
-              "label": "Pickup only"
-            },
-            {
-              "value": "SP",
-              "label": "Shipping or Pickup"
-            },
-            {
-              "value": "DL",
-              "label": "Download"
-            },
-            {
-              "value": "EM",
-              "label": "Email"
-            },
-            {
-              "value": "OS",
-              "label": "One time subscription"
-            },
-            {
-              "value": "RS",
-              "label": "Recurring subscription"
-            }
-          ]
-        },
-        {
-          "key": "tags",
-          "type": "rc-select",
-          "tags": true,
-          "maxTagTextLength": 20,
-          "action": {
-            "get": {
-              "url": "/api/rs?cmd={\"category\": \"tag\", \"name\": \"getTagDropdown\", \"readOnly\": true}"
-            }
-          }
-        },
-        {
-          "key": "variants",
-          "add": "New",
-          "style": {
-            "add": "btn-success"
-          },
-          "items": [
-            "variants[].sku",
-            "variants[].type",
-            "variants[].price",
-            "variants[].image",
-            "variants[].inventory"
-          ]
-        },
-        {
-          "key": "description",
-          "type": "textarea",
-          "rows": 5
-        },
-        {
-          "key": "content",
-          "type": "textarea",
-          "rows": 15
-        }
-      ],
-      "action": [
-        {
-          "category": "catalog",
-          "name": "updProduct",
-          "readOnly": false,
-          "title": "Submit",
-          "success": "/catalog"
-        }
-      ],
-      "createDate": "2016-02-26T03:26:55.201"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-26T03:26:55.201",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:20",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10021,
-    "createUserId": "stevehu",
-    "data": {
-      "formId": "com.networknt.light.class.feed",
-      "schema": {
-        "type": "object",
-        "required": [
-          "environment",
-          "messageNumber",
-          "hppInd",
-          "centreCode"
-        ],
-        "title": "class",
-        "properties": {
-          "environment": {
-            "type": "string",
-            "title": "Environment",
-            "enum": [
-              "LOCAL",
-              "IDT5N",
-              "SIT1N",
-              "SIT2N",
-              "SIT3N",
-              "UAT1N",
-              "UAT2N"
-            ]
-          },
-          "requestId": {
-            "type": "number",
-            "title": "Request Id",
-            "maxLength": 10
-          },
-          "messageNumber": {
-            "type": "string",
-            "title": "Message Number",
-            "enum": [
-              "E0500",
-              "E0450",
-              "E0220",
-              "E0130",
-              "E0110",
-              "E0014",
-              "E0012",
-              "E0010",
-              "A0120",
-              "A0090"
-            ]
-          },
-          "loanNumber": {
-            "type": "string",
-            "title": "Loan Number",
-            "maxLength": 10
-          },
-          "pid": {
-            "type": "string",
-            "title": "PID",
-            "enum": [
-              "263",
-              "701",
-              "702",
-              "703",
-              "704",
-              "705",
-              "706",
-              "798",
-              "799",
-              "233",
-              "237",
-              "262",
-              "265",
-              "232",
-              "257",
-              "248",
-              "238",
-              "900",
-              "910",
-              "999",
-              "259",
-              "131",
-              "600",
-              "601",
-              "602",
-              "603",
-              "697",
-              "698",
-              "699",
-              "141",
-              "142",
-              "152",
-              "232",
-              "257",
-              "800",
-              "899"
-            ]
-          },
-          "hppInd": {
-            "type": "string",
-            "title": "HPP Indicator",
-            "enum": [
-              "0",
-              "1",
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8"
-            ]
-          },
-          "loanCategroy": {
-            "title": "Loan Category",
-            "type": "string",
-            "enum": [
-              "CMHC",
-              "COL1",
-              "COL2",
-              "COL3",
-              "ANEW",
-              "ANUT",
-              "AUSE",
-              "AUUT",
-              "MCYC",
-              "MOHO",
-              "TCCN",
-              "TCCU",
-              "GPIN",
-              "GPIV"
-            ],
-            "default": "CHMC"
-          },
-          "debtConsolidation": {
-            "title": "Debt Consolidation",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "incomeVerification": {
-            "title": "Income Verification",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "liabilityType": {
-            "title": "Liability Type",
-            "type": "string",
-            "enum": [
-              "701",
-              "700",
-              "602",
-              "603",
-              "601",
-              "600",
-              "302",
-              "301",
-              "300",
-              "BSC",
-              "CLN",
-              "PLC",
-              "MTG",
-              "REN",
-              "DC0"
-            ]
-          },
-          "plcPurposeCode": {
-            "title": "Plc PurposeCode",
-            "type": "string",
-            "enum": [
-              "000",
-              "001",
-              "002",
-              "003",
-              "004",
-              "005",
-              "006",
-              "009"
-            ]
-          },
-          "fullLiabilityIndicator": {
-            "title": "Full Liability Indicator",
-            "type": "string",
-            "enum": [
-              "1",
-              "4"
-            ]
-          },
-          "solicitorName": {
-            "title": "Solicitor Name",
-            "type": "string",
-            "maxLength": 25
-          },
-          "propertyProvCode": {
-            "title": "Property Prov Code",
-            "type": "string",
-            "enum": [
-              "QC",
-              "NS",
-              "NU",
-              "MB",
-              "BC",
-              "PE",
-              "NT",
-              "YT",
-              "ON",
-              "SK",
-              "AB",
-              "NB"
-            ],
-            "default": "ON"
-          },
-          "centreCode": {
-            "title": "Centre Code",
-            "type": "string",
-            "enum": [
-              "TO",
-              "VA",
-              "CA",
-              "TB",
-              "REBO",
-              "Bank@Work",
-              "WP",
-              "HL",
-              "Training",
-              "MT",
-              "RISK"
-            ],
-            "default": "TO"
-          },
-          "processingDate": {
-            "title": "Processing Date",
-            "type": "string",
-            "format": "date"
-          },
-          "reportDate": {
-            "title": "Report Date",
-            "type": "string",
-            "format": "date"
-          },
-          "customerName": {
-            "title": "Customer Name",
-            "type": "string",
-            "maxLength": 250,
-            "default": "New Injector"
-          },
-          "postNumber": {
-            "title": "Post Number",
-            "type": "string",
-            "maxLength": 3,
-            "default": "123"
-          },
-          "transit": {
-            "title": "Transit",
-            "type": "string",
-            "maxLength": 5,
-            "default": "00001"
-          },
-          "cid": {
-            "title": "CID",
-            "type": "string",
-            "maxLength": 3,
-            "default": "100"
-          },
-          "fundsDisbursed": {
-            "title": "Funds Disbursed",
-            "type": "number",
-            "default": 1000
-          },
-          "relationship": {
-            "title": "Relationship",
-            "type": "string",
-            "enum": [
-              "1",
-              "2",
-              "3",
-              "4",
-              "5"
-            ],
-            "default": "1"
-          },
-          "marketingSourceCode": {
-            "title": "Marketing Source Code",
-            "type": "string",
-            "enum": [
-              "DWPV",
-              "PBCY",
-              "BFIN",
-              "BFCE",
-              "BDLG",
-              "OFFN",
-              "BLAK",
-              "EQLH",
-              "OFFB",
-              "NEW2",
-              "FCBC",
-              "JJ99",
-              "AHBL",
-              "CASE",
-              "NRES",
-              "BTOB",
-              "GENL",
-              "ABL1",
-              "RP22",
-              "RP99",
-              "EQL1"
-            ],
-            "default": "RP99"
-          },
-          "provinceCode": {
-            "title": "Province Code",
-            "type": "string",
-            "enum": [
-              "QC",
-              "NS",
-              "NU",
-              "MB",
-              "BC",
-              "PE",
-              "NT",
-              "YT",
-              "ON",
-              "SK",
-              "AB",
-              "NB"
-            ],
-            "default": "ON"
-          },
-          "newConstructionInd": {
-            "title": "New Construction Ind",
-            "type": "string",
-            "enum": [
-              "Y",
-              "N"
-            ],
-            "default": "N"
-          },
-          "processTypeCd": {
-            "title": "Process Type",
-            "type": "string"
-          },
-          "processSubtypeCd": {
-            "title": "Process Sub Type",
-            "type": "string"
-          },
-          "tags": {
-            "title": "Tags[Maximum 5 tags separated by ,]",
-            "type": "string"
-          }
-        }
-      },
-      "createUserId": "stevehu",
-      "form": [
-        {
-          "type": "help",
-          "helpvalue": "<h4>Class Feed Example</h4>"
-        },
-        "environment",
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for injection rules</h4>"
-        },
-        "messageNumber",
-        "hppInd",
-        {
-          "type": "conditional",
-          "condition": "modelData.hppInd==='0'",
-          "items": [
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0012' || modelData.messageNumber === 'E0014'",
-              "items": [
-                "pid"
-              ]
-            },
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0010'",
-              "items": [
-                "pid",
-                {
-                  "key": "debtConsolidation",
-                  "type": "radiobuttons"
-                },
-                "loanCategroy"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "conditional",
-          "condition": "modelData.hppInd !== '0'",
-          "items": [
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber==='E0012'",
-              "items": [
-                "plcPurposeCode",
-                "fullLiabilityIndicator",
-                "solicitorName",
-                "propertyProvCode"
-              ]
-            },
-            {
-              "type": "conditional",
-              "condition": "modelData.messageNumber === 'E0014'",
-              "items": [
-                "plcPurposeCode",
-                "solicitorName",
-                "propertyProvCode"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for epi mappings</h4>"
-        },
-        "loanNumber",
-        "customerName",
-        "postNumber",
-        "transit",
-        "cid",
-        "fundsDisbursed",
-        "relationship",
-        "marketingSourceCode",
-        {
-          "key": "incomeVerification",
-          "type": "radios",
-          "titleMap": {
-            "Y": "Income Verification is requried.",
-            "N": "Income Verification is not required."
-          }
-        },
-        "centreCode",
-        "provinceCode",
-        "newConstructionInd",
-        {
-          "type": "help",
-          "helpvalue": "<h4>The following fields are for feed storage and retrieval only</h4>"
-        },
-        "processTypeCd",
-        "processSubtypeCd",
-        {
-          "key": "tags",
-          "type": "textarea"
-        }
-      ],
-      "action": [
-        {
-          "host": "injector",
-          "app": "main",
-          "category": "feed",
-          "name": "injClassFeed",
-          "readOnly": false,
-          "title": "Inject",
-          "success": "/"
-        },
-        {
-          "host": "injector",
-          "app": "main",
-          "category": "feed",
-          "name": "updFeedMeta",
-          "readOnly": false,
-          "title": "Update Meta",
-          "success": "/"
-        }
-      ],
-      "createDate": "2016-02-26T03:26:55.251"
-    },
-    "name": "impForm",
-    "category": "form",
-    "createDate": "2016-02-26T03:26:55.251",
+    "createDate": "2016-02-27T02:33:06.596",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   }

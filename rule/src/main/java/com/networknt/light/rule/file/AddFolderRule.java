@@ -8,7 +8,7 @@ import com.networknt.light.rule.config.AbstractConfigRule;
  *
  * This rule will create a new folder under domain folder or any specified folder.
  * 
- * AccessLevel R [owner, admin]
+ * AccessLevel R [owner, admin, fileAdmin]
  */
 public class AddFolderRule extends AbstractFileRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

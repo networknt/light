@@ -481,6 +481,7 @@ public class InitDatabase {
             graph.addVertex( "class:Role", "roleId", "pageAdmin", "description", "admin pages for the host");
             graph.addVertex( "class:Role", "roleId", "ruleAdmin", "description", "admin rules for the host");
             graph.addVertex( "class:Role", "roleId", "menuAdmin", "description", "admin menus for the host");
+            graph.addVertex( "class:Role", "roleId", "fileAdmin", "description", "admin file system for the host");
             graph.addVertex( "class:Role", "roleId", "admin", "description", "admin every thing for the host");
             graph.addVertex( "class:Role", "roleId", "owner", "description", "owner of the site who can do anything");
             graph.addVertex( "class:Role", "roleId", "betaTester", "description", "Beta Tester that can be routed to differnt version of API");
@@ -590,12 +591,20 @@ public class InitDatabase {
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_roleAdmin);
 
+            Vertex m_fileAdmin = graph.addVertex("class:MenuItem",
+                    "menuItemId", "fileAdmin",
+                    "text", "File Admin",
+                    "route", "/admin/fileAdmin",
+                    "roles", "fileAdmin,admin,owner",
+                    "createDate", new java.util.Date());
+            userOwner.addEdge("Create", m_fileAdmin);
+
             // Main
             Vertex m_admin = graph.addVertex("class:MenuItem",
                     "menuItemId", "admin",
                     "text", "Admin",
                     "route", "/admin",
-                    "roles", "owner,admin,accessAdmin,pageAdmin,formAdmin,ruleAdmin,menuAdmin,dbAdmin,catalogAdmin,productAdmin,forumAdmin,blogAdmin,newsAdmin,userAdmin,roleAdmin", // make sure there is no space between ,
+                    "roles", "owner,admin,accessAdmin,pageAdmin,formAdmin,ruleAdmin,menuAdmin,dbAdmin,catalogAdmin,productAdmin,forumAdmin,blogAdmin,newsAdmin,userAdmin,roleAdmin,fileAdmin", // make sure there is no space between ,
                     "createDate", new java.util.Date());
             m_admin.addEdge("Own", m_ruleAdmin);
             m_admin.addEdge("Own", m_accessAdmin);
@@ -607,6 +616,7 @@ public class InitDatabase {
             m_admin.addEdge("Own", m_formAdmin);
             m_admin.addEdge("Own", m_pageAdmin);
             m_admin.addEdge("Own", m_configAdmin);
+            m_admin.addEdge("Own", m_fileAdmin);
 
             userOwner.addEdge("Create", m_admin);
 

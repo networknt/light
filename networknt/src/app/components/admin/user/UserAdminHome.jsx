@@ -52,15 +52,37 @@ var UserAdminHome = React.createClass({
         });
     },
 
-    _onDeleteUser: function(user) {
-        UserActionCreators.delUser(user['@rid']);
+    _onDelete: function() {
+        if(typeof(this.selectIndex) != 'undefined') {
+            let user = this.state.users[this.selectIndex];
+            UserActionCreators.delUser(user['@rid']);
+        } else {
+            alert('Please select a user.');
+        }
     },
 
-    _onUpdateUser: function(user) {
+    _onProfile: function() {
         let formId = 'com.networknt.light.user.update.profile';
-        FormActionCreators.setFormModel(formId, user);
-        this.context.router.push('/form/' + formId);
+        if(typeof(this.selectIndex) != 'undefined') {
+            let user = this.state.users[this.selectIndex];
+            FormActionCreators.setFormModel(formId, user);
+            this.context.router.push('/form/' + formId);
+        } else {
+            alert('Please select a user.');
+        }
     },
+
+    _onRole: function() {
+        let formId = 'com.networknt.light.user.role.update_d';
+        if(typeof(this.selectIndex) != 'undefined') {
+            let user = this.state.users[this.selectIndex];
+            FormActionCreators.setFormModel(formId, user);
+            this.context.router.push('/form/' + formId);
+        } else {
+            alert('Please select a user.');
+        }
+    },
+
 
     _onPageNoChange: function (key) {
         this.setState({
@@ -77,6 +99,12 @@ var UserAdminHome = React.createClass({
         UserActionCreators.getAllUser(this.state.pageNo, pageSize);
     },
 
+    _onRowSelection: function(selectedRows) {
+        console.log('UserAdminHome._onRowSelection', selectedRows);
+        this.selectIndex = selectedRows[0];
+        console.log('selectIndex', this.selectIndex);
+    },
+
     render: function() {
         return (
             <span>
@@ -84,19 +112,25 @@ var UserAdminHome = React.createClass({
                     height={'1080px'}
                     fixedHeader={true}
                     fixedFooter={true}
-                    selectable={false}
+                    selectable={true}
+                    onRowSelection={this._onRowSelection}
                     multiSelectable={false}>
                     <TableHeader enableSelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn colSpan="8" tooltip='Users' style={{textAlign: 'center'}}>
-                                Users
-                            </TableHeaderColumn>
+                            <TableRowColumn colSpan="9" style={{textAlign: 'left'}}>
+                                <RaisedButton label="Profile" primary={true} onTouchTap={this._onProfile} />
+                                <RaisedButton label="Address" primary={true} onTouchTap={this._onAddress} />
+                                <RaisedButton label="Role" primary={true} onTouchTap={this._onRole} />
+                                <RaisedButton label="Delete" primary={true} onTouchTap={this._onDelete} />
+                                <RaisedButton label="Lock" primary={true} onTouchTap={this._onLock} />
+                                <RaisedButton label="Unlock" primary={true} onTouchTap={this._onUnlock} />
+                                <RaisedButton label="Activate" primary={true} onTouchTap={this._onActivate} />
+                            </TableRowColumn>
                         </TableRow>
                         <TableRow>
-                            <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
                             <TableHeaderColumn tooltip='User Id'>User Id</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Roles'>Roles</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Roles' colSpan="2">Roles</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Email' colSpan="2">Email</TableHeaderColumn>
                             <TableHeaderColumn tooltip='First Name'>First Name</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Last Name'>Last Name</TableHeaderColumn>
@@ -109,14 +143,11 @@ var UserAdminHome = React.createClass({
                         stripedRows={true}>
 
                         {this.state.users.map((user, index) => {
-                            let boundDelete = this._onDeleteUser.bind(this, user);
-                            let boundUpdate = this._onUpdateUser.bind(this, user);
                             return (
                                 <TableRow key={index}>
-                                    <TableRowColumn><a onClick={boundDelete}>Delete</a></TableRowColumn>
-                                    <TableRowColumn><a onClick={boundUpdate}>{user.userId}</a></TableRowColumn>
+                                    <TableRowColumn>{user.userId}</TableRowColumn>
                                     <TableRowColumn>{user.host}</TableRowColumn>
-                                    <TableRowColumn>{user.roles.toString()}</TableRowColumn>
+                                    <TableRowColumn colSpan="2">{user.roles.toString()}</TableRowColumn>
                                     <TableRowColumn colSpan="2">{user.email}</TableRowColumn>
                                     <TableRowColumn>{user.firstName}</TableRowColumn>
                                     <TableRowColumn>{user.lastName}</TableRowColumn>
@@ -129,14 +160,24 @@ var UserAdminHome = React.createClass({
 
                     <TableFooter>
                         <TableRow>
-                            <TableHeaderColumn tooltip='Delete'>Delete</TableHeaderColumn>
                             <TableHeaderColumn tooltip='User Id'>User Id</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Host'>Host</TableHeaderColumn>
-                            <TableHeaderColumn tooltip='Roles'>Roles</TableHeaderColumn>
+                            <TableHeaderColumn tooltip='Roles' colSpan="2">Roles</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Email' colSpan="2">Email</TableHeaderColumn>
                             <TableHeaderColumn tooltip='First Name'>First Name</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Last Name'>Last Name</TableHeaderColumn>
                             <TableHeaderColumn tooltip='Create Date'>Create Date</TableHeaderColumn>
+                        </TableRow>
+                        <TableRow>
+                            <TableRowColumn colSpan="9" style={{textAlign: 'left'}}>
+                                <RaisedButton label="Profile" primary={true} onTouchTap={this._onProfile} />
+                                <RaisedButton label="Address" primary={true} onTouchTap={this._onAddress} />
+                                <RaisedButton label="Role" primary={true} onTouchTap={this._onRole} />
+                                <RaisedButton label="Delete" primary={true} onTouchTap={this._onDelete} />
+                                <RaisedButton label="Lock" primary={true} onTouchTap={this._onLock} />
+                                <RaisedButton label="Unlock" primary={true} onTouchTap={this._onUnlock} />
+                                <RaisedButton label="Activate" primary={true} onTouchTap={this._onActivate} />
+                            </TableRowColumn>
                         </TableRow>
                     </TableFooter>
                 </Table>

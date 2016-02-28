@@ -494,6 +494,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         jwtMap.put("userId", user.getProperty("userId"));
         jwtMap.put("clientId", clientId);
         jwtMap.put("roles", user.getProperty("roles"));
+        if(user.getProperty("host") != null) jwtMap.put("host", user.getProperty("host"));
         return JwtUtil.getJwt(jwtMap, rememberMe);
     }
 

@@ -1104,5 +1104,168 @@
     "createDate": "2016-02-19T02:59:48.513",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:13",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10014,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-27T14:43:07.472",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "fileAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.file.GetFileRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-27T14:43:07.472",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:42",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10043,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-27T21:41:19.409",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "fileAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.file.GetContentRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-27T21:41:19.409",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:43",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10044,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-27T21:41:39.257",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.file.DnlFileRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-27T21:41:39.257",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:51",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10052,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-28T01:16:52.999",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "fileAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.file.UplFileRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-28T01:16:52.999",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:56",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10057,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-28T01:52:54.506",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "fileAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.file.DelFileRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-28T01:52:54.506",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:66",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10067,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-28T03:01:11.022",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "fileAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.file.RenFileRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-28T03:01:11.022",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:67",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10068,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-28T03:01:33.604",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "fileAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.file.AddFolderRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-28T03:01:33.604",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

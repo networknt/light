@@ -65,7 +65,7 @@ var CheckoutButton = React.createClass({
     handleCartTouchTap(event) {
         if(AuthStore.isLoggedIn()) {
             this.setState({cartOpen: true});
-            console.log('CheckoutButton.handleCartTouchTap state is set to open');
+            //console.log('CheckoutButton.handleCartTouchTap state is set to open');
         } else {
             this.context.router.push('login');
         }
@@ -73,7 +73,7 @@ var CheckoutButton = React.createClass({
     },
 
     open: function() {
-        console.log('open is called');
+        //console.log('open is called');
         this.setState({cartOpen: true});
     },
 
@@ -272,12 +272,10 @@ var CheckoutButton = React.createClass({
     render: function() {
         var actions = [];
         var contents;
-        console.log('render is called');
         if(this.state.screen === 'cart') {
             contents =  <CheckoutCart cartItems = {this.state.cartItems} totalPrice= {this.state.cartTotal} />;
             actions.push(<RaisedButton label="Buy now" primary={true} disabled={this.state.cartItems.length > 0? false : true} onTouchTap={this.onDelivery} />);
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />)
-            console.log('screen is cart');
         } else if (this.state.screen === 'shippingAddress') {
             if(this.state.schema) {
                 contents =
@@ -346,8 +344,6 @@ var CheckoutButton = React.createClass({
         );
 
     }
-
-
 });
 
 module.exports = CheckoutButton;

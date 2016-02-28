@@ -389,6 +389,27 @@ module.exports = {
             type: ActionTypes.GET_CONFIG_RESPONSE,
             json: json
         });
+    },
+
+    getFileResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_FILE_RESPONSE,
+            json: json
+        });
+    },
+
+    updPathResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPD_PATH_RESPONSE,
+            json: json
+        });
+    },
+
+    uplFileResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPL_FILE_RESPONSE,
+            json: json
+        });
     }
 
 };
