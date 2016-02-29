@@ -49,7 +49,7 @@ FormStore.dispatchToken = AppDispatcher.register(function(payload) {
             FormStore.emitChange();
             break;
         case ActionTypes.SET_FORM_MODEL:
-            console.log('SET_FORM_MODEL', payload);
+            //console.log('SET_FORM_MODEL', payload);
             _models[payload.formId] = payload.json;
             FormStore.emitChange();
             break;

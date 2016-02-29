@@ -2,57 +2,24 @@
     "formId": "com.networknt.light.common.command",
     "version": 1,
     "action" : [{
-        "category" : "common",
-        "name" : "command",
-        "readOnly": false,
         "title": "Submit"
     }],
     "schema": {
         "type": "object",
         "title": "Command",
-        "required": ["name", "data"],
+        "required": ["category", "name", "readOnly"],
         "properties": {
-            "host": {
-                "title": "Host",
-                "type": "string",
-                "enum": [
-                    "www.networknt.com",
-                    "injector"
-                ]
-            },
-            "app": {
-                "title": "App",
-                "type": "string",
-                "enum": [
-                    "main",
-                    "forum",
-                    "blog",
-                    "shopping"
-                ]
-            },
             "category": {
                 "title": "Category",
-                "type": "string",
-                "enum": [
-                    "user",
-                    "form"
-                ]
-            },
-            "readOnly": {
-                "title": "ReadOnly",
-                "type": "boolean",
-                "default": false
+                "type": "string"
             },
             "name": {
                 "title": "Name",
-                "type": "string",
-                "enum": [
-                    "getForm",
-                    "addForm",
-                    "delForm",
-                    "updForm",
-                    "getFormList"
-                ]
+                "type": "string"
+            },
+            "readOnly": {
+                "title": "ReadOnly",
+                "type": "boolean"
             },
             "data": {
                 "title": "Data",
@@ -61,19 +28,12 @@
         }
     },
     "form": [
-        "host",
-        "app",
         "category",
-        "readOnly",
         "name",
+        "readOnly",
         {
             "key": "data",
             "type": "textarea"
-        },
-        {
-            "type": "submit",
-            "style": "btn-info",
-            "title": "Submit"
         }
     ]
 }

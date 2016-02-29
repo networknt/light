@@ -456,27 +456,6 @@ public class InitDatabase {
     static void refreshDoc() {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            // global config without host. email server config
-            Map mailServerMap = new HashMap<String, Object>();
-            mailServerMap.put("mail.smtp.starttls.enable", "true");
-            mailServerMap.put("mail.smtp.auth", "true");
-            mailServerMap.put("mail.smtp.host", "mail.networknt.com");
-            mailServerMap.put("mail.smtp.port", "587");
-            graph.addVertex("class:Config", "category", "email", "name", "server", "properties", mailServerMap);
-
-            // global config registration confirmation
-            Map regConfirmMap = new HashMap<String, Object>();
-            regConfirmMap.put("subject", "Registration Activation");
-            regConfirmMap.put("content", "Hi,<br>Thanks for registering with us.<br>Please use %s to activate your account when you login.");
-
-            graph.addVertex("class:Config", "category", "email", "name", "regConfirm", "properties", regConfirmMap);
-
-            // host specific config for email
-            Map networkntMap = new HashMap<String, Object>();
-            networkntMap.put("username", "noreply@networknt.com"); // update during initial setup
-            networkntMap.put("password", ""); // update during initial setup
-
-
 
             graph.addVertex( "class:Role", "roleId", "anonymous", "description", "Anonymous or guest that have readonly access to certain things");
             graph.addVertex( "class:Role", "roleId", "user", "description", "logged in user who can do certain things");
