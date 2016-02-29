@@ -26,6 +26,9 @@ public class GetContentRule extends AbstractFileRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String) user.get("host");
+        if(host == null) {
+            host = (String)data.get("host");
+        }
         String path = (String) data.get("path");
         String root = getRootPath(host);
         String absPath = getAbsPath(root, path);

@@ -37,6 +37,9 @@ public abstract class AbstractFileRule extends AbstractRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String) user.get("host");
+        if(host == null) {
+            host = (String)data.get("host");
+        }
         String path = (String) data.get("path");
         String folder = (String) data.get("folder");
         File file = new File(getAbsPath(getRootPath(host), path) + "/" + folder);
@@ -53,6 +56,9 @@ public abstract class AbstractFileRule extends AbstractRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String) user.get("host");
+        if(host == null) {
+            host = (String)data.get("host");
+        }
         String path = (String) data.get("path");
         String oldName = (String) data.get("oldName");
         String newName = (String) data.get("newName");
@@ -70,6 +76,9 @@ public abstract class AbstractFileRule extends AbstractRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String) user.get("host");
+        if(host == null) {
+            host = (String)data.get("host");
+        }
         String path = (String) data.get("path");
         boolean isdir = (boolean)data.get("isdir");
         if(isdir) {
@@ -89,6 +98,9 @@ public abstract class AbstractFileRule extends AbstractRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String) user.get("host");
+        if(host == null) {
+            host = (String)data.get("host");
+        }
         String name = (String) data.get("name");
         String path = (String) data.get("path");
         String content = (String) data.get("content");

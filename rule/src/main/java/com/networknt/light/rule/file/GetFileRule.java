@@ -18,7 +18,10 @@ public class GetFileRule extends AbstractFileRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String) user.get("host");
-
+        if(host == null) {
+            // this is the owner that is updating. get the host from data.
+            host = (String)data.get("host");
+        }
         String files = getFile(host, (String)data.get("path"));
         if(files != null) {
             inputMap.put("result", files);
