@@ -62,14 +62,24 @@ public class InitDatabase {
             status.createProperty("app", OType.STRING);
             status.createProperty("map", OType.EMBEDDEDMAP);
 
+            // This is framework wide config, only owner can update it.
             OrientVertexType config = graph.createVertexType("Config");
-            config.createProperty("host", OType.STRING);
             config.createProperty("configId", OType.STRING);
             config.createProperty("description", OType.STRING);
             config.createProperty("properties", OType.EMBEDDEDMAP);
             config.createProperty("createDate", OType.DATETIME);
             config.createProperty("updateDate", OType.DATETIME);
-            config.createIndex("configHostIdIdx", OClass.INDEX_TYPE.UNIQUE, "host", "configId");
+            graph.createKeyIndex("configId", Vertex.class, new Parameter("type", "UNIQUE"), new Parameter("class", "Config"));
+
+            // This is host wide config which can override framework config.
+            OrientVertexType hostConfig = graph.createVertexType("HostConfig");
+            hostConfig.createProperty("host", OType.STRING);
+            hostConfig.createProperty("configId", OType.STRING);
+            hostConfig.createProperty("description", OType.STRING);
+            hostConfig.createProperty("properties", OType.EMBEDDEDMAP);
+            hostConfig.createProperty("createDate", OType.DATETIME);
+            hostConfig.createProperty("updateDate", OType.DATETIME);
+            hostConfig.createIndex("configHostIdIdx", OClass.INDEX_TYPE.UNIQUE, "host", "configId");
 
             OrientVertexType role = graph.createVertexType("Role");
             role.createProperty("roleId", OType.STRING);
@@ -515,9 +525,17 @@ public class InitDatabase {
                     "menuItemId", "configAdmin",
                     "text", "Config Admin",
                     "route", "/admin/configAdmin",
-                    "roles", "configAdmin,admin,owner",
+                    "roles", "owner",
                     "createDate", new java.util.Date());
             userOwner.addEdge("Create", m_configAdmin);
+
+            Vertex m_hostConfigAdmin = graph.addVertex("class:MenuItem",
+                    "menuItemId", "hostConfigAdmin",
+                    "text", "Host Config Admin",
+                    "route", "/admin/hostConfigAdmin",
+                    "roles", "configAdmin,admin,owner",
+                    "createDate", new java.util.Date());
+            userOwner.addEdge("Create", m_hostConfigAdmin);
 
             Vertex m_accessAdmin = graph.addVertex("class:MenuItem",
                     "menuItemId", "accessAdmin",
@@ -616,6 +634,7 @@ public class InitDatabase {
             m_admin.addEdge("Own", m_formAdmin);
             m_admin.addEdge("Own", m_pageAdmin);
             m_admin.addEdge("Own", m_configAdmin);
+            m_admin.addEdge("Own", m_hostConfigAdmin);
             m_admin.addEdge("Own", m_fileAdmin);
 
             userOwner.addEdge("Create", m_admin);

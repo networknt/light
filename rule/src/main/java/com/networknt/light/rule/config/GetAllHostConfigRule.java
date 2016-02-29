@@ -5,15 +5,16 @@ import com.networknt.light.rule.Rule;
 import java.util.Map;
 
 /**
- * Created by steve on 2/18/2016.
+ * Created by steve on 28/02/16.
  *
- * AccessLevel R [owner]
+ * AccessLevel R [owner, admin, configAdmin]
  */
-public class GetAllConfigRule extends AbstractConfigRule implements Rule {
+public class GetAllHostConfigRule extends AbstractConfigRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        String hostConfigs = getAllConfig();
+        String host = (String) data.get("host");
+        String hostConfigs = getAllHostConfig(host);
         if(hostConfigs != null) {
             inputMap.put("result", hostConfigs);
             return true;

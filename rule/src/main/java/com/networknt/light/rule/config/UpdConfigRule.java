@@ -5,7 +5,7 @@ import com.networknt.light.rule.Rule;
 /**
  * Created by steve on 2/18/2016.
  *
- * AccessLevel R [owner, admin, configAdmin]
+ * AccessLevel R [owner]
  *
  */
 public class UpdConfigRule extends AbstractConfigRule implements Rule {

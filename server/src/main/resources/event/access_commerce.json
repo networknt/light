@@ -102,50 +102,6 @@
   },
   {
     "@type": "d",
-    "@rid": "#17:16",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10017,
-    "createUserId": "stevehu",
-    "data": {
-      "updateDate": "2016-02-13T08:53:58.396",
-      "accessLevel": "R",
-      "updateUserId": "stevehu",
-      "roles": [
-        "user"
-      ],
-      "ruleClass": "com.networknt.light.rule.shipping.UpdAddressRule"
-    },
-    "name": "updAccess",
-    "category": "access",
-    "createDate": "2016-02-13T08:53:58.396",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:17",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10018,
-    "createUserId": "stevehu",
-    "data": {
-      "updateDate": "2016-02-13T08:54:29.170",
-      "accessLevel": "R",
-      "updateUserId": "stevehu",
-      "roles": [
-        "user"
-      ],
-      "ruleClass": "com.networknt.light.rule.shipping.CnfAddressRule"
-    },
-    "name": "updAccess",
-    "category": "access",
-    "createDate": "2016-02-13T08:54:29.170",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
     "@rid": "#17:20",
     "@version": 1,
     "@class": "Event",
@@ -459,6 +415,93 @@
     "createDate": "2016-02-13T09:07:16.328",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:0",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10001,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-29T03:56:08.798",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.address.CnfBillingAddressRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-29T03:56:08.798",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:1",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10002,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-29T03:56:26.626",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.address.CnfShippingAddressRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-29T03:56:26.626",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:2",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10003,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-29T03:56:42.317",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.address.UpdBillingAddressRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-29T03:56:42.317",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-29T03:56:57.274",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "user"
+      ],
+      "ruleClass": "com.networknt.light.rule.address.UpdShippingAddressRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-29T03:56:57.274",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
-
 ]

@@ -8,7 +8,12 @@ import java.util.Map;
 /**
  * Created by steve on 2/18/2016.
  *
- * AccessLevel A
+ * The lookup sequence is host then system.
+ *
+ * In some cases, the config values need to be accessed in the dropdown list. so the
+ * access level is A (anyone)
+ *
+ * AccessLevel: A
  */
 public class GetConfigRule extends AbstractConfigRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {

@@ -34,6 +34,7 @@ module.exports = {
         // Config
         GET_CONFIG_RESPONSE: null,
         GET_ALL_CONFIG_RESPONSE: null,
+        GET_ALL_HOST_CONFIG_RESPONSE: null,
 
         // File
         GET_FILE_RESPONSE: null,

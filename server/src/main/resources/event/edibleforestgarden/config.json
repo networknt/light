@@ -16,7 +16,7 @@
       },
       "createDate": "2016-02-26T03:48:06.135"
     },
-    "name": "addConfig",
+    "name": "addHostConfig",
     "category": "config",
     "createDate": "2016-02-26T03:48:06.135",
     "ipAddress": "127.0.0.1",

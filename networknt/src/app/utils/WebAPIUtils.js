@@ -1096,6 +1096,67 @@ module.exports = {
         });
     },
 
+    getAllHostConfig: function() {
+        var getAllHostConfig = {
+            category: 'config',
+            name: 'getAllHostConfig',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getAllHostConfig))}
+        }).done(function(data) {
+            ServerActionCreators.getAllHostConfigResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delConfig: function(rid) {
+        let delConfig = {
+            category: 'config',
+            name: 'delConfig',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delConfig),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delConfigResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delHostConfig: function(rid) {
+        let delHostConfig = {
+            category: 'config',
+            name: 'delHostConfig',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delHostConfig),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delHostConfigResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getFile: function(path) {
         var getFile = {
             category: 'file',

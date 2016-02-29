@@ -384,6 +384,13 @@ module.exports = {
         });
     },
 
+    getAllHostConfigResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_HOST_CONFIG_RESPONSE,
+            json: json
+        });
+    },
+
     getConfigResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_CONFIG_RESPONSE,

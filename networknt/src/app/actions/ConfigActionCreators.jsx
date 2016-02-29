@@ -8,7 +8,18 @@ module.exports = {
 
     getAllConfig: function() {
         WebAPIUtils.getAllConfig();
-    }
+    },
 
+    getAllHostConfig: function() {
+        WebAPIUtils.getAllHostConfig();
+    },
+
+    delConfig: function(rid) {
+        WebAPIUtils.delConfig(rid);
+    },
+
+    delHostConfig: function(rid) {
+        WebAPIUtils.delHostConfig(rid);
+    }
 };
 

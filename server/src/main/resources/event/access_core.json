@@ -992,13 +992,13 @@
   },
   {
     "@type": "d",
-    "@rid": "#17:29",
+    "@rid": "#18:430",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10030,
+    "eventId": 10431,
     "createUserId": "stevehu",
     "data": {
-      "updateDate": "2016-02-19T02:57:54.930",
+      "updateDate": "2016-02-29T03:40:06.416",
       "accessLevel": "R",
       "updateUserId": "stevehu",
       "roles": [
@@ -1006,42 +1006,66 @@
         "admin",
         "configAdmin"
       ],
-      "ruleClass": "com.networknt.light.rule.config.GetAllConfigRule"
+      "ruleClass": "com.networknt.light.rule.config.DelHostConfigRule"
     },
     "name": "updAccess",
     "category": "access",
-    "createDate": "2016-02-19T02:57:54.930",
+    "createDate": "2016-02-29T03:40:06.416",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:30",
+    "@rid": "#18:431",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10031,
+    "eventId": 10432,
     "createUserId": "stevehu",
     "data": {
-      "updateDate": "2016-02-19T02:58:37.003",
+      "updateDate": "2016-02-29T03:40:32.013",
+      "accessLevel": "R",
+      "updateUserId": "stevehu",
+      "roles": [
+        "owner",
+        "admin",
+        "configAdmin"
+      ],
+      "ruleClass": "com.networknt.light.rule.config.UpdHostConfigRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-02-29T03:40:32.013",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:432",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10433,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-02-29T03:41:09.801",
       "accessLevel": "A",
       "updateUserId": "stevehu",
       "ruleClass": "com.networknt.light.rule.config.GetConfigRule"
     },
     "name": "updAccess",
     "category": "access",
-    "createDate": "2016-02-19T02:58:37.003",
+    "createDate": "2016-02-29T03:41:09.801",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:31",
+    "@rid": "#18:433",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10032,
+    "eventId": 10434,
     "createUserId": "stevehu",
     "data": {
-      "updateDate": "2016-02-19T02:59:02.642",
+      "updateDate": "2016-02-29T03:41:55.513",
       "accessLevel": "R",
       "updateUserId": "stevehu",
       "roles": [
@@ -1049,23 +1073,23 @@
         "admin",
         "configAdmin"
       ],
-      "ruleClass": "com.networknt.light.rule.config.DelConfigRule"
+      "ruleClass": "com.networknt.light.rule.config.GetAllHostConfigRule"
     },
     "name": "updAccess",
     "category": "access",
-    "createDate": "2016-02-19T02:59:02.642",
+    "createDate": "2016-02-29T03:41:55.513",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },
   {
     "@type": "d",
-    "@rid": "#17:32",
+    "@rid": "#18:434",
     "@version": 1,
     "@class": "Event",
-    "eventId": 10033,
+    "eventId": 10435,
     "createUserId": "stevehu",
     "data": {
-      "updateDate": "2016-02-19T02:59:26.234",
+      "updateDate": "2016-02-29T03:42:31.500",
       "accessLevel": "R",
       "updateUserId": "stevehu",
       "roles": [
@@ -1073,35 +1097,11 @@
         "admin",
         "configAdmin"
       ],
-      "ruleClass": "com.networknt.light.rule.config.AddConfigRule"
+      "ruleClass": "com.networknt.light.rule.config.AddHostConfigRule"
     },
     "name": "updAccess",
     "category": "access",
-    "createDate": "2016-02-19T02:59:26.234",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:33",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10034,
-    "createUserId": "stevehu",
-    "data": {
-      "updateDate": "2016-02-19T02:59:48.513",
-      "accessLevel": "R",
-      "updateUserId": "stevehu",
-      "roles": [
-        "owner",
-        "admin",
-        "configAdmin"
-      ],
-      "ruleClass": "com.networknt.light.rule.config.UpdConfigRule"
-    },
-    "name": "updAccess",
-    "category": "access",
-    "createDate": "2016-02-19T02:59:48.513",
+    "createDate": "2016-02-29T03:42:31.500",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },

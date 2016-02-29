@@ -39,6 +39,59 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String configId = (String) data.get("configId");
+        String error = null;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            Vertex config = graph.getVertexByKey("Config.configId", configId);
+            if(config != null) {
+                error = "configId " + configId + " exists";
+                inputMap.put("responseCode", 400);
+            } else {
+                Map eventMap = getEventMap(inputMap);
+                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                inputMap.put("eventMap", eventMap);
+                eventData.putAll((Map<String, Object>) inputMap.get("data"));
+                eventData.put("createDate", new java.util.Date());
+                eventData.put("createUserId", user.get("userId"));
+                // remove host
+                eventData.remove("host");
+                // replace properties
+                String properties = (String)data.get("properties");
+                if(properties != null) {
+                    Map<String, Object> map = mapper.readValue(properties,
+                            new TypeReference<HashMap<String, Object>>() {
+                            });
+                    eventData.put("properties", map);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+        if(error != null) {
+            inputMap.put("result", error);
+            return false;
+        } else {
+            // no need to clean the cache here.
+            /*
+            Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
+            if(cache != null) {
+                cache.remove(host + configId);
+            }
+            */
+            return true;
+        }
+    }
+
+    public boolean addHostConfig (Object ...objects) throws Exception {
+        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
+        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        String configId = (String) data.get("configId");
         String host = (String) data.get("host");
         String error = null;
         String userHost = (String)user.get("host");
@@ -98,8 +151,14 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         return true;
     }
 
+    public boolean addHostConfigEv(Object ...objects) throws Exception {
+        Map<String, Object> eventMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
+        addHostConfigDb(data);
+        return true;
+    }
+
     protected void addConfigDb(Map<String, Object> data) throws Exception {
-        String host = (String)data.get("host");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
@@ -115,7 +174,64 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         }
     }
 
+    protected void addHostConfigDb(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try{
+            graph.begin();
+            Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
+            OrientVertex hostConfig = graph.addVertex("class:HostConfig", data);
+            createUser.addEdge("Create", hostConfig);
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+        } finally {
+            graph.shutdown();
+        }
+    }
+
     public boolean delConfig(Object ...objects) throws Exception {
+        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
+        String rid = (String) data.get("@rid");
+        String host = (String) data.get("host");
+        String configId = null;
+        String error = null;
+        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            Vertex config = DbService.getVertexByRid(graph, rid);
+            if(config != null) {
+                Map eventMap = getEventMap(inputMap);
+                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                inputMap.put("eventMap", eventMap);
+                configId = config.getProperty("configId");
+                eventData.put("configId", configId);
+            } else {
+                error = "@rid " + rid + " doesn't exist on host " + host;
+                inputMap.put("responseCode", 404);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+        if(error != null) {
+            inputMap.put("result", error);
+            return false;
+        } else {
+            Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
+            if(cache != null) {
+                cache.remove(configId);
+            }
+            return true;
+        }
+    }
+
+    public boolean delHostConfig(Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("@rid");
@@ -155,8 +271,8 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
             return false;
         } else {
             // update the branch tree as one of branch has changed.
-            Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage("configMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get("cache");
+            Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
+            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
             if(cache != null) {
                 cache.remove(host + configId);
             }
@@ -171,7 +287,31 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         return true;
     }
 
+    public boolean delHostConfigEv(Object ...objects) throws Exception {
+        Map<String, Object> eventMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
+        delHostConfigDb(data);
+        return true;
+    }
+
     protected void delConfigDb(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try{
+            graph.begin();
+            Vertex config = graph.getVertexByKey("Config.configId", (String)data.get("configId"));
+            if(config != null) {
+                graph.removeVertex(config);
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void delHostConfigDb(Map<String, Object> data) throws Exception {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try{
             graph.begin();
@@ -200,6 +340,52 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
     }
 
     public boolean updConfig (Object ...objects) throws Exception {
+        Map<String, Object> inputMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
+        String rid = (String) data.get("@rid");
+        String host = (String) data.get("host");
+        String configId = null;
+        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            Vertex config = DbService.getVertexByRid(graph, rid);
+            if(config != null) {
+                Map eventMap = getEventMap(inputMap);
+                Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                inputMap.put("eventMap", eventMap);
+                eventData.putAll((Map<String, Object>)inputMap.get("data"));
+                eventData.put("updateDate", new java.util.Date());
+                eventData.put("updateUserId", user.get("userId"));
+                configId = config.getProperty("configId");
+
+                String properties = (String)data.get("properties");
+                if(properties != null) {
+                    Map<String, Object> map = mapper.readValue(properties,
+                            new TypeReference<HashMap<String, Object>>() {
+                            });
+                    eventData.put("properties", map);
+                }
+            } else {
+                inputMap.put("result",  "@rid " + rid + " cannot be found");
+                inputMap.put("responseCode", 404);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+        Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
+        if(cache != null) {
+            cache.remove(configId);
+        }
+        return true;
+    }
+
+    public boolean updHostConfig (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("@rid");
@@ -244,8 +430,8 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         } finally {
             graph.shutdown();
         }
-        Map<String, Object> branchMap = ServiceLocator.getInstance().getMemoryImage("configMap");
-        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)branchMap.get("cache");
+        Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
+        ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
         if(cache != null) {
             cache.remove(host + configId);
         }
@@ -259,7 +445,45 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         return true;
     }
 
+    public boolean updHostConfigEv (Object ...objects) throws Exception {
+        Map<String, Object> eventMap = (Map<String, Object>) objects[0];
+        Map<String, Object> data = (Map<String, Object>) eventMap.get("data");
+        updHostConfigDb(data);
+        return true;
+    }
+
     protected void updConfigDb(Map<String, Object> data) throws Exception {
+        String configId = (String)data.get("configId");
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try{
+            graph.begin();
+            Vertex updateUser = graph.getVertexByKey("User.userId", data.remove("updateUserId"));
+            Vertex config = graph.getVertexByKey("Config.configId", configId);
+            if(config != null) {
+                if(data.get("description") != null) {
+                    config.setProperty("description", data.get("description"));
+                } else {
+                    config.removeProperty("description");
+                }
+                if(data.get("properties") != null) {
+                    config.setProperty("properties", data.get("properties"));
+                } else {
+                    config.removeProperty("properties");
+                }
+                config.setProperty("updateDate", data.get("updateDate"));
+                // updateUser
+                updateUser.addEdge("Update", config);
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void updHostConfigDb(Map<String, Object> data) throws Exception {
         String host = (String)data.get("host");
         String configId = (String)data.get("configId");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -302,6 +526,10 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
             configMap.put("cache", cache);
         } else {
             json = (String)cache.get(host + configId);
+            if(json == null) {
+                // fall back to system config instead of host config
+                json = (String) cache.get(configId);
+            }
         }
         if(json == null) {
             OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -310,6 +538,13 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
                 if(config != null) {
                     json = config.getRecord().toJSON();
                     cache.put(host + configId, json);
+                } else {
+                    // get system config here.
+                    config = (OrientVertex)graph.getVertexByKey("Config.configId", configId);
+                    if(config != null) {
+                        json = config.getRecord().toJSON();
+                        cache.put(configId, json);
+                    }
                 }
             } catch (Exception e) {
                 logger.error("Exception:", e);
@@ -321,8 +556,27 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         return json;
     }
 
-    protected String getAllConfig(String host) {
-        String sql = "SELECT FROM Config WHERE host = ?";
+    protected String getAllConfig() {
+        String sql = "SELECT FROM Config";
+        String json = null;
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try {
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
+            List<ODocument> configs = graph.getRawGraph().command(query).execute();
+            if(configs != null && configs.size() > 0) {
+                json = OJSONWriter.listToJSON(configs, null);
+            }
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            throw e;
+        } finally {
+            graph.shutdown();
+        }
+        return json;
+    }
+
+    protected String getAllHostConfig(String host) {
+        String sql = "SELECT FROM HostConfig WHERE host = ?";
         String json = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
@@ -339,4 +593,5 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         }
         return json;
     }
+
 }
