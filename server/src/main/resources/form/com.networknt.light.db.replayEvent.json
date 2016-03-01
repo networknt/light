@@ -5,8 +5,7 @@
         "category" : "db",
         "name" : "replayEvent",
         "readOnly": true,
-        "title": "Replay Event",
-        "success" : "/page/com-networknt-light-v-db-admin-home"
+        "title": "Replay Event"
     }],
     "schema": {
         "type": "object",

@@ -21,7 +21,8 @@ public class GetConfigRule extends AbstractConfigRule implements Rule {
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String host = (String)data.get("host");
         String configId = (String)data.get("configId");
-        String json = getConfig(host, configId);
+        String jsonPath = (String)data.get("jsonPath");
+        String json = getConfig(host, configId, jsonPath);
         if(json != null) {
             inputMap.put("result", json);
             return true;

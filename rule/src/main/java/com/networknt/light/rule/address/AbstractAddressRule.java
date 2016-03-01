@@ -63,19 +63,14 @@ public abstract class AbstractAddressRule extends AbstractCommerceRule implement
     public static Map<String, BigDecimal> calculateTax(String host, Map<String, Object> address, List<Map<String, Object>> items, BigDecimal subTotal) throws Exception {
         Map<String, BigDecimal> taxes = new HashMap<String, BigDecimal>();
         GetConfigRule getConfigRule = new GetConfigRule();
-        String s = getConfigRule.getConfig(host, DEFAULT_TAX);
-        Map<String, Object> defaultTax = ServiceLocator.getInstance().getMapper().readValue(s, new TypeReference<HashMap<String, Object>>() {});
-        if(defaultTax != null) {
-            Map<String, Object> properties = (Map)defaultTax.get("properties");
-            if(properties != null) {
-                boolean taxIncluded = (boolean)properties.get("taxIncluded");
-                if(taxIncluded) {
+        String s = getConfigRule.getConfig(host, DEFAULT_TAX, "$.properties.taxIncluded");
+        boolean taxIncluded = Boolean.valueOf(s);
+        if(taxIncluded) {
+            // do nothing here.
+        } else {
 
-                } else {
-                    // TODO calculate taxes based on address and items.
+            // TODO calculate taxes based on address and items.
 
-                }
-            }
         }
         return taxes;
     }

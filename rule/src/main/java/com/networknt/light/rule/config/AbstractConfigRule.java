@@ -3,6 +3,7 @@ package com.networknt.light.rule.config;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import com.jayway.jsonpath.JsonPath;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
@@ -74,14 +75,6 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            // no need to clean the cache here.
-            /*
-            Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
-            if(cache != null) {
-                cache.remove(host + configId);
-            }
-            */
             return true;
         }
     }
@@ -132,14 +125,6 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
             inputMap.put("result", error);
             return false;
         } else {
-            // no need to clean the cache here.
-            /*
-            Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
-            ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
-            if(cache != null) {
-                cache.remove(host + configId);
-            }
-            */
             return true;
         }
     }
@@ -225,7 +210,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
             Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
             ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
             if(cache != null) {
-                cache.remove(configId);
+                cache.clear();
             }
             return true;
         }
@@ -274,7 +259,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
             Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
             ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
             if(cache != null) {
-                cache.remove(host + configId);
+                cache.clear();
             }
             return true;
         }
@@ -343,7 +328,6 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("@rid");
-        String host = (String) data.get("host");
         String configId = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
@@ -358,7 +342,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
                 eventData.put("updateDate", new java.util.Date());
                 eventData.put("updateUserId", user.get("userId"));
                 configId = config.getProperty("configId");
-
+                eventData.remove("host");
                 String properties = (String)data.get("properties");
                 if(properties != null) {
                     Map<String, Object> map = mapper.readValue(properties,
@@ -380,7 +364,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
         if(cache != null) {
-            cache.remove(configId);
+            cache.clear();
         }
         return true;
     }
@@ -433,7 +417,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
         if(cache != null) {
-            cache.remove(host + configId);
+            cache.clear();
         }
         return true;
     }
@@ -515,8 +499,9 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         }
     }
 
-    public String getConfig(String host, String configId) throws Exception {
+    public String getConfig(String host, String configId, String jsonPath) throws Exception {
         String json  = null;
+        jsonPath = jsonPath == null? "" : jsonPath;
         Map<String, Object> configMap = ServiceLocator.getInstance().getMemoryImage("configMap");
         ConcurrentMap<Object, Object> cache = (ConcurrentMap<Object, Object>)configMap.get("cache");
         if(cache == null) {
@@ -525,10 +510,10 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
                     .build();
             configMap.put("cache", cache);
         } else {
-            json = (String)cache.get(host + configId);
+            json = (String)cache.get(host + configId + jsonPath);
             if(json == null) {
                 // fall back to system config instead of host config
-                json = (String) cache.get(configId);
+                json = (String) cache.get(configId + jsonPath);
             }
         }
         if(json == null) {
@@ -537,13 +522,20 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
                 OrientVertex config = getConfigByHostId(graph, host, configId);
                 if(config != null) {
                     json = config.getRecord().toJSON();
-                    cache.put(host + configId, json);
+                    // now we need to apply jsonpath.
+                    if(jsonPath.length() > 0) {
+                        json = mapper.writeValueAsString(JsonPath.parse(json).read(jsonPath));
+                    }
+                    cache.put(host + configId + jsonPath, json);
                 } else {
                     // get system config here.
                     config = (OrientVertex)graph.getVertexByKey("Config.configId", configId);
                     if(config != null) {
                         json = config.getRecord().toJSON();
-                        cache.put(configId, json);
+                        if(jsonPath.length() > 0) {
+                            json = mapper.writeValueAsString(JsonPath.parse(json).read(jsonPath));
+                        }
+                        cache.put(configId + jsonPath, json);
                     }
                 }
             } catch (Exception e) {

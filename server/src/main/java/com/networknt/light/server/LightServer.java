@@ -18,6 +18,12 @@ package com.networknt.light.server;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.Option;
+import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
+import com.jayway.jsonpath.spi.json.JsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.rule.rule.AbstractRuleRule;
 import com.networknt.light.server.handler.RestHandler;
@@ -63,6 +69,8 @@ public class LightServer {
 
     public static void main(final String[] args) {
         logger.info("server starts");
+        // init JsonPath
+        configJsonPath();
         // add shutdown hook here.
         addDaemonShutdownHook();
         start();
@@ -205,5 +213,28 @@ public class LightServer {
                 logger.debug("Events are loaded from " + location);
             }
         }
+    }
+
+    static void configJsonPath() {
+        Configuration.setDefaults(new Configuration.Defaults() {
+
+            private final JsonProvider jsonProvider = new JacksonJsonProvider();
+            private final MappingProvider mappingProvider = new JacksonMappingProvider();
+
+            @Override
+            public JsonProvider jsonProvider() {
+                return jsonProvider;
+            }
+
+            @Override
+            public MappingProvider mappingProvider() {
+                return mappingProvider;
+            }
+
+            @Override
+            public Set<Option> options() {
+                return EnumSet.noneOf(Option.class);
+            }
+        });
     }
 }
