@@ -1,5 +1,5 @@
 {
-    "formId": "com.networknt.light.common.command",
+    "formId": "com.networknt.light.db.execRuleCommand",
     "version": 1,
     "action" : [{
         "title": "Submit"

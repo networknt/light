@@ -148,6 +148,7 @@ module.exports = {
         // Db
         EXEC_QUERY_CMD_RESPONSE: null,
         DOWNLOAD_EVENT_RESPONSE: null,
+        EXEC_RULE_CMD_RESPONSE: null,
 
         // Rule
         GET_RULE_RESPONSE: null

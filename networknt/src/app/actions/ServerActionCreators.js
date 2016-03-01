@@ -325,6 +325,13 @@ module.exports = {
         });
     },
 
+    execRuleCmdResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.EXEC_RULE_CMD_RESPONSE,
+            json: json
+        });
+    },
+
     execQueryCmdResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.EXEC_QUERY_CMD_RESPONSE,

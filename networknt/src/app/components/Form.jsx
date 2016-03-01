@@ -71,13 +71,8 @@ let Form = React.createClass({
         if(!validationResult.valid) {
             this.setState({error: validationResult.error.message});
         } else {
-            if(action.category && action.name) {
-                action.data = this.state.model;
-                this.setState({success: action.success});
-            } else {
-                // no category or name defined in the action, this must be command form
-                action = this.state.model;
-            }
+            action.data = this.state.model;
+            this.setState({success: action.success});
             FormActionCreators.submitForm(action);
         }
     },

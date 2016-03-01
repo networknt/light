@@ -38,6 +38,7 @@ DbStore.dispatchToken = AppDispatcher.register(function(payload) {
     switch(type) {
         case ActionTypes.EXEC_QUERY_CMD_RESPONSE:
         case ActionTypes.DOWNLOAD_EVENT_RESPONSE:
+        case ActionTypes.EXEC_RULE_CMD_RESPONSE:
             _queryResult = payload.json;
             DbStore.emitChange();
             break;

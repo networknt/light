@@ -9,7 +9,7 @@ let menuItems = [
     { route: '/admin/dbAdmin/execQueryCommand', text: 'Execute Query Command' },
     { route: '/admin/dbAdmin/downloadEvent', text: 'Download Event' },
     { route: '/form/com.networknt.light.db.replayEvent', text: 'Replay Event' },
-    { route: '/form/com.networknt.light.common.command', text: 'Execute Command' }
+    { route: '/admin/dbAdmin/execRuleCommand', text: 'Execute Rule Command' }
 ];
 
 class DbAdminHome extends React.Component {

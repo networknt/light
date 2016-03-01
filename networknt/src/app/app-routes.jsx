@@ -45,6 +45,7 @@ import NewsAdminHome from './components/admin/news/NewsAdminHome';
 import CatalogAdminHome from './components/admin/catalog/CatalogAdminHome';
 import DbAdminHome from './components/admin/db/DbAdminHome';
 import ExecQueryCommand from './components/admin/db/ExecQueryCommand';
+import ExecRuleCommand from './components/admin/db/ExecRuleCommand';
 import ExportDatabase from './components/admin/db/ExportDatabase';
 import DownloadEvent from './components/admin/db/DownloadEvent';
 import AccessAdminHome from './components/admin/access/AccessAdminHome';
@@ -113,6 +114,7 @@ const AppRoutes = (
     <Route path='/admin/dbAdmin' component={DbAdminHome} />
     <Route path='/admin/dbAdmin/exportDatabase' component={ExportDatabase} />
     <Route path='/admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
+    <Route path='/admin/dbAdmin/execRuleCommand' component={ExecRuleCommand} />
     <Route path='/admin/dbAdmin/downloadEvent' component={DownloadEvent} />
     <Route path='/admin/accessAdmin' component={AccessAdminHome} />
     <Route path='/admin/roleAdmin' component={RoleAdminHome} />

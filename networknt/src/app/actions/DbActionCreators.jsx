@@ -15,6 +15,10 @@ module.exports = {
 
     downloadEvent: function(action) {
         WebAPIUtils.downloadEvent(action);
+    },
+
+    execRuleCmd: function(action) {
+        WebAPIUtils.execRuleCmd(action);
     }
 
 };

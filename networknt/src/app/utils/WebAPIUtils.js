@@ -1013,6 +1013,20 @@ module.exports = {
         });
     },
 
+    execRuleCmd: function(action) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(action),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.execRuleCmdResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     execQueryCmd: function(action) {
         $.ajax({
             type: 'POST',
