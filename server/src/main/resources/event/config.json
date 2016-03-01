@@ -1,0 +1,62 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:27",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10028,
+    "createUserId": "stevehu",
+    "data": {
+      "description": "country",
+      "createUserId": "stevehu",
+      "configId": "country",
+      "properties": {
+        "items": [
+          {
+            "label": "Canada",
+            "value": "CA"
+          },
+          {
+            "label": "United States of America",
+            "value": "US"
+          }
+        ]
+      },
+      "createDate": "2016-03-01T03:37:05.228"
+    },
+    "name": "addConfig",
+    "category": "config",
+    "createDate": "2016-03-01T03:37:05.228",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:29",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10030,
+    "createUserId": "stevehu",
+    "data": {
+      "description": "province",
+      "createUserId": "stevehu",
+      "configId": "province",
+      "properties": {
+        "CA": {
+          "items": [
+            {
+              "label": "Ontario",
+              "value": "ON"
+            }
+          ]
+        }
+      },
+      "createDate": "2016-03-01T03:45:02.208"
+    },
+    "name": "addConfig",
+    "category": "config",
+    "createDate": "2016-03-01T03:45:02.208",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

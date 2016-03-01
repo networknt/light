@@ -44,5 +44,41 @@
     "createDate": "2016-02-21T03:27:30.579",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:28",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10029,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "www.networknt.com",
+      "description": "country",
+      "createUserId": "stevehu",
+      "properties": {
+        "items": [
+          {
+            "label": "Canada",
+            "value": "CA"
+          },
+          {
+            "label": "United States of America",
+            "value": "US"
+          },
+          {
+            "label": "United Kingdom",
+            "value": "GB"
+          }
+        ]
+      },
+      "configId": "country",
+      "createDate": "2016-03-01T03:39:05.203"
+    },
+    "name": "addHostConfig",
+    "category": "config",
+    "createDate": "2016-03-01T03:39:05.203",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]
