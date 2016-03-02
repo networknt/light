@@ -325,6 +325,13 @@ module.exports = {
         });
     },
 
+    execRuleCmdResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.EXEC_RULE_CMD_RESPONSE,
+            json: json
+        });
+    },
+
     execQueryCmdResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.EXEC_QUERY_CMD_RESPONSE,
@@ -384,9 +391,37 @@ module.exports = {
         });
     },
 
+    getAllHostConfigResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_ALL_HOST_CONFIG_RESPONSE,
+            json: json
+        });
+    },
+
     getConfigResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_CONFIG_RESPONSE,
+            json: json
+        });
+    },
+
+    getFileResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_FILE_RESPONSE,
+            json: json
+        });
+    },
+
+    updPathResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPD_PATH_RESPONSE,
+            json: json
+        });
+    },
+
+    uplFileResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPL_FILE_RESPONSE,
             json: json
         });
     }

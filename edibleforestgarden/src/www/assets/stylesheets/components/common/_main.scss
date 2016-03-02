@@ -1,10 +1,46 @@
 .mainAppBar {
-  position: fixed !important;
+  position: relative !important;
 }
 
 .mainRoot {
-  position: absolute;
-  top: 64px;
+  position: relative;
   left: 0;
   right: 0;
+}
+
+.footer {
+  position: relative;
+  width: 100%;
+  background-color:#444444;
+  float:left;
+}
+
+.footerFloat {
+  width: 25%;
+  float: left;
+  min-width: 200px;
+}
+
+.footerFloat h5, .footerFloat h6, .footerFloat table {
+  text-align: justify;
+  margin-left: 10px;
+  color:#fff;
+}
+
+.footerFloat ul {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 10px;
+}
+
+.footerFloat ul li a {
+  color: #F2DEDE;
+}
+
+.footerFloat ul li a:hover {
+  color: #fff;
+}
+
+.copyright {
+  text-align: center;
 }

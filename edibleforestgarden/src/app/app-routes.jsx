@@ -45,6 +45,7 @@ import NewsAdminHome from './components/admin/news/NewsAdminHome';
 import CatalogAdminHome from './components/admin/catalog/CatalogAdminHome';
 import DbAdminHome from './components/admin/db/DbAdminHome';
 import ExecQueryCommand from './components/admin/db/ExecQueryCommand';
+import ExecRuleCommand from './components/admin/db/ExecRuleCommand';
 import ExportDatabase from './components/admin/db/ExportDatabase';
 import DownloadEvent from './components/admin/db/DownloadEvent';
 import AccessAdminHome from './components/admin/access/AccessAdminHome';
@@ -56,6 +57,8 @@ import PageAdminHome from './components/admin/page/PageAdminHome';
 import RuleAdminHome from './components/admin/rule/RuleAdminHome';
 import HostAdminHome from './components/admin/host/HostAdminHome';
 import ConfigAdminHome from './components/admin/config/ConfigAdminHome';
+import HostConfigAdminHome from './components/admin/config/HostConfigAdminHome';
+import FileAdminHome from './components/admin/file/FileAdminHome';
 
 /**
  * Routes: https://github.com/rackt/react-router/blob/master/docs/api/components/Route.md
@@ -111,6 +114,7 @@ const AppRoutes = (
     <Route path='/admin/dbAdmin' component={DbAdminHome} />
     <Route path='/admin/dbAdmin/exportDatabase' component={ExportDatabase} />
     <Route path='/admin/dbAdmin/execQueryCommand' component={ExecQueryCommand} />
+    <Route path='/admin/dbAdmin/execRuleCommand' component={ExecRuleCommand} />
     <Route path='/admin/dbAdmin/downloadEvent' component={DownloadEvent} />
     <Route path='/admin/accessAdmin' component={AccessAdminHome} />
     <Route path='/admin/roleAdmin' component={RoleAdminHome} />
@@ -121,6 +125,8 @@ const AppRoutes = (
     <Route path='/admin/ruleAdmin' component={RuleAdminHome} />
     <Route path='/admin/hostAdmin' component={HostAdminHome} />
     <Route path='/admin/configAdmin' component={ConfigAdminHome} />
+    <Route path='/admin/hostConfigAdmin' component={HostConfigAdminHome} />
+    <Route path='/admin/fileAdmin' component={FileAdminHome} />
 
 
     <IndexRoute component={Home}/>

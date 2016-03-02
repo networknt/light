@@ -12,16 +12,14 @@ import org.slf4j.ext.XLoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by steve on 20/02/16.
  */
 public abstract class AbstractAddressRule extends AbstractCommerceRule implements Rule {
     static final XLogger logger = XLoggerFactory.getXLogger(AbstractAddressRule.class);
-    static final String DEFAULT_TAX = "default.tax";
+    static final String TAX = "tax";
 
     public abstract boolean execute (Object ...objects) throws Exception;
 
@@ -62,15 +60,39 @@ public abstract class AbstractAddressRule extends AbstractCommerceRule implement
      */
     public static Map<String, BigDecimal> calculateTax(String host, Map<String, Object> address, List<Map<String, Object>> items, BigDecimal subTotal) throws Exception {
         Map<String, BigDecimal> taxes = new HashMap<String, BigDecimal>();
+        String country = (String)address.get("country");
+        String province = (String)address.get("province");
+        String postalPost = (String)address.get("postalCode");
         GetConfigRule getConfigRule = new GetConfigRule();
-        String s = getConfigRule.getConfig(host, DEFAULT_TAX, "$.properties.taxIncluded");
+        String s = getConfigRule.getConfig(host, TAX, "$.properties.taxIncluded");
         boolean taxIncluded = Boolean.valueOf(s);
         if(taxIncluded) {
             // do nothing here.
         } else {
 
-            // TODO calculate taxes based on address and items.
-
+            String tax = getConfigRule.getConfig(host, TAX, "$.properties." + country + "." + province);
+            if(tax.startsWith("0")) {
+                // we have single value tax rate.
+                BigDecimal b = subTotal.multiply(new BigDecimal(tax));
+                b.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("Tax", b);
+            } else if(tax.startsWith("[")) {
+                // we have an array of tax rate
+                List<Map<String, Object>> list = ServiceLocator.getInstance().getMapper().readValue(tax, new TypeReference<List<HashMap<String, Object>>>() {});
+                for(Map<String, Object> t: list) {
+                    Iterator<String> iterator = t.keySet().iterator();
+                    String name = iterator.next();
+                    BigDecimal b = subTotal.multiply(new BigDecimal((Double)t.get(name)));
+                    b.setScale(2, RoundingMode.HALF_UP);
+                    taxes.put(name, b);
+                }
+            } else {
+                tax = getConfigRule.getConfig(host, TAX, "$.properties." + country + "." + province + "." + postalPost);
+                // we assume that this tax will be a single value
+                BigDecimal b = subTotal.multiply(new BigDecimal(tax));
+                b.setScale(2, RoundingMode.HALF_UP);
+                taxes.put("Tax", b);
+            }
         }
         return taxes;
     }

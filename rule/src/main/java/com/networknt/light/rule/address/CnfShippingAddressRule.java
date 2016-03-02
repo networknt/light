@@ -5,6 +5,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -34,13 +35,13 @@ public class CnfShippingAddressRule extends AbstractAddressRule implements Rule 
         Map<String, Object> resultMap = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
-        String rid = (String)user.get("@rid");
+        String userId = (String)user.get("userId");
         String host = (String)data.get("host");
         // expect a list of products in order to calculate shipping cost, shipping address etc.
         // the calculation will be done on the server side in order to avoid hack in the js.
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            Vertex updateUser = DbService.getVertexByRid(graph, rid);
+            OrientVertex updateUser = (OrientVertex)graph.getVertexByKey("User.userId", userId);
             if(updateUser != null) {
                 // now return the shipping cost and tax according to the address.
                 BigDecimal cartTotal = new BigDecimal(data.get("cartTotal").toString());
@@ -53,7 +54,7 @@ public class CnfShippingAddressRule extends AbstractAddressRule implements Rule 
                 Map<String, BigDecimal> taxes = calculateTax(host, shippingAddress, items, cartTotal.add(shipping));
                 resultMap.put("taxes", taxes);
             } else {
-                error = "User with rid " + rid + " cannot be found.";
+                error = "User with userId " + userId + " cannot be found.";
                 inputMap.put("responseCode", 404);
             }
         } catch (Exception e) {

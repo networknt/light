@@ -34,6 +34,12 @@ module.exports = {
         // Config
         GET_CONFIG_RESPONSE: null,
         GET_ALL_CONFIG_RESPONSE: null,
+        GET_ALL_HOST_CONFIG_RESPONSE: null,
+
+        // File
+        GET_FILE_RESPONSE: null,
+        UPD_PATH_RESPONSE: null,
+        UPL_FILE_RESPONSE: null,
 
         // Menu
         GET_MENU: null,
@@ -142,6 +148,7 @@ module.exports = {
         // Db
         EXEC_QUERY_CMD_RESPONSE: null,
         DOWNLOAD_EVENT_RESPONSE: null,
+        EXEC_RULE_CMD_RESPONSE: null,
 
         // Rule
         GET_RULE_RESPONSE: null

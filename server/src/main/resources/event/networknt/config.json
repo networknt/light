@@ -8,9 +8,9 @@
     "createUserId": "stevehu",
     "data": {
       "host": "www.networknt.com",
-      "description": "default delivery",
+      "description": "delivery",
       "createUserId": "stevehu",
-      "configId": "default.delivery",
+      "configId": "delivery",
       "properties": {
         "method": "RS"
       },
@@ -19,29 +19,6 @@
     "name": "addHostConfig",
     "category": "config",
     "createDate": "2016-02-21T03:12:30.687",
-    "ipAddress": "127.0.0.1",
-    "@fieldTypes": "eventId=l,createDate=t"
-  },
-  {
-    "@type": "d",
-    "@rid": "#17:17",
-    "@version": 1,
-    "@class": "Event",
-    "eventId": 10018,
-    "createUserId": "stevehu",
-    "data": {
-      "host": "www.networknt.com",
-      "description": "default tax",
-      "createUserId": "stevehu",
-      "configId": "default.tax",
-      "properties": {
-        "taxIncluded": true
-      },
-      "createDate": "2016-02-21T03:27:30.579"
-    },
-    "name": "addHostConfig",
-    "category": "config",
-    "createDate": "2016-02-21T03:27:30.579",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   },

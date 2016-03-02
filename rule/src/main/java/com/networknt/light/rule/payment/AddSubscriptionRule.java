@@ -36,7 +36,6 @@ public class AddSubscriptionRule extends AbstractPaymentRule implements Rule {
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
         String host = (String)data.get("host");
         String userId = (String)user.get("userId"); // this will be customer_id
-        String rid = (String)user.get("@rid");
         Integer orderId = (Integer)data.get("orderId");
         Map<String, Object> tran = (Map<String, Object>)data.get("transaction");
         String nonce = (String)tran.get("nonce");
@@ -59,7 +58,8 @@ public class AddSubscriptionRule extends AbstractPaymentRule implements Rule {
                 List<Map<String, Object>> subscriptions = new ArrayList<Map<String, Object>>();
                 // first get braintree customer id from user profile. The customerId was created when
                 // billing address is created.
-                Vertex userVertex = DbService.getVertexByRid(graph, rid);
+                Vertex userVertex = graph.getVertexByKey("User.userId", userId);
+
                 String braintreeCustomerId = userVertex.getProperty("braintreeCustomerId");
                 PaymentMethodRequest paymentMethodRequest = new PaymentMethodRequest()
                 .customerId(braintreeCustomerId)

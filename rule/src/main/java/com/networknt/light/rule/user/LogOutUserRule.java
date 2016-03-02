@@ -23,6 +23,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import java.util.Map;
 
@@ -42,11 +43,11 @@ public class LogOutUserRule extends AbstractUserRule implements Rule {
         // The assumption is that user should have a token when he/she click logout.
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
-        String rid = (String)user.get("@rid");
+        String userId = (String)user.get("userId");
         // check if the rid exists or not. if exists, then create event.
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            Vertex vertex = DbService.getVertexByRid(graph, rid);
+            Vertex vertex = graph.getVertexByKey("User.userId", userId);
             if(vertex != null) {
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
@@ -56,7 +57,7 @@ public class LogOutUserRule extends AbstractUserRule implements Rule {
                 eventData.put("refreshToken", data.get("refreshToken"));
                 eventData.put("logOutDate", new java.util.Date());
             } else {
-                error = "User with @rid " + rid + " cannot be found.";
+                error = "User with userId " + userId + " cannot be found.";
                 inputMap.put("responseCode", 404);
             }
         } catch (Exception e) {

@@ -6,10 +6,10 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _queryResult;
-var _errors = [];
+var _configs = [];
 
-var DbStore = assign({}, EventEmitter.prototype, {
+
+var HostConfigAdminStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -23,28 +23,20 @@ var DbStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getQueryResult: function() {
-        return _queryResult;
-    },
-
-    getErrors: function() {
-        return _errors;
+    getConfigs: function() {
+        return _configs;
     }
-
 });
 
-DbStore.dispatchToken = AppDispatcher.register(function(payload) {
+HostConfigAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.EXEC_QUERY_CMD_RESPONSE:
-        case ActionTypes.DOWNLOAD_EVENT_RESPONSE:
-        case ActionTypes.EXEC_RULE_CMD_RESPONSE:
-            _queryResult = payload.json;
-            DbStore.emitChange();
+        case ActionTypes.GET_ALL_HOST_CONFIG_RESPONSE:
+            _configs = payload.json;
+            HostConfigAdminStore.emitChange();
             break;
     }
-
     return true;
 });
 
-module.exports = DbStore;
+module.exports = HostConfigAdminStore;

@@ -1,3 +1,6 @@
+/**
+ * Created by steve on 7/31/2015.
+ */
 var AppDispatcher = require('../dispatcher/AppDispatcher.js');
 var AppConstants = require('../constants/AppConstants.js');
 var EventEmitter = require('events').EventEmitter;
@@ -6,10 +9,10 @@ var assign = require('object-assign');
 var ActionTypes = AppConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _queryResult;
-var _errors = [];
+var _fileMap = {};
+var _path = '.';
 
-var DbStore = assign({}, EventEmitter.prototype, {
+var FileAdminStore = assign({}, EventEmitter.prototype, {
 
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -23,28 +26,27 @@ var DbStore = assign({}, EventEmitter.prototype, {
         this.removeListener(CHANGE_EVENT, callback);
     },
 
-    getQueryResult: function() {
-        return _queryResult;
+    getFiles: function(path) {
+        return _fileMap[path];
     },
 
-    getErrors: function() {
-        return _errors;
+    getPath: function() {
+        return _path;
     }
 
 });
 
-DbStore.dispatchToken = AppDispatcher.register(function(payload) {
+FileAdminStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
-        case ActionTypes.EXEC_QUERY_CMD_RESPONSE:
-        case ActionTypes.DOWNLOAD_EVENT_RESPONSE:
-        case ActionTypes.EXEC_RULE_CMD_RESPONSE:
-            _queryResult = payload.json;
-            DbStore.emitChange();
+        case ActionTypes.GET_FILE_RESPONSE:
+        case ActionTypes.UPD_PATH_RESPONSE:
+            _path = payload.json.path;
+            _fileMap[_path] = payload.json.children;
+            FileAdminStore.emitChange();
             break;
     }
-
     return true;
 });
 
-module.exports = DbStore;
+module.exports = FileAdminStore;

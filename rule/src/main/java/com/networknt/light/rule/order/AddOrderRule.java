@@ -7,6 +7,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -62,7 +63,7 @@ public class AddOrderRule extends AbstractOrderRule implements Rule {
             String deliveryMethod = null;
             Map<String, Object> delivery = (Map)data.get("delivery");
             if(delivery != null) deliveryMethod = (String)delivery.get("method");
-            Vertex u = DbService.getVertexByRid(graph, (String) user.get("@rid"));
+            Vertex u = graph.getVertexByKey("User.userId", (String) user.get("userId"));
 
             if("SP".equals(deliveryMethod) || "SO".equals(deliveryMethod)) {
                 // shipping cost

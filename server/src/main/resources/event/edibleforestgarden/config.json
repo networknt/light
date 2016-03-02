@@ -8,9 +8,9 @@
     "createUserId": "stevehu",
     "data": {
       "host": "www.edibleforestgarden.ca",
-      "description": "default delivery",
+      "description": "delivery",
       "createUserId": "stevehu",
-      "configId": "default.delivery",
+      "configId": "delivery",
       "properties": {
         "method": "SP"
       },

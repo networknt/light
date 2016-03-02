@@ -24,6 +24,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import java.util.Map;
 
@@ -42,10 +43,10 @@ public class UpdPasswordRule extends AbstractUserRule implements Rule {
         String error = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
-        String rid = (String)user.get("@rid");
+        String userId = (String)user.get("userId");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            Vertex updateUser = DbService.getVertexByRid(graph, rid);
+            Vertex updateUser = graph.getVertexByKey("User.userId", userId);
             if(updateUser != null) {
                 String password = (String) data.get("password");
                 String newPassword = (String)data.get("newPassword");
@@ -71,7 +72,7 @@ public class UpdPasswordRule extends AbstractUserRule implements Rule {
                     inputMap.put("responseCode", 400);
                 }
             } else {
-                error = "User with rid " + rid + " cannot be found.";
+                error = "User with userId " + userId + " cannot be found.";
                 inputMap.put("responseCode", 404);
             }
         } catch (Exception e) {

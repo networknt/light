@@ -51,7 +51,9 @@
           "PE",
           "QC",
           "SK",
-          "YK"
+          "YK",
+          "IN",
+          "AL"
         ]
       },
       "postalCode": {
@@ -62,7 +64,8 @@
         "title": "Country",
         "type": "string",
         "enum": [
-          "Canada"
+          "CA",
+          "US"
         ]
       },
       "phone": {

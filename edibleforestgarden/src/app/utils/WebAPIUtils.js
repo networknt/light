@@ -1013,6 +1013,20 @@ module.exports = {
         });
     },
 
+    execRuleCmd: function(action) {
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(action),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.execRuleCmdResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     execQueryCmd: function(action) {
         $.ajax({
             type: 'POST',
@@ -1092,6 +1106,295 @@ module.exports = {
             console.log('getAllForm', data);
             ServerActionCreators.getAllConfigResponse(data);
         }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getAllHostConfig: function() {
+        var getAllHostConfig = {
+            category: 'config',
+            name: 'getAllHostConfig',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getAllHostConfig))}
+        }).done(function(data) {
+            ServerActionCreators.getAllHostConfigResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delConfig: function(rid) {
+        let delConfig = {
+            category: 'config',
+            name: 'delConfig',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delConfig),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delConfigResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delHostConfig: function(rid) {
+        let delHostConfig = {
+            category: 'config',
+            name: 'delHostConfig',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delHostConfig),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delHostConfigResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getFile: function(path) {
+        var getFile = {
+            category: 'file',
+            name: 'getFile',
+            readOnly: true,
+            data: {
+                path: path
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getFile))}
+        }).done(function(data) {
+            console.log('WebAPIUtils.getFile', data);
+            ServerActionCreators.getFileResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getContent: function(path) {
+        var getContent = {
+            category: 'file',
+            name: 'getContent',
+            readOnly: true,
+            data: {
+                path: path
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getContent))}
+        }).done(function(data) {
+            // get the token here and route to download link.
+            console.log('getContent data', data);
+            var dnlFile = {
+                category: 'file',
+                name: 'dnlFile',
+                readOnly:true,
+                data: {
+                    token: data.token
+                }
+            };
+            var url = '/api/rs?cmd=' + encodeURIComponent(JSON.stringify(dnlFile));
+            console.log('url =', url);
+            location.href=url;
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    uplFile: function(name, path, content) {
+        var uplFile = {
+            category: 'file',
+            name: 'uplFile',
+            readOnly: true,
+            data: {
+                name: name,
+                path: path,
+                content: content
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(uplFile),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            console.log("data = ", data);
+            ServerActionCreators.uplFileResponse(data);
+        }).fail(function(error) {
+            console.log('error = ', error);
+            if(error.status === 200) {
+                var getFile = {
+                    category: 'file',
+                    name: 'getFile',
+                    readOnly: true,
+                    data: {
+                        path: path
+                    }
+                };
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/rs',
+                    data:  { cmd: encodeURIComponent(JSON.stringify(getFile))}
+                }).done(function(data) {
+                    ServerActionCreators.getFileResponse(data);
+                }).fail(function(error) {
+                    ErrorActionCreators.serverErrorResponse(error);
+                });
+            }
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delFile: function(currentPath, file) {
+        var delFile = {
+            category: 'file',
+            name: 'delFile',
+            readOnly: true,
+            data: {
+                path: file.path,
+                isdir: file.isdir
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(delFile),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delFileResponse(data);
+        }).fail(function(error) {
+            console.log('error = ', error);
+            if(error.status === 200) {
+                var getFile = {
+                    category: 'file',
+                    name: 'getFile',
+                    readOnly: true,
+                    data: {
+                        path: currentPath
+                    }
+                };
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/rs',
+                    data:  { cmd: encodeURIComponent(JSON.stringify(getFile))}
+                }).done(function(data) {
+                    ServerActionCreators.getFileResponse(data);
+                }).fail(function(error) {
+                    ErrorActionCreators.serverErrorResponse(error);
+                });
+            }
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    addFolder: function(path, folder) {
+        var addFolder = {
+            category: 'file',
+            name: 'addFolder',
+            readOnly: true,
+            data: {
+                path: path,
+                folder: folder
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(addFolder),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.addFolderResponse(data);
+        }).fail(function(error) {
+            console.log('error = ', error);
+            if(error.status === 200) {
+                var getFile = {
+                    category: 'file',
+                    name: 'getFile',
+                    readOnly: true,
+                    data: {
+                        path: path
+                    }
+                };
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/rs',
+                    data:  { cmd: encodeURIComponent(JSON.stringify(getFile))}
+                }).done(function(data) {
+                    ServerActionCreators.getFileResponse(data);
+                }).fail(function(error) {
+                    ErrorActionCreators.serverErrorResponse(error);
+                });
+            }
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    renFile: function(path, oldName, newName) {
+        var renFile = {
+            category: 'file',
+            name: 'renFile',
+            readOnly: true,
+            data: {
+                path: path,
+                oldName: oldName,
+                newName: newName
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data: JSON.stringify(renFile),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.renFileResponse(data);
+        }).fail(function(error) {
+            console.log('error = ', error);
+            if(error.status === 200) {
+                var getFile = {
+                    category: 'file',
+                    name: 'getFile',
+                    readOnly: true,
+                    data: {
+                        path: path
+                    }
+                };
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/rs',
+                    data:  { cmd: encodeURIComponent(JSON.stringify(getFile))}
+                }).done(function(data) {
+                    ServerActionCreators.getFileResponse(data);
+                }).fail(function(error) {
+                    ErrorActionCreators.serverErrorResponse(error);
+                });
+            }
             ErrorActionCreators.serverErrorResponse(error);
         });
     }

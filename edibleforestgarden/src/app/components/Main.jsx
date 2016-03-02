@@ -1,5 +1,6 @@
 import React from 'react';
 import AppBar from 'material-ui/lib/app-bar';
+import Footer from './Footer';
 import LeftNav from 'material-ui/lib/left-nav';
 import Menu from 'material-ui/lib/menus/menu';
 import MenuItem from 'material-ui/lib/menus/menu-item';
@@ -396,10 +397,6 @@ const Main = React.createClass({
                 leftNavContent = (<div>No Context Navigation</div>);
         }
 
-
-        //console.log('history', this.props.history);
-        //console.log('location', this.props.location);
-        //console.log('children', this.props.children);
         return (
             <div id="page_container">
                 <LeftNav open={this.state.leftNavOpen} docked={false} onRequestChange={leftNavOpen => this.setState({leftNavOpen})}>
@@ -412,6 +409,7 @@ const Main = React.createClass({
                 <span className="mainRoot">
                     {this.props.children}
                 </span>
+                <footer><Footer /></footer>
             </div>
         );
     }

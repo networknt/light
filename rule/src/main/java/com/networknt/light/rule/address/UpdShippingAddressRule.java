@@ -5,6 +5,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
+import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -31,17 +32,17 @@ public class UpdShippingAddressRule extends AbstractAddressRule implements Rule 
         Map<String, Object> resultMap = null;
         Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         Map<String, Object> user = (Map<String, Object>)payload.get("user");
-        String rid = (String)user.get("@rid");
+        String userId = (String)user.get("userId");
         String host = (String)data.get("host");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            Vertex updateUser = DbService.getVertexByRid(graph, rid);
+            OrientVertex updateUser = (OrientVertex)graph.getVertexByKey("User.userId", userId);
             if(updateUser != null) {
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.putAll(data);
-                eventData.put("userId", updateUser.getProperty("userId"));
+                eventData.put("userId", userId);
                 eventData.put("updateDate", new java.util.Date());
 
                 // now return the shipping cost and tax according to the address if cartTotal exists
@@ -58,7 +59,7 @@ public class UpdShippingAddressRule extends AbstractAddressRule implements Rule 
                     resultMap.put("taxes", taxes);
                 }
             } else {
-                error = "User with rid " + rid + " cannot be found.";
+                error = "User with userId " + userId + " cannot be found.";
                 inputMap.put("responseCode", 404);
             }
         } catch (Exception e) {

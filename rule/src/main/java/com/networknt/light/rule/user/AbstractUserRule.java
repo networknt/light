@@ -490,7 +490,6 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
 
     String generateToken(Vertex user, String clientId, Boolean rememberMe) throws Exception {
         Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();
-        jwtMap.put("@rid", user.getId().toString());
         jwtMap.put("userId", user.getProperty("userId"));
         jwtMap.put("clientId", clientId);
         jwtMap.put("roles", user.getProperty("roles"));

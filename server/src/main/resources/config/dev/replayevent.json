@@ -22,6 +22,10 @@
       "location": "event/cors_core.json"
     },
     {
+      "description": "This file contains all the configs for all domains.",
+      "location": "event/config.json"
+    },
+    {
       "description": "This file contains all the forms including core, cms and commerce. Should be split to three files before production.",
       "location": "event/form.json"
     },
