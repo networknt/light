@@ -15,8 +15,7 @@ public class GetFileRule extends AbstractFileRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         // here we get user's host to decide which domain he/she can access
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String host = (String) user.get("host");
         if(host == null) {
             // this is the owner that is updating. get the host from data.

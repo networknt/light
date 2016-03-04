@@ -55,9 +55,8 @@ public class BetaTestRule extends AbstractRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> transformData = (Map<String, Object>)inputMap.remove("transformData");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        if(payload != null) {
-            Map<String, Object> user = (Map<String, Object>) payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
+        if(user != null) {
             List roles = (List) user.get("roles");
             if (roles.contains("betaTester")) {
                 inputMap.put("name", transformData.get("beta"));

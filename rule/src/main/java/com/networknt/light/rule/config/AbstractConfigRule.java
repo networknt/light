@@ -37,8 +37,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
     public boolean addConfig (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String configId = (String) data.get("configId");
         String error = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -82,8 +81,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
     public boolean addHostConfig (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String configId = (String) data.get("configId");
         String host = (String) data.get("host");
         String error = null;
@@ -182,8 +180,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         String host = (String) data.get("host");
         String configId = null;
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             Vertex config = DbService.getVertexByRid(graph, rid);
@@ -223,8 +220,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         String host = (String) data.get("host");
         String configId = null;
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             String userHost = (String)user.get("host");
@@ -329,8 +325,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("@rid");
         String configId = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             Vertex config = DbService.getVertexByRid(graph, rid);
@@ -375,8 +370,7 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
         String configId = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             String userHost = (String)user.get("host");

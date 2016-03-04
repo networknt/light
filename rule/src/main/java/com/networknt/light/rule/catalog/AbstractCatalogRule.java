@@ -57,8 +57,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         String parentRid = (String)data.remove("parentRid");
         List<String> tags = null;
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String userHost = (String)user.get("host");
         if(userHost != null && !userHost.equals(host)) {
             error = "You can only add product from host: " + host;
@@ -254,8 +253,7 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
 
         String host = (String) data.get("host");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             String userHost = (String)user.get("host");
@@ -525,9 +523,8 @@ public abstract class AbstractCatalogRule extends AbstractBfnRule implements Rul
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String categoryId = (String)data.get("categoryId");
         String host = (String)data.get("host");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String json = null;
-        Map<String,Object> user = (Map<String, Object>)payload.get("user");
         List roles = (List)user.get("roles");
         if(roles.contains("owner")) {
             json = getProductDb();

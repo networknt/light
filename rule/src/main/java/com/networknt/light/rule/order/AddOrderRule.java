@@ -30,8 +30,7 @@ public class AddOrderRule extends AbstractOrderRule implements Rule {
     public boolean execute(Object... objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         List<Map<String, Object>> items = (List<Map<String, Object>>)data.get("items");
         String host = (String)data.get("host");
         BigDecimal subTotal = new BigDecimal(0.00);

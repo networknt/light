@@ -38,12 +38,11 @@ public class ExpEventRule extends AbstractDbRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        if(payload == null) {
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
+        if(user == null) {
             error = "Login is required";
             inputMap.put("responseCode", 401);
         } else {
-            Map<String, Object> user = (Map<String, Object>)payload.get("user");
             List roles = (List)user.get("roles");
             if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("dbAdmin")) {
                 error = "Role owner or admin or dbAdmin is required to add schema";

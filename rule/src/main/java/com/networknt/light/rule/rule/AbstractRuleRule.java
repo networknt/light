@@ -197,8 +197,7 @@ public abstract class AbstractRuleRule extends AbstractRule implements Rule {
 
     protected String updateValidation(Map<String, Object> inputMap, Map<String, Object> eventData) {
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String rid = (String)data.get("@rid");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;

@@ -33,8 +33,7 @@ public class ExecSchemaCmdRule extends AbstractDbRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         // make sure we have content payload here.
         String script = (String)data.get("script");
         Map eventMap = getEventMap(inputMap);

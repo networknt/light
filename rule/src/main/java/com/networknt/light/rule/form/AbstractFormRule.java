@@ -210,7 +210,7 @@ public abstract class AbstractFormRule extends AbstractRule implements Rule {
             logger.debug("text = {}", text);
             Map<String, Object> jsonMap = mapper.readValue(text,
                     new TypeReference<HashMap<String, Object>>() {});
-            jsonMap.put("payload", inputMap.get("payload"));
+            jsonMap.put("user", inputMap.get("user"));
             // inject host into data here.
             Map<String, Object> dataMap = new HashMap<String, Object>();
             dataMap.put("host", data.get("host"));

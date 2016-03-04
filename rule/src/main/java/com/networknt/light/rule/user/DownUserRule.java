@@ -41,12 +41,11 @@ public class DownUserRule extends AbstractUserRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> userMap = (Map<String, Object>) inputMap.get("user");
         String error = null;
 
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
-            Map<String,Object> userMap = (Map<String, Object>)payload.get("user");
             String voteUserId = (String)userMap.get("userId");
             String userRid = (String)data.get("@rid");
             OrientVertex user = (OrientVertex)DbService.getVertexByRid(graph, userRid);

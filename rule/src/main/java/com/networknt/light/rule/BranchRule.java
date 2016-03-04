@@ -52,8 +52,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
     public boolean addBranch (String branchType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String categoryId = (String) data.get("categoryId");
         String host = (String) data.get("host");
         String error = null;
@@ -186,8 +185,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             String userHost = (String)user.get("host");
@@ -259,8 +257,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             String userHost = (String)user.get("host");
@@ -455,8 +452,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OrientVertex branch = (OrientVertex)DbService.getVertexByRid(graph, rid);
@@ -539,8 +535,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OrientVertex branch = (OrientVertex)DbService.getVertexByRid(graph, rid);
@@ -675,8 +670,7 @@ public abstract class BranchRule extends AbstractRule implements Rule {
     public boolean getBranch(String branchType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>) payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String host = (String)data.get("host");
         Object userHost = user.get("host");
         if(userHost != null && !userHost.equals(host)) {
@@ -717,7 +711,6 @@ public abstract class BranchRule extends AbstractRule implements Rule {
     public boolean getBranchDropdown (String branchType, Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         String host = (String)data.get("host");
         String docs = getBranchDropdownDb(branchType, host);
         if(docs != null) {

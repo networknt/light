@@ -34,8 +34,7 @@ public class UpdFormRule extends AbstractFormRule implements Rule {
         String formId = (String)data.get("formId");
         String error = null;
 
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String host = (String)user.get("host");
         if(host != null) {
             // admin or formAdmin

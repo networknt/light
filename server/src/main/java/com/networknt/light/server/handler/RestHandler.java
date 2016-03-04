@@ -150,9 +150,9 @@ public class RestHandler implements HttpHandler {
         }
 
         HeaderMap headerMap = exchange.getRequestHeaders();
-        Map<String, Object> payload = null;
+        Map<String, Object> user = null;
         try {
-            payload = getTokenPayload(headerMap);
+            user = getTokenUser(headerMap);
         } catch (IllegalStateException e) {
             logger.error("Exception", e);
             String msg = e.getMessage();
@@ -177,18 +177,16 @@ public class RestHandler implements HttpHandler {
             String accessLevel = (String)access.get("accessLevel");
             List<String> clients = (List)access.get("clients");
             List<String> accessRoles = (List)access.get("roles");
-            if (!("A").equals(accessLevel) && !("N").equals(accessLevel) && payload == null) {
+            if (!("A").equals(accessLevel) && !("N").equals(accessLevel) && user == null) {
                 sendErrorResponse(exchange, 400, "Login is required");
                 logger.error("Login is required for command {}", json);
                 return;
             }
 
-            Map<String, Object> user = null;
             String clientId = null;
             List userRoles = null;
             boolean found;
-            if (payload != null && payload.get("user") != null) {
-                user = (Map<String, Object>) payload.get("user");
+            if (user != null) {
                 clientId = (String) user.get("clientId");
                 userRoles = (List) user.get("roles");
             }
@@ -226,7 +224,7 @@ public class RestHandler implements HttpHandler {
                     break;
                 case "U":
                     //user only
-                    if(payload == null) {
+                    if(user == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
                         logger.error("Login is required");
                         return;
@@ -242,7 +240,7 @@ public class RestHandler implements HttpHandler {
                     break;
                 case "CR":
                     // client and role
-                    if(payload == null) {
+                    if(user == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
                         logger.error("Login is required");
                         return;
@@ -269,7 +267,7 @@ public class RestHandler implements HttpHandler {
                     break;
                 case "CU":
                     // client and user
-                    if(payload == null) {
+                    if(user == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
                         return;
                     } else {
@@ -290,7 +288,7 @@ public class RestHandler implements HttpHandler {
                     break;
                 case "RU":
                     // role and user
-                    if(payload == null) {
+                    if(user == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
                         logger.error("Login is required");
                         return;
@@ -319,7 +317,7 @@ public class RestHandler implements HttpHandler {
                     break;
                 case "CRU":
                     // client, role and user
-                    if(payload == null) {
+                    if(user == null) {
                         sendErrorResponse(exchange, 401, "Login is required");
                         logger.error("Login is required");
                         return;
@@ -358,9 +356,9 @@ public class RestHandler implements HttpHandler {
         }
 
 
-        if(payload != null) {
-            // put payload as part of the map
-            jsonMap.put("payload", payload);
+        if(user != null) {
+            // put user as part of the map
+            jsonMap.put("user", user);
         }
 
 
@@ -466,9 +464,9 @@ public class RestHandler implements HttpHandler {
         exchange.getResponseSender().send(ByteBuffer.wrap(jsonErrorMessage.getBytes("utf-8")));
     }
 
-    private Map<String, Object> getTokenPayload(HeaderMap headerMap) throws Exception {
+    private Map<String, Object> getTokenUser(HeaderMap headerMap) throws Exception {
 
-        Map<String, Object> payload = null;
+        Map<String, Object> user = null;
 
         String authorization = headerMap.getFirst("authorization");
         if (authorization != null) {
@@ -479,11 +477,11 @@ public class RestHandler implements HttpHandler {
 
                 Pattern pattern = Pattern.compile("^Bearer$", Pattern.CASE_INSENSITIVE);
                 if (pattern.matcher(scheme).matches()) {
-                    payload = JwtUtil.VerifyAndDeserialize(credentials).getPayload();
+                    user = JwtUtil.verifyJwt(credentials);
                 }
             }
         }
-        return payload;
+        return user;
     }
 
     private String getIpAddress(HttpServerExchange exchange) {

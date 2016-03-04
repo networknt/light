@@ -33,8 +33,7 @@ public class CnfShippingAddressRule extends AbstractAddressRule implements Rule 
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String error = null;
         Map<String, Object> resultMap = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String userId = (String)user.get("userId");
         String host = (String)data.get("host");
         // expect a list of products in order to calculate shipping cost, shipping address etc.

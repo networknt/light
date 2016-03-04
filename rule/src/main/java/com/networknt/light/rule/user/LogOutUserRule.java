@@ -41,8 +41,7 @@ public class LogOutUserRule extends AbstractUserRule implements Rule {
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String error = null;
         // The assumption is that user should have a token when he/she click logout.
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String userId = (String)user.get("userId");
         // check if the rid exists or not. if exists, then create event.
         OrientGraph graph = ServiceLocator.getInstance().getGraph();

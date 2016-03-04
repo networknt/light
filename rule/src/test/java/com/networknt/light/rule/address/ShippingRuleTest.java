@@ -30,6 +30,9 @@ public class ShippingRuleTest extends TestCase {
         super.tearDown();
     }
 
+    public void testVoid() throws Exception {
+
+    }
     /*
     public void testCalculateShipping() throws Exception {
         BigDecimal subTotal = new BigDecimal(10.00);

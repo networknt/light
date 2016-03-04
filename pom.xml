@@ -60,7 +60,7 @@
         <orientdb.version>2.1.11</orientdb.version>
         <jna.version>4.2.1</jna.version>
         <snappy.version>1.1.2.1</snappy.version>
-        <jsontoken.version>1.2.1</jsontoken.version>
+        <jose4j.version>0.4.4</jose4j.version>
         <rule-engine.version>1.0.0.0.1</rule-engine.version>
         <rule-loader.version>1.0.0.0.1</rule-loader.version>
         <page-loader.version>1.0.0.0.1</page-loader.version>
@@ -393,9 +393,9 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>com.googlecode.jsontoken</groupId>
-                <artifactId>jsontoken</artifactId>
-                <version>${jsontoken.version}</version>
+                <groupId>org.bitbucket.b_c</groupId>
+                <artifactId>jose4j</artifactId>
+                <version>${jose4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.mail</groupId>

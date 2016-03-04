@@ -18,18 +18,12 @@ package com.networknt.light.rule.catalog;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.light.rule.user.SignInUserEvRule;
-import com.networknt.light.rule.user.SignInUserRule;
-import com.networknt.light.util.JwtUtil;
 import com.networknt.light.util.ServiceLocator;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.oauth.jsontoken.JsonToken;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -339,7 +333,6 @@ public class CatalogRuleTest extends TestCase {
             System.out.println("product for catalog1" + json);
         }
     }
-    */
     private void addCatalog(String json, JsonToken token) throws Exception {
         Map<String, Object> jsonMap = null;
         boolean ruleResult = false;
@@ -403,5 +396,5 @@ public class CatalogRuleTest extends TestCase {
         assertTrue(ruleResult);
         return (String)jsonMap.get("result");
     }
-
+    */
 }

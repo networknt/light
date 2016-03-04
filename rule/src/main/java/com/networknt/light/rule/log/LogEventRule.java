@@ -21,10 +21,9 @@ public class LogEventRule extends AbstractRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String userId = null;
-        if(payload != null) {
-            Map<String, Object> user = (Map<String, Object>) payload.get("user");
+        if(user != null) {
             userId = (String)user.get("userId");
         }
 

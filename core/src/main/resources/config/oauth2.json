@@ -1,0 +1,14 @@
+{
+  "description": "Here we have only one key and cert and it it ever compromised, a new one will be used and the existing tokens are invalidated",
+  "issuer" : "networknt.com",
+  "clockSkewInMinute": 2,
+  "audience" : "networknt.com",
+  "subject": "networknt.com/auth/v1",
+  "expireInMinute": 480,
+  "rememberMeMinute": 43200,
+  "keystoreName":"/config/oauth2/jwt.jks",
+  "keystorePass":"syssys",
+  "privateKeyName":"jwt",
+  "privateKeyPass": "syssys",
+  "certificate": "/config/oauth2/jwt.crt"
+}

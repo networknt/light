@@ -59,7 +59,7 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         String parentRid = (String) data.remove("parentRid");
         String host = (String) data.get("host");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             Vertex parent = DbService.getVertexByRid(graph, parentRid);
@@ -67,7 +67,6 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 error = "Rid " + parentRid + " doesn't exist on host " + host;
                 inputMap.put("responseCode", 400);
             } else {
-                Map<String, Object> user = (Map<String, Object>)payload.get("user");
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
@@ -292,13 +291,12 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
         String error = null;
         Set<String> addTags = null;
         Set<String> delTags = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             // update post itself and we might have a new api to move post from one parent to another.
             Vertex post = DbService.getVertexByRid(graph, rid);
             if(post != null) {
-                Map<String, Object> user = (Map<String, Object>)payload.get("user");
                 Map eventMap = getEventMap(inputMap);
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
@@ -558,9 +556,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
 
     protected boolean isUpdateAllowed(String categoryType, String host, Map<String, Object> inputMap) {
         boolean isAllowed = false;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        if(payload != null) {
-            Map<String,Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
+        if(user != null) {
             List roles = (List)user.get("roles");
             if(roles.contains("owner")) {
                 isAllowed = true;

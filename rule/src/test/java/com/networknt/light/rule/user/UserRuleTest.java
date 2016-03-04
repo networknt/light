@@ -16,21 +16,10 @@
 
 package com.networknt.light.rule.user;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.light.server.DbService;
-import com.networknt.light.util.JwtUtil;
-import com.orientechnologies.orient.core.record.impl.ODocument;
-import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.oauth.jsontoken.JsonToken;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by husteve on 8/28/2014.

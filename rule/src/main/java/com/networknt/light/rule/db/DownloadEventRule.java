@@ -38,7 +38,7 @@ public class DownloadEventRule extends AbstractDbRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         // everyone is allowed to download events performed by himself and replay it on
         // other site build with the same framework.
 
@@ -47,7 +47,6 @@ public class DownloadEventRule extends AbstractDbRule implements Rule {
 
         // Now let's build a criteria for db search.
 
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
         List roles = (List)user.get("roles");
         if(roles.contains("owner")) {
             // only owner can generate events for common components without host.

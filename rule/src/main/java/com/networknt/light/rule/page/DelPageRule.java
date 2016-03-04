@@ -39,8 +39,7 @@ public class DelPageRule extends AbstractPageRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         HttpServerExchange exchange = (HttpServerExchange)inputMap.get("exchange");
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String rid = (String) data.get("@rid");
         String host = (String) data.get("host");
         String error = null;

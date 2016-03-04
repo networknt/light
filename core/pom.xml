@@ -24,8 +24,8 @@
             <artifactId>jackson-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.jsontoken</groupId>
-            <artifactId>jsontoken</artifactId>
+            <groupId>org.bitbucket.b_c</groupId>
+            <artifactId>jose4j</artifactId>
         </dependency>
         <dependency>
             <groupId>com.hazelcast</groupId>

@@ -46,17 +46,16 @@ public class DelAccessRule extends AbstractAccessRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String rid = (String)data.get("@rid");
         int inputVersion = (int)data.get("@version");
         String ruleClass = (String)data.get("ruleClass");
         String error = null;
 
-        if(payload == null) {
+        if(user == null) {
             error = "Login is required";
             inputMap.put("responseCode", 401);
         } else {
-            Map<String, Object> user = (Map<String, Object>)payload.get("user");
             List roles = (List)user.get("roles");
             if(!roles.contains("owner") && !roles.contains("admin") && !roles.contains("ruleAdmin")) {
                 error = "Role owner or admin or ruleAdmin is required to delete rule";

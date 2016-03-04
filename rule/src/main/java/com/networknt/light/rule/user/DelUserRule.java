@@ -36,8 +36,7 @@ public class DelUserRule extends AbstractUserRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String rid = (String) data.get("@rid");
         String userId = (String)data.get("userId");
         String error = null;

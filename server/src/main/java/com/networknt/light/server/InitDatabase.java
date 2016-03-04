@@ -847,11 +847,8 @@ public class InitDatabase {
                             "\n" +
                             "    protected Map<String, Object> getEventMap(Map<String, Object> inputMap) {\n" +
                             "        Map<String, Object> eventMap = new HashMap<String, Object>();\n" +
-                            "        Map<String, Object> payload = (Map<String, Object>)inputMap.get(\"payload\");\n" +
-                            "        if(payload != null) {\n" +
-                            "            Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n" +
-                            "            if(user != null)  eventMap.put(\"createUserId\", user.get(\"userId\"));\n" +
-                            "        }\n" +
+                            "        Map<String, Object> user = (Map<String, Object>)inputMap.get(\"user\");\n" +
+                            "        if(user != null)  eventMap.put(\"createUserId\", user.get(\"userId\"));\n" +
                             "        // IP address is used to identify event owner if user is not logged in.\n" +
                             "        if(inputMap.get(\"ipAddress\") != null) {\n" +
                             "            eventMap.put(\"ipAddress\", inputMap.get(\"ipAddress\"));\n" +
@@ -1146,8 +1143,7 @@ public class InitDatabase {
                             "\n" +
                             "    protected String updateValidation(Map<String, Object> inputMap, Map<String, Object> eventData) {\n" +
                             "        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n" +
-                            "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
-                            "        Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n" +
+                            "        Map<String, Object> user = (Map<String, Object>) inputMap.get(\"user\");\n" +
                             "        String rid = (String)data.get(\"@rid\");\n" +
                             "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
                             "        String error = null;\n" +
@@ -2038,10 +2034,10 @@ public class InitDatabase {
                             "\n" +
                             "    String generateToken(Vertex user, String clientId, Boolean rememberMe) throws Exception {\n" +
                             "        Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();\n" +
-                            "        jwtMap.put(\"@rid\", user.getId().toString());\n" +
                             "        jwtMap.put(\"userId\", user.getProperty(\"userId\"));\n" +
                             "        jwtMap.put(\"clientId\", clientId);\n" +
                             "        jwtMap.put(\"roles\", user.getProperty(\"roles\"));\n" +
+                            "        if(user.getProperty(\"host\") != null) jwtMap.put(\"host\", user.getProperty(\"host\"));\n" +
                             "        return JwtUtil.getJwt(jwtMap, rememberMe);\n" +
                             "    }\n" +
                             "\n" +
@@ -2136,12 +2132,6 @@ public class InitDatabase {
                             "                            inputMap.put(\"eventMap\", eventMap);\n" +
                             "                            Map<String, Object> tokens = new HashMap<String, Object>();\n" +
                             "                            tokens.put(\"accessToken\", jwt);\n" +
-                            "                            if(user.getProperty(\"shippingAddress\") != null) {\n" +
-                            "                                tokens.put(\"shippingAddress\", user.getProperty(\"shippingAddress\"));\n" +
-                            "                            }\n" +
-                            "                            if(user.getProperty(\"paymentAddress\") != null) {\n" +
-                            "                                tokens.put(\"paymentAddress\", user.getProperty(\"paymentAddress\"));\n" +
-                            "                            }\n" +
                             "                            tokens.put(\"rid\", user.getIdentity().toString());\n" +
                             "                            if(rememberMe) {\n" +
                             "                                // generate refreshToken\n" +
@@ -2276,12 +2266,11 @@ public class InitDatabase {
                             "        Map<String, Object> inputMap = (Map<String, Object>)objects[0];\n" +
                             "        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n" +
                             "        String error = null;\n" +
-                            "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
-                            "        if(payload == null) {\n" +
+                            "        Map<String, Object> user = (Map<String, Object>) inputMap.get(\"user\");\n" +
+                            "        if(user == null) {\n" +
                             "            error = \"Login is required\";\n" +
                             "            inputMap.put(\"responseCode\", 401);\n" +
                             "        } else {\n" +
-                            "            Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n" +
                             "            List roles = (List)user.get(\"roles\");\n" +
                             "            if(!roles.contains(\"owner\") && !roles.contains(\"admin\") && !roles.contains(\"dbAdmin\")) {\n" +
                             "                error = \"Role owner or admin or dbAdmin is required to replay events\";\n" +
@@ -2355,8 +2344,7 @@ public class InitDatabase {
                             "public class GetRuleMapRule extends AbstractRuleRule implements Rule {\n" +
                             "    public boolean execute (Object ...objects) throws Exception {\n" +
                             "        Map<String, Object> inputMap = (Map<String, Object>) objects[0];\n" +
-                            "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
-                            "        Map<String, Object> user = (Map<String, Object>) payload.get(\"user\");\n" +
+                            "        Map<String, Object> user = (Map<String, Object>) inputMap.get(\"user\");\n" +
                             "        String host = (String) user.get(\"host\");\n" +
                             "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
                             "        String hostRuleMap = null;\n" +
@@ -2426,8 +2414,7 @@ public class InitDatabase {
                             "    public boolean execute (Object ...objects) throws Exception {\n" +
                             "        Map<String, Object> inputMap = (Map<String, Object>)objects[0];\n" +
                             "        Map<String, Object> data = (Map<String, Object>)inputMap.get(\"data\");\n" +
-                            "        Map<String, Object> payload = (Map<String, Object>) inputMap.get(\"payload\");\n" +
-                            "        Map<String, Object> user = (Map<String, Object>)payload.get(\"user\");\n" +
+                            "        Map<String, Object> user = (Map<String, Object>) inputMap.get(\"user\");\n" +
                             "        String ruleClass = (String)data.get(\"ruleClass\");\n" +
                             "        String error = null;\n" +
                             "        String host = (String)user.get(\"host\");\n" +

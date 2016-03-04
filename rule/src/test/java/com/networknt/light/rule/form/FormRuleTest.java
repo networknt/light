@@ -26,7 +26,6 @@ import com.networknt.light.util.JwtUtil;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.oauth.jsontoken.JsonToken;
 
 import java.util.HashMap;
 import java.util.Map;

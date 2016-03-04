@@ -43,8 +43,7 @@ public class AddDependencyRule extends AbstractDependencyRule implements Rule {
         String source = (String)data.get("source");
         String dest = (String)data.get("desc");
         String error = null;
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
-        Map<String, Object> user = (Map<String, Object>)payload.get("user");
+        Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String userHost = (String)user.get("host");
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {

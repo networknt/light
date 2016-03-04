@@ -29,7 +29,6 @@ import java.util.*;
 public class GetHostDropdownRule extends AbstractHostRule implements Rule {
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
-        Map<String, Object> payload = (Map<String, Object>) inputMap.get("payload");
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
         Set<String> keys = ServiceLocator.getInstance().getHostMap().keySet();
         for(String key: keys) {
