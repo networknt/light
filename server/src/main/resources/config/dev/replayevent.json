@@ -1,5 +1,5 @@
 {
-  "replay": false,
+  "replay": true,
   "event": [
     {
       "description": "This file contains all the rule classes including core, cms and commerce. Should be split to three files before production.",
