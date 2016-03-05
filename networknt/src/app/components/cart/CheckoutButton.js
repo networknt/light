@@ -43,7 +43,7 @@ function getStateFromStores() {
 }
 
 const id = 'com.networknt.light.user.address';
-const configId = 'default.delivery';
+const configId = 'delivery';
 
 var CheckoutButton = React.createClass({
 
@@ -80,6 +80,7 @@ var CheckoutButton = React.createClass({
     onDelivery: function() {
         // first get delivery method from host config, if the host config can be overwritten
         // check each item in the cart for delivery method and details.
+        console.log('delivery.method', this.state.delivery.method);
         let screen;
         let title;
         switch(this.state.delivery.method) {
@@ -142,8 +143,8 @@ var CheckoutButton = React.createClass({
         }
     },
 
-    onBillingAddressChange: function(key, val) {
-        utils.selectOrSet(key, this.state.billingAddress, val);
+    onShippingAddressChange: function(key, val) {
+        utils.selectOrSet(key, this.state.shippingAddress, val);
     },
 
     onConfirmBillingAddress: function() {
@@ -239,7 +240,7 @@ var CheckoutButton = React.createClass({
     },
 
     _onConfigStoreChange: function() {
-        console.log('_onConfigStoreChange, default.delivery', ConfigStore.getConfig(configId));
+        console.log('_onConfigStoreChange, delivery', ConfigStore.getConfig(configId));
         this.setState({
             delivery: ConfigStore.getConfig(configId)
         });
@@ -308,6 +309,23 @@ var CheckoutButton = React.createClass({
             actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateBillingAddress} />);
             if(UserStore.getUser() && UserStore.getUser().billingAddress) {
                 actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmBillingAddress}/>);
+            }
+            actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
+        } else if (this.state.screen === 'shippingPickup') {
+            if(this.state.schema) {
+                contents =
+                    (<div>
+                        <pre>{this.state.error}</pre>
+                        <ShippingAddress shippingAddress={this.state.shippingAddress} schema={this.state.schema} form={this.state.form} onShippingAddressChange={this.onShippingAddressChange} />
+                        <pre>{this.state.error}</pre>
+                    </div>);
+            } else {
+                contents = <CircularProgress mode="indeterminate"/>;
+            }
+            actions.length = 0;
+            actions.push(<RaisedButton label="Update" primary={true} onTouchTap={this.onUpdateShippingAddress} />);
+            if(UserStore.getUser() && UserStore.getUser().shippingAddress) {
+                actions.push(<RaisedButton label="Confirm" primary={true} onTouchTap={this.onConfirmShippingAddress}/>);
             }
             actions.push(<RaisedButton label="Cancel" secondary={true} onTouchTap={this.handleCartClose} />);
         } else if (this.state.screen === 'deliveryTax') {

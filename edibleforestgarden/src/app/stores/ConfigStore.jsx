@@ -31,7 +31,6 @@ ConfigStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.GET_CONFIG_RESPONSE:
-            console.log('ConfigStore payload.json', payload.json);
             _configs[payload.json.configId] = payload.json.properties;
             ConfigStore.emitChange();
             break;
