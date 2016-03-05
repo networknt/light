@@ -1,12 +1,8 @@
-package com.networknt.light.rule.address;
+package com.networknt.light.rule.delivery;
 
-import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * Created by steve on 21/12/15.

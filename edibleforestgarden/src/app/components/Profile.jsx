@@ -50,7 +50,7 @@ let Profile = React.createClass({
             for(var key in this.state.user.shippingAddress) {
                 if(this.state.user.shippingAddress.hasOwnProperty(key)) {
                     addressInfo.push(
-                        <TableRow>
+                        <TableRow key={key}>
                             <TableRowColumn>{key}</TableRowColumn>
                             <TableRowColumn>{this.state.user.shippingAddress[key]}</TableRowColumn>
                         </TableRow>

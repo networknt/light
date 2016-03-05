@@ -430,7 +430,7 @@
       "roles": [
         "user"
       ],
-      "ruleClass": "com.networknt.light.rule.address.CnfBillingAddressRule"
+      "ruleClass": "com.networknt.light.rule.delivery.CnfBillingAddressRule"
     },
     "name": "updAccess",
     "category": "access",
@@ -452,7 +452,7 @@
       "roles": [
         "user"
       ],
-      "ruleClass": "com.networknt.light.rule.address.CnfShippingAddressRule"
+      "ruleClass": "com.networknt.light.rule.delivery.CnfShippingAddressRule"
     },
     "name": "updAccess",
     "category": "access",
@@ -474,7 +474,7 @@
       "roles": [
         "user"
       ],
-      "ruleClass": "com.networknt.light.rule.address.UpdBillingAddressRule"
+      "ruleClass": "com.networknt.light.rule.delivery.UpdBillingAddressRule"
     },
     "name": "updAccess",
     "category": "access",
@@ -496,7 +496,7 @@
       "roles": [
         "user"
       ],
-      "ruleClass": "com.networknt.light.rule.address.UpdShippingAddressRule"
+      "ruleClass": "com.networknt.light.rule.delivery.UpdShippingAddressRule"
     },
     "name": "updAccess",
     "category": "access",

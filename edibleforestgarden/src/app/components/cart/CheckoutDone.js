@@ -1,8 +1,8 @@
 /**
  * Created by steve on 12/04/15.
  */
-var React = require('react');
-var OrderStore = require('../../stores/OrderStore');
+import React from 'react';
+import OrderStore from '../../stores/OrderStore';
 import AppConstants from '../../constants/AppConstants';
 
 var CheckoutDone = React.createClass({

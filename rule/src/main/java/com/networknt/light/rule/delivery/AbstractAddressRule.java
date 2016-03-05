@@ -1,4 +1,4 @@
-package com.networknt.light.rule.address;
+package com.networknt.light.rule.delivery;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.networknt.light.rule.AbstractCommerceRule;
@@ -74,7 +74,7 @@ public abstract class AbstractAddressRule extends AbstractCommerceRule implement
             if(tax.startsWith("0")) {
                 // we have single value tax rate.
                 BigDecimal b = subTotal.multiply(new BigDecimal(tax));
-                b.setScale(2, RoundingMode.HALF_UP);
+                b = b.setScale(2, RoundingMode.HALF_UP);
                 taxes.put("Tax", b);
             } else if(tax.startsWith("[")) {
                 // we have an array of tax rate
@@ -83,20 +83,21 @@ public abstract class AbstractAddressRule extends AbstractCommerceRule implement
                     Iterator<String> iterator = t.keySet().iterator();
                     String name = iterator.next();
                     BigDecimal b = subTotal.multiply(new BigDecimal((Double)t.get(name)));
-                    b.setScale(2, RoundingMode.HALF_UP);
+                    b = b.setScale(2, RoundingMode.HALF_UP);
                     taxes.put(name, b);
                 }
             } else {
                 tax = getConfigRule.getConfig(host, TAX, "$.properties." + country + "." + province + "." + postalPost);
                 // we assume that this tax will be a single value
                 BigDecimal b = subTotal.multiply(new BigDecimal(tax));
-                b.setScale(2, RoundingMode.HALF_UP);
+                b = b.setScale(2, RoundingMode.HALF_UP);
                 taxes.put("Tax", b);
             }
         }
         return taxes;
     }
     // TODO calculate base on the rule defined in the config.
+    /*
     public static Map<String, BigDecimal> calculateTax(String province, BigDecimal subTotal) {
         Map<String, BigDecimal> taxes = new HashMap<String, BigDecimal>();
         BigDecimal gst = subTotal.multiply(new BigDecimal(0.05));
@@ -169,7 +170,7 @@ public abstract class AbstractAddressRule extends AbstractCommerceRule implement
         }
         return taxes;
     }
-
+    */
     // TODO calculate based on the rule defined in the config.
     public static BigDecimal calculateShipping(String host, Map<String, Object> address, List<Map<String, Object>> items, BigDecimal subTotal) {
         BigDecimal b = subTotal.multiply(new BigDecimal(0.05));

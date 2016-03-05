@@ -10,7 +10,7 @@ var PaymentActionCreators = require('../../actions/PaymentActionCreators');
 var DropIn = require('braintree-react').DropIn;
 var braintree = require('braintree-web');
 
-const configId = 'default.delivery';
+const configId = 'delivery';
 
 var Payment = React.createClass({
 
@@ -31,7 +31,7 @@ var Payment = React.createClass({
     onPaymentMethodReceived: function (payload) {
         //console.log(payload);
         let delivery = ConfigStore.getConfig(configId);
-        console.log('delivery', delivery);
+        console.log('Payment delivery', delivery);
         switch(delivery.method) {
             case "RS":
                 console.log('RS subscription');

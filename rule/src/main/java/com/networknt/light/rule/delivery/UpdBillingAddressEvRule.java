@@ -1,4 +1,4 @@
-package com.networknt.light.rule.address;
+package com.networknt.light.rule.delivery;
 
 import com.networknt.light.rule.Rule;
 

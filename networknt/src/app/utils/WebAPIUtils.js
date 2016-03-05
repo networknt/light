@@ -745,7 +745,7 @@ module.exports = {
 
     updateShippingAddress: function(address) {
         var updAddress = {
-            category: 'address',
+            category: 'delivery',
             name: 'updShippingAddress',
             readOnly: false,
             data: address
@@ -766,7 +766,7 @@ module.exports = {
 
     confirmShippingAddress: function(address) {
         var cnfAddress = {
-            category: 'address',
+            category: 'delivery',
             name: 'cnfShippingAddress',
             readOnly: true,
             data: address
@@ -786,7 +786,7 @@ module.exports = {
 
     updateBillingAddress: function(address) {
         var updAddress = {
-            category: 'address',
+            category: 'delivery',
             name: 'updBillingAddress',
             readOnly: false,
             data: address
@@ -806,7 +806,7 @@ module.exports = {
 
     confirmBillingAddress: function(address) {
         var cnfAddress = {
-            category: 'address',
+            category: 'delivery',
             name: 'cnfBillingAddress',
             readOnly: true,
             data: address

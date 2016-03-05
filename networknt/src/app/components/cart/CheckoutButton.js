@@ -119,7 +119,7 @@ var CheckoutButton = React.createClass({
 
         AddressActionCreators.confirmShippingAddress(data);
         this.setState({
-            screen: 'shippingTax',
+            screen: 'deliveryTax',
             title: 'Shipping and Tax'
         })
     },
@@ -137,7 +137,7 @@ var CheckoutButton = React.createClass({
         } else {
             AddressActionCreators.updateShippingAddress(data);
             this.setState({
-                screen: 'shippingTax',
+                screen: 'deliveryTax',
                 title: 'Shipping and Tax'
             })
         }
@@ -206,7 +206,7 @@ var CheckoutButton = React.createClass({
         this.setState({
             screen: 'payment',
             title: 'BrainTree Payment Gateway'
-        })
+        });
     },
 
     onPlaceOrder: function() {
@@ -336,7 +336,7 @@ var CheckoutButton = React.createClass({
         } else if (this.state.screen === 'payment') {
             contents =  <Payment onPlaceOrder = {this.onPlaceOrder} />
         } else {
-            contents =  <CheckoutDone />
+            contents =  <CheckoutDone />;
             actions.length = 0;
             actions.push(<RaisedButton label="Close" primary={true} onTouchTap={this.handleCartReset} />);
         }

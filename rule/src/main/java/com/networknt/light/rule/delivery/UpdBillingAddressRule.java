@@ -1,12 +1,10 @@
-package com.networknt.light.rule.address;
+package com.networknt.light.rule.delivery;
 
 import com.braintreegateway.Customer;
 import com.braintreegateway.CustomerRequest;
 import com.braintreegateway.Result;
 import com.networknt.light.rule.Rule;
-import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
-import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.ext.XLogger;

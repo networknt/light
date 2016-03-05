@@ -5,13 +5,7 @@ var WebAPIUtils = require('../utils/WebAPIUtils.js');
 var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
-
     addOrder: function(order) {
-        AppDispatcher.dispatch({
-            type: ActionTypes.ADD_ORDER,
-            order: order
-        });
         WebAPIUtils.addOrder(order);
     }
-
 };

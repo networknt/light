@@ -34,7 +34,13 @@ var OrderStore = assign({}, EventEmitter.prototype, {
     },
 
     getOrderCompleted: function() {
-        return _orderCompleted;
+        //  reset the value in order to place order multiple time in each session.
+        if(_orderCompleted === true) {
+            _orderCompleted = false;
+            return true;
+        } else {
+            return false;
+        }
     },
 
     getErrors: function() {

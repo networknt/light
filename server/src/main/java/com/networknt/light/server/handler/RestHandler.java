@@ -477,6 +477,7 @@ public class RestHandler implements HttpHandler {
 
                 Pattern pattern = Pattern.compile("^Bearer$", Pattern.CASE_INSENSITIVE);
                 if (pattern.matcher(scheme).matches()) {
+                    logger.debug("jwt = " + credentials);
                     user = JwtUtil.verifyJwt(credentials);
                 }
             }

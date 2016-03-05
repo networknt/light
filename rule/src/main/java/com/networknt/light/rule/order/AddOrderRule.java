@@ -1,13 +1,11 @@
 package com.networknt.light.rule.order;
 
 import com.networknt.light.rule.Rule;
-import com.networknt.light.rule.address.AbstractAddressRule;
-import com.networknt.light.rule.config.GetConfigRule;
+import com.networknt.light.rule.delivery.AbstractAddressRule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
 import java.math.BigDecimal;
 import java.util.List;
