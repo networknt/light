@@ -52,7 +52,7 @@ const config = {
   //Output file config
   output: {
     path: buildPath,    //Path of output file
-    filename: 'app.js'  //Name of output file
+    filename: 'js/app.js'  //Name of output file
   },
   plugins: [
     //Used to include index.html in build folder
@@ -64,7 +64,7 @@ const config = {
     new webpack.HotModuleReplacementPlugin(),
     //Allows error warninggs but does not stop compiling. Will remove when eslint is added
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin(path.resolve(__dirname,'/style.css') , {
+    new ExtractTextPlugin(path.resolve(__dirname,'/css/style.css') , {
       allChunks: true
     })
   ],

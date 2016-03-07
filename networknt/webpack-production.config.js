@@ -30,7 +30,7 @@ const config = {
   //Output file config
   output: {
     path: buildPath,    //Path of output file
-    filename: 'app.js',  //Name of output file
+    filename: 'js/app.js',  //Name of output file
   },
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
@@ -59,7 +59,7 @@ const config = {
       {from: 'www/css', to: 'css'},
       {from: 'www/images', to: 'images'},
     ], path.resolve(__dirname, 'src')),
-    new ExtractTextPlugin(path.resolve(__dirname,'/style.css') , {
+    new ExtractTextPlugin(path.resolve(__dirname,'/css/style.css') , {
       allChunks: true
     })
   ],
