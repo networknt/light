@@ -1,6 +1,8 @@
 Light Core
 =====
 
+[![Join the chat at https://gitter.im/networknt/light](https://badges.gitter.im/networknt/light.svg)](https://gitter.im/networknt/light?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Light is an Omni-Channel Application Framework/REST API Server Platform leveraging [AngularJS](https://angularjs.org/), [Undertow](http://undertow.io/) 
 and [OrientDB](http://www.orientechnologies.com/orientdb/). It's lightning fast, light weight and sheds light on how Web Component based front end applications, 
 Microservices REST APIs can be built and deployed. On the front end, it is easy to add new components, views and applications and to deploy them individually all through to production. 
