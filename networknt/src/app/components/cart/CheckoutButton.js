@@ -259,7 +259,9 @@ var CheckoutButton = React.createClass({
                 billingAddress: UserStore.getUser().billingAddress || {}
             })
         } else {
-            UserActionCreators.getUser(AuthStore.getUserId());
+            if(AuthStore.getUserId()) {
+                UserActionCreators.getUser(AuthStore.getUserId());
+            }
         }
     },
 
