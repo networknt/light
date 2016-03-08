@@ -1653,14 +1653,6 @@
       "form": [
         "*"
       ],
-      "action": [
-        {
-          "category": "user",
-          "name": "addAddress",
-          "readOnly": false,
-          "title": "New"
-        }
-      ],
       "createDate": "2016-03-05T09:45:17.387"
     },
     "name": "impForm",

@@ -1,10 +1,10 @@
 {
-  "name": "material-ui-docs",
-  "version": "0.14.0",
-  "description": "Documentation site for material-ui",
+  "name": "edibleforestgarden",
+  "version": "0.1.0",
+  "description": "edibleforestgarden.ca front end",
   "repository": {
     "type": "git",
-    "url": "https://github.com/callemall/material-ui.git"
+    "url": "https://github.com/networknt/light.git"
   },
   "engines": {
     "node": ">=4"
