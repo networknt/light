@@ -1,6 +1,14 @@
 {
   "formId": "com.networknt.light.user.address",
   "version": 1,
+  "action" : [
+    {
+      "category" : "user",
+      "name" : "addAddress",
+      "readOnly": false,
+      "title" : "New"
+    }
+  ],
   "schema": {
     "type": "object",
     "required": ["firstName", "lastName", "address", "city", "province", "postalCode", "country", "phone"],
