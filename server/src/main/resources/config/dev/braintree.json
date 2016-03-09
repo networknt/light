@@ -4,5 +4,17 @@
     "merchant_id": "mk2pjd3q3qmr8qxb",
     "public_key":"9w44j9tdkj9ycs9w",
     "private_key":"e89b2c707b7272fce36d74095262a7a0"
+  },
+  "www.edibleforestgarden.ca":   {
+    "sandbox": true,
+    "merchant_id": "mk2pjd3q3qmr8qxb",
+    "public_key":"9w44j9tdkj9ycs9w",
+    "private_key":"e89b2c707b7272fce36d74095262a7a0"
+  },
+  "www.networknt.com":   {
+    "sandbox": true,
+    "merchant_id": "qq8bbssnz47cdsqn",
+    "public_key":"49q2m77kh56kbzy6",
+    "private_key":"5ddcb525a23413fd736466dcbb5e26bf"
   }
 }

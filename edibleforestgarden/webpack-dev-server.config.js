@@ -39,7 +39,7 @@ const config = {
       // regex is still crappy because JS doesn't have negative lookbehind
       path:   /\/api(.*)/,
       // koa running on 3001 with koa-send and isomorphic react
-      target:  'http://example:8080'
+      target:  'http://www.edibleforestgarden.ca:8080'
     }],
     contentBase: 'src/www',
     hot: true,
