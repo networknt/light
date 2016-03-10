@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const buildPath = path.resolve(__dirname, 'src/www');
+const buildPath = path.resolve(__dirname, 'src/www/assets');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -52,7 +52,8 @@ const config = {
   //Output file config
   output: {
     path: buildPath,    //Path of output file
-    filename: 'js/app.js'  //Name of output file
+    filename: 'app.js',  //Name of output file
+    publicPath: '/assets'
   },
   plugins: [
     //Used to include index.html in build folder
@@ -64,7 +65,7 @@ const config = {
     new webpack.HotModuleReplacementPlugin(),
     //Allows error warninggs but does not stop compiling. Will remove when eslint is added
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin(path.resolve(__dirname,'/css/style.css') , {
+    new ExtractTextPlugin('style.css' , {
       allChunks: true
     })
   ],
@@ -119,7 +120,7 @@ const config = {
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=" + path.resolve(__dirname, "/src/www/assets/stylesheets"))
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=" + path.resolve(__dirname, "src/www/assets/stylesheets"))
       }
     ]
   },
