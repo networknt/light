@@ -25,5 +25,32 @@
     "createDate": "2016-02-16T21:00:07.977",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:0",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10001,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "In this article, I will walk you through the Light Framework step by step on Linux environment in development mode. ",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "aQL83VuuSLOTwiVntaLIDw",
+      "title": "Start Light Framework with two demo sites in development mode",
+      "content": "### Create a project folder\n\nI am assuming you are using Linux desktop like Ubuntu but the instruction will work on Mac and Windows with some modifications. First you need to create a project folder in your home directory.\n\nFor example, my user directory is /home/steve and I will create a new folder named project and clone the light framework from github.\n\n```\nmkdir project\ncd project\ngit clone https://github.com/networknt/light.git\n```\n\n### Build Light Framework from command line\nIn order to build the framework you need to install the following software packages. \n1. Oracle JDK 1.8\n2. Apache Maven 3.3.x\n3. Node\n4. Npm\n\nNow, let's build the server and start it\n```\ncd light\nmvn clean install\ncd server/target\nsetsid java -jar light-server.jar < /dev/zero & > /dev/null &\n```\n\nNow the Light server is up and a database named lightdb will be created under your home directory by replay the events.\n\n### Start and debug server from IDE\n If you want to start server from your IDE or debug into it, open your IDE (Eclipse or Idea) and open the project from folder light. Both Eclipse and Idea will import the parent pom.xml. To server the server, navigate to server/src/main/java/com/networknt/light/server and run LightServer class. If the database doesn't exist, it will create a new one under your home directory by replaying events.\n\nOnce the server is ready, you should see the following messages on the console.\n\n```\n2016-03-09 20:23:31,396 [XNIO-1 I/O-1] DEBUG org.xnio.niorun(431) - Started channel thread 'XNIO-1 I/O-1', selector sun.nio.ch.EPollSelectorImpl@2790e59d\n2016-03-09 20:23:31,396 [XNIO-1 I/O-2] DEBUG org.xnio.niorun(431) - Started channel thread 'XNIO-1 I/O-2', selector sun.nio.ch.EPollSelectorImpl@6471ccf5\n2016-03-09 20:23:31,398 [XNIO-1 I/O-3] DEBUG org.xnio.niorun(431) - Started channel thread 'XNIO-1 I/O-3', selector sun.nio.ch.EPollSelectorImpl@72f54de2\n2016-03-09 20:23:31,399 [XNIO-1 I/O-4] DEBUG org.xnio.niorun(431) - Started channel thread 'XNIO-1 I/O-4', selector sun.nio.ch.EPollSelectorImpl@27bb2cd1\n```\n\n### Start www.networknt.com with react hot loader\n\nwww.networknt.com is a live site to promote the framework and hosting sites built on the framework. In order to run the site locally, you need to update your /etc/hosts to point 127.0.0.1 to it.\n\n```\nsudo gedit /etc/hosts\n```\n\nAdd the following line right after 127.0.0.1\n```\n127.0.0.1       www.edibleforestgarden.ca www.networknt.com\n```\n\nTo start the server in hot loader mode.\n\n```\ncd ~\ncd project/light/networknt\nnpm installl\nnpm start\n```\n\n### Test and update the www.networknt.com\nNow open your browser (Chrome or Firefox) and the address is www.networknt.com:3000\n\nThe site will be loaded and you can login with test/123456 for normal user or you can login with stevehu/123456 as owner\n\n### Start www.edibleforestgarden.ca with react hot loader\nYou have to stop www.networknt.com before starting www.edibleforestgarden.ca as they are listening to the same port.\n\nTo start the server in hot loader mode\n```\ncd ~\ncd project/light/edibleforestgarden\nnpm install\nnpm start\n```\nThe address for the site is www.edibleforestgarden.ca:3000\n\nYou can try to update the site with your IDE and the browser will be updated automatically with react-hot-loader.\n\n\n",
+      "parentId": "All",
+      "tags": [
+        "Light Framework",
+        "Installation"
+      ],
+      "createDate": "2016-03-10T02:30:55.103"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-03-10T02:30:55.098",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]
