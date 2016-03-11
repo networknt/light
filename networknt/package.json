@@ -14,7 +14,7 @@
     "start": "npm run browser:development",
     "test": "jest",
     "browser:development": "webpack-dev-server --config webpack-dev-server.config.js --progress --colors --inline",
-    "browser:build": "webpack --config webpack-production.config.js --progress --colors --profile",
+    "browser:build": "NODE_ENV=production webpack --config webpack-production.config.js --progress --colors --profile",
     "browser:prd": "NODE_ENV=production webpack-dev-server --config webpack-production.config.js --progress --colors --profile",
     "native:development": "node_modules/react-native/packager/packager.sh --reset-cache",
     "android:setup-port": "adb reverse tcp:8081 tcp:8081"
