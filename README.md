@@ -12,6 +12,7 @@ On the back end, it adhears to the REST API with Java POJO and deploys individua
 # Technical Stack
 
 * AngularJS - Most popular Javascript MVW Framework
+* ReactJS - Most popular UI Javascript library
 * Undertow - One of the fastest Java Non-Blocking HTTP servers
 * OrientDB - No-SQL Distributed Graph Database
 * Light Rule Engine - A Java based Rule Engine
@@ -223,46 +224,20 @@ Module update notifier will monitor if there are any security updates from the f
 
 ## Installation On Linux
 
-Requirements: maven, java8
+Development Mode
 
-1. Clone required projects:
-
-  1. `git clone https://github.com/networknt/light.git`
-  2. `git clone https://github.com/networknt/jsontoken.git`
-
-2. Building jsontoken:
-
-  1. `cd ./jsontoken`
-  2. `mvn clean install`
-    If this fails, it could be due Java8 being required, steps for ubuntu/mint linux:
-      * `sudo add-apt-repository ppa:webupd8team/java`
-      * `sudo apt-get update`
-      * `sudo apt-get install oracle-java8-installer`
-      * `sudo apt-get install oracle-java8-set-default`
-  3. `cd ..`
-
-3. Building the Light server:
-
-  1. `cd ./light`
-  2. `mvn clean install -DskipTests`
-
-4. Light server configuration:
-
-  Copy the virtualhost.json, and server.json file from light/server/src/main/resources to home/{user}/
-  1. `cp server/src/main/resources/virtualhost.json ~`
-  2. `cp server/src/main/resources/server.json ~`
-
-5. Running the Light server:
-    Run LightServer.java from server/src/main/java/com/networknt/light/server (In intellij, right click, and run)
+http://www.networknt.com/blog/All/aQL83VuuSLOTwiVntaLIDw
 
 ## Installation On Windows
 
 ## Installation On Mac
 
 ##
-# Live Demo
-[demo.networknt.com](http://demo.networknt.com)
+# Live sites powered by Light Framework
+www.networknt.com
 
-username: stevehu
+www.edibleforestgarden.ca
+
+username: test
 password: 123456
 
