@@ -23,6 +23,14 @@ module.exports = {
         WebAPIUtils.login(userIdEmail, password, rememberMe);
     },
 
+    googleLogin: function(data) {
+        WebAPIUtils.googleLogin(data);
+    },
+
+    facebookLogin: function(data) {
+        WebAPIUtils.facebookLogin(data);
+    },
+
     init: function() {
         //console.log('the inti action is called', AppDispatcher);
         AppDispatcher.dispatch({

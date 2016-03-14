@@ -7,6 +7,8 @@ import SchemaForm from 'react-schema-form/lib/SchemaForm';
 import RaisedButton from 'material-ui/lib/raised-button';
 import CircularProgress from 'material-ui/lib/circular-progress';
 import utils from 'react-schema-form/lib/utils';
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 
 const id = 'com.networknt.light.user.signin';
 
@@ -62,6 +64,16 @@ let Login = React.createClass({
         }
     },
 
+    _responseGoogle: function(response) {
+        console.log('responseGoogle.AuthResponse', response.getAuthResponse());
+        AuthActionCreators.googleLogin(response.getAuthResponse());
+    },
+
+    _responseFacebook: function(response) {
+        console.log('responseFacebook', response);
+        AuthActionCreators.facebookLogin(response);
+    },
+
     render: function() {
         console.log('Login._onModelChange', this.state.user);
         if(this.state.schema) {
@@ -74,6 +86,18 @@ let Login = React.createClass({
                 <div>
                     <SchemaForm schema={this.state.schema} form={this.state.form} model={this.state.user} onModelChange={this._onModelChange} />
                     {buttons}
+                    <div className="socialButton">
+                    <GoogleLogin
+                        clientId={'314433823054-8fkjke45eqdeqqfce4p32c4q91sd7375.apps.googleusercontent.com'}
+                        callback={this._responseGoogle}
+                        offline={false}
+                    />
+                    <FacebookLogin
+                        appId="1003494309742403"
+                        autoLoad={true}
+                        callback={this._responseFacebook}
+                    />
+                    </div>
                 </div>
             )
         } else {

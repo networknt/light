@@ -76,6 +76,46 @@ module.exports = {
         });
     },
 
+    googleLogin: function(data) {
+        let googleLogin =  {
+            category : 'user',
+            name : 'googleLogin',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/api/rs',
+            data: JSON.stringify(googleLogin),
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.googleLoginResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    facebookLogin: function(data) {
+        let facebookLogin =  {
+            category : 'user',
+            name : 'facebookLogin',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/api/rs',
+            data: JSON.stringify(facebookLogin),
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.facebookLoginResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getMenu: function() {
         let getMenu = {
             category : 'menu',

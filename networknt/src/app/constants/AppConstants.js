@@ -26,6 +26,8 @@ module.exports = {
         // Auth
         SIGNIN_USER_REQUEST: null,
         SIGNIN_USER_RESPONSE: null,
+        GOOGLE_LOGIN_RESPONSE: null,
+        FACEBOOK_LOGIN_RESPONSE: null,
         SIGNUP_USER_RESPONSE: null,
         REFRESH: null,
         LOGOUT: null,

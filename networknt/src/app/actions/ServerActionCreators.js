@@ -15,6 +15,20 @@ module.exports = {
         });
     },
 
+    googleLoginResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GOOGLE_LOGIN_RESPONSE,
+            json: json
+        });
+    },
+
+    facebookLoginResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.FACEBOOK_LOGIN_RESPONSE,
+            json: json
+        });
+    },
+
     signUpUserResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.SIGNUP_USER_RESPONSE,
