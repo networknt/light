@@ -29,28 +29,27 @@ public class GoogleLoginRule extends AbstractUserRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String host = (String)data.get("host");
+        String clientId = (String)data.get("clientId");
         String token = (String)data.get("id_token");
         String error = null;
 
         // https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
         // first need to verify and get user profile from access token
         GetConfigRule getConfigRule = new GetConfigRule();
-        String clientId = getConfigRule.getConfig(host, GOOGLE, "$.properties.client_id");
+        String googleClientId = getConfigRule.getConfig(host, GOOGLE, "$.properties.client_id");
 
         // Set up the HTTP transport and JSON factory
         HttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .setAudience(Arrays.asList(clientId))
+                .setAudience(Arrays.asList(googleClientId))
                 // If you retrieved the token on Android using the Play Services 8.3 API or newer, set
                 // the issuer to "https://accounts.google.com". Otherwise, set the issuer to
                 // "accounts.google.com". If you need to verify tokens from multiple sources, build
                 // a GoogleIdTokenVerifier for each issuer and try them both.
                 .setIssuer("https://accounts.google.com")
                 .build();
-
-        // (Receive idTokenString by HTTPS POST)
 
         GoogleIdToken idToken = verifier.verify(token);
         if (idToken != null) {
@@ -62,8 +61,6 @@ public class GoogleLoginRule extends AbstractUserRule implements Rule {
             String email = payload.getEmail();
             boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
             String name = (String) payload.get("name");
-            String pictureUrl = (String) payload.get("picture");
-            String locale = (String) payload.get("locale");
             String familyName = (String) payload.get("family_name");
             String givenName = (String) payload.get("given_name");
 
@@ -79,32 +76,33 @@ public class GoogleLoginRule extends AbstractUserRule implements Rule {
                         inputMap.put("responseCode", 400);
                     } else {
                         // for third party login, won't remember it.
-                        boolean rememberMe = false;
-                        String jwt = generateToken(user, clientId, rememberMe);
+                        String jwt = generateToken(user, clientId, false);
                         if(jwt != null) {
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
                             Map<String, Object> tokens = new HashMap<String, Object>();
                             tokens.put("accessToken", jwt);
                             tokens.put("rid", user.getIdentity().toString());
-                            if(rememberMe) {
-                                // generate refreshToken
-                                String refreshToken = HashUtil.generateUUID();
-                                tokens.put("refreshToken", refreshToken);
-                                String hashedRefreshToken = HashUtil.md5(refreshToken);
-                                eventData.put("hashedRefreshToken", hashedRefreshToken);
-                            }
                             inputMap.put("result", mapper.writeValueAsString(tokens));
-                            eventData.put("clientId", clientId);
-                            eventData.put("userId", user.getProperty("userId"));
-                            eventData.put("host", data.get("host"));  // add host as refreshToken will be associate with host.
-                            eventData.put("logInDate", new java.util.Date());
                         }
                     }
                 } else {
-                    // TODO first time login from google, save the info.
-
+                    // Generate access token
+                    String jwt = generateToken(user, clientId, false);
+                    if(jwt != null) {
+                        Map<String, Object> tokens = new HashMap<String, Object>();
+                        tokens.put("accessToken", jwt);
+                        tokens.put("rid", user.getIdentity().toString());
+                        inputMap.put("result", mapper.writeValueAsString(tokens));
+                    }
+                    // save user info into db.
+                    Map eventMap = getEventMap(inputMap);
+                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                    inputMap.put("eventMap", eventMap);
+                    eventData.put("clientId", clientId);
+                    eventData.put("host", data.get("host"));
+                    eventData.put("userId", userId + "@g");
+                    eventData.put("email", email);
+                    eventData.put("firstName", givenName);
+                    eventData.put("lastName", familyName);
                 }
             } catch (Exception e) {
                 logger.error("Exception:", e);
@@ -113,7 +111,7 @@ public class GoogleLoginRule extends AbstractUserRule implements Rule {
                 graph.shutdown();
             }
         } else {
-            error = "Invalid id_token";
+            error = "Invalid google id_token";
             inputMap.put("responseCode", 401);
         }
         if(error != null) {

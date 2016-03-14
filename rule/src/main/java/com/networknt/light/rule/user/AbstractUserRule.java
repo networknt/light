@@ -104,9 +104,12 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             graph.begin();
+            // password might not be available if google or facebook login
             String password = (String)data.remove("password");
-            OrientVertex credential = graph.addVertex("class:Credential", "password", password);
-            data.put("credential", credential);
+            if(password != null) {
+                OrientVertex credential = graph.addVertex("class:Credential", "password", password);
+                data.put("credential", credential);
+            }
             // calculate gravatar md5
             data.put("gravatar", HashUtil.md5Hex((String)data.get("email")));
             user = graph.addVertex("class:User", data);

@@ -7,6 +7,7 @@ import com.networknt.light.util.HashUtil;
 import com.networknt.light.util.ServiceLocator;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.Version;
 import com.restfb.types.User;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
@@ -26,14 +27,15 @@ public class FacebookLoginRule extends AbstractUserRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>) objects[0];
         Map<String, Object> data = (Map<String, Object>) inputMap.get("data");
         String host = (String)data.get("host");
+        String clientId = (String)data.get("clientId");
         String token = (String)data.get("accessToken");
         String error = null;
 
         // https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
         // first need to verify and get user profile from access token
         GetConfigRule getConfigRule = new GetConfigRule();
-        String clientId = getConfigRule.getConfig(host, FACEBOOK, "$.properties.appId");
-        FacebookClient fbClient = new DefaultFacebookClient(token);
+        //String facebookAppId = getConfigRule.getConfig(host, FACEBOOK, "$.properties.appId");
+        FacebookClient fbClient = new DefaultFacebookClient(token, Version.VERSION_2_5);
         User me = fbClient.fetchObject("me", User.class);
 
         if (me != null) {
@@ -54,32 +56,35 @@ public class FacebookLoginRule extends AbstractUserRule implements Rule {
                         inputMap.put("responseCode", 400);
                     } else {
                         // for third party login, won't remember it.
-                        boolean rememberMe = false;
-                        String jwt = generateToken(user, clientId, rememberMe);
+                        String jwt = generateToken(user, clientId, false);
                         if(jwt != null) {
-                            Map eventMap = getEventMap(inputMap);
-                            Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
-                            inputMap.put("eventMap", eventMap);
                             Map<String, Object> tokens = new HashMap<String, Object>();
                             tokens.put("accessToken", jwt);
                             tokens.put("rid", user.getIdentity().toString());
-                            if(rememberMe) {
-                                // generate refreshToken
-                                String refreshToken = HashUtil.generateUUID();
-                                tokens.put("refreshToken", refreshToken);
-                                String hashedRefreshToken = HashUtil.md5(refreshToken);
-                                eventData.put("hashedRefreshToken", hashedRefreshToken);
-                            }
                             inputMap.put("result", mapper.writeValueAsString(tokens));
-                            eventData.put("clientId", clientId);
-                            eventData.put("userId", user.getProperty("userId"));
-                            eventData.put("host", data.get("host"));  // add host as refreshToken will be associate with host.
-                            eventData.put("logInDate", new java.util.Date());
                         }
                     }
                 } else {
-                    // TODO first time login from google, save the info.
+                    // generate jwt token
+                    String jwt = generateToken(user, clientId, false);
+                    if(jwt != null) {
+                        Map<String, Object> tokens = new HashMap<String, Object>();
+                        tokens.put("accessToken", jwt);
+                        tokens.put("rid", user.getIdentity().toString());
+                        inputMap.put("result", mapper.writeValueAsString(tokens));
+                    }
 
+                    // save user
+                    Map eventMap = getEventMap(inputMap);
+                    Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                    inputMap.put("eventMap", eventMap);
+
+                    eventData.put("clientId", clientId);
+                    eventData.put("host", data.get("host"));
+                    eventData.put("userId", userId + "@f");
+                    eventData.put("email", email);
+                    eventData.put("firstName", firstName);
+                    eventData.put("lastName", lastName);
                 }
             } catch (Exception e) {
                 logger.error("Exception:", e);
@@ -88,7 +93,7 @@ public class FacebookLoginRule extends AbstractUserRule implements Rule {
                 graph.shutdown();
             }
         } else {
-            error = "Invalid id_token";
+            error = "Invalid facebook accessToken";
             inputMap.put("responseCode", 401);
         }
         if(error != null) {
