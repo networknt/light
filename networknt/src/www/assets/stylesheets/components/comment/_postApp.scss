@@ -1,0 +1,19 @@
+.posts-app a {
+  text-decoration: none;
+}
+
+.posts-app a:hover {
+  text-decoration: underline;
+}
+
+.posts-app p {
+  margin: 0;
+}
+
+.posts-app ul {
+  list-style-type: none;
+}
+
+#react-comment-app-mount > div > li {
+  list-style-type: none;
+}

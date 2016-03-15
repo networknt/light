@@ -518,7 +518,12 @@ public abstract class AbstractConfigRule extends AbstractRule implements Rule {
                     json = config.getRecord().toJSON();
                     // now we need to apply jsonpath.
                     if(jsonPath.length() > 0) {
-                        json = mapper.writeValueAsString(JsonPath.parse(json).read(jsonPath));
+                        Object object = JsonPath.parse(json).read(jsonPath);
+                        if(object instanceof String) {
+                            json = (String)object;
+                        } else {
+                            json = mapper.writeValueAsString(object);
+                        }
                     }
                     cache.put(host + configId + jsonPath, json);
                 } else {

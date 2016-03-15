@@ -1,0 +1,60 @@
+#react-comment-app-mount > div > ul > li {
+  list-style-type: none;
+}
+
+.depth2 {
+  margin-left: 50px;
+}
+
+.depth3 {
+  margin-left: 100px;
+}
+
+.depth4 {
+  margin-left: 150px;
+}
+
+.depth5 {
+  margin-left: 200px;
+}
+
+.depth6 {
+  margin-left: 250px;
+}
+
+.comment {
+  margin-bottom: 20px;
+  color: #626262;
+}
+
+.comment p {
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+
+.comment blockquote p  {
+  margin: 0;
+  padding: 0;
+}
+
+.comment-top-banner {
+  color: #acacac;
+  font-size: 0.875rem;
+}
+
+.comment-author {
+  font-weight: 700;
+  color: #5395FF;
+}
+
+.comment-points-banner-upvoted {
+  color: #FCA53D;
+}
+
+.comment-upvote-button {
+  cursor: pointer;
+}
+
+.comment-upvote-button-wrapper {
+  width: 15px;
+}
