@@ -94,7 +94,8 @@ let Login = React.createClass({
                     />
                     <FacebookLogin
                         appId="1003494309742403"
-                        autoLoad={true}
+                        autoLoad={false}
+                        scope="public_profile, email"
                         callback={this._responseFacebook}
                     />
                     </div>

@@ -1267,5 +1267,43 @@
     "createDate": "2016-02-28T03:01:33.604",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:9",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10010,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-03-15T01:32:16.329",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.user.FacebookLoginRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-03-15T01:32:16.329",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:10",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10011,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-03-15T01:32:48.188",
+      "accessLevel": "A",
+      "updateUserId": "stevehu",
+      "ruleClass": "com.networknt.light.rule.user.GoogleLoginRule"
+    },
+    "name": "updAccess",
+    "category": "access",
+    "createDate": "2016-03-15T01:32:48.188",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

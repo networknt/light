@@ -405,6 +405,22 @@
                 <version>${mail-api.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.google.api-client</groupId>
+                <artifactId>google-api-client</artifactId>
+                <version>${google-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava-jdk5</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.restfb</groupId>
+                <artifactId>restfb</artifactId>
+                <version>${facebook-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.github.fge</groupId>
                 <artifactId>json-schema-validator</artifactId>
                 <version>${json-schema-validator.version}</version>
@@ -414,16 +430,6 @@
                         <artifactId>mailapi</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.google.api-client</groupId>
-                <artifactId>google-api-client</artifactId>
-                <version>${google-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.restfb</groupId>
-                <artifactId>restfb</artifactId>
-                <version>${facebook-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

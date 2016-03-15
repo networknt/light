@@ -48,7 +48,7 @@ public class GoogleLoginRule extends AbstractUserRule implements Rule {
                 // the issuer to "https://accounts.google.com". Otherwise, set the issuer to
                 // "accounts.google.com". If you need to verify tokens from multiple sources, build
                 // a GoogleIdTokenVerifier for each issuer and try them both.
-                .setIssuer("https://accounts.google.com")
+                .setIssuer("accounts.google.com")
                 .build();
 
         GoogleIdToken idToken = verifier.verify(token);
