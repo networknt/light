@@ -7,12 +7,15 @@ import com.networknt.light.util.HashUtil;
 import com.networknt.light.util.ServiceLocator;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.Parameter;
 import com.restfb.Version;
 import com.restfb.types.User;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,15 +38,15 @@ public class FacebookLoginRule extends AbstractUserRule implements Rule {
         // first need to verify and get user profile from access token
         GetConfigRule getConfigRule = new GetConfigRule();
         //String facebookAppId = getConfigRule.getConfig(host, FACEBOOK, "$.properties.appId");
-        FacebookClient fbClient = new DefaultFacebookClient(token, Version.VERSION_2_5);
-        User me = fbClient.fetchObject("me", User.class);
+        FacebookClient fbClient = new DefaultFacebookClient(token, Version.VERSION_2_3);
+        User me = fbClient.fetchObject("me", User.class, Parameter.with("fields", "id,name,email,first_name, last_name, verified"));
 
         if (me != null) {
             String email = me.getEmail();
             String firstName = me.getFirstName();
             String lastName = me.getLastName();
-            String userId = me.getId();
             String name = me.getName();
+            Boolean verified = me.getVerified();
 
             OrientGraph graph = ServiceLocator.getInstance().getGraph();
             try {
@@ -63,14 +66,25 @@ public class FacebookLoginRule extends AbstractUserRule implements Rule {
                             tokens.put("rid", user.getIdentity().toString());
                             inputMap.put("result", mapper.writeValueAsString(tokens));
                         }
+                        // create an empty eventMap, otherwise the event cannot be saved into event db.
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
                     }
                 } else {
                     // generate jwt token
-                    String jwt = generateToken(user, clientId, false);
+                    Map<String, Object> userMap = new HashMap<String, Object>();
+                    userMap.put("userId", name + "@g");
+                    userMap.put("host", host);
+                    userMap.put("clientId", clientId);
+                    List roles = new ArrayList();
+                    roles.add("user");
+                    userMap.put("roles", roles);
+                    userMap.put("rememberMe", false);
+                    String jwt = generateToken(userMap);
                     if(jwt != null) {
                         Map<String, Object> tokens = new HashMap<String, Object>();
                         tokens.put("accessToken", jwt);
-                        tokens.put("rid", user.getIdentity().toString());
                         inputMap.put("result", mapper.writeValueAsString(tokens));
                     }
 
@@ -81,8 +95,10 @@ public class FacebookLoginRule extends AbstractUserRule implements Rule {
 
                     eventData.put("clientId", clientId);
                     eventData.put("host", data.get("host"));
-                    eventData.put("userId", userId + "@f");
+                    eventData.put("userId", name + "@f");
                     eventData.put("email", email);
+                    eventData.put("roles", roles);
+                    eventData.put("verified", verified);
                     eventData.put("firstName", firstName);
                     eventData.put("lastName", lastName);
                 }
