@@ -13,9 +13,7 @@ import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by steve on 13/03/16.
@@ -55,8 +53,6 @@ public class GoogleLoginRule extends AbstractUserRule implements Rule {
         if (idToken != null) {
             GoogleIdToken.Payload payload = idToken.getPayload();
 
-            // Print user identifier
-            String userId = payload.getSubject();
             // Get profile information from payload
             String email = payload.getEmail();
             boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
@@ -83,14 +79,25 @@ public class GoogleLoginRule extends AbstractUserRule implements Rule {
                             tokens.put("rid", user.getIdentity().toString());
                             inputMap.put("result", mapper.writeValueAsString(tokens));
                         }
+                        Map eventMap = getEventMap(inputMap);
+                        Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
+                        inputMap.put("eventMap", eventMap);
                     }
                 } else {
                     // Generate access token
-                    String jwt = generateToken(user, clientId, false);
+                    Map<String, Object> userMap = new HashMap<String, Object>();
+                    userMap.put("userId", name + "@g");
+                    userMap.put("host", host);
+                    userMap.put("clientId", clientId);
+                    List roles = new ArrayList();
+                    roles.add("user");
+                    userMap.put("roles", roles);
+                    userMap.put("rememberMe", false);
+
+                    String jwt = generateToken(userMap);
                     if(jwt != null) {
                         Map<String, Object> tokens = new HashMap<String, Object>();
                         tokens.put("accessToken", jwt);
-                        tokens.put("rid", user.getIdentity().toString());
                         inputMap.put("result", mapper.writeValueAsString(tokens));
                     }
                     // save user info into db.
@@ -98,9 +105,11 @@ public class GoogleLoginRule extends AbstractUserRule implements Rule {
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
                     eventData.put("clientId", clientId);
-                    eventData.put("host", data.get("host"));
-                    eventData.put("userId", userId + "@g");
+                    eventData.put("host", host);
+                    eventData.put("userId", name + "@g");
                     eventData.put("email", email);
+                    eventData.put("roles", roles);
+                    eventData.put("verified", emailVerified);
                     eventData.put("firstName", givenName);
                     eventData.put("lastName", familyName);
                 }

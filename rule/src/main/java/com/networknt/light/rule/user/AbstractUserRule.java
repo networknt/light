@@ -101,6 +101,9 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
 
     protected Vertex addUser(Map<String, Object> data) throws Exception {
         Vertex user = null;
+        if(data.size() == 0) {
+            return user;
+        }
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             graph.begin();
@@ -491,6 +494,7 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         return matcher.matches();
     }
 
+    @Deprecated
     String generateToken(Vertex user, String clientId, Boolean rememberMe) throws Exception {
         Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();
         jwtMap.put("userId", user.getProperty("userId"));
@@ -498,6 +502,15 @@ public abstract class AbstractUserRule extends AbstractRule implements Rule {
         jwtMap.put("roles", user.getProperty("roles"));
         if(user.getProperty("host") != null) jwtMap.put("host", user.getProperty("host"));
         return JwtUtil.getJwt(jwtMap, rememberMe);
+    }
+
+    String generateToken(Map<String, Object> user) throws Exception {
+        Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();
+        jwtMap.put("userId", user.get("userId"));
+        jwtMap.put("clientId", user.get("clientId"));
+        jwtMap.put("roles", user.get("roles"));
+        if(user.get("host") != null) jwtMap.put("host", user.get("host"));
+        return JwtUtil.getJwt(jwtMap, (boolean)user.get("rememberMe"));
     }
 
     boolean checkPassword(OrientGraph graph, Vertex user, String inputPassword) throws Exception {

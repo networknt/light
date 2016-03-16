@@ -77,12 +77,14 @@ module.exports = {
     },
 
     googleLogin: function(data) {
+        data.clientId = ClientId;
         let googleLogin =  {
             category : 'user',
             name : 'googleLogin',
             readOnly: false,
             data: data
         };
+
         $.ajax({
             type: 'POST',
             contentType: 'application/json',
@@ -97,6 +99,7 @@ module.exports = {
     },
 
     facebookLogin: function(data) {
+        data.clientId = ClientId;
         let facebookLogin =  {
             category : 'user',
             name : 'facebookLogin',
