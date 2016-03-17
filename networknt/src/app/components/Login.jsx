@@ -45,6 +45,7 @@ let Login = React.createClass({
     componentWillUnmount: function() {
         FormStore.removeChangeListener(this._onFormChange);
         AuthStore.removeChangeListener(this._onAuthChange);
+        ConfigStore.removeChangeListener(this._onConfigStoreChange);
     },
 
     _onModelChange: function(key, val) {
