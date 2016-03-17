@@ -13,6 +13,7 @@ import PostStore from '../../stores/PostStore';
 import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
+import CommentBox from '../comment/CommentBox';
 import moment from 'moment';
 
 import Toolbar from 'material-ui/lib/toolbar/toolbar';
@@ -86,6 +87,7 @@ var BlogPost = React.createClass({
     },
 
     render: function() {
+        console.log('BlogPost.state.post', this.state.post);
         let time = moment(this.state.post.createDate).format("DD-MM-YYYY HH:mm:ss");
         let tags = '';
         if(this.state.post && this.state.post.tags) {
@@ -125,7 +127,7 @@ var BlogPost = React.createClass({
                             <Markdown text={this.state.post.content} />
                         </div>
                     </Paper>
-                    <hr />
+                    <CommentBox parentRid = {this.state.post.rid}/>
                 </div>
             </div>
         )

@@ -1,30 +1,48 @@
-var scriptDOM = document.getElementById('comment-thread-script');
-var postId = scriptDOM.getAttribute('postId');
-var commentsGETURL = '/comments/' + postId;
-var postGETURL = '/posts/' + postId;
-
-var pollInterval = 20 * 1000;
-
-var React = require('react');
-var Comment = require('./Comment.jsx');
-var Post = require('./Post.jsx');
-var UpvoteButton = require('./UpvoteButton.jsx');
-var PointsBanner = require('./PointsBanner.jsx');
+import React from 'react';
 import CommonUtils from '../../utils/CommonUtils';
+import CommentActionCreators from '../../actions/CommentActionCreators';
+import CommentStore from '../../stores/CommentStore';
+import CommentForm from './CommentForm';
+import CircularProgress from 'material-ui/lib/circular-progress';
 
 var CommentBox = React.createClass({
+
+    propTypes: {
+        parentRid: React.PropTypes.string
+    },
+
     getInitialState: function() {
         return {
-            post: null,
             comments: []
         };
     },
+
     componentDidMount: function() {
-        this.loadCommentsFromServer();
-        this.loadPostFromServer();
-        setInterval(this.loadCommentsFromServer, this.props.pollInterval);
-        setInterval(this.loadPostFromServer, this.props.pollInterval);
+        console.log("CommentBox.componentDidMount", this.props.parentRid);
+        CommentStore.addChangeListener(this._onCommentChange);
+        CommentActionCreators.getComment(this.props.parentRid);
     },
+
+    componentWillUnmount: function() {
+        CommentStore.removeChangeListener(this._onCommentChange);
+    },
+
+    _onCommentChange: function() {
+        console.log('onCommentChange', CommentStore.getComment());
+        this.setState({
+            comments: CommentStore.getComments()
+        });
+    },
+
+    _onAddComment: function(parentRid, message) {
+        let data = {
+            '@rid': parentRid,
+            comment: message
+        };
+        CommentActionCreators.addComment(data);
+    },
+
+    /*
     updateCommentsAfterUpvote: function(commentId, isUpvoting) {
         var updatedComments = helpers.findAndUpdateUpvoted(this.state.comments, commentId, isUpvoting);
         this.setState({comments: updatedComments});
@@ -93,18 +111,7 @@ var CommentBox = React.createClass({
             }.bind(this)
         });
     },
-    loadCommentsFromServer: function() {
-        $.ajax({
-            url: this.props.url,
-            dataType: 'json',
-            success: function(data) {
-                this.setState({comments: data});
-            }.bind(this),
-            error: function(xhr, status, err) {
-                console.error(this.props.url, status, err.toString());
-            }.bind(this)
-        });
-    },
+
     loadPostFromServer: function() {
         $.ajax({
             url: this.props.GETPostURL,
@@ -117,122 +124,37 @@ var CommentBox = React.createClass({
             }.bind(this)
         });
     },
+    */
     render: function() {
-        var CommentThreadProps = {
-            handleReply: this.handleReply,
-            comments: this.state.comments,
-            usernameRoute: this.props.usernameRoute,
-            upvoteImageURL: this.props.upvoteImageURL,
-            upvotedImageURL: this.props.upvotedImageURL,
-            handleUpvote: this.handleUpvote,
-            handleRemoveUpvote: this.handleRemoveUpvote
-        };
-
-        var PostProps = {
-            handleUpvote: this.handlePostUpvote,
-            handleRemoveUpvote: this.handlePostRemoveUpvote,
-            post: this.state.post,
-            upvoteImageURL: '/images/upvote.svg',
-            upvotedImageURL: '/images/upvoted.svg',
-            commentsURL: '/comments/'
-        };
-
-        console.log(this.state.post);
-
-
-        // TODO: This is pretty hacky, but I'm not sure
-        // how else to do it by using componentDidMount
-        var commentCount = 0;
-        var PostComponent;
-        if (this.state.post) {
-            commentCount = this.state.post.comment_count;
-            PostComponent = <Post {...PostProps} />
+        console.log('this.state', this.state);
+        //let commentThread = (<CircularProgress mode="indeterminate"/>);
+        let commentThread = (<div></div>);
+        if(this.state.comments && this.state.comments.length > 0) {
+            commentThread = (
+                <div className="comment-thread-app">
+                    <CommentThread {...CommentThreadProps} />
+                </div>
+            )
         }
 
+        var CommentThreadProps = {
+            //handleReply: this.handleReply,
+            comments: this.state.comments
+            //usernameRoute: this.props.usernameRoute,
+            //upvoteImageURL: this.props.upvoteImageURL,
+            //upvotedImageURL: this.props.upvotedImageURL,
+            //handleUpvote: this.handleUpvote,
+            //handleRemoveUpvote: this.handleRemoveUpvote
+        };
+
         return (
-            <div className="comment-thread-app">
-                {PostComponent}
-                <h3>{commentCount} comments</h3>
-                <CommentForm
-                    onCommentSubmit={this.handleReply}
-                    />
-                <CommentThread {...CommentThreadProps} />
+            <div>
+                <h3>{this.state.comments.length} comments</h3>
+                <CommentForm onCommentSubmit={this._onAddComment} parentRid={this.props.parentRid} />
+                {commentThread}
             </div>
         );
     }
 });
 
-var CommentForm = React.createClass({
-    handleSubmit: function(e) {
-        e.preventDefault();
-
-        var message = React.findDOMNode(this.refs.message).value.trim();
-
-        if (!message) {
-            return;
-        }
-
-        this.props.onCommentSubmit(null, message);
-        React.findDOMNode(this.refs.message).value = '';
-    },
-    render: function() {
-        return (
-            <form className='new-comment-form' onSubmit={this.handleSubmit}>
-                <textarea type='text' ref='message' maxLength='300' placeholder='Reply to thread...' className="thread-reply-textarea"/>
-                <br />
-                <input type="submit" value="reply" />
-            </form>
-        );
-    }
-});
-
-var CommentThread = React.createClass({
-    propTypes: {
-        comments           : React.PropTypes.array,
-        handleUpvote       : React.PropTypes.func.isRequired,
-        handleRemoveUpvote : React.PropTypes.func.isRequired,
-        handleReply        : React.PropTypes.func.isRequired,
-        upvoteImageURL     : React.PropTypes.string.isRequired,
-        upvotedImageURL    : React.PropTypes.string.isRequired,
-        usernameRoute      : React.PropTypes.string.isRequired,
-    },
-    render: function() {
-        var props = this.props;
-
-        var CommentProps = {
-            comment: {},
-            handleUpvote: props.handleUpvote,
-            handleRemoveUpvote: props.handleRemoveUpvote,
-            handleReply: props.handleReply,
-            upvoteImageURL: props.upvoteImageURL,
-            upvotedImageURL: props.upvotedImageURL,
-            usernameRoute: props.usernameRoute
-        };
-
-        var comments = this.props.comments.map(function(comment) {
-            CommentProps.comment = comment;
-
-            return (
-                <Comment {...CommentProps} />
-            );
-        });
-
-        return (
-            <ul className="comment-thread">
-                {comments}
-            </ul>
-        );
-    }
-});
-
-React.render(
-    <CommentThreadApp
-        url={commentsGETURL}
-        GETPostURL={postGETURL}
-        pollInterval={pollInterval}
-        usernameRoute='/u/'
-        upvoteImageURL='/images/upvote_comment.svg'
-        upvotedImageURL='/images/upvoted_comment.svg'
-        />,
-    document.getElementById("react-comment-app-mount")
-);
+module.exports = CommentBox;

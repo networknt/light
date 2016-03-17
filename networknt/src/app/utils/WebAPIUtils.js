@@ -1440,6 +1440,50 @@ module.exports = {
             }
             ErrorActionCreators.serverErrorResponse(error);
         });
+    },
+
+    getComment: function(parentRid) {
+        console.log('WebAPIUtils.getComment.parentRid', parentRid);
+        var getComment = {
+            category: 'comment',
+            name: 'getComment',
+            readOnly: true,
+            data: {
+                '@rid': parentRid
+            }
+        };
+        console.log('WebAPIUtils.getComment', getComment);
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getComment))}
+        }).done(function(data) {
+            console.log('WebAPIUtils.getComment response', data);
+            ServerActionCreators.getCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    addComment: function(data) {
+        let addComment = {
+            category: 'comment',
+            name: 'addComment',
+            readOnly: false,
+            data: data
+        };
+        console.log('addComment', addComment);
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(addComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.addCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
     }
 
 };

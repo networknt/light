@@ -153,7 +153,11 @@ module.exports = {
         EXEC_RULE_CMD_RESPONSE: null,
 
         // Rule
-        GET_RULE_RESPONSE: null
+        GET_RULE_RESPONSE: null,
+
+        // Comment
+        GET_COMMENT_RESPONSE: null
+
     }),
 
     monthNames: ["January", "February", "March", "April", "May", "June",

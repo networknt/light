@@ -3,7 +3,7 @@ var UpvoteButton = require('./UpvoteButton.jsx');
 var ReplyBox = require('./ReplyBox.jsx');
 var PointsBanner = require('./PointsBanner.jsx');
 import CommonUtils from '../../utils/CommonUtils';
-import Markdown from './Markdown';
+import Markdown from '../Markdown';
 
 var Comment = React.createClass({
     propTypes: {

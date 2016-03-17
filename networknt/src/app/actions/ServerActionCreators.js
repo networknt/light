@@ -438,7 +438,15 @@ module.exports = {
             type: ActionTypes.UPL_FILE_RESPONSE,
             json: json
         });
+    },
+
+    getCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_COMMENT_RESPONSE,
+            json: json
+        });
     }
+
 
 };
 
