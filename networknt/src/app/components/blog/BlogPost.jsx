@@ -53,6 +53,7 @@ var BlogPost = React.createClass({
         }
         //console.log('BlogPost blogPosts', BlogStore.getPosts());
         //console.log('BlogPost index ', this.props.params.index);
+        console.log('componentDidMount', post);
         this.setState({
             post: post? post : {},
             allowUpdate: BlogStore.getAllowUpdate()
@@ -67,6 +68,7 @@ var BlogPost = React.createClass({
     },
 
     _onEntityChange: function() {
+        console.log('_onEntityChange', EntityStore.getEntity());
         this.setState({
             post: EntityStore.getEntity()
         })
@@ -112,6 +114,10 @@ var BlogPost = React.createClass({
                 </ToolbarGroup>
             </Toolbar>
             : '';
+        let commentBox = '';
+        if(this.state.post && this.state.post.rid) {
+            commentBox = (<CommentBox parentRid = {this.state.post.rid}/>)
+        }
         return (
             <div>
                 <div className="leftColumn">
@@ -127,7 +133,7 @@ var BlogPost = React.createClass({
                             <Markdown text={this.state.post.content} />
                         </div>
                     </Paper>
-                    <CommentBox parentRid = {this.state.post.rid}/>
+                    {commentBox}
                 </div>
             </div>
         )

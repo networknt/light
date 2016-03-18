@@ -75,8 +75,6 @@ let Login = React.createClass({
     },
 
     _onConfigStoreChange: function() {
-        console.log('googleConfigId', ConfigStore.getConfig(googleConfigId).client_id);
-        console.log('facebookConfigId', ConfigStore.getConfig(facebookConfigId).appId);
         this.setState({
             googleId: ConfigStore.getConfig(googleConfigId).client_id,
             facebookId: ConfigStore.getConfig(facebookConfigId).appId

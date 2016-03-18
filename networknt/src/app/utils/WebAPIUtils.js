@@ -1442,21 +1442,21 @@ module.exports = {
         });
     },
 
-    getComment: function(parentRid) {
-        console.log('WebAPIUtils.getComment.parentRid', parentRid);
-        var getComment = {
+    getCommentTree: function(parentRid) {
+        console.log('WebAPIUtils.getCommentTree.parentRid', parentRid);
+        var getCommentTree = {
             category: 'comment',
-            name: 'getComment',
+            name: 'getCommentTree',
             readOnly: true,
             data: {
                 '@rid': parentRid
             }
         };
-        console.log('WebAPIUtils.getComment', getComment);
+        console.log('WebAPIUtils.getCommentTree', getCommentTree);
         $.ajax({
             type: 'GET',
             url: '/api/rs',
-            data:  { cmd: encodeURIComponent(JSON.stringify(getComment))}
+            data:  { cmd: encodeURIComponent(JSON.stringify(getCommentTree))}
         }).done(function(data) {
             console.log('WebAPIUtils.getComment response', data);
             ServerActionCreators.getCommentResponse(data);

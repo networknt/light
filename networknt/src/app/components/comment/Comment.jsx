@@ -7,25 +7,23 @@ import Markdown from '../Markdown';
 
 var Comment = React.createClass({
     propTypes: {
-        handleUpvote       : React.PropTypes.func.isRequired,
-        handleRemoveUpvote : React.PropTypes.func.isRequired,
-        handleReply        : React.PropTypes.func.isRequired,
-        comment            : React.PropTypes.shape({
-            id        : React.PropTypes.string,
-            author    : React.PropTypes.string,
-            message   : React.PropTypes.string,
-            score     : React.PropTypes.number,
-            age       : React.PropTypes.object,
-            subpy     : React.PropTypes.string,
-            path      : React.PropTypes.array,
-            depth     : React.PropTypes.number,
-            parent_id : React.PropTypes.number,
-            upvoted   : React.PropTypes.bool
-        }),
-        upvoteImageURL  : React.PropTypes.string.isRequired,
-        upvotedImageURL : React.PropTypes.string.isRequired,
-        usernameRoute   : React.PropTypes.string.isRequired
+        onUpVote         : React.PropTypes.func.isRequired,
+        onRemoveUpVote   : React.PropTypes.func.isRequired,
+        onAddComment     : React.PropTypes.func.isRequired,
+        onDownVote       : React.PropTypes.func.isRequired,
+        onRemoveDownVote : React.PropTypes.func.isRequired,
+        comment          : React.PropTypes.shape({
+            commentId        : React.PropTypes.string,
+            in_Create        : React.PropTypes.string,
+            comment          : React.PropTypes.string,
+            score            : React.PropTypes.number,
+            createDate       : React.PropTypes.object,
+            in_HasComment    : React.PropTypes.array,
+            upVoted          : React.PropTypes.bool,
+            downVoted        : React.PropTypes.bool
+        })
     },
+
     render: function() {
         var comment = this.props.comment;
         var className = "comment " + "depth" + comment.depth;

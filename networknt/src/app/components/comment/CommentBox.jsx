@@ -3,6 +3,8 @@ import CommonUtils from '../../utils/CommonUtils';
 import CommentActionCreators from '../../actions/CommentActionCreators';
 import CommentStore from '../../stores/CommentStore';
 import CommentForm from './CommentForm';
+import CommentThread from './CommentThread';
+
 import CircularProgress from 'material-ui/lib/circular-progress';
 
 var CommentBox = React.createClass({
@@ -20,7 +22,7 @@ var CommentBox = React.createClass({
     componentDidMount: function() {
         console.log("CommentBox.componentDidMount", this.props.parentRid);
         CommentStore.addChangeListener(this._onCommentChange);
-        CommentActionCreators.getComment(this.props.parentRid);
+        CommentActionCreators.getCommentTree(this.props.parentRid);
     },
 
     componentWillUnmount: function() {
@@ -28,7 +30,7 @@ var CommentBox = React.createClass({
     },
 
     _onCommentChange: function() {
-        console.log('onCommentChange', CommentStore.getComment());
+        console.log('onCommentChange', CommentStore.getComments());
         this.setState({
             comments: CommentStore.getComments()
         });
@@ -125,9 +127,35 @@ var CommentBox = React.createClass({
         });
     },
     */
+
+    _onUpVote: function(rid) {
+
+    },
+
+    _onRemoveUpVote: function(rid) {
+
+    },
+
+    _onDownVote: function(rid) {
+
+    },
+
+    _onRemoveDownVote: function(rid) {
+
+    },
+
     render: function() {
         console.log('this.state', this.state);
         //let commentThread = (<CircularProgress mode="indeterminate"/>);
+        var CommentThreadProps = {
+            comments: this.state.comments,
+            onAddComment: this._onAddComment,
+            onUpVote: this._onUpVote,
+            onRemoveUpVote: this._onRemoveUpVote,
+            onDownVote: this._onDownVote,
+            onRemoveDownVote: this_onRemoveDownVote
+        };
+
         let commentThread = (<div></div>);
         if(this.state.comments && this.state.comments.length > 0) {
             commentThread = (

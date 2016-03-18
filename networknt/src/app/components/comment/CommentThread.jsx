@@ -1,24 +1,23 @@
 var CommentThread = React.createClass({
     propTypes: {
         comments           : React.PropTypes.array,
-        handleUpvote       : React.PropTypes.func.isRequired,
-        handleRemoveUpvote : React.PropTypes.func.isRequired,
-        handleReply        : React.PropTypes.func.isRequired,
-        upvoteImageURL     : React.PropTypes.string.isRequired,
-        upvotedImageURL    : React.PropTypes.string.isRequired,
-        usernameRoute      : React.PropTypes.string.isRequired
+        onUpVote           : React.PropTypes.func.isRequired,
+        onRemoveUpVote     : React.PropTypes.func.isRequired,
+        onAddComment       : React.PropTypes.func.isRequired,
+        onDownVote         : React.PropTypes.func.isRequired,
+        onRemoveDownVote   : React.PropTypes.func.isRequired
     },
+
     render: function() {
         var props = this.props;
 
         var CommentProps = {
             comment: {},
-            handleUpvote: props.handleUpvote,
-            handleRemoveUpvote: props.handleRemoveUpvote,
-            handleReply: props.handleReply,
-            upvoteImageURL: props.upvoteImageURL,
-            upvotedImageURL: props.upvotedImageURL,
-            usernameRoute: props.usernameRoute
+            onUpVote: props.onUpVote,
+            onRemoveUpVote: props.onRemoveUpVote,
+            onAddComment: props.onAddComment,
+            onDownVote: props.onDownVote,
+            onRemoveDownVote: props.onRemoveDownVote
         };
 
         var comments = this.props.comments.map(function(comment) {
@@ -37,3 +36,4 @@ var CommentThread = React.createClass({
     }
 });
 
+module.exports = CommentThread;

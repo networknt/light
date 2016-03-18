@@ -102,7 +102,7 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
 
     protected long getTotal(Map<String, Object> data, Map<String, Object> criteria) {
         long total = 0;
-        StringBuilder sb = new StringBuilder("SELECT COUNT(*) as count FROM (TRAVERSE children FROM ").append(data.get("@rid")).append(") ");
+        StringBuilder sb = new StringBuilder("SELECT COUNT(*) as count FROM (TRAVERSE out_HasComment FROM ").append(data.get("@rid")).append(") ");
         String whereClause = DbService.getWhereClause(criteria);
         if(whereClause != null && whereClause.length() > 0) {
             sb.append(whereClause);
@@ -121,7 +121,7 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
 
     protected String getComment(Map<String, Object> data, Map<String, Object> criteria) {
         String json = null;
-        StringBuilder sb = new StringBuilder("SELECT FROM (TRAVERSE children FROM ").append(data.get("@rid")).append(") ");
+        StringBuilder sb = new StringBuilder("SELECT FROM (TRAVERSE out_HasComment FROM ").append(data.get("@rid")).append(") ");
         String whereClause = DbService.getWhereClause(criteria);
         if(whereClause != null && whereClause.length() > 0) {
             sb.append(whereClause);
