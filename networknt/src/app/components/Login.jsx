@@ -95,6 +95,26 @@ let Login = React.createClass({
 
     render: function() {
         console.log('Login._onModelChange', this.state.user);
+        let socialLogin = '';
+        if(this.state.googleId && this.state.facebookId) {
+            socialLogin = (
+                <div className="socialButton">
+                    <GoogleLogin
+                        clientId={this.state.googleId}
+                        callback={this._responseGoogle}
+                        cssClass="googleLogin"
+                        offline={false}
+                    />
+                    <FacebookLogin
+                        appId={this.state.facebookId}
+                        autoLoad={false}
+                        scope="public_profile, email"
+                        cssClass="facebookLogin"
+                        callback={this._responseFacebook}
+                    />
+                </div>
+            )
+        }
         if(this.state.schema) {
             const buttons = this.state.action.map((item, idx) => (
                 <RaisedButton key={idx} label={item.title} primary={true}
@@ -104,21 +124,7 @@ let Login = React.createClass({
             return (
 
                 <div>
-                    <div className="socialButton">
-                        <GoogleLogin
-                            clientId={this.state.googleId}
-                            callback={this._responseGoogle}
-                            cssClass="googleLogin"
-                            offline={false}
-                        />
-                        <FacebookLogin
-                            appId={this.state.facebookId}
-                            autoLoad={false}
-                            scope="public_profile, email"
-                            cssClass="facebookLogin"
-                            callback={this._responseFacebook}
-                        />
-                    </div>
+                    {socialLogin}
                     <SchemaForm schema={this.state.schema} form={this.state.form} model={this.state.user} onModelChange={this._onModelChange} />
                     {buttons}
                 </div>
