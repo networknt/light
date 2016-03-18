@@ -114,6 +114,14 @@
       "location": "event/networknt/news_post.json"
     },
     {
+      "description": "This file contains networknt site forum category data for cms",
+      "location": "event/networknt/forum.json"
+    },
+    {
+      "description": "This file contains networknt site forum post data for cms",
+      "location": "event/networknt/forum_post.json"
+    },
+    {
       "description": "This file contains networknt site catalog data for commerce",
       "location": "event/networknt/catalog.json"
     },

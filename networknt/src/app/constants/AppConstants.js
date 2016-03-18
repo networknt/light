@@ -96,6 +96,9 @@ module.exports = {
 
         // Forum
         GET_FORUM_TREE_RESPONSE: null,
+        GET_FORUM_POST_RESPONSE: null,
+        GET_RECENT_FORUM_POST_RESPONSE: null,
+        GET_FORUM_RESPONSE: null,
 
         // Catalog
         GET_CATALOG_TREE_RESPONSE: null,

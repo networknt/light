@@ -350,6 +350,23 @@ module.exports = {
         });
     },
 
+    getForumTree: function() {
+        let getForumTree = {
+            category: 'forum',
+            name: 'getForumTree',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getForumTree))}
+        }).done(function(data) {
+            ServerActionCreators.getForumTreeResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.getForumTreeResponse(null, error);
+        });
+    },
+
     getRecentBlogPost: function(pageNo, pageSize) {
         let getRecentBlogPost = {
             category: 'blog',
@@ -389,6 +406,27 @@ module.exports = {
             ServerActionCreators.getRecentNewsPostResponse(data, null);
         }).fail(function(error) {
             ServerActionCreators.getRecentNewsPostResponse(null, error);
+        });
+    },
+
+    getRecentForumPost: function(pageNo, pageSize) {
+        let getRecentForumPost = {
+            category: 'forum',
+            name: 'getRecentPost',
+            readOnly: true,
+            data: {
+                pageSize: pageSize,
+                pageNo: pageNo
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getRecentForumPost))}
+        }).done(function(data) {
+            ServerActionCreators.getRecentForumPostResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.getRecentForumPostResponse(null, error);
         });
     },
 
@@ -438,6 +476,28 @@ module.exports = {
 
         }).fail(function(error) {
             ServerActionCreators.getNewsPostResponse(null, error);
+        });
+    },
+
+    getForumPost: function(rid, pageNo, pageSize) {
+        let getForumPost = {
+            category: 'forum',
+            name: 'getForumPost',
+            readOnly: true,
+            data: {
+                pageSize: pageSize,
+                pageNo: pageNo,
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getForumPost))}
+        }).done(function(data) {
+            ServerActionCreators.getForumPostResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.getForumPostResponse(null, error);
         });
     },
 
@@ -500,6 +560,23 @@ module.exports = {
         });
     },
 
+    getForum: function() {
+        let getForum = {
+            category: 'forum',
+            name: 'getForum',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getForum))}
+        }).done(function(data) {
+            ServerActionCreators.getForumResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getCatalog: function() {
         let getCatalog = {
             category: 'catalog',
@@ -556,6 +633,28 @@ module.exports = {
             dataType: 'json'
         }).done(function(data) {
             ServerActionCreators.delNewsResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delForum: function(rid) {
+        let delForum = {
+            category: 'forum',
+            name: 'delForum',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delForum),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delForumResponse(data);
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });

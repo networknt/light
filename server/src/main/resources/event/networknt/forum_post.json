@@ -1,0 +1,25 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:19",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10020,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "All logged in users are able to post in forums. After selecting \"Forum\" from right navigation menu, you will be in the \"All category for all forums and all post will be shown up page by page. If you are interested in only a small topic, for example, \"Hosting\", you can click the left context navigation menu and choose \"Hosting\" sub category to read all the threads about hosting. Also, when you post, it will be in the hosting category automatically. One can switch category at any time by just click the left navigation menu and choose the category you want to interact with.",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "9WNvIx7ISYa2VQW0v9PPrA",
+      "title": "How to post in forums",
+      "content": "N/A",
+      "parentId": "All",
+      "createDate": "2016-03-18T18:05:09.258"
+    },
+    "name": "addPost",
+    "category": "forum",
+    "createDate": "2016-03-18T18:05:09.257",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

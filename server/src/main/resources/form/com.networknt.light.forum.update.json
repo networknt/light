@@ -7,7 +7,7 @@
       "name": "updForum",
       "readOnly": false,
       "title": "Submit",
-      "success": "/page/com-networknt-light-v-forum-admin-home"
+      "success": "/admin/forumAdmin"
     }
   ],
   "schema": {
@@ -20,7 +20,8 @@
     "properties": {
       "categoryId": {
         "title": "Forum Id",
-        "type": "string"
+        "type": "string",
+        "readOnly": true
       },
       "description": {
         "title": "Description",
@@ -29,13 +30,11 @@
       "in_Own": {
         "title": "Parent",
         "type": "array",
-        "maxItems": 1,
-        "format": "strapselectdynamic"
+        "maxItems": 1
       },
       "out_Own": {
         "title": "Children",
-        "type": "array",
-        "format": "strapselectdynamic"
+        "type": "array"
       }
     }
   },
@@ -44,16 +43,22 @@
     "description",
     {
       "key": "in_Own",
-      "options": {
-        "category": "forum",
-        "name": "getForumDropdown"
+      "type": "rc-select",
+      "multiple": false,
+      "action" : {
+        "get": {
+          "url": "/api/rs?cmd={\"category\": \"forum\", \"name\": \"getForumDropdown\", \"readOnly\": true}"
+        }
       }
     },
     {
       "key": "out_Own",
-      "options": {
-        "category": "forum",
-        "name": "getForumDropdown"
+      "type": "rc-select",
+      "multiple": true,
+      "action" : {
+        "get": {
+          "url": "/api/rs?cmd={\"category\": \"forum\", \"name\": \"getForumDropdown\", \"readOnly\": true}"
+        }
       }
     }
   ]

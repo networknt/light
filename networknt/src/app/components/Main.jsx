@@ -15,8 +15,9 @@ import Snackbar from 'material-ui/lib/snackbar';
 import { History } from 'react-router'
 import AuthStore from '../stores/AuthStore';
 import CartStore from '../stores/CartStore';
-import NewsCategoryStore from '../stores/NewsCategoryStore';
 import BlogCategoryStore from '../stores/BlogCategoryStore';
+import NewsCategoryStore from '../stores/NewsCategoryStore';
+import ForumCategoryStore from '../stores/ForumCategoryStore'
 import CatalogCategoryStore from '../stores/CatalogCategoryStore';
 import ErrorStore from '../stores/ErrorStore';
 import MenuStore from '../stores/MenuStore';
@@ -25,6 +26,7 @@ import TreeNode from './TreeNode';
 import CatalogActionCreators from '../actions/CatalogActionCreators';
 import BlogActionCreators from '../actions/BlogActionCreators';
 import NewsActionCreators from '../actions/NewsActionCreators';
+import ForumActionCreators from '../actions/ForumActionCreators';
 import AuthActionCreators from '../actions/AuthActionCreators';
 import MenuActionCreators from '../actions/MenuActionCreators';
 import CircularProgress from 'material-ui/lib/circular-progress';
@@ -75,6 +77,7 @@ const Main = React.createClass({
         CartStore.addChangeListener(this._cartItemChange);
         BlogCategoryStore.addChangeListener(this._blogCategoryChange);
         NewsCategoryStore.addChangeListener(this._newsCategoryChange);
+        ForumCategoryStore.addChangeListener(this._forumCategoryChange);
         CatalogCategoryStore.addChangeListener(this._catalogCategoryChange);
         ErrorStore.addChangeListener(this._onErrorChange);
         MenuStore.addChangeListener(this._onMenuChange);
@@ -90,6 +93,7 @@ const Main = React.createClass({
         CartStore.removeChangeListener(this._cartItemChange);
         BlogCategoryStore.removeChangeListener(this._blogCategoryChange);
         NewsCategoryStore.removeChangeListener(this._newsCategoryChange);
+        ForumCategoryStore.removeChangeListener(this._forumCategoryChange);
         CatalogCategoryStore.removeChangeListener(this._catalogCategoryChange);
         ErrorStore.removeChangeListener(this._onErrorChange);
         MenuStore.removeChangeListener(this._onMenuChange);
@@ -161,6 +165,19 @@ const Main = React.createClass({
         this.onNewsCategorySelect(node);
     },
 
+    _forumCategoryChange: function() {
+        this.setState({
+            forumCategory: ForumCategoryStore.getCategory()
+        });
+        // create a fake node to trigger the first node loading for the category
+        let node = {};
+        let props = {};
+        props.category = ForumCategoryStore.getCategory()[0];
+        node.props = props;
+        node.fake = true;
+        this.onForumCategorySelect(node);
+    },
+
     _catalogCategoryChange: function() {
         //console.log('Main._catalogCategoryChange', CatalogCategoryStore.getCategory());
         this.setState({
@@ -230,6 +247,33 @@ const Main = React.createClass({
         if(secondPath != null && secondPath != categoryId) {
             //console.log('The main window has the same route, force to reload blogPost...');
             NewsActionCreators.getNewsPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
+        }
+    },
+
+    onForumCategorySelect(node) {
+        // set the select state for the selected category
+        if(node.fake) {
+
+        } else {
+            if (this.state.selected && this.state.selected.isMounted()) {
+                this.state.selected.setState({selected: false});
+            }
+            this.setState({selected: node});
+            node.setState({selected: true});
+            if (this.props.onForumCategorySelect) {
+                this.props.onForumCategorySelect(node);
+            }
+        }
+        // route to Forum with a specific categoryId in the path
+        let categoryId = node.props.category.categoryId;
+        this.context.router.push('/forum/' + categoryId);
+        // if the current location is forum/:forumRid and has different forumRid then the component won't
+        // be mount again and there is no way for the component to reload the forumPost. Work around here.
+        let secondPath = this.getSecondPath(this.props.location.pathname);
+        //console.log('before workaround', this.props.location.pathname, secondPath, rid);
+        if(secondPath != null && secondPath != categoryId) {
+            //console.log('The main window has the same route, force to reload forumPost...');
+            ForumActionCreators.getForumPost(node.props.category['@rid'], defaultPageNo, defaultPageSize);
         }
     },
 
@@ -373,6 +417,17 @@ const Main = React.createClass({
                 ) : (<CircularProgress mode="indeterminate"/>);
                 break;
             case 'forum':
+                leftNavContent = this.state.forumCategory.length > 0 ? (
+                    <div>
+                        <ul className="category-tree">
+                            {this.state.forumCategory.map(function(item) {
+                                return <TreeNode key={item.categoryId}
+                                                 category={item}
+                                                 onCategorySelect={this.onForumCategorySelect}/>;
+                            }.bind(this))}
+                        </ul>
+                    </div>
+                ) : (<CircularProgress mode="indeterminate"/>);
                 break;
             case 'catalog':
                 leftNavContent = this.state.catalogCategory.length > 0 ? (

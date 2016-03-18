@@ -108,9 +108,33 @@ module.exports = {
         });
     },
 
+    getForumTreeResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_FORUM_TREE_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     getBlogPostResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_BLOG_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getNewsPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_NEWS_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getForumPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_FORUM_POST_RESPONSE,
             json: json,
             error: error
         });
@@ -132,9 +156,9 @@ module.exports = {
         });
     },
 
-    getNewsPostResponse: function(json, error) {
+    getRecentForumPostResponse: function(json, error) {
         AppDispatcher.dispatch({
-            type: ActionTypes.GET_NEWS_POST_RESPONSE,
+            type: ActionTypes.GET_RECENT_FORUM_POST_RESPONSE,
             json: json,
             error: error
         });
@@ -158,6 +182,14 @@ module.exports = {
     getNewsResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_NEWS_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getForumResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_FORUM_RESPONSE,
             json: json,
             error: error
         });

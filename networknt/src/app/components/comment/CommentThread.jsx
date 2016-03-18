@@ -1,3 +1,5 @@
+import React from 'react';
+
 var CommentThread = React.createClass({
     propTypes: {
         comments           : React.PropTypes.array,
