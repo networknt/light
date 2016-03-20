@@ -3,7 +3,7 @@ import Paper from 'material-ui/lib/paper';
 import Gravatar from '../Gravatar';
 import Markdown from '../Markdown';
 import moment from 'moment';
-
+import CommonUtils from '../../utils/CommonUtils';
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
 import CardHeader from 'material-ui/lib/card/card-header';
@@ -20,14 +20,7 @@ class ForumSummary extends React.Component {
         return (
             <Paper>
                 <Card>
-                    <CardHeader title={"Created by: " + this.props.post.createUserId} subtitle= {'Submitted by ' + this.props.post.createUserId + "On: " + time} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} />
-                    <CardTitle title={this.props.post.title}/>
-                    <CardText>
-                        <Markdown text={this.props.post.summary} />
-                    </CardText>
-                    <CardActions>
-                        <RaisedButton label="Read More" primary={true} onClick={this.props.onClick}/>
-                    </CardActions>
+                    <a onClick={this.props.onClick}><CardHeader title={this.props.post.title} subtitle= {'Submitted by ' + this.props.post.createUserId + ' on ' + time} avatar={<Avatar icon={<Gravatar md5={this.props.post.gravatar} />} />} /></a>
                 </Card>
             </Paper>
         );

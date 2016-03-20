@@ -153,8 +153,9 @@ var CommentBox = React.createClass({
             onUpVote: this._onUpVote,
             onRemoveUpVote: this._onRemoveUpVote,
             onDownVote: this._onDownVote,
-            onRemoveDownVote: this_onRemoveDownVote
+            onRemoveDownVote: this._onRemoveDownVote
         };
+        console.log('CommentThreadProp', CommentThreadProps);
 
         let commentThread = (<div></div>);
         if(this.state.comments && this.state.comments.length > 0) {
@@ -164,20 +165,9 @@ var CommentBox = React.createClass({
                 </div>
             )
         }
-
-        var CommentThreadProps = {
-            //handleReply: this.handleReply,
-            comments: this.state.comments
-            //usernameRoute: this.props.usernameRoute,
-            //upvoteImageURL: this.props.upvoteImageURL,
-            //upvotedImageURL: this.props.upvotedImageURL,
-            //handleUpvote: this.handleUpvote,
-            //handleRemoveUpvote: this.handleRemoveUpvote
-        };
-
         return (
             <div>
-                <h3>{this.state.comments.length} comments</h3>
+                <h3>{this.state.comments ? this.state.comments.length : 0} comments</h3>
                 <CommentForm onCommentSubmit={this._onAddComment} parentRid={this.props.parentRid} />
                 {commentThread}
             </div>

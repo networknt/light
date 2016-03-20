@@ -16,7 +16,6 @@ require('rc-select/assets/index.css');
 import Select from 'rc-select';
 import CommonUtils from '../../utils/CommonUtils';
 import ForumSummary from './ForumSummary';
-import Summary from '../common/Summary.jsx';
 import List from 'material-ui/lib/lists/list';
 import ListItem from 'material-ui/lib/lists/list-item';
 import DropDownMenu from 'material-ui/lib/DropDownMenu';
@@ -143,7 +142,7 @@ var Forum = React.createClass({
                         this.state.posts.map(function(post, index) {
                             var boundClick = this._routeToPost.bind(this, post.entityId);
                             return (
-                                <Summary post={post} onClick ={boundClick} key={index}/>
+                                <ForumSummary post={post} onClick ={boundClick} key={index}/>
                             );
                         }, this)
                     }

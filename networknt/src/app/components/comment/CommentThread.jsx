@@ -1,4 +1,5 @@
 import React from 'react';
+import Comment from './Comment';
 
 var CommentThread = React.createClass({
     propTypes: {
@@ -12,8 +13,9 @@ var CommentThread = React.createClass({
 
     render: function() {
         var props = this.props;
+        console.log('props', this.props);
 
-        var CommentProps = {
+        var commentProps = {
             comment: {},
             onUpVote: props.onUpVote,
             onRemoveUpVote: props.onRemoveUpVote,
@@ -22,11 +24,44 @@ var CommentThread = React.createClass({
             onRemoveDownVote: props.onRemoveDownVote
         };
 
-        var comments = this.props.comments.map(function(comment) {
-            CommentProps.comment = comment;
+        console.log('commentProps', commentProps);
+        console.log('comments', this.props.comments);
+        var comments = this.props.comments.map(function(comment, index) {
+            commentProps.comment = comment;
+            commentProps.key = index;
 
             return (
-                <Comment {...CommentProps} />
+                <Comment {...commentProps} />
+            );
+        });
+        console.log('comments', comments);
+        return (
+            <ul className="comment-thread">
+                {comments}
+            </ul>
+        );
+    }
+    /*
+    render: function() {
+        var props = this.props;
+        console.log('props', this.props);
+
+        var commentProps = {
+            comment: {},
+            onUpVote: props.onUpVote,
+            onRemoveUpVote: props.onRemoveUpVote,
+            onAddComment: props.onAddComment,
+            onDownVote: props.onDownVote,
+            onRemoveDownVote: props.onRemoveDownVote
+        };
+
+        console.log('commentProps', commentProps);
+        var comments = this.props.comments.map(function(comment, index) {
+            commentProps.comment = comment;
+            commentProps.key = index;
+
+            return (
+                <Comment {...commentProps} />
             );
         });
 
@@ -36,6 +71,7 @@ var CommentThread = React.createClass({
             </ul>
         );
     }
+    */
 });
 
 module.exports = CommentThread;

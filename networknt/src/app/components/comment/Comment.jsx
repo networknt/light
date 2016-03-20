@@ -1,10 +1,17 @@
-var React = require('react');
-var UpvoteButton = require('./UpvoteButton.jsx');
-var ReplyBox = require('./ReplyBox.jsx');
-var PointsBanner = require('./PointsBanner.jsx');
-import CommonUtils from '../../utils/CommonUtils';
-import Markdown from '../Markdown';
+import React from 'react';
 
+var Comment = React.createClass({
+
+    render: function() {
+        var className = "comment " + "depth2";
+
+        return (
+            <li className={className}>{this.props.comment.comment}</li>
+        )
+    }
+});
+
+/*
 var Comment = React.createClass({
     propTypes: {
         onUpVote         : React.PropTypes.func.isRequired,
@@ -23,7 +30,6 @@ var Comment = React.createClass({
             downVoted        : React.PropTypes.bool
         })
     },
-
     render: function() {
         var comment = this.props.comment;
         var className = "comment " + "depth" + comment.depth;
@@ -125,5 +131,7 @@ var CommentBottomBanner = React.createClass({
         );
     }
 });
+*/
+
 
 module.exports = Comment;
