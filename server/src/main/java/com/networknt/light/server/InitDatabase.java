@@ -1645,12 +1645,18 @@ public class InitDatabase {
                             "\n" +
                             "    protected Vertex addUser(Map<String, Object> data) throws Exception {\n" +
                             "        Vertex user = null;\n" +
+                            "        if(data.size() == 0) {\n" +
+                            "            return user;\n" +
+                            "        }\n" +
                             "        OrientGraph graph = ServiceLocator.getInstance().getGraph();\n" +
                             "        try {\n" +
                             "            graph.begin();\n" +
+                            "            // password might not be available if google or facebook login\n" +
                             "            String password = (String)data.remove(\"password\");\n" +
-                            "            OrientVertex credential = graph.addVertex(\"class:Credential\", \"password\", password);\n" +
-                            "            data.put(\"credential\", credential);\n" +
+                            "            if(password != null) {\n" +
+                            "                OrientVertex credential = graph.addVertex(\"class:Credential\", \"password\", password);\n" +
+                            "                data.put(\"credential\", credential);\n" +
+                            "            }\n" +
                             "            // calculate gravatar md5\n" +
                             "            data.put(\"gravatar\", HashUtil.md5Hex((String)data.get(\"email\")));\n" +
                             "            user = graph.addVertex(\"class:User\", data);\n" +
@@ -2032,6 +2038,7 @@ public class InitDatabase {
                             "        return matcher.matches();\n" +
                             "    }\n" +
                             "\n" +
+                            "    @Deprecated\n" +
                             "    String generateToken(Vertex user, String clientId, Boolean rememberMe) throws Exception {\n" +
                             "        Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();\n" +
                             "        jwtMap.put(\"userId\", user.getProperty(\"userId\"));\n" +
@@ -2039,6 +2046,15 @@ public class InitDatabase {
                             "        jwtMap.put(\"roles\", user.getProperty(\"roles\"));\n" +
                             "        if(user.getProperty(\"host\") != null) jwtMap.put(\"host\", user.getProperty(\"host\"));\n" +
                             "        return JwtUtil.getJwt(jwtMap, rememberMe);\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    String generateToken(Map<String, Object> user) throws Exception {\n" +
+                            "        Map<String, Object> jwtMap = new LinkedHashMap<String, Object>();\n" +
+                            "        jwtMap.put(\"userId\", user.get(\"userId\"));\n" +
+                            "        jwtMap.put(\"clientId\", user.get(\"clientId\"));\n" +
+                            "        jwtMap.put(\"roles\", user.get(\"roles\"));\n" +
+                            "        if(user.get(\"host\") != null) jwtMap.put(\"host\", user.get(\"host\"));\n" +
+                            "        return JwtUtil.getJwt(jwtMap, (boolean)user.get(\"rememberMe\"));\n" +
                             "    }\n" +
                             "\n" +
                             "    boolean checkPassword(OrientGraph graph, Vertex user, String inputPassword) throws Exception {\n" +
