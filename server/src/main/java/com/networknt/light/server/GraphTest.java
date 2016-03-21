@@ -28,7 +28,7 @@ public class GraphTest {
 
     public static void main(String[] args) {
 
-        String sql = "select @RID, id, content, out_Has as children, in_Has as parent from (traverse out('Has') from #11:0) where @class = 'Comment'";
+        String sql = "select @rid, out_HasComment, comment, commentId, createDate, in_Create[0].userId as userId, in_Create[0]['@rid'] as userRid from (traverse out('HasComment') from #35:22) where host = 'www.networknt.com' and @class = 'Comment'";
 
         OrientGraphFactory factory = new OrientGraphFactory("plocal:/home/steve/lightdb").setupPool(1,10);
 
@@ -37,13 +37,14 @@ public class GraphTest {
             //System.out.println(graph.getVertex("#11:0").getRecord().toJSON("rid, fetchPlan:*:-1"));
 
             //String result = graph.getVertex("#37:0").getRecord().toJSON("rid,fetchPlan:[*]in_Create:-2 out_HasComment:5");
-            String result = graph.getVertex("#37:0").getRecord().toJSON("rid,version,fetchPlan:out_HasComment:-1 out_HasComment.out_HasComment:-1 out_HasComment.in_Create:0");
-            System.out.println(result);
+            //String result = graph.getVertex("#35:22").getRecord().toJSON("rid,version,fetchPlan:out_HasComment:-1 out_HasComment.out_HasComment:-1 out_HasComment.in_Create:0");
+            //String result = graph.getVertex("#35:22").getRecord().toJSON("rid,in_Create.userId, fetchPlan:out_HasComment:5");
+            //System.out.println(result);
 
-            //List<ODocument> result = graph.getRawGraph().query(
-            //        new OSQLSynchQuery(sql));
-            //System.out.println(OJSONWriter.listToJSON(result, "fetchPlan:children:-1"));
-            //System.out.println(getMenu(graph, "example"));
+            List<ODocument> result = graph.getRawGraph().query(
+                    new OSQLSynchQuery(sql));
+            String json = OJSONWriter.listToJSON(result, "fetchPlan:[*]in_HasComment:-2 [*]out_HasComment:5");
+            System.out.println(json);
             //System.out.println(getBfnTree("forum", "example"));
         } finally {
             graph.shutdown();

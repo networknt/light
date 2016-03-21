@@ -1,5 +1,6 @@
 import React from 'react';
 import Comment from './Comment';
+import CommentNode from './CommentNode';
 
 var CommentThread = React.createClass({
     propTypes: {
@@ -9,6 +10,18 @@ var CommentThread = React.createClass({
         onAddComment       : React.PropTypes.func.isRequired,
         onDownVote         : React.PropTypes.func.isRequired,
         onRemoveDownVote   : React.PropTypes.func.isRequired
+    },
+
+    onCommentSelect: function(node) {
+        // set the select state for the selected category
+        if (this.state.selected && this.state.selected.isMounted()) {
+            this.state.selected.setState({selected: false});
+        }
+        this.setState({selected: node});
+        node.setState({selected: true});
+        if (this.props.onCommentSelect) {
+            this.props.onCommentSelect(node);
+        }
     },
 
     render: function() {
@@ -25,18 +38,15 @@ var CommentThread = React.createClass({
         };
 
         console.log('commentProps', commentProps);
-        console.log('comments', this.props.comments);
-        var comments = this.props.comments.map(function(comment, index) {
+        var comments = this.props.comments.map(function(comment) {
             commentProps.comment = comment;
-            commentProps.key = index;
+            return <CommentNode key={comment.commentId}
+                                comment = {comment}
+                                onCommentSelect={this.onCommentSelect} />
+        }.bind(this));
 
-            return (
-                <Comment {...commentProps} />
-            );
-        });
-        console.log('comments', comments);
         return (
-            <ul className="comment-thread">
+            <ul className="category-tree">
                 {comments}
             </ul>
         );

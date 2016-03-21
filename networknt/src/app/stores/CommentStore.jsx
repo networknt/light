@@ -31,7 +31,7 @@ CommentStore.dispatchToken = AppDispatcher.register(function(payload) {
     var type = payload.type;
     switch(type) {
         case ActionTypes.GET_COMMENT_RESPONSE:
-            _comments = payload.json.out_HasComment;
+            _comments = payload.json;
             CommentStore.emitChange();
             break;
     }
