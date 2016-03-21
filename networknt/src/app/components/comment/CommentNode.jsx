@@ -1,5 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
+import Card from 'material-ui/lib/card/card';
+import CardActions from 'material-ui/lib/card/card-actions';
+import CardHeader from 'material-ui/lib/card/card-header';
+import CardTitle from 'material-ui/lib/card/card-title';
+import CardText from 'material-ui/lib/card/card-text';
+import RaisedButton from 'material-ui/lib/raised-button';
+import Gravatar from '../Gravatar';
+import Avatar from 'material-ui/lib/avatar';
 
 var CommentNode = React.createClass({
 
@@ -74,7 +82,7 @@ var CommentNode = React.createClass({
                 onClick={this.onChildDisplayToggle}>
                 <a onClick={this.onCommentSelect}
                    data-id={this.props.comment.commentId}>
-                    {this.props.comment.commentId}
+                    <CardHeader title={this.props.comment.comment} subtitle= {'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate} avatar={<Avatar icon={<Gravatar md5={this.props.comment.gravatar} />} />} />
                 </a>
                 <ul>
                     {this.state.out_HasComment.map(function(child) {
