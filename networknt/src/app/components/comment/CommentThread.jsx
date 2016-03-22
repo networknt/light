@@ -46,7 +46,7 @@ var CommentThread = React.createClass({
         }.bind(this));
 
         return (
-            <ul className="category-tree">
+            <ul className="comment-tree">
                 {comments}
             </ul>
         );

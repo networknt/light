@@ -72,7 +72,7 @@ var CommentNode = React.createClass({
     render: function () {
         if (!this.state.out_HasComment) this.state.out_HasComment = [];
         var classes = classNames({
-            'has-children': (this.props.comment.out_HasComment ? true : false),
+            'has-comment': (this.props.comment.out_HasComment ? true : false),
             'open': (this.state.out_HasComment.length ? true : false),
             'closed': (this.state.out_HasComment ? false : true),
             'selected': (this.state.selected ? true : false)
@@ -81,8 +81,12 @@ var CommentNode = React.createClass({
             <li ref="node" className={classes}
                 onClick={this.onChildDisplayToggle}>
                 <a onClick={this.onCommentSelect}
-                   data-id={this.props.comment.commentId}>
-                    <CardHeader title={this.props.comment.comment} subtitle= {'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate} avatar={<Avatar icon={<Gravatar md5={this.props.comment.gravatar} />} />} />
+                    data-id={this.props.comment.commentId}>
+                    <Gravatar md5={this.props.comment.gravatar} />
+                    <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
+                        <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate}</span>
+                    </div>
+                    <span style={{display: 'block', fontSize: 15}}>{this.props.comment.comment}</span>
                 </a>
                 <ul>
                     {this.state.out_HasComment.map(function(child) {
@@ -97,3 +101,7 @@ var CommentNode = React.createClass({
 });
 
 module.exports = CommentNode;
+/*
+ <CardHeader title={this.props.comment.comment} subtitle= {'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate} avatar={<Avatar icon={<Gravatar md5={this.props.comment.gravatar} />} />} />
+
+ */
