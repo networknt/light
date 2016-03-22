@@ -8,6 +8,7 @@ import CardText from 'material-ui/lib/card/card-text';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Gravatar from '../Gravatar';
 import Avatar from 'material-ui/lib/avatar';
+import IconButton from 'material-ui/lib/icon-button';
 
 var CommentNode = React.createClass({
 
@@ -85,6 +86,7 @@ var CommentNode = React.createClass({
                     <Gravatar md5={this.props.comment.gravatar} />
                     <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
                         <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate}</span>
+                        <span style={{fontSize: 14}}>2<IconButton iconStyle={{width: '12px', height:'12px', padding: '1px'}} style={{width: '48px', height: '48px', padding: '1px'}} iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_less</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_more</IconButton>5<IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>visibility_off</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>reply</IconButton></span>
                     </div>
                     <span style={{display: 'block', fontSize: 15}}>{this.props.comment.comment}</span>
                 </a>
