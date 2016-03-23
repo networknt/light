@@ -166,7 +166,7 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
             List<ODocument> list = graph.getRawGraph().command(query).execute(rid, host);
             if(list.size() > 0) {
-                json = OJSONWriter.listToJSON(list, "fetchPlan:[*]in_HasComment:-2 [*]out_HasComment:5");
+                json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 [*]out_HasComment:5");
             }
         } catch (Exception e) {
             logger.error("Exception:", e);

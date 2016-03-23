@@ -30,7 +30,7 @@ var CommentBox = React.createClass({
     },
 
     _onCommentChange: function() {
-        console.log('onCommentChange', CommentStore.getComments());
+        console.log('onCommentChange', JSON.stringify(CommentStore.getComments()));
         this.setState({
             comments: CommentStore.getComments()
         });
@@ -144,6 +144,14 @@ var CommentBox = React.createClass({
 
     },
 
+    _onReply: function(rid, text) {
+        let data = {
+            '@rid': rid,
+            comment: text
+        };
+        CommentActionCreators.addComment(data);
+    },
+
     render: function() {
         console.log('this.state', this.state);
         //let commentThread = (<CircularProgress mode="indeterminate"/>);
@@ -153,7 +161,8 @@ var CommentBox = React.createClass({
             onUpVote: this._onUpVote,
             onRemoveUpVote: this._onRemoveUpVote,
             onDownVote: this._onDownVote,
-            onRemoveDownVote: this._onRemoveDownVote
+            onRemoveDownVote: this._onRemoveDownVote,
+            onReply: this._onReply
         };
         console.log('CommentThreadProp', CommentThreadProps);
 

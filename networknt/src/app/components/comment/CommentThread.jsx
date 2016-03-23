@@ -9,7 +9,8 @@ var CommentThread = React.createClass({
         onRemoveUpVote     : React.PropTypes.func.isRequired,
         onAddComment       : React.PropTypes.func.isRequired,
         onDownVote         : React.PropTypes.func.isRequired,
-        onRemoveDownVote   : React.PropTypes.func.isRequired
+        onRemoveDownVote   : React.PropTypes.func.isRequired,
+        onReply            : React.PropTypes.func.isRequired
     },
 
     onCommentSelect: function(node) {
@@ -34,15 +35,16 @@ var CommentThread = React.createClass({
             onRemoveUpVote: props.onRemoveUpVote,
             onAddComment: props.onAddComment,
             onDownVote: props.onDownVote,
-            onRemoveDownVote: props.onRemoveDownVote
+            onRemoveDownVote: props.onRemoveDownVote,
+            onReply: props.onReply
         };
 
         console.log('commentProps', commentProps);
         var comments = this.props.comments.map(function(comment) {
             commentProps.comment = comment;
-            return <CommentNode key={comment.commentId}
-                                comment = {comment}
-                                onCommentSelect={this.onCommentSelect} />
+            commentProps.key = comment.commentId;
+
+            return <CommentNode {...commentProps} />
         }.bind(this));
 
         return (

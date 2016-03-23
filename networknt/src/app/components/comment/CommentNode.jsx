@@ -9,6 +9,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import Gravatar from '../Gravatar';
 import Avatar from 'material-ui/lib/avatar';
 import IconButton from 'material-ui/lib/icon-button';
+import ReplyBox from './ReplyBox';
 
 var CommentNode = React.createClass({
 
@@ -70,6 +71,11 @@ var CommentNode = React.createClass({
         ev.stopPropagation();
     },
 
+    handleReply: function(rid, text) {
+        console.log('handleReply', rid, text);
+        this.props.onReply(rid, text);
+    },
+
     render: function () {
         if (!this.state.out_HasComment) this.state.out_HasComment = [];
         var classes = classNames({
@@ -78,18 +84,18 @@ var CommentNode = React.createClass({
             'closed': (this.state.out_HasComment ? false : true),
             'selected': (this.state.selected ? true : false)
         });
+        console.log('this.props', this.props);
+        let boundHandleReply = this.handleReply.bind(this, this.props.comment.rid);
         return (
             <li ref="node" className={classes}
                 onClick={this.onChildDisplayToggle}>
-                <a onClick={this.onCommentSelect}
-                    data-id={this.props.comment.commentId}>
-                    <Gravatar md5={this.props.comment.gravatar} />
-                    <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
-                        <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate}</span>
-                        <span style={{fontSize: 14}}>2<IconButton iconStyle={{width: '12px', height:'12px', padding: '1px'}} style={{width: '48px', height: '48px', padding: '1px'}} iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_less</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_more</IconButton>5<IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>visibility_off</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>reply</IconButton></span>
-                    </div>
-                    <span style={{display: 'block', fontSize: 15}}>{this.props.comment.comment}</span>
-                </a>
+                <Gravatar md5={this.props.comment.gravatar} />
+                <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
+                    <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate}</span>
+                    <span style={{fontSize: 14}}>2<IconButton iconStyle={{width: '12px', height:'12px', padding: '1px'}} style={{width: '48px', height: '48px', padding: '1px'}} iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_less</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_more</IconButton>5<IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>visibility_off</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>reply</IconButton></span>
+                    <ReplyBox onReply={boundHandleReply} defaultClassName="reply-box"/>
+                </div>
+                <span style={{display: 'block', fontSize: 15}}>{this.props.comment.comment}</span>
                 <ul>
                     {this.state.out_HasComment.map(function(child) {
                         return <CommentNode key={child.commentId}

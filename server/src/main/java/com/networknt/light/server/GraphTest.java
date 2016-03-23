@@ -28,10 +28,10 @@ public class GraphTest {
 
     public static void main(String[] args) {
 
-        String sql = "select @rid, out_HasComment, comment, commentId, createDate, in_Create[0].userId as userId, in_Create[0]['@rid'] as userRid from (traverse out('HasComment') from #35:22) where host = 'www.networknt.com' and @class = 'Comment'";
+        String sql = "select @rid, out_HasComment, comment, commentId, createDate, in_Create[0].userId as userId, in_Create[0]['@rid'] as userRid from (traverse out('HasComment') from #35:22) where host = 'www.networknt.com' and @class = 'Comment' and in_HasComment[0]['@CLASS'] <> 'Comment'";
 
-        OrientGraphFactory factory = new OrientGraphFactory("plocal:/home/steve/lightdb").setupPool(1,10);
-
+        //OrientGraphFactory factory = new OrientGraphFactory("plocal:/home/steve/lightdb").setupPool(1,10);
+        OrientGraphFactory factory = new OrientGraphFactory("plocal:/Users/HUS5/lightdb").setupPool(1,10);
         OrientGraph graph = factory.getTx();
         try {
             //System.out.println(graph.getVertex("#11:0").getRecord().toJSON("rid, fetchPlan:*:-1"));
@@ -43,7 +43,7 @@ public class GraphTest {
 
             List<ODocument> result = graph.getRawGraph().query(
                     new OSQLSynchQuery(sql));
-            String json = OJSONWriter.listToJSON(result, "fetchPlan:[*]in_HasComment:-2 [*]out_HasComment:5");
+            String json = OJSONWriter.listToJSON(result, "rid,fetchPlan:out_HasComment:-1");
             System.out.println(json);
             //System.out.println(getBfnTree("forum", "example"));
         } finally {

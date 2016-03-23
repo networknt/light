@@ -38,10 +38,13 @@ var ReplyButton = React.createClass({
     getInitialState: function() {
         return {isSubmitting: this.props.isSubmitting};
     },
+
     mountId: "text-area-mount",
+
     startSubmit: function() {
         this.setState({isSubmitting: true});
     },
+
     handleSubmit: function(e) {
         this.setState({isSubmitting: false});
         var text = React.findDOMNode(this.refs.textArea).value;
@@ -50,12 +53,15 @@ var ReplyButton = React.createClass({
         }
         this.props.onReplySubmit(text);
     },
+
     getOnClickFunction: function() {
         return this.state.isSubmitting ? this.handleSubmit : this.startSubmit;
     },
+
     cancel: function() {
         this.setState({isSubmitting: false});
     },
+
     render: function() {
         var textareaComponent, cancelButtonComponent;
 
