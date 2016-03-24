@@ -16,6 +16,10 @@
 
 package com.networknt.light.rule.comment;
 
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.MapFunction;
 import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
@@ -29,6 +33,7 @@ import com.tinkerpop.blueprints.impls.orient.OrientVertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -165,9 +170,11 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
             List<ODocument> list = graph.getRawGraph().command(query).execute();
             if(list.size() > 0) {
-                json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 in_Create[0]:1 [*]out_Create:-2 [*]out_Update:-2 [*]out_HasComment:-1");
-                // TODO need to fixed the in_Create within the json using json path.
-
+                json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 in_Create[]:0 [*]out_Create:-2 [*]out_Update:-2 [*]out_HasComment:-1");
+                // need to fixed the in_Create within the json using json path.
+                DocumentContext dc = JsonPath.parse(json);
+                MapFunction mapFunction = new StripInCreateMapFunction();
+                json = dc.map("$..in_Create[0]", mapFunction).jsonString();
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
@@ -175,5 +182,26 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             graph.shutdown();
         }
         return json;
+    }
+
+    private class StripInCreateMapFunction implements MapFunction {
+        Map<String, Object> userMap = new HashMap<String, Object>();
+        @Override
+        public Object map(Object currentValue, Configuration configuration) {
+            if(currentValue instanceof Map) {
+                ((Map) currentValue).remove("roles");
+                ((Map) currentValue).remove("credential");
+                ((Map) currentValue).remove("createDate");
+                ((Map) currentValue).remove("host");
+                ((Map) currentValue).remove("out_Create");
+                String rid = (String)((Map) currentValue).get("@rid");
+                if(userMap.get(rid) == null) {
+                    userMap.put(rid, currentValue);
+                }
+            } else if(currentValue instanceof String) {
+                currentValue = userMap.get((String)currentValue);
+            }
+            return currentValue;
+        }
     }
 }

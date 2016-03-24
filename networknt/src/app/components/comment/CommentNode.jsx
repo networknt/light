@@ -54,6 +54,22 @@ var CommentNode = React.createClass({
         });
         console.log('this.props', this.props);
         let boundHandleReply = this.handleReply.bind(this, this.props.comment['@rid']);
+        var commentProps = {
+            comment: {},
+            onUpVote: this.props.onUpVote,
+            onRemoveUpVote: this.props.onRemoveUpVote,
+            onAddComment: this.props.onAddComment,
+            onDownVote: this.props.onDownVote,
+            onRemoveDownVote: this.props.onRemoveDownVote,
+            onReply: this.props.onReply
+        };
+
+        var comments = this.state.out_HasComment.map(function(comment) {
+            commentProps.comment = comment;
+            commentProps.key = comment.commentId;
+            return <CommentNode {...commentProps} />
+        }.bind(this));
+
         return (
             <li ref="node" className={classes}
                 onClick={this.onChildDisplayToggle}>
@@ -65,11 +81,7 @@ var CommentNode = React.createClass({
                 </div>
                 <span style={{display: 'block', fontSize: 15}}>{this.props.comment.comment}</span>
                 <ul>
-                    {this.state.out_HasComment.map(function(child) {
-                        return <CommentNode key={child.commentId}
-                                         comment={child}
-                                         onCommentSelect={this.props.onCommentSelect}/>;
-                    }.bind(this))}
+                    {comments}
                 </ul>
             </li>
         );

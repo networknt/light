@@ -153,7 +153,7 @@ var CommentBox = React.createClass({
     },
 
     render: function() {
-        console.log('this.state', this.state);
+        //console.log('this.state', this.state);
         //let commentThread = (<CircularProgress mode="indeterminate"/>);
         var CommentThreadProps = {
             comments: this.state.comments,
@@ -164,7 +164,7 @@ var CommentBox = React.createClass({
             onRemoveDownVote: this._onRemoveDownVote,
             onReply: this._onReply
         };
-        console.log('CommentThreadProp', CommentThreadProps);
+        //console.log('CommentThreadProp', CommentThreadProps);
 
         let commentThread = (<div></div>);
         if(this.state.comments && this.state.comments.length > 0) {
