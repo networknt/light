@@ -14,41 +14,9 @@ import ReplyBox from './ReplyBox';
 var CommentNode = React.createClass({
 
     getInitialState: function() {
-        return {comments: [
-            {
-                "rid": "#36:0",
-                "out_HasComment": [
-                    {
-                        "host": "www.networknt.com",
-                        "commentId": "joiwejfloiewwoihg",
-                        "createDate": "2016-03-20T17:50:21.455",
-                        "comment": "This is the first child of comment 1",
-                        "in_": []
-                    }
-                ],
-                "comment": "This is the first comment",
-                "commentId": "Hc-X1ag7QziOIffoUQXO5g",
-                "createDate": "2016-03-20T14:40:47.317",
-                "userId": "stevehu",
-                "userRid": "#15:0"
-            },
-            {
-                "rid": "#36:1",
-                "comment": "This is the second comment",
-                "commentId": "oqzhrj4hTbacItyV9xTYVQ",
-                "createDate": "2016-03-20T14:41:05.591",
-                "userId": "stevehu",
-                "userRid": "#15:0"
-            },
-            {
-                "rid": "#36:2",
-                "comment": "This is the third comment",
-                "commentId": "GQACmDViS-6w7oZpcPjZfA",
-                "createDate": "2016-03-20T14:41:16.028",
-                "userId": "stevehu",
-                "userRid": "#15:0"
-            }
-        ]};
+        return {
+            comments: []
+        };
     },
 
     onCategorySelect: function (ev) {
@@ -85,13 +53,13 @@ var CommentNode = React.createClass({
             'selected': (this.state.selected ? true : false)
         });
         console.log('this.props', this.props);
-        let boundHandleReply = this.handleReply.bind(this, this.props.comment.rid);
+        let boundHandleReply = this.handleReply.bind(this, this.props.comment['@rid']);
         return (
             <li ref="node" className={classes}
                 onClick={this.onChildDisplayToggle}>
                 <Gravatar md5={this.props.comment.gravatar} />
                 <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
-                    <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate}</span>
+                    <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.in_Create[0].userId + ' on ' + this.props.comment.createDate}</span>
                     <span style={{fontSize: 14}}>2<IconButton iconStyle={{width: '12px', height:'12px', padding: '1px'}} style={{width: '48px', height: '48px', padding: '1px'}} iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_less</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_more</IconButton>5<IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>visibility_off</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>reply</IconButton></span>
                     <ReplyBox onReply={boundHandleReply} defaultClassName="reply-box"/>
                 </div>

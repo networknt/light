@@ -27,11 +27,10 @@ public class GraphTest {
     static final org.slf4j.Logger logger = LoggerFactory.getLogger(GraphTest.class);
 
     public static void main(String[] args) {
+        String sql = "select from Comment where in_HasComment[0] = #35:22";
 
-        String sql = "select @rid, out_HasComment, comment, commentId, createDate, in_Create[0].userId as userId, in_Create[0]['@rid'] as userRid from (traverse out('HasComment') from #35:22) where host = 'www.networknt.com' and @class = 'Comment' and in_HasComment[0]['@CLASS'] <> 'Comment'";
-
-        //OrientGraphFactory factory = new OrientGraphFactory("plocal:/home/steve/lightdb").setupPool(1,10);
-        OrientGraphFactory factory = new OrientGraphFactory("plocal:/Users/HUS5/lightdb").setupPool(1,10);
+        OrientGraphFactory factory = new OrientGraphFactory("plocal:/home/steve/lightdb").setupPool(1,10);
+        //OrientGraphFactory factory = new OrientGraphFactory("plocal:/Users/HUS5/lightdb").setupPool(1,10);
         OrientGraph graph = factory.getTx();
         try {
             //System.out.println(graph.getVertex("#11:0").getRecord().toJSON("rid, fetchPlan:*:-1"));
@@ -40,10 +39,9 @@ public class GraphTest {
             //String result = graph.getVertex("#35:22").getRecord().toJSON("rid,version,fetchPlan:out_HasComment:-1 out_HasComment.out_HasComment:-1 out_HasComment.in_Create:0");
             //String result = graph.getVertex("#35:22").getRecord().toJSON("rid,in_Create.userId, fetchPlan:out_HasComment:5");
             //System.out.println(result);
-
-            List<ODocument> result = graph.getRawGraph().query(
-                    new OSQLSynchQuery(sql));
-            String json = OJSONWriter.listToJSON(result, "rid,fetchPlan:out_HasComment:-1");
+            OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
+            List<ODocument> list = graph.getRawGraph().command(query).execute();
+            String json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 in_Create[]:0 [*]out_Create:-2 [*]out_Update:-2 [*]out_HasComment:-1");
             System.out.println(json);
             //System.out.println(getBfnTree("forum", "example"));
         } finally {

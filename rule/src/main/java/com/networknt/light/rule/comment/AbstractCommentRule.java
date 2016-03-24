@@ -157,16 +157,17 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
     }
 
     protected String getCommentTree(Map<String, Object> data) {
-        String host = (String)data.get("host");
         String rid = (String)data.get("@rid");
-        String sql = "select @rid, out_HasComment, comment, commentId, createDate, in_Create[0].userId as userId, in_Create[0]['@rid'] as userRid from (traverse out('HasComment') from ?) where host = ? and @class = 'Comment' and in_HasComment[0]['@CLASS'] <> 'Comment'";
+        String sql = "select from Comment where in_HasComment[0] = " + rid;
         String json = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
-            List<ODocument> list = graph.getRawGraph().command(query).execute(rid, host);
+            List<ODocument> list = graph.getRawGraph().command(query).execute();
             if(list.size() > 0) {
-                json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 [*]out_HasComment:5");
+                json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 in_Create[0]:1 [*]out_Create:-2 [*]out_Update:-2 [*]out_HasComment:-1");
+                // TODO need to fixed the in_Create within the json using json path.
+
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
