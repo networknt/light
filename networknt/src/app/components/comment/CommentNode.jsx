@@ -15,16 +15,9 @@ var CommentNode = React.createClass({
 
     getInitialState: function() {
         return {
-            comments: []
+            comments: [],
+            out_HasComment: this.props.comment.out_HasComment
         };
-    },
-
-    onCategorySelect: function (ev) {
-        if (this.props.onCommentSelect) {
-            this.props.onCommentSelect(this);
-        }
-        ev.preventDefault();
-        ev.stopPropagation();
     },
 
     onChildDisplayToggle: function (ev) {
@@ -76,10 +69,12 @@ var CommentNode = React.createClass({
                 <Gravatar md5={this.props.comment.gravatar} />
                 <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
                     <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.in_Create[0].userId + ' on ' + this.props.comment.createDate}</span>
+                    <span style={{display: 'inline-block', fontSize: 15}}>{this.props.comment.comment}</span>
+                </div>
+                <div>
                     <span style={{fontSize: 14}}>2<IconButton iconStyle={{width: '12px', height:'12px', padding: '1px'}} style={{width: '48px', height: '48px', padding: '1px'}} iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_less</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_more</IconButton>5<IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>visibility_off</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>reply</IconButton></span>
                     <ReplyBox onReply={boundHandleReply} defaultClassName="reply-box"/>
                 </div>
-                <span style={{display: 'block', fontSize: 15}}>{this.props.comment.comment}</span>
                 <ul>
                     {comments}
                 </ul>
