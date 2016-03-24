@@ -1,4 +1,8 @@
 var React = require('react');
+import TextField from 'material-ui/lib/TextField';
+import Tabs from 'material-ui/lib/tabs/tabs';
+import Tab from 'material-ui/lib/tabs/tab';
+import Markdown from '../Markdown';
 
 var ReplyBox = React.createClass({
     propTypes: {
@@ -7,9 +11,11 @@ var ReplyBox = React.createClass({
     },
     getInitialState: function() {
         return {
-            isSubmitting: false
+            isSubmitting: false,
+            vlaue: ''
         };
     },
+
     handleReplySubmit: function(text) {
         this.props.onReply(text);
         this.setState({isSubmitting: true});
@@ -39,15 +45,13 @@ var ReplyButton = React.createClass({
         return {isSubmitting: this.props.isSubmitting};
     },
 
-    mountId: "text-area-mount",
-
     startSubmit: function() {
         this.setState({isSubmitting: true});
     },
 
     handleSubmit: function(e) {
         this.setState({isSubmitting: false});
-        var text = React.findDOMNode(this.refs.textArea).value;
+        var text = this.state.value;
         if (text === '') {
             return;
         }
@@ -62,13 +66,26 @@ var ReplyButton = React.createClass({
         this.setState({isSubmitting: false});
     },
 
+    onChange: function(e) {
+        this.setState({
+            value: e.target.value
+        })
+    },
+
     render: function() {
         var textareaComponent, cancelButtonComponent;
 
         if (this.state.isSubmitting) {
             textareaComponent = (
-                <div>
-                    <textarea className={this.props.defaultClassName + "-textarea"} ref="textArea" />
+                <div style={{width: '100%'}}>
+                    <Tabs initialSelectedIndex={0}>
+                        <Tab label="Content">
+                            <TextField style={{width: '100%'}} hintText="Reply to thread..." multiLine={true} rows={4} onChange={this.onChange} />
+                        </Tab>
+                        <Tab label="Review">
+                            <Markdown text={this.state.value} />
+                        </Tab>
+                    </Tabs>
                 </div>
             );
 

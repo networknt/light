@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import TextField from 'material-ui/lib/TextField';
 import Tabs from 'material-ui/lib/tabs/tabs';
 import Tab from 'material-ui/lib/tabs/tab';
-import RaisedButton from 'material-ui/lib/raised-button';
 import Markdown from '../Markdown';
 
 var CommentForm = React.createClass({
@@ -44,27 +43,10 @@ var CommentForm = React.createClass({
                         <Markdown text={this.state.value} />
                     </Tab>
                 </Tabs>
-                <RaisedButton primary={true} label="Reply" onTouchTap={this.onReply} />
+                <input type="button" onClick={this.onReply} value="Reply" />
             </div>
         );
     }
 });
 
 module.exports = CommentForm;
-
-/*
- <form style={{width: '100%'}} className='new-comment-form' onSubmit={this.handleSubmit}>
- <Tabs initialSelectedIndex={1}>
- <Tab label="Content">
- <TextField hintText="Reply to thread..." multiLine={true} rows={4} onChange={this.onChange} />
- </Tab>
- <Tab label="Review">
- <Markdown text={this.state.value} />
- </Tab>
- </Tabs>
-
- <br />
- <input type="submit" value="reply" />
- </form>
-
- */
