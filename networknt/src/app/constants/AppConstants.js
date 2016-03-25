@@ -159,7 +159,7 @@ module.exports = {
         GET_RULE_RESPONSE: null,
 
         // Comment
-        GET_COMMENT_RESPONSE: null
+        GET_COMMENT_TREE_RESPONSE: null
 
     }),
 

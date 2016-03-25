@@ -9,8 +9,8 @@ var ActionTypes = AppConstants.ActionTypes;
 
 module.exports = {
 
-    getCommentTree: function(parentRid) {
-        WebAPIUtils.getCommentTree(parentRid);
+    getCommentTree: function(parentRid, pageNo, pageSize, sortedBy, sortDir) {
+        WebAPIUtils.getCommentTree(parentRid, pageNo, pageSize, sortedBy, sortDir);
     },
 
     addComment: function(data) {

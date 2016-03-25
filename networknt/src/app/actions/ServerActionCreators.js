@@ -423,7 +423,6 @@ module.exports = {
     },
 
     delHostResponse: function(hostId) {
-        console.log('ServerActionCreators.delHostResponse', hostId);
         AppDispatcher.dispatch({
             type: ActionTypes.DEL_HOST_RESPONSE,
             hostId: hostId
@@ -472,9 +471,9 @@ module.exports = {
         });
     },
 
-    getCommentResponse: function(json) {
+    getCommentTreeResponse: function(json) {
         AppDispatcher.dispatch({
-            type: ActionTypes.GET_COMMENT_RESPONSE,
+            type: ActionTypes.GET_COMMENT_TREE_RESPONSE,
             json: json
         });
     }

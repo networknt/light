@@ -13,6 +13,7 @@ import PostStore from '../../stores/PostStore';
 import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
+import CommentBox from '../comment/CommentBox';
 import moment from 'moment';
 
 import Toolbar from 'material-ui/lib/toolbar/toolbar';
@@ -107,6 +108,10 @@ var NewsPost = React.createClass({
                 </ToolbarGroup>
             </Toolbar>
             : '';
+        let commentBox = '';
+        if(this.state.post && this.state.post.rid) {
+            commentBox = (<CommentBox entityRid = {this.state.post.rid}/>)
+        }
         return (
             <div>
                 <div className="leftColumn">
@@ -122,7 +127,7 @@ var NewsPost = React.createClass({
                             <Markdown text={this.state.post.content} />
                         </div>
                     </Paper>
-                    <hr />
+                    {commentBox}
                 </div>
             </div>
         )

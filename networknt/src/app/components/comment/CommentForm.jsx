@@ -8,7 +8,8 @@ import Markdown from '../Markdown';
 var CommentForm = React.createClass({
 
     propTypes: {
-        parentRid: React.PropTypes.string
+        parentRid: React.PropTypes.string,
+        onAddComment: React.PropTypes.func.isRequired
     },
 
     getInitialState: function() {
@@ -22,7 +23,7 @@ var CommentForm = React.createClass({
         if (!this.state.value || this.state.value.length === 0) {
             return;
         }
-        this.props.onCommentSubmit(this.props.parentRid, this.state.value);
+        this.props.onAddComment(this.props.parentRid, this.state.value);
         this.setState({value: ''});
     },
 

@@ -36,8 +36,8 @@ public class DelCommentRule extends AbstractCommentRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
-        String host = (String)data.get("host");
         String rid = (String)data.get("@rid");
+        String entityRid = (String)data.get("entityRid");
         String error = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
         try {
@@ -56,6 +56,7 @@ public class DelCommentRule extends AbstractCommentRule implements Rule {
                     Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                     inputMap.put("eventMap", eventMap);
                     eventData.put("commentId", comment.getProperty("commentId"));
+                    eventData.put("entityRid", entityRid);
                 }
             }
         } catch (Exception e) {

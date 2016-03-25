@@ -34,7 +34,7 @@ var CommentNode = React.createClass({
 
     handleReply: function(rid, text) {
         console.log('handleReply', rid, text);
-        this.props.onReply(rid, text);
+        this.props.onAddComment(rid, text);
     },
 
     render: function () {
@@ -45,16 +45,16 @@ var CommentNode = React.createClass({
             'closed': (this.state.out_HasComment ? false : true),
             'selected': (this.state.selected ? true : false)
         });
-        console.log('this.props', this.props);
+        //console.log('this.props', this.props);
         let boundHandleReply = this.handleReply.bind(this, this.props.comment['@rid']);
+
         var commentProps = {
             comment: {},
+            onAddComment: this.props.onAddComment,
             onUpVote: this.props.onUpVote,
             onRemoveUpVote: this.props.onRemoveUpVote,
-            onAddComment: this.props.onAddComment,
             onDownVote: this.props.onDownVote,
-            onRemoveDownVote: this.props.onRemoveDownVote,
-            onReply: this.props.onReply
+            onRemoveDownVote: this.props.onRemoveDownVote
         };
 
         var comments = this.state.out_HasComment.map(function(comment) {
@@ -69,7 +69,7 @@ var CommentNode = React.createClass({
                 <Gravatar md5={this.props.comment.gravatar} />
                 <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
                     <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.in_Create[0].userId + ' on ' + this.props.comment.createDate}</span>
-                    <span style={{display: 'inline-block', fontSize: 15}}>{this.props.comment.comment}</span>
+                    <span style={{display: 'inline-block', fontSize: 15}}>{this.props.comment.content}</span>
                 </div>
                 <div>
                     <span style={{fontSize: 14}}>2<IconButton iconStyle={{width: '12px', height:'12px', padding: '1px'}} style={{width: '48px', height: '48px', padding: '1px'}} iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_less</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_more</IconButton>5<IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>visibility_off</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>reply</IconButton></span>
@@ -84,7 +84,3 @@ var CommentNode = React.createClass({
 });
 
 module.exports = CommentNode;
-/*
- <CardHeader title={this.props.comment.comment} subtitle= {'Submitted by ' + this.props.comment.userId + ' on ' + this.props.comment.createDate} avatar={<Avatar icon={<Gravatar md5={this.props.comment.gravatar} />} />} />
-
- */

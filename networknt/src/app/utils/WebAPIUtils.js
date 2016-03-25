@@ -1541,24 +1541,25 @@ module.exports = {
         });
     },
 
-    getCommentTree: function(parentRid) {
-        console.log('WebAPIUtils.getCommentTree.parentRid', parentRid);
+    getCommentTree: function(parentRid, pageNo, pageSize, sortedBy, sortDir) {
         var getCommentTree = {
             category: 'comment',
             name: 'getCommentTree',
             readOnly: true,
             data: {
-                '@rid': parentRid
+                '@rid': parentRid,
+                pageNo: pageNo,
+                pageSize: pageSize,
+                sortedBy: sortedBy,
+                sortDir: sortDir
             }
         };
-        console.log('WebAPIUtils.getCommentTree', getCommentTree);
         $.ajax({
             type: 'GET',
             url: '/api/rs',
             data:  { cmd: encodeURIComponent(JSON.stringify(getCommentTree))}
         }).done(function(data) {
-            console.log('WebAPIUtils.getComment response', data);
-            ServerActionCreators.getCommentResponse(data);
+            ServerActionCreators.getCommentTreeResponse(data);
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });
@@ -1571,7 +1572,6 @@ module.exports = {
             readOnly: false,
             data: data
         };
-        console.log('addComment', addComment);
         $.ajax({
             type: 'POST',
             url: '/api/rs',

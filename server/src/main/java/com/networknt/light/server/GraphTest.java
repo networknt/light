@@ -29,8 +29,8 @@ public class GraphTest {
     public static void main(String[] args) {
         String sql = "select from Comment where in_HasComment[0] = #35:22";
 
-        //OrientGraphFactory factory = new OrientGraphFactory("plocal:/home/steve/lightdb").setupPool(1,10);
-        OrientGraphFactory factory = new OrientGraphFactory("plocal:/Users/HUS5/lightdb").setupPool(1,10);
+        OrientGraphFactory factory = new OrientGraphFactory("plocal:/home/steve/lightdb").setupPool(1,10);
+        //OrientGraphFactory factory = new OrientGraphFactory("plocal:/Users/HUS5/lightdb").setupPool(1,10);
         OrientGraph graph = factory.getTx();
         try {
             //System.out.println(graph.getVertex("#11:0").getRecord().toJSON("rid, fetchPlan:*:-1"));

@@ -41,6 +41,7 @@ public class AddCommentRule extends AbstractCommentRule implements Rule {
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
         String host = (String)data.get("host");
+        String entityRid = (String)data.get("entityRid");
         String parentRid = (String)data.get("@rid");
         String error = null;
         OrientGraph graph = ServiceLocator.getInstance().getGraph();
@@ -54,7 +55,9 @@ public class AddCommentRule extends AbstractCommentRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.put("host", host);
-                eventData.put("comment", data.get("comment"));
+                eventData.put("entityRid", entityRid);
+                eventData.put("content", data.get("content"));
+                eventData.put("rank", 0);
                 String parentClassName = parent.getProperty("@class");
                 eventData.put("parentClassName", parentClassName); // parent can be a post or a comment
                 if("Post".equals(parentClassName)) {

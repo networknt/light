@@ -4,25 +4,36 @@ import CommentActionCreators from '../../actions/CommentActionCreators';
 import CommentStore from '../../stores/CommentStore';
 import CommentForm from './CommentForm';
 import CommentThread from './CommentThread';
-
+require('rc-pagination/assets/index.css');
+import Pagination from 'rc-pagination';
+import Locale from 'rc-pagination/lib/locale/en_US';
+require('rc-select/assets/index.css');
+import Select, {Option} from 'rc-select';
 import CircularProgress from 'material-ui/lib/circular-progress';
+
 
 var CommentBox = React.createClass({
 
     propTypes: {
-        parentRid: React.PropTypes.string
+        entityRid: React.PropTypes.string
     },
 
     getInitialState: function() {
         return {
-            comments: []
+            comments: [],
+            total: 0,
+            allowUpdate: false,
+            pageSize: 10,
+            pageNo: 1,
+            sortedBy: 'rank',
+            sortDir: 'desc'
         };
     },
 
     componentDidMount: function() {
-        console.log("CommentBox.componentDidMount", this.props.parentRid);
+        //console.log("CommentBox.componentDidMount", this.props.entityRid);
         CommentStore.addChangeListener(this._onCommentChange);
-        CommentActionCreators.getCommentTree(this.props.parentRid);
+        CommentActionCreators.getCommentTree(this.props.entityRid, this.state.pageNo, this.state.pageSize, this.state.sortedBy, this.state.sortDir);
     },
 
     componentWillUnmount: function() {
@@ -32,14 +43,17 @@ var CommentBox = React.createClass({
     _onCommentChange: function() {
         console.log('onCommentChange', JSON.stringify(CommentStore.getComments()));
         this.setState({
-            comments: CommentStore.getComments()
+            comments: CommentStore.getComments(),
+            total: CommentStore.getTotal(),
+            allowUpdate: CommentStore.getAllowUpdate()
         });
     },
 
-    _onAddComment: function(parentRid, message) {
+    _onAddComment: function(parentRid, content) {
         let data = {
+            entityRid: this.props.entityRid,
             '@rid': parentRid,
-            comment: message
+            content: content
         };
         CommentActionCreators.addComment(data);
     },
@@ -144,28 +158,55 @@ var CommentBox = React.createClass({
 
     },
 
-    _onReply: function(rid, text) {
-        let data = {
-            '@rid': rid,
-            comment: text
-        };
-        CommentActionCreators.addComment(data);
+    _onPageNoChange: function (key) {
+        this.setState({
+            pageNo: key
+        });
+        // use key instead of this.state.pageNo as setState is async.
+        CommentActionCreators.getCommentTree(this.props.entityRid, key, this.state.pageSize, this.state.sortedBy, this.state.sortDir);
+    },
+
+    _onPageSizeChange: function (current, pageSize) {
+        this.setState({
+            pageSize: pageSize
+        });
+        CommentActionCreators.getCommentTree(this.props.entityRid, this.state.pageNo, pageSize, this.state.sortedBy, this.state.sortDir);
+    },
+
+    _onSortSelect: function(value, option) {
+        let sortedBy = 'rank';
+        let sortDir = 'desc';
+
+        switch(value) {
+            case 'Rank':
+                break;
+            case 'Newest':
+                sortedBy = 'createDate';
+                sortDir = 'desc';
+                break;
+            case 'Oldest':
+                sortedBy = 'createDate';
+                sortDir = 'asc';
+                break;
+        }
+        this.setState({
+            sortedBy: sortedBy,
+            sortDir: sortDir
+        });
+
+        CommentActionCreators.getCommentTree(this.props.entityRid, this.state.pageNo, this.state.pageSize, sortedBy, sortDir);
+
     },
 
     render: function() {
-        //console.log('this.state', this.state);
-        //let commentThread = (<CircularProgress mode="indeterminate"/>);
         var CommentThreadProps = {
             comments: this.state.comments,
             onAddComment: this._onAddComment,
             onUpVote: this._onUpVote,
             onRemoveUpVote: this._onRemoveUpVote,
             onDownVote: this._onDownVote,
-            onRemoveDownVote: this._onRemoveDownVote,
-            onReply: this._onReply
+            onRemoveDownVote: this._onRemoveDownVote
         };
-        //console.log('CommentThreadProp', CommentThreadProps);
-
         let commentThread = (<div></div>);
         if(this.state.comments && this.state.comments.length > 0) {
             commentThread = (
@@ -176,9 +217,10 @@ var CommentBox = React.createClass({
         }
         return (
             <div>
-                <h3>{this.state.comments ? this.state.comments.length : 0} comments</h3>
-                <CommentForm onCommentSubmit={this._onAddComment} parentRid={this.props.parentRid} />
+                <h3>{this.state.total} comments</h3><Select defaultValue="Rank" onSelect={this._onSortSelect}><Option value="Rank">Rank</Option><Option value="Newest">Newest</Option><Option value="Oldest">Oldest</Option></Select>
+                <CommentForm onAddComment={this._onAddComment} parentRid={this.props.entityRid} />
                 {commentThread}
+                <Pagination locale={Locale} selectComponentClass={Select} showSizeChanger={true} pageSizeOptions={['10', '25', '50', '100']} onShowSizeChange={this._onPageSizeChange} onChange={this._onPageNoChange} current={this.state.pageNo} pageSize={this.state.pageSize} total={this.state.total}/>
             </div>
         );
     }

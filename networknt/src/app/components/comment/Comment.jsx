@@ -6,7 +6,7 @@ var Comment = React.createClass({
         var className = "comment " + "depth2";
 
         return (
-            <li className={className}>{this.props.comment.comment}</li>
+            <li className={className}>{this.props.comment.content}</li>
         )
     }
 });

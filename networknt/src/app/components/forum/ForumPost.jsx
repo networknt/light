@@ -114,7 +114,7 @@ var ForumPost = React.createClass({
             : '';
         let commentBox = '';
         if(this.state.post && this.state.post.rid) {
-            commentBox = (<CommentBox parentRid = {this.state.post.rid}/>)
+            commentBox = (<CommentBox entityRid = {this.state.post.rid}/>)
         }
         return (
             <div>
