@@ -5,6 +5,7 @@ import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,7 @@ public class UpdCommentRule extends AbstractCommentRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.put("commentId", comment.getProperty("commentId"));
-                eventData.put("content", data.get("content"));
+                eventData.put("content", Encode.forJavaScriptSource((String)data.get("content")));
             }
         } catch (Exception e) {
             logger.error("Exception:", e);

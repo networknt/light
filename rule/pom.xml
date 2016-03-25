@@ -55,6 +55,10 @@
             <groupId>com.restfb</groupId>
             <artifactId>restfb</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+        </dependency>
         <!-- Test Dependencies -->
         <dependency>
             <groupId>junit</groupId>

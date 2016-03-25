@@ -33,6 +33,7 @@ import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.impls.orient.OrientElementIterable;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +72,24 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.putAll((Map<String, Object>) inputMap.get("data"));
+                if(eventData.get("title") != null) {
+                    eventData.put("title", Encode.forJavaScriptSource((String)eventData.get("title")));
+                }
+                if(eventData.get("summary") != null) {
+                    eventData.put("summary", Encode.forJavaScriptSource((String)eventData.get("summary")));
+                }
+                if(eventData.get("content") != null) {
+                    eventData.put("content", Encode.forJavaScriptSource((String)eventData.get("content")));
+                }
+                if(eventData.get("originalAuthor") != null) {
+                    eventData.put("originalAuthor", Encode.forJavaScriptSource((String)eventData.get("originalAuthor")));
+                }
+                if(eventData.get("originalSite") != null) {
+                    eventData.put("originalSite", Encode.forJavaScriptSource((String)eventData.get("originalSite")));
+                }
+                if(eventData.get("originalUrl") != null) {
+                    eventData.put("originalUrl", Encode.forUriComponent((String)eventData.get("originalUrl")));
+                }
                 eventData.put("parentId", parent.getProperty("categoryId"));
                 eventData.put("entityId", HashUtil.generateUUID());
                 eventData.put("createDate", new Date());
@@ -302,10 +321,12 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 inputMap.put("eventMap", eventMap);
                 eventData.put("host", data.get("host"));
                 eventData.put("entityId", post.getProperty("entityId"));
-                eventData.put("title", data.get("title"));
-                eventData.put("source", data.get("source"));
-                eventData.put("summary", data.get("summary"));
-                eventData.put("content", data.get("content"));
+                eventData.put("title", Encode.forJavaScriptSource((String)data.get("title")));
+                eventData.put("originalAuthor", Encode.forJavaScriptSource((String)data.get("originalAuthor")));
+                eventData.put("originalSite", Encode.forJavaScriptSource((String)data.get("originalSite")));
+                eventData.put("originalUrl", Encode.forUriComponent((String)data.get("originalUrl")));
+                eventData.put("summary", Encode.forJavaScriptSource((String)data.get("summary")));
+                eventData.put("content", Encode.forJavaScriptSource((String)data.get("content")));
                 eventData.put("updateDate", new Date());
                 eventData.put("updateUserId", user.get("userId"));
                 // it is possible for the post to switch parent.
@@ -410,10 +431,20 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 } else {
                     post.removeProperty("name");
                 }
-                if(data.get("source") != null) {
-                    post.setProperty("source", data.get("source"));
+                if(data.get("originalAuthor") != null) {
+                    post.setProperty("originalAuthor", data.get("originalAuthor"));
                 } else {
-                    post.removeProperty("source");
+                    post.removeProperty("originalAuthor");
+                }
+                if(data.get("originalSite") != null) {
+                    post.setProperty("originalSite", data.get("originalSite"));
+                } else {
+                    post.removeProperty("originalSite");
+                }
+                if(data.get("originalUrl") != null) {
+                    post.setProperty("originalUrl", data.get("originalUrl"));
+                } else {
+                    post.removeProperty("originalUrl");
                 }
                 if(data.get("summary") != null) {
                     post.setProperty("summary", data.get("summary"));

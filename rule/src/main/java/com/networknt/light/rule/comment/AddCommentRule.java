@@ -22,6 +22,7 @@ import com.networknt.light.util.HashUtil;
 import com.networknt.light.util.ServiceLocator;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientVertex;
+import org.owasp.encoder.Encode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,7 @@ public class AddCommentRule extends AbstractCommentRule implements Rule {
                 inputMap.put("eventMap", eventMap);
                 eventData.put("host", host);
                 eventData.put("entityRid", entityRid);
-                eventData.put("content", data.get("content"));
+                eventData.put("content", Encode.forJavaScriptSource((String)data.get("content")));
                 eventData.put("rank", 0);
                 String parentClassName = parent.getProperty("@class");
                 eventData.put("parentClassName", parentClassName); // parent can be a post or a comment

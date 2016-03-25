@@ -73,6 +73,7 @@
         <commons-codec.version>1.10</commons-codec.version>
         <google-api.version>1.19.1</google-api.version>
         <facebook-api.version>1.20.0</facebook-api.version>
+        <java-encoder.version>1.2</java-encoder.version>
         <junit.version>4.12</junit.version>
         <easymock.version>3.2</easymock.version>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
@@ -430,6 +431,11 @@
                         <artifactId>mailapi</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.owasp.encoder</groupId>
+                <artifactId>encoder</artifactId>
+                <version>${java-encoder.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
