@@ -151,6 +151,11 @@ var CommentBox = React.createClass({
     },
 
     _onSpam: function(rid) {
+        let data = {
+            entityRid: this.props.entityRid,
+            '@rid': rid
+        };
+        CommentActionCreators.spmComment(data);
 
     },
 

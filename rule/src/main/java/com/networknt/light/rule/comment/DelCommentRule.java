@@ -57,6 +57,7 @@ public class DelCommentRule extends AbstractCommentRule implements Rule {
                     inputMap.put("eventMap", eventMap);
                     eventData.put("commentId", comment.getProperty("commentId"));
                     eventData.put("entityRid", entityRid);
+                    clearCommentCache(entityRid);
                 }
             }
         } catch (Exception e) {

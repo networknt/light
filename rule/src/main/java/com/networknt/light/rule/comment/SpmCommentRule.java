@@ -12,23 +12,18 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * Created by steve on 21/03/15.
+ * Created by steve on 26/03/16.
  *
- * only the comment content can be updated
- *
- * Access Level [owner, admin, forumAdmin, newsAdmin, blogAdmin, user]
- *
- * now only owner and admin can update
+ * AccessLevel R [user]
  *
  */
-public class UpdCommentRule extends AbstractCommentRule implements Rule {
-    static final Logger logger = LoggerFactory.getLogger(UpdCommentRule.class);
+public class SpmCommentRule extends AbstractCommentRule implements Rule {
+    static final Logger logger = LoggerFactory.getLogger(SpmCommentRule.class);
 
     public boolean execute (Object ...objects) throws Exception {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
-        String host = (String)data.get("host");
         String rid = (String)data.get("@rid");
         String entityRid = (String)data.get("entityRid");
         String error = null;
@@ -44,7 +39,7 @@ public class UpdCommentRule extends AbstractCommentRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.put("commentId", comment.getProperty("commentId"));
-                eventData.put("content", Encode.forJavaScriptSource((String)data.get("content")));
+                eventData.put("userId", user.get("userId"));
                 clearCommentCache(entityRid);
             }
         } catch (Exception e) {

@@ -1583,6 +1583,26 @@ module.exports = {
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });
+    },
+
+    spmComment: function(data) {
+        let spmComment = {
+            category: 'comment',
+            name: 'spmComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(spmComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.spmCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
     }
 
 };

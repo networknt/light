@@ -58,7 +58,6 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             graph.begin();
             Vertex createUser = graph.getVertexByKey("User.userId", data.remove("createUserId"));
             String parentId = (String)data.remove("parentId");
-            String entityRid = (String)data.remove("entityRid");
             String parentClassName = (String)data.remove("parentClassName");
             Vertex parent = null;
             if("Post".equals(parentClassName)) {
@@ -70,7 +69,6 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             createUser.addEdge("Create", comment);
             parent.addEdge("HasComment", comment);
             graph.commit();
-            clearCommentCache(entityRid);
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -95,7 +93,6 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
         try{
             graph.begin();
             String commentId = (String)data.get("commentId");
-            String entityRid = (String)data.get("entityRid");
             OrientVertex comment = (OrientVertex)graph.getVertexByKey("Comment.commentId", commentId);
             // remove the edge to this comment
             for (Edge edge : comment.getEdges(Direction.IN)) {
@@ -103,7 +100,6 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             }
             graph.removeVertex(comment);
             graph.commit();
-            clearCommentCache(entityRid);
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -117,13 +113,44 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
         try{
             graph.begin();
             String commentId = (String)data.get("commentId");
-            String entityRid = (String)data.get("entityRid");
             OrientVertex comment = (OrientVertex)graph.getVertexByKey("Comment.commentId", commentId);
             if(comment != null) {
                 comment.setProperty("content", data.get("content"));
             }
             graph.commit();
-            clearCommentCache(entityRid);
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void spmComment(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try{
+            graph.begin();
+            String commentId = (String)data.get("commentId");
+            OrientVertex comment = (OrientVertex)graph.getVertexByKey("Comment.commentId", commentId);
+            if(comment != null) {
+                String userId = (String)data.get("userId");
+                OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", userId);
+                if(user != null) {
+                    // check if this user has reported spam for this comment.
+                    boolean reported = false;
+                    for (Edge edge : user.getEdges(Direction.OUT, "ReportSpam")) {
+                        if(edge.getVertex(Direction.IN).equals(comment)) {
+                            // reported before, remove it.
+                            reported = true;
+                            edge.remove();
+                        }
+                    }
+                    if(!reported) {
+                        user.addEdge("ReportSpam", comment);
+                    }
+                }
+            }
+            graph.commit();
         } catch (Exception e) {
             logger.error("Exception:", e);
             graph.rollback();
@@ -321,10 +348,12 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
         public Object map(Object currentValue, Configuration configuration) {
             if(currentValue instanceof Map) {
                 ((Map) currentValue).remove("roles");
+                ((Map) currentValue).remove("email");
                 ((Map) currentValue).remove("credential");
                 ((Map) currentValue).remove("createDate");
                 ((Map) currentValue).remove("host");
                 ((Map) currentValue).remove("out_Create");
+                ((Map) currentValue).remove("out_ReportSpam");
                 String rid = (String)((Map) currentValue).get("@rid");
                 if(userMap.get(rid) == null) {
                     userMap.put(rid, currentValue);

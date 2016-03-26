@@ -56,7 +56,6 @@ public class AddCommentRule extends AbstractCommentRule implements Rule {
                 Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                 inputMap.put("eventMap", eventMap);
                 eventData.put("host", host);
-                eventData.put("entityRid", entityRid);
                 eventData.put("content", Encode.forJavaScriptSource((String)data.get("content")));
                 eventData.put("rank", 0);
                 String parentClassName = parent.getProperty("@class");
@@ -70,6 +69,7 @@ public class AddCommentRule extends AbstractCommentRule implements Rule {
                 eventData.put("commentId", HashUtil.generateUUID());
                 eventData.put("createDate", new java.util.Date());
                 eventData.put("createUserId", user.get("userId"));
+                clearCommentCache(entityRid);
             }
         } catch (Exception e) {
             logger.error("Exception:", e);

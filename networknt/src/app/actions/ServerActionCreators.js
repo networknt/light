@@ -476,8 +476,21 @@ module.exports = {
             type: ActionTypes.GET_COMMENT_TREE_RESPONSE,
             json: json
         });
-    }
+    },
 
+    addCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.ADD_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
+    spmCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.SPM_COMMENT_RESPONSE,
+            json: json
+        });
+    }
 
 };
 

@@ -10,7 +10,7 @@ import Gravatar from '../Gravatar';
 import Avatar from 'material-ui/lib/avatar';
 import CommentBottomBanner from './CommentBottomBanner';
 import moment from 'moment';
-
+import _ from 'lodash';
 
 var CommentNode = React.createClass({
 

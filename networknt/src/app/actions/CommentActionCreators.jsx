@@ -23,6 +23,11 @@ module.exports = {
 
     updComment: function(comment) {
         WebAPIUtils.updComment(comment);
+    },
+
+    spmComment: function(data) {
+        WebAPIUtils.spmComment(data);
     }
+
 };
 
