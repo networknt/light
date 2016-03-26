@@ -159,6 +159,78 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
         }
     }
 
+    protected void upComment(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try{
+            graph.begin();
+            String commentId = (String)data.get("commentId");
+            OrientVertex comment = (OrientVertex)graph.getVertexByKey("Comment.commentId", commentId);
+            if(comment != null) {
+                String userId = (String)data.get("userId");
+                OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", userId);
+                if(user != null) {
+                    // check if this user has down vote for the comment, if yes, then remove it.
+                    for (Edge edge : user.getEdges(comment, Direction.OUT, "DownVote")) {
+                        if (edge.getVertex(Direction.IN).equals(comment)) graph.removeEdge(edge);
+                    }
+                    // check if this user has up voted for this comment. if yes, then remove it.
+                    boolean upVoted = false;
+                    for (Edge edge : user.getEdges(comment, Direction.OUT, "UpVote")) {
+                        if(edge.getVertex(Direction.IN).equals(comment)) {
+                            upVoted = true;
+                            graph.removeEdge(edge);
+                        }
+                    }
+                    if(!upVoted) {
+                        user.addEdge("UpVote", comment);
+                    }
+                }
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+        } finally {
+            graph.shutdown();
+        }
+    }
+
+    protected void downComment(Map<String, Object> data) throws Exception {
+        OrientGraph graph = ServiceLocator.getInstance().getGraph();
+        try{
+            graph.begin();
+            String commentId = (String)data.get("commentId");
+            OrientVertex comment = (OrientVertex)graph.getVertexByKey("Comment.commentId", commentId);
+            if(comment != null) {
+                String userId = (String)data.get("userId");
+                OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", userId);
+                if(user != null) {
+                    // check if this user has up voted for the comment, if yes, then remove it.
+                    for (Edge edge : user.getEdges(comment, Direction.OUT, "UpVote")) {
+                        if (edge.getVertex(Direction.IN).equals(comment)) graph.removeEdge(edge);
+                    }
+                    // check if this user has down voted for this comment. if yes, then remove it.
+                    boolean downVoted = false;
+                    for (Edge edge : user.getEdges(comment, Direction.OUT, "DownVote")) {
+                        if(edge.getVertex(Direction.IN).equals(comment)) {
+                            downVoted = true;
+                            graph.removeEdge(edge);
+                        }
+                    }
+                    if(!downVoted) {
+                        user.addEdge("DownVote", comment);
+                    }
+                }
+            }
+            graph.commit();
+        } catch (Exception e) {
+            logger.error("Exception:", e);
+            graph.rollback();
+        } finally {
+            graph.shutdown();
+        }
+    }
+
     protected long getTotal(Map<String, Object> data, Map<String, Object> criteria) {
         long total = 0;
         StringBuilder sb = new StringBuilder("SELECT COUNT(*) as count FROM (TRAVERSE out_HasComment FROM ").append(data.get("@rid")).append(") ");

@@ -11,16 +11,18 @@ import Avatar from 'material-ui/lib/avatar';
 import CommentBottomBanner from './CommentBottomBanner';
 import moment from 'moment';
 import _ from 'lodash';
+import UserStore from '../../stores/UserStore';
 
 var CommentNode = React.createClass({
 
     getInitialState: function() {
+        console.log('spamed', this.props.comment.in_ReportSpam, UserStore.getUser()['@rid'], (this.props.comment.in_ReportSpam && this.props.comment.in_ReportSpam.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false);
         return {
             comments: [],
             out_HasComment: this.props.comment.out_HasComment,
             upVoted: false,
             downVoted: false,
-            spamed: false
+            spamed: (this.props.comment.in_ReportSpam && this.props.comment.in_ReportSpam.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false
         };
     },
 
