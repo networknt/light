@@ -27,6 +27,14 @@ module.exports = {
 
     spmComment: function(data) {
         WebAPIUtils.spmComment(data);
+    },
+
+    upComment: function(data) {
+        WebAPIUtils.upComment(data);
+    },
+
+    downComment: function(data) {
+        WebAPIUtils.downComment(data);
     }
 
 };

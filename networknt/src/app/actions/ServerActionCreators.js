@@ -490,6 +490,20 @@ module.exports = {
             type: ActionTypes.SPM_COMMENT_RESPONSE,
             json: json
         });
+    },
+
+    upCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UP_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
+    downCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.DOWN_COMMENT_RESPONSE,
+            json: json
+        });
     }
 
 };

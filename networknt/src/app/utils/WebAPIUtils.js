@@ -1603,6 +1603,46 @@ module.exports = {
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });
+    },
+
+    upComment: function(data) {
+        let upComment = {
+            category: 'comment',
+            name: 'upComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(upComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.upCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    downComment: function(data) {
+        let downComment = {
+            category: 'comment',
+            name: 'downComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(downComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.downCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
     }
 
 };

@@ -143,11 +143,19 @@ var CommentBox = React.createClass({
     */
 
     _onUpVote: function(rid) {
-
+        let data = {
+            entityRid: this.props.entityRid,
+            '@rid': rid
+        };
+        CommentActionCreators.upComment(data);
     },
 
     _onDownVote: function(rid) {
-
+        let data = {
+            entityRid: this.props.entityRid,
+            '@rid': rid
+        };
+        CommentActionCreators.downComment(data);
     },
 
     _onSpam: function(rid) {

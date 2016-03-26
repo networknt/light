@@ -161,7 +161,9 @@ module.exports = {
         // Comment
         GET_COMMENT_TREE_RESPONSE: null,
         ADD_COMMENT_RESPONSE: null,
-        SPM_COMMENT_RESPONSE: null
+        SPM_COMMENT_RESPONSE: null,
+        DOWN_COMMENT_RESPONSE: null,
+        UP_COMMENT_RESPONSE: null
     }),
 
     monthNames: ["January", "February", "March", "April", "May", "June",

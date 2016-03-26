@@ -16,12 +16,12 @@ import UserStore from '../../stores/UserStore';
 var CommentNode = React.createClass({
 
     getInitialState: function() {
-        console.log('spamed', this.props.comment.in_ReportSpam, UserStore.getUser()['@rid'], (this.props.comment.in_ReportSpam && this.props.comment.in_ReportSpam.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false);
+        console.log('upVoted', this.props.comment.in_UpVote, UserStore.getUser()['@rid'], (this.props.comment.in_UpVote && this.props.comment.in_UpVote.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false);
         return {
             comments: [],
             out_HasComment: this.props.comment.out_HasComment,
-            upVoted: false,
-            downVoted: false,
+            upVoted: (this.props.comment.in_UpVote && this.props.comment.in_UpVote.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false,
+            downVoted: (this.props.comment.in_DownVote && this.props.comment.in_DownVote.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false,
             spamed: (this.props.comment.in_ReportSpam && this.props.comment.in_ReportSpam.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false
         };
     },
@@ -51,13 +51,19 @@ var CommentNode = React.createClass({
 
     onUpVote: function(rid) {
         console.log('onUpVote', rid);
-        this.setState({upVoted: !this.state.upVoted});
+        this.setState({
+            upVoted: !this.state.upVoted,
+            downVoted: false
+        });
         this.props.onUpVote(rid);
     },
 
     onDownVote: function (rid) {
         console.log('onDownVote', rid);
-        this.setState({downVoted: !this.state.downVoted});
+        this.setState({
+            downVoted: !this.state.downVoted,
+            upVoted: false
+        });
         this.props.onDownVote(rid);
     },
 
