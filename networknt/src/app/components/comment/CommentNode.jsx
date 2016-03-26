@@ -9,6 +9,8 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import Gravatar from '../Gravatar';
 import Avatar from 'material-ui/lib/avatar';
 import CommentBottomBanner from './CommentBottomBanner';
+import moment from 'moment';
+
 
 var CommentNode = React.createClass({
 
@@ -82,12 +84,14 @@ var CommentNode = React.createClass({
             return <CommentNode {...commentProps} />
         }.bind(this));
 
+        var age = moment(this.props.comment.createDate).fromNow();
+
         return (
             <li ref="node">
                 <div className={classes} onClick={this.onChildDisplayToggle}>
                     <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
                         <Gravatar md5={this.props.comment.gravatar} />
-                        <span style={{display: 'inline-block', fontSize: 16}}>{this.props.comment.in_Create[0].userId + ' . ' + this.props.comment.createDate}</span>
+                        <span style={{display: 'inline-block', fontSize: 16}}>{this.props.comment.in_Create[0].userId + ' . ' + age}</span>
                     </div>
                     <div style={{display: 'block', fontSize: 15}}>{this.props.comment.content}</div>
                 </div>
