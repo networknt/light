@@ -43,16 +43,19 @@ var CommentNode = React.createClass({
 
     onSpam: function(rid) {
         console.log('onSpam', rid);
+        this.setState({spamed: !this.state.spamed});
         this.props.onSpam(rid);
     },
 
     onUpVote: function(rid) {
         console.log('onUpVote', rid);
+        this.setState({upVoted: !this.state.upVoted});
         this.props.onUpVote(rid);
     },
 
     onDownVote: function (rid) {
         console.log('onDownVote', rid);
+        this.setState({downVoted: !this.state.downVoted});
         this.props.onDownVote(rid);
     },
 

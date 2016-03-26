@@ -14,9 +14,13 @@ var SpamButton = React.createClass({
             display: 'inline-block'
         };
 
+        var spamButtonClass = "spam-button";
+        if(this.props.spamed === true) {
+            spamButtonClass = "spam-button-spamed";
+        }
         return (
             <div className={"comment-button-wrapper"} style={wrapperStyle}>
-                <a className={"spam-button"} onClick={this.props.onSpam}>spam</a>
+                <a className={spamButtonClass} onClick={this.props.onSpam}>spam</a>
             </div>
         );
     }
