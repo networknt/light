@@ -8,15 +8,17 @@ import CardText from 'material-ui/lib/card/card-text';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Gravatar from '../Gravatar';
 import Avatar from 'material-ui/lib/avatar';
-import IconButton from 'material-ui/lib/icon-button';
-import ReplyBox from './ReplyBox';
+import CommentBottomBanner from './CommentBottomBanner';
 
 var CommentNode = React.createClass({
 
     getInitialState: function() {
         return {
             comments: [],
-            out_HasComment: this.props.comment.out_HasComment
+            out_HasComment: this.props.comment.out_HasComment,
+            upVoted: false,
+            downVoted: false,
+            spamed: false
         };
     },
 
@@ -32,9 +34,24 @@ var CommentNode = React.createClass({
         ev.stopPropagation();
     },
 
-    handleReply: function(rid, text) {
+    onAddComment: function(rid, text) {
         console.log('handleReply', rid, text);
         this.props.onAddComment(rid, text);
+    },
+
+    onSpam: function(rid) {
+        console.log('onSpam', rid);
+        this.props.onSpam(rid);
+    },
+
+    onUpVote: function(rid) {
+        console.log('onUpVote', rid);
+        this.props.onUpVote(rid);
+    },
+
+    onDownVote: function (rid) {
+        console.log('onDownVote', rid);
+        this.props.onDownVote(rid);
     },
 
     render: function () {
@@ -45,16 +62,18 @@ var CommentNode = React.createClass({
             'closed': (this.state.out_HasComment ? false : true),
             'selected': (this.state.selected ? true : false)
         });
-        //console.log('this.props', this.props);
-        let boundHandleReply = this.handleReply.bind(this, this.props.comment['@rid']);
+
+        let boundOnAddComment = this.onAddComment.bind(this, this.props.comment['@rid']);
+        let boundOnSpam = this.onSpam.bind(this, this.props.comment['@rid']);
+        let boundOnUpVote = this.onUpVote.bind(this, this.props.comment['@rid']);
+        let boundOnDownVote = this.onDownVote.bind(this, this.props.comment['@rid']);
 
         var commentProps = {
             comment: {},
             onAddComment: this.props.onAddComment,
             onUpVote: this.props.onUpVote,
-            onRemoveUpVote: this.props.onRemoveUpVote,
             onDownVote: this.props.onDownVote,
-            onRemoveDownVote: this.props.onRemoveDownVote
+            onSpam: this.props.onSpam
         };
 
         var comments = this.state.out_HasComment.map(function(comment) {
@@ -64,17 +83,23 @@ var CommentNode = React.createClass({
         }.bind(this));
 
         return (
-            <li ref="node" className={classes}
-                onClick={this.onChildDisplayToggle}>
-                <Gravatar md5={this.props.comment.gravatar} />
-                <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
-                    <span style={{display: 'block', fontSize: 13}}>{'Submitted by ' + this.props.comment.in_Create[0].userId + ' on ' + this.props.comment.createDate}</span>
-                    <span style={{display: 'inline-block', fontSize: 15}}>{this.props.comment.content}</span>
+            <li ref="node">
+                <div className={classes} onClick={this.onChildDisplayToggle}>
+                    <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
+                        <Gravatar md5={this.props.comment.gravatar} />
+                        <span style={{display: 'inline-block', fontSize: 16}}>{this.props.comment.in_Create[0].userId + ' . ' + this.props.comment.createDate}</span>
+                    </div>
+                    <div style={{display: 'block', fontSize: 15}}>{this.props.comment.content}</div>
                 </div>
-                <div>
-                    <span style={{fontSize: 14}}>2<IconButton iconStyle={{width: '12px', height:'12px', padding: '1px'}} style={{width: '48px', height: '48px', padding: '1px'}} iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_less</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>expand_more</IconButton>5<IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>visibility_off</IconButton><IconButton iconClassName="material-icons" tooltip='Refresh' onTouchTap={this._onRefresh}>reply</IconButton></span>
-                    <ReplyBox onReply={boundHandleReply} defaultClassName="reply-box"/>
-                </div>
+                <CommentBottomBanner
+                    upVoted            = {this.state.upVoted}
+                    onUpVote           = {boundOnUpVote}
+                    downVoted          = {this.state.downVoted}
+                    onDownVote         = {boundOnDownVote}
+                    spamed             = {this.state.spamed}
+                    onSpam             = {boundOnSpam}
+                    onAddComment       = {boundOnAddComment}
+                />
                 <ul>
                     {comments}
                 </ul>
@@ -84,3 +109,7 @@ var CommentNode = React.createClass({
 });
 
 module.exports = CommentNode;
+
+/*
+
+ */

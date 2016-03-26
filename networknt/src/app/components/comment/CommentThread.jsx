@@ -7,9 +7,8 @@ var CommentThread = React.createClass({
         comments           : React.PropTypes.array,
         onAddComment       : React.PropTypes.func.isRequired,
         onUpVote           : React.PropTypes.func.isRequired,
-        onRemoveUpVote     : React.PropTypes.func.isRequired,
         onDownVote         : React.PropTypes.func.isRequired,
-        onRemoveDownVote   : React.PropTypes.func.isRequired
+        onSpam             : React.PropTypes.func.isRequired
     },
 
     render: function() {
@@ -19,9 +18,8 @@ var CommentThread = React.createClass({
             comment: {},
             onAddComment: props.onAddComment,
             onUpVote: props.onUpVote,
-            onRemoveUpVote: props.onRemoveUpVote,
             onDownVote: props.onDownVote,
-            onRemoveDownVote: props.onRemoveDownVote
+            onSpam: props.onSpam
         };
         var comments = this.props.comments.map(function(comment) {
             commentProps.comment = comment;

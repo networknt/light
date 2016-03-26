@@ -146,15 +146,11 @@ var CommentBox = React.createClass({
 
     },
 
-    _onRemoveUpVote: function(rid) {
-
-    },
-
     _onDownVote: function(rid) {
 
     },
 
-    _onRemoveDownVote: function(rid) {
+    _onSpam: function(rid) {
 
     },
 
@@ -203,9 +199,8 @@ var CommentBox = React.createClass({
             comments: this.state.comments,
             onAddComment: this._onAddComment,
             onUpVote: this._onUpVote,
-            onRemoveUpVote: this._onRemoveUpVote,
             onDownVote: this._onDownVote,
-            onRemoveDownVote: this._onRemoveDownVote
+            onSpam: this._onSpam
         };
         let commentThread = (<div></div>);
         if(this.state.comments && this.state.comments.length > 0) {
