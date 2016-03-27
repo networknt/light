@@ -16,13 +16,12 @@ import UserStore from '../../stores/UserStore';
 var CommentNode = React.createClass({
 
     getInitialState: function() {
-        console.log('upVoted', this.props.comment.in_UpVote, UserStore.getUser()['@rid'], (this.props.comment.in_UpVote && this.props.comment.in_UpVote.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false);
         return {
             comments: [],
             out_HasComment: this.props.comment.out_HasComment,
-            upVoted: (this.props.comment.in_UpVote && this.props.comment.in_UpVote.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false,
-            downVoted: (this.props.comment.in_DownVote && this.props.comment.in_DownVote.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false,
-            spamed: (this.props.comment.in_ReportSpam && this.props.comment.in_ReportSpam.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false
+            upVoted: (UserStore.getUser() && this.props.comment.in_UpVote && this.props.comment.in_UpVote.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false,
+            downVoted: (UserStore.getUser() && this.props.comment.in_DownVote && this.props.comment.in_DownVote.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false,
+            spamed: (UserStore.getUser() && this.props.comment.in_ReportSpam && this.props.comment.in_ReportSpam.indexOf(UserStore.getUser()['@rid']) >= 0) ? true : false
         };
     },
 

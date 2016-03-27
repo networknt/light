@@ -18,12 +18,13 @@ public class JsonPathTest {
     public void testJsonPath() {
         String json = "[\n" +
                 "  {\n" +
-                "    \"@rid\": \"#36:1\",\n" +
+                "    \"@rid\": \"#36:8\",\n" +
                 "    \"host\": \"www.networknt.com\",\n" +
-                "    \"commentId\": \"BauZB8vOQT2yUUTN618kWw\",\n" +
-                "    \"createDate\": \"2016-03-23T12:41:47.532\",\n" +
-                "    \"comment\": \"This is the first comment\",\n" +
-                "    \"in_Create\": [\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"dSuRPJT9Sxq2JZs4zmOJQw\",\n" +
+                "    \"content\": \"This is the comment 1\",\n" +
+                "    \"createDate\": \"2016-03-25T18:26:56.583\",\n" +
+                "    \"in_UpVote\": [\n" +
                 "      {\n" +
                 "        \"@rid\": \"#15:0\",\n" +
                 "        \"userId\": \"stevehu\",\n" +
@@ -33,127 +34,98 @@ public class JsonPathTest {
                 "          \"user\"\n" +
                 "        ],\n" +
                 "        \"credential\": \"#16:0\",\n" +
-                "        \"createDate\": \"2016-03-14T14:13:17.821\",\n" +
-                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\"\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
                 "      }\n" +
+                "    ],\n" +
+                "    \"in_Create\": [\n" +
+                "      \"#15:0\"\n" +
                 "    ],\n" +
                 "    \"out_HasComment\": [\n" +
                 "      {\n" +
-                "        \"@rid\": \"#36:6\",\n" +
+                "        \"@rid\": \"#36:19\",\n" +
                 "        \"host\": \"www.networknt.com\",\n" +
-                "        \"commentId\": \"99tFpCBTSpuuw45W4BZU1Q\",\n" +
-                "        \"createDate\": \"2016-03-23T17:23:04.185\",\n" +
-                "        \"comment\": \"this is the first reply for the first comment.\",\n" +
+                "        \"rank\": 0,\n" +
+                "        \"commentId\": \"CHQSq7PrSMiZiOK-4Pas-Q\",\n" +
+                "        \"content\": \"Reply to the comment 1\",\n" +
+                "        \"createDate\": \"2016-03-25T18:33:19.492\",\n" +
                 "        \"in_Create\": [\n" +
                 "          \"#15:0\"\n" +
-                "        ]\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"@rid\": \"#36:2\",\n" +
-                "    \"host\": \"www.networknt.com\",\n" +
-                "    \"commentId\": \"EYDef3GYTBGexpHPtF-YXg\",\n" +
-                "    \"createDate\": \"2016-03-23T12:43:39.239\",\n" +
-                "    \"comment\": \"This is the second comment.\",\n" +
-                "    \"in_Create\": [\n" +
-                "      {\n" +
-                "        \"@rid\": \"#15:0\",\n" +
-                "        \"userId\": \"stevehu\",\n" +
-                "        \"email\": \"stevehu@gmail.com\",\n" +
-                "        \"roles\": [\n" +
-                "          \"owner\",\n" +
-                "          \"user\"\n" +
                 "        ],\n" +
-                "        \"credential\": \"#16:0\",\n" +
-                "        \"createDate\": \"2016-03-14T14:13:17.821\",\n" +
-                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"@rid\": \"#36:3\",\n" +
-                "    \"host\": \"www.networknt.com\",\n" +
-                "    \"commentId\": \"DARXUkVURsiDKgzOpWuMxQ\",\n" +
-                "    \"createDate\": \"2016-03-23T12:46:35.504\",\n" +
-                "    \"comment\": \"Hello this is the third comment that need to test\",\n" +
-                "    \"in_Create\": [\n" +
-                "      {\n" +
-                "        \"@rid\": \"#15:0\",\n" +
-                "        \"userId\": \"stevehu\",\n" +
-                "        \"email\": \"stevehu@gmail.com\",\n" +
-                "        \"roles\": [\n" +
-                "          \"owner\",\n" +
-                "          \"user\"\n" +
-                "        ],\n" +
-                "        \"credential\": \"#16:0\",\n" +
-                "        \"createDate\": \"2016-03-14T14:13:17.821\",\n" +
-                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"@rid\": \"#36:4\",\n" +
-                "    \"host\": \"www.networknt.com\",\n" +
-                "    \"commentId\": \"GuUirImmTyOAI1gf7GtR6w\",\n" +
-                "    \"createDate\": \"2016-03-23T13:13:43.052\",\n" +
-                "    \"comment\": \"Hello this is the first comment that using tabl\",\n" +
-                "    \"in_Create\": [\n" +
-                "      {\n" +
-                "        \"@rid\": \"#15:0\",\n" +
-                "        \"userId\": \"stevehu\",\n" +
-                "        \"email\": \"stevehu@gmail.com\",\n" +
-                "        \"roles\": [\n" +
-                "          \"owner\",\n" +
-                "          \"user\"\n" +
-                "        ],\n" +
-                "        \"credential\": \"#16:0\",\n" +
-                "        \"createDate\": \"2016-03-14T14:13:17.821\",\n" +
-                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\"\n" +
-                "      }\n" +
-                "    ],\n" +
-                "    \"out_HasComment\": [\n" +
-                "      {\n" +
-                "        \"@rid\": \"#36:8\",\n" +
-                "        \"host\": \"www.networknt.com\",\n" +
-                "        \"commentId\": \"aVbmzLgiScybaQFOdWDFYw\",\n" +
-                "        \"createDate\": \"2016-03-24T13:26:55.474\",\n" +
-                "        \"comment\": \"reply of 4\",\n" +
-                "        \"in_Create\": [\n" +
+                "        \"out_HasComment\": [\n" +
                 "          {\n" +
-                "            \"@rid\": \"#15:1\",\n" +
-                "            \"userId\": \"test\",\n" +
-                "            \"host\": \"example\",\n" +
-                "            \"email\": \"test@example.com\",\n" +
-                "            \"roles\": [\n" +
-                "              \"user\"\n" +
+                "            \"@rid\": \"#36:20\",\n" +
+                "            \"host\": \"www.networknt.com\",\n" +
+                "            \"rank\": 0,\n" +
+                "            \"commentId\": \"BmnvEiXzTDOtCm2jVYj_4w\",\n" +
+                "            \"content\": \"Reply to the reply to the comment 1\",\n" +
+                "            \"createDate\": \"2016-03-25T18:33:45.650\",\n" +
+                "            \"in_Create\": [\n" +
+                "              \"#15:0\"\n" +
                 "            ],\n" +
-                "            \"credential\": {\n" +
-                "              \"@rid\": \"#16:1\",\n" +
-                "              \"password\": \"1000:abc\",\n" +
-                "              \"clientRefreshTokens\": {\n" +
-                "                \"networknt.com@Browser\": [\n" +
-                "                  \"ea9d0c8a93d9729df690327a07d63f2\",\n" +
-                "                  \"572048c9e70eb74b6b3345757b5c3ba7\"\n" +
+                "            \"out_HasComment\": [\n" +
+                "              {\n" +
+                "                \"@rid\": \"#36:21\",\n" +
+                "                \"host\": \"www.networknt.com\",\n" +
+                "                \"rank\": 0,\n" +
+                "                \"commentId\": \"45ephwwwQMCQnzxyj1emMA\",\n" +
+                "                \"content\": \"Reply to the reply to the reply to the comment 1\",\n" +
+                "                \"createDate\": \"2016-03-25T18:34:17.610\",\n" +
+                "                \"in_Create\": [\n" +
+                "                  \"#15:0\"\n" +
+                "                ],\n" +
+                "                \"out_HasComment\": [\n" +
+                "                  {\n" +
+                "                    \"@rid\": \"#36:22\",\n" +
+                "                    \"host\": \"www.networknt.com\",\n" +
+                "                    \"rank\": 0,\n" +
+                "                    \"commentId\": \"2MZEWwqbRaiQuvGOxf-sag\",\n" +
+                "                    \"content\": \"One thing worries me about your Angular code samples: you have your ng-repeat/ngFor iterating over a data structure, but the ng-class=\\\\\\\"getClassName(query)\\\\\\\" will need to be checked on every digest cycle. If instead the code that created the topFiveQueries object set the desired class as an attribute on each query object you can avoid constantly re-calculating the value. Of course that may be a drop in the ocean as far as performance is concerned.\",\n" +
+                "                    \"createDate\": \"2016-03-26T02:55:39.156\",\n" +
+                "                    \"in_Create\": [\n" +
+                "                      \"#15:0\"\n" +
+                "                    ],\n" +
+                "                    \"out_HasComment\": [\n" +
+                "                      {\n" +
+                "                        \"@rid\": \"#36:23\",\n" +
+                "                        \"host\": \"www.networknt.com\",\n" +
+                "                        \"rank\": 0,\n" +
+                "                        \"commentId\": \"Cq_5ZS68Rsye6guO6htz5w\",\n" +
+                "                        \"content\": \"Hello world\",\n" +
+                "                        \"createDate\": \"2016-03-26T02:56:06.428\",\n" +
+                "                        \"in_Create\": [\n" +
+                "                          \"#15:0\"\n" +
+                "                        ]\n" +
+                "                      }\n" +
+                "                    ]\n" +
+                "                  }\n" +
                 "                ]\n" +
                 "              }\n" +
-                "            },\n" +
-                "            \"createDate\": \"2016-03-14T14:13:17.839\",\n" +
-                "            \"gravatar\": \"55502f40dc8b7c769880b10874abc9d0\",\n" +
-                "            \"out_Create\": [\n" +
-                "              \"#36:8\"\n" +
                 "            ]\n" +
                 "          }\n" +
                 "        ]\n" +
                 "      }\n" +
-                "    ]\n" +
+                "    ],\n" +
+                "    \"in_ReportSpam\": [\n" +
+                "      \"#15:0\"\n" +
+                "    ],\n" +
+                "    \"in_DownVote\": []\n" +
                 "  },\n" +
                 "  {\n" +
-                "    \"@rid\": \"#36:5\",\n" +
+                "    \"@rid\": \"#36:9\",\n" +
                 "    \"host\": \"www.networknt.com\",\n" +
-                "    \"commentId\": \"FEZg0rXtSHiiIMgx9WanxQ\",\n" +
-                "    \"createDate\": \"2016-03-23T13:21:12.187\",\n" +
-                "    \"comment\": \"Hello this just to test it if it works.\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"Puut89ZTRii4TFfXcVqxqA\",\n" +
+                "    \"content\": \"This is the comment 2\",\n" +
+                "    \"createDate\": \"2016-03-25T18:31:58.322\",\n" +
                 "    \"in_Create\": [\n" +
                 "      {\n" +
                 "        \"@rid\": \"#15:0\",\n" +
@@ -164,20 +136,286 @@ public class JsonPathTest {
                 "          \"user\"\n" +
                 "        ],\n" +
                 "        \"credential\": \"#16:0\",\n" +
-                "        \"createDate\": \"2016-03-14T14:13:17.821\",\n" +
-                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\"\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
                 "      }\n" +
-                "    ],\n" +
-                "    \"out_HasComment\": [\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:10\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"oa0SmklARH6cPQnRIQCIFA\",\n" +
+                "    \"content\": \"This is the comment 3\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:03.495\",\n" +
+                "    \"in_Create\": [\n" +
                 "      {\n" +
-                "        \"@rid\": \"#36:7\",\n" +
-                "        \"host\": \"www.networknt.com\",\n" +
-                "        \"commentId\": \"niQuRCQVSK2wavTb_OMsLg\",\n" +
-                "        \"createDate\": \"2016-03-24T13:25:01.908\",\n" +
-                "        \"comment\": \"reply\",\n" +
-                "        \"in_Create\": [\n" +
-                "          \"#15:0\"\n" +
-                "        ]\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:11\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"SafmN_dhSGCyzFN2j3MLDA\",\n" +
+                "    \"content\": \"This is the comment 4\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:07.204\",\n" +
+                "    \"in_Create\": [\n" +
+                "      {\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:12\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"61gsOlsjTA2od3u_-q8EEg\",\n" +
+                "    \"content\": \"This is the comment 5\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:11.890\",\n" +
+                "    \"in_Create\": [\n" +
+                "      {\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:13\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"WRV6pr_ORnWIBQT2rgj6qw\",\n" +
+                "    \"content\": \"This is the comment 6\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:16.475\",\n" +
+                "    \"in_Create\": [\n" +
+                "      {\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:14\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"76eYIYUfSE2UkpyYObHEuw\",\n" +
+                "    \"content\": \"This is the comment 7\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:20.620\",\n" +
+                "    \"in_Create\": [\n" +
+                "      {\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:15\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"kJEbmj4OSkKQM9hTrtHJ_Q\",\n" +
+                "    \"content\": \"This is the comment 8\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:25.216\",\n" +
+                "    \"in_Create\": [\n" +
+                "      {\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:16\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"9UZJifQ6QgK52W7nopQtLQ\",\n" +
+                "    \"content\": \"This is the comment 9\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:29.621\",\n" +
+                "    \"in_Create\": [\n" +
+                "      {\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:17\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"FPESqMiMTsuS-HhEx28jlw\",\n" +
+                "    \"content\": \"This is the comment 10\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:33.890\",\n" +
+                "    \"in_Create\": [\n" +
+                "      {\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"@rid\": \"#36:18\",\n" +
+                "    \"host\": \"www.networknt.com\",\n" +
+                "    \"rank\": 0,\n" +
+                "    \"commentId\": \"IWOTmQuIQDSF5O5BCwNY3w\",\n" +
+                "    \"content\": \"This is the comment 11\",\n" +
+                "    \"createDate\": \"2016-03-25T18:32:39.049\",\n" +
+                "    \"in_Create\": [\n" +
+                "      {\n" +
+                "        \"@rid\": \"#15:0\",\n" +
+                "        \"userId\": \"stevehu\",\n" +
+                "        \"email\": \"stevehu@gmail.com\",\n" +
+                "        \"roles\": [\n" +
+                "          \"owner\",\n" +
+                "          \"user\"\n" +
+                "        ],\n" +
+                "        \"credential\": \"#16:0\",\n" +
+                "        \"createDate\": \"2016-03-20T11:52:18.806\",\n" +
+                "        \"gravatar\": \"417bed6d9644f12d8bc709059c225c27\",\n" +
+                "        \"out_\": [],\n" +
+                "        \"out_ReportSpam\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_UpVote\": [\n" +
+                "          \"#36:8\"\n" +
+                "        ],\n" +
+                "        \"out_DownVote\": []\n" +
                 "      }\n" +
                 "    ]\n" +
                 "  }\n" +
@@ -189,6 +427,10 @@ public class JsonPathTest {
         MapFunction mapFunction = new StripInCreateMapFunction();
 
         List list = dc.map("$..in_Create[0]", mapFunction).read("$..in_Create[0]");
+
+        MapFunction upVoteFunction = new StripInUpVoteMapFunction();
+        list = dc.map("$..in_UpVote[*]", upVoteFunction).read("$..in_UpVote[*]");
+
         System.out.println("list = " + list);
 
     }
@@ -214,4 +456,38 @@ public class JsonPathTest {
             return currentValue;
         }
     }
+
+    private class StripInReportSpamMapFunction implements MapFunction {
+        @Override
+        public Object map(Object currentValue, Configuration configuration) {
+            String value = null;
+            if(currentValue instanceof Map) {
+                value = (String) ((Map) currentValue).get("@rid");
+            }
+            return value;
+        }
+    }
+
+    private class StripInUpVoteMapFunction implements MapFunction {
+        @Override
+        public Object map(Object currentValue, Configuration configuration) {
+            String value = null;
+            if(currentValue instanceof Map) {
+                value = (String) ((Map) currentValue).get("@rid");
+            }
+            return value;
+        }
+    }
+
+    private class StripInDownVoteMapFunction implements MapFunction {
+        @Override
+        public Object map(Object currentValue, Configuration configuration) {
+            String value = null;
+            if(currentValue instanceof Map) {
+                value = (String) ((Map) currentValue).get("@rid");
+            }
+            return value;
+        }
+    }
+
 }

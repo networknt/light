@@ -26,6 +26,7 @@ import com.networknt.light.rule.AbstractRule;
 import com.networknt.light.rule.Rule;
 import com.networknt.light.server.DbService;
 import com.networknt.light.util.ServiceLocator;
+import com.orientechnologies.orient.core.db.record.OIdentifiable;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.serialization.serializer.OJSONWriter;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
@@ -138,11 +139,10 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
                 if(user != null) {
                     // check if this user has reported spam for this comment.
                     boolean reported = false;
-                    for (Edge edge : user.getEdges(Direction.OUT, "ReportSpam")) {
+                    for (Edge edge : user.getEdges(comment, Direction.OUT, "ReportSpam")) {
                         if(edge.getVertex(Direction.IN).equals(comment)) {
-                            // reported before, remove it.
                             reported = true;
-                            edge.remove();
+                            graph.removeEdge(edge);
                         }
                     }
                     if(!reported) {
@@ -390,8 +390,6 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
         return isAllowed;
     }
 
-
-
     protected String getCommentTreeDb(String rid, String sortedBy, String sortDir) {
         String sql = "select from Comment where in_HasComment[0] = " + rid + " ORDER BY " + sortedBy + " " + sortDir;
         String json = null;
@@ -400,11 +398,16 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
             List<ODocument> list = graph.getRawGraph().command(query).execute();
             if(list.size() > 0) {
-                json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 in_Create[]:0 [*]out_Create:-2 [*]out_Update:-2 [*]out_HasComment:-1");
+                json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 [*]out_ReportSpam:-2 [*]out_UpVote:-2 [*]out_DownVote:-2 in_Create[]:0 [*]out_Create:-2 [*]out_Update:-2 [*]out_HasComment:-1");
                 // need to fixed the in_Create within the json using json path.
                 DocumentContext dc = JsonPath.parse(json);
-                MapFunction mapFunction = new StripInCreateMapFunction();
-                json = dc.map("$..in_Create[0]", mapFunction).jsonString();
+                MapFunction propsFunction = new StripPropsMapFunction();
+                dc.map("$..in_UpVote[*]", propsFunction);
+                dc.map("$..in_DownVote[*]", propsFunction);
+                dc.map("$..in_ReportSpam[*]", propsFunction);
+
+                MapFunction createFunction = new StripInCreateMapFunction();
+                json = dc.map("$..in_Create[0]", createFunction).jsonString();
             }
         } catch (Exception e) {
             logger.error("Exception:", e);
@@ -412,6 +415,19 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             graph.shutdown();
         }
         return json;
+    }
+
+    private class StripPropsMapFunction implements MapFunction {
+        @Override
+        public Object map(Object currentValue, Configuration configuration) {
+            String value = null;
+            if(currentValue instanceof Map) {
+                value = (String) ((Map) currentValue).get("@rid");
+            } else if(currentValue instanceof String) {
+                value = (String)currentValue;
+            }
+            return value;
+        }
     }
 
     private class StripInCreateMapFunction implements MapFunction {
@@ -425,7 +441,10 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
                 ((Map) currentValue).remove("createDate");
                 ((Map) currentValue).remove("host");
                 ((Map) currentValue).remove("out_Create");
+                ((Map) currentValue).remove("out_Update");
                 ((Map) currentValue).remove("out_ReportSpam");
+                ((Map) currentValue).remove("out_UpVote");
+                ((Map) currentValue).remove("out_DownVote");
                 String rid = (String)((Map) currentValue).get("@rid");
                 if(userMap.get(rid) == null) {
                     userMap.put(rid, currentValue);

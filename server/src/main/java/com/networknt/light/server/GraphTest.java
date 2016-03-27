@@ -41,7 +41,7 @@ public class GraphTest {
             //System.out.println(result);
             OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<ODocument>(sql);
             List<ODocument> list = graph.getRawGraph().command(query).execute();
-            String json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 in_Create[]:0 [*]out_Create:-2 [*]out_Update:-2 [*]out_HasComment:-1");
+            String json = OJSONWriter.listToJSON(list, "rid,fetchPlan:[*]in_HasComment:-2 [*]out_ReportSpam:-2 [*]out_UpVote:-2 [*]out_DownVote:-2 in_Create[]:0 [*]out_Create:-2 [*]out_Update:-2 [*]out_HasComment:-1");
             System.out.println(json);
             //System.out.println(getBfnTree("forum", "example"));
         } finally {
