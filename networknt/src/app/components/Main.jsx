@@ -344,9 +344,9 @@ const Main = React.createClass({
 
         var loginMenuItems = [];
         if (this.state.isLoggedIn) {
-            loginMenuItems.push(<MenuItem key='logout' value='logout' primaryText='Sign out' />)
+            loginMenuItems.push(<MenuItem key='logout' value='/logout' primaryText='Sign out' />)
         } else {
-            loginMenuItems.push(<MenuItem key='login' value='login' primaryText='Log in' />);
+            loginMenuItems.push(<MenuItem key='login' value='/login' primaryText='Log in' />);
             loginMenuItems.push(<MenuItem key='signup' value='/form/com.networknt.light.user.signup' primaryText='Sign up' />);
         }
 
@@ -470,4 +470,5 @@ const Main = React.createClass({
     }
 });
 
+export default Main;
 export default Main;
