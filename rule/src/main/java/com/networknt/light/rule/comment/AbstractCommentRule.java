@@ -168,10 +168,14 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             if(comment != null) {
                 String userId = (String)data.get("userId");
                 OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", userId);
+                Integer rank = comment.getProperty("rank");
                 if(user != null) {
                     // check if this user has down vote for the comment, if yes, then remove it.
                     for (Edge edge : user.getEdges(comment, Direction.OUT, "DownVote")) {
-                        if (edge.getVertex(Direction.IN).equals(comment)) graph.removeEdge(edge);
+                        if (edge.getVertex(Direction.IN).equals(comment)) {
+                            graph.removeEdge(edge);
+                            rank++;
+                        }
                     }
                     // check if this user has up voted for this comment. if yes, then remove it.
                     boolean upVoted = false;
@@ -179,12 +183,15 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
                         if(edge.getVertex(Direction.IN).equals(comment)) {
                             upVoted = true;
                             graph.removeEdge(edge);
+                            rank--;
                         }
                     }
                     if(!upVoted) {
                         user.addEdge("UpVote", comment);
+                        rank++;
                     }
                 }
+                comment.setProperty("rank", rank);
             }
             graph.commit();
         } catch (Exception e) {
@@ -204,10 +211,14 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
             if(comment != null) {
                 String userId = (String)data.get("userId");
                 OrientVertex user = (OrientVertex)graph.getVertexByKey("User.userId", userId);
+                Integer rank = comment.getProperty("rank");
                 if(user != null) {
                     // check if this user has up voted for the comment, if yes, then remove it.
                     for (Edge edge : user.getEdges(comment, Direction.OUT, "UpVote")) {
-                        if (edge.getVertex(Direction.IN).equals(comment)) graph.removeEdge(edge);
+                        if (edge.getVertex(Direction.IN).equals(comment)) {
+                            graph.removeEdge(edge);
+                            rank--;
+                        }
                     }
                     // check if this user has down voted for this comment. if yes, then remove it.
                     boolean downVoted = false;
@@ -215,12 +226,15 @@ public abstract class AbstractCommentRule extends AbstractRule implements Rule {
                         if(edge.getVertex(Direction.IN).equals(comment)) {
                             downVoted = true;
                             graph.removeEdge(edge);
+                            rank++;
                         }
                     }
                     if(!downVoted) {
                         user.addEdge("DownVote", comment);
+                        rank--;
                     }
                 }
+                comment.setProperty("rank", rank);
             }
             graph.commit();
         } catch (Exception e) {

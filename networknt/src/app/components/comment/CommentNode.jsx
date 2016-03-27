@@ -95,6 +95,9 @@ var CommentNode = React.createClass({
         }.bind(this));
 
         var age = moment(this.props.comment.createDate).fromNow();
+        let up = this.props.comment.in_UpVote? this.props.comment.in_UpVote.length : 0
+        let down = this.props.comment.in_DownVote? this.props.comment.in_DownVote.length: 0;
+        let rank = this.props.comment.rank;
 
         return (
             <li ref="node">
@@ -102,6 +105,7 @@ var CommentNode = React.createClass({
                     <div style={{display: 'inline-block', verticalAlign: 'top', paddingRight: '90px'}}>
                         <Gravatar md5={this.props.comment.gravatar} />
                         <span style={{display: 'inline-block', fontSize: 16}}>{this.props.comment.in_Create[0].userId + ' . ' + age}</span>
+                        <span style={{display: 'inline-block', fontSize: 16}}>{' .  up:' + up + ' down: ' + down + ' rank: ' + rank}</span>
                     </div>
                     <div style={{display: 'block', fontSize: 15}}>{this.props.comment.content}</div>
                 </div>
