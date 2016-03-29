@@ -49,7 +49,7 @@ public class DelCommentRule extends AbstractCommentRule implements Rule {
             } else {
                 // check if there are edges HasComment
                 if(comment.countEdges(Direction.OUT, "HasComment") > 0) {
-                    error = "Comment has comment(s), cannot be deleted";
+                    error = "Comment has replied, cannot be deleted";
                     inputMap.put("responseCode", 400);
                 } else {
                     Map eventMap = getEventMap(inputMap);

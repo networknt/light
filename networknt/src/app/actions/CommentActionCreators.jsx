@@ -17,12 +17,12 @@ module.exports = {
         WebAPIUtils.addComment(data);
     },
 
-    delComment: function(rid) {
-        WebAPIUtils.delComment(rid);
+    delComment: function(data) {
+        WebAPIUtils.delComment(data);
     },
 
-    updComment: function(comment) {
-        WebAPIUtils.updComment(comment);
+    updComment: function(data) {
+        WebAPIUtils.updComment(data);
     },
 
     spmComment: function(data) {

@@ -12,7 +12,8 @@ var CommentBottomBanner = React.createClass({
         downVoted:          React.PropTypes.bool,
         onSpam:             React.PropTypes.func.isRequired,
         spamed:             React.PropTypes.bool,
-        onAddComment:       React.PropTypes.func.isRequired
+        onAddComment:       React.PropTypes.func.isRequired,
+        onDelComment:       React.PropTypes.func.isRequired
     },
 
     render: function() {
@@ -31,12 +32,22 @@ var CommentBottomBanner = React.createClass({
             onSpam: this.props.onSpam
         };
 
+        var DelButtonProps = {
+            onDelComment: this.props.onDelComment
+        };
+
+        var delButton = '';
+        if(this.props.allowUpdate === true) {
+            delButton = <DeleteButton {...DelButtonProps}/>;
+        }
+
         return (
             <div className="comment-bottom-banner">
                 <UpVoteButton {...UpVoteButtonProps} />{' '}
                 <DownVoteButton {...DownVoteButtonProps} />{' '}
                 <SpamButton {...SpamButtonProps} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <ReplyBox onAddComment={this.props.onAddComment} />
+                {delButton}
             </div>
         );
     }

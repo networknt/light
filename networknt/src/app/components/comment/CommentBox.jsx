@@ -58,6 +58,23 @@ var CommentBox = React.createClass({
         CommentActionCreators.addComment(data);
     },
 
+    _onDelComment: function(rid) {
+        let data = {
+            entityRid: this.props.entityRid,
+            '@rid': rid
+        };
+        CommentActionCreators.delComment(data);
+    },
+
+    _onUpdComment: function(rid, content) {
+        let data = {
+            entityRid: this.props.entityRid,
+            '@rid': rid,
+            content: content
+        };
+        CommentActionCreators.updComment(data);
+    },
+
     /*
     updateCommentsAfterUpvote: function(commentId, isUpvoting) {
         var updatedComments = helpers.findAndUpdateUpvoted(this.state.comments, commentId, isUpvoting);
@@ -211,9 +228,12 @@ var CommentBox = React.createClass({
         var CommentThreadProps = {
             comments: this.state.comments,
             onAddComment: this._onAddComment,
+            onDelComment: this._onDelComment,
+            onUpdComment: this._onUpdComment,
             onUpVote: this._onUpVote,
             onDownVote: this._onDownVote,
-            onSpam: this._onSpam
+            onSpam: this._onSpam,
+            allowUpdate: this.state.allowUpdate
         };
         let commentThread = (<div></div>);
         if(this.state.comments && this.state.comments.length > 0) {

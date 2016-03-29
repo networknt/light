@@ -42,6 +42,16 @@ var CommentNode = React.createClass({
         this.props.onAddComment(rid, text);
     },
 
+    onDelComment: function(rid) {
+        console.log('onDelComment', rid);
+        this.props.onDelComment(rid);
+    },
+
+    onUpdComment: function(rid, text) {
+        console.log('onUpdComment', rid, text);
+        this.props.onUpdComment(rid, text);
+    },
+
     onSpam: function(rid) {
         console.log('onSpam', rid);
         this.setState({spamed: !this.state.spamed});
@@ -76,6 +86,7 @@ var CommentNode = React.createClass({
         });
 
         let boundOnAddComment = this.onAddComment.bind(this, this.props.comment['@rid']);
+        let boundOnDelComment = this.onDelComment.bind(this, this.props.comment['@rid']);
         let boundOnSpam = this.onSpam.bind(this, this.props.comment['@rid']);
         let boundOnUpVote = this.onUpVote.bind(this, this.props.comment['@rid']);
         let boundOnDownVote = this.onDownVote.bind(this, this.props.comment['@rid']);
@@ -83,9 +94,12 @@ var CommentNode = React.createClass({
         var commentProps = {
             comment: {},
             onAddComment: this.props.onAddComment,
+            onDelComment: this.props.onDelComment,
+            onUpdComment: this.props.onUpdComment,
             onUpVote: this.props.onUpVote,
             onDownVote: this.props.onDownVote,
-            onSpam: this.props.onSpam
+            onSpam: this.props.onSpam,
+            allowUpdate: this.props.allowUpdate
         };
 
         var comments = this.state.out_HasComment.map(function(comment) {
@@ -117,6 +131,9 @@ var CommentNode = React.createClass({
                     spamed             = {this.state.spamed}
                     onSpam             = {boundOnSpam}
                     onAddComment       = {boundOnAddComment}
+                    onDelComment       = {boundOnDelComment}
+                    onUpdComment       = {boundOnUpdComment}
+                    allowUpdate        = {this.props.allowUpdate}
                 />
                 <ul>
                     {comments}

@@ -161,6 +161,8 @@ module.exports = {
         // Comment
         GET_COMMENT_TREE_RESPONSE: null,
         ADD_COMMENT_RESPONSE: null,
+        UPD_COMMENT_RESPONSE: null,
+        DEL_COMMENT_RESPONSE: null,
         SPM_COMMENT_RESPONSE: null,
         DOWN_COMMENT_RESPONSE: null,
         UP_COMMENT_RESPONSE: null

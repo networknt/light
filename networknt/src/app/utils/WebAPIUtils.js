@@ -1585,6 +1585,46 @@ module.exports = {
         });
     },
 
+    updComment: function(data) {
+        let updComment = {
+            category: 'comment',
+            name: 'updComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(updComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.updCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delComment: function(data) {
+        let delComment = {
+            category: 'comment',
+            name: 'delComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     spmComment: function(data) {
         let spmComment = {
             category: 'comment',

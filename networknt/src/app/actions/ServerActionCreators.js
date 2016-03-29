@@ -485,6 +485,20 @@ module.exports = {
         });
     },
 
+    delCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.DEL_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
+    updCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPD_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
     spmCommentResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.SPM_COMMENT_RESPONSE,

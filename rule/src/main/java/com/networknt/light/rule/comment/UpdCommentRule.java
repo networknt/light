@@ -28,7 +28,6 @@ public class UpdCommentRule extends AbstractCommentRule implements Rule {
         Map<String, Object> inputMap = (Map<String, Object>)objects[0];
         Map<String, Object> data = (Map<String, Object>)inputMap.get("data");
         Map<String, Object> user = (Map<String, Object>) inputMap.get("user");
-        String host = (String)data.get("host");
         String rid = (String)data.get("@rid");
         String entityRid = (String)data.get("entityRid");
         String error = null;
