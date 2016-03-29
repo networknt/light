@@ -3,6 +3,8 @@ import UpVoteButton from './UpVoteButton';
 import DownVoteButton from './DownVoteButton';
 import SpamButton from './SpamButton';
 import ReplyBox from './ReplyBox';
+import DeleteButton from './DeleteButton';
+import UpdateBox from './UpdateBox';
 
 var CommentBottomBanner = React.createClass({
     propTypes: {
@@ -46,8 +48,9 @@ var CommentBottomBanner = React.createClass({
                 <UpVoteButton {...UpVoteButtonProps} />{' '}
                 <DownVoteButton {...DownVoteButtonProps} />{' '}
                 <SpamButton {...SpamButtonProps} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <ReplyBox onAddComment={this.props.onAddComment} />
-                {delButton}
+                <ReplyBox onAddComment={this.props.onAddComment} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {delButton}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <UpdateBox onUpdComment={this.props.onUpdComment} />
             </div>
         );
     }

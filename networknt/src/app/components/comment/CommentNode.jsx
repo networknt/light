@@ -87,6 +87,7 @@ var CommentNode = React.createClass({
 
         let boundOnAddComment = this.onAddComment.bind(this, this.props.comment['@rid']);
         let boundOnDelComment = this.onDelComment.bind(this, this.props.comment['@rid']);
+        let boundOnUpdComment = this.onUpdComment.bind(this, this.props.comment['@rid']);
         let boundOnSpam = this.onSpam.bind(this, this.props.comment['@rid']);
         let boundOnUpVote = this.onUpVote.bind(this, this.props.comment['@rid']);
         let boundOnDownVote = this.onDownVote.bind(this, this.props.comment['@rid']);

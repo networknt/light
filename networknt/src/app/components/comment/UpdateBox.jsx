@@ -7,7 +7,7 @@ import Markdown from '../Markdown';
 
 var UpdateBox = React.createClass({
     propTypes: {
-        onAddComment: React.PropTypes.func.isRequired
+        onUpdComment: React.PropTypes.func.isRequired
     },
     getInitialState: function() {
         return {
@@ -16,29 +16,29 @@ var UpdateBox = React.createClass({
         };
     },
 
-    onAddComment: function(text) {
-        this.props.onAddComment(text);
+    onUpdComment: function(text) {
+        this.props.onUpdComment(text);
         this.setState({isSubmitting: true});
     },
 
     render: function() {
-        var ReplyButtonProps = {
+        var UpdateButtonProps = {
             isSubmitting: this.state.isSubmitting,
-            onAddComment: this.onAddComment
+            onUpdComment: this.onUpdComment
         };
 
         return (
             <span>
-                <ReplyButton  {...ReplyButtonProps}/>
+                <UpdateButton  {...UpdateButtonProps}/>
             </span>
         );
     }
 });
 
-var ReplyButton = React.createClass({
+var UpdateButton = React.createClass({
     propTypes: {
         isSubmitting: React.PropTypes.bool.isRequired,
-        onAddComment: React.PropTypes.func.isRequired,
+        onUpdComment: React.PropTypes.func.isRequired,
     },
     getInitialState: function() {
         return {isSubmitting: this.props.isSubmitting};
@@ -48,17 +48,17 @@ var ReplyButton = React.createClass({
         this.setState({isSubmitting: true});
     },
 
-    onAddComment: function(e) {
+    onUpdComment: function(e) {
         this.setState({isSubmitting: false});
         var text = this.state.value;
         if (text === '') {
             return;
         }
-        this.props.onAddComment(text);
+        this.props.onUpdComment(text);
     },
 
     getOnClick: function() {
-        return this.state.isSubmitting ? this.onAddComment : this.startSubmit;
+        return this.state.isSubmitting ? this.onUpdComment : this.startSubmit;
     },
 
     cancel: function() {
@@ -78,7 +78,7 @@ var ReplyButton = React.createClass({
                 <div style={{width: '100%'}}>
                     <Tabs initialSelectedIndex={0}>
                         <Tab label="Content">
-                            <TextField style={{width: '100%'}} hintText="Reply to thread..." multiLine={true} rows={4} onChange={this.onChange} />
+                            <TextField style={{width: '100%'}} hintText="Update content..." multiLine={true} rows={4} onChange={this.onChange} />
                         </Tab>
                         <Tab label="Review">
                             <Markdown text={this.state.value} />
@@ -98,7 +98,7 @@ var ReplyButton = React.createClass({
         return (
             <span className={"reply-box-banner"}>
                 {textareaComponent}
-                <a className={"reply-box-reply-button"} onClick={this.getOnClick()}>reply</a>
+                <a className={"reply-box-reply-button"} onClick={this.getOnClick()}>update</a>
                 {cancelButtonComponent}
             </span>
         );
