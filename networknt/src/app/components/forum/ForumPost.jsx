@@ -128,7 +128,7 @@ var ForumPost = React.createClass({
                         <div className="blogPost">
                             <div>{tags}</div>
                             {original}
-                            <Markdown text={this.state.post.content} />
+                            <Markdown text={this.state.post.summary} />
                         </div>
                     </Paper>
                     {commentBox}
