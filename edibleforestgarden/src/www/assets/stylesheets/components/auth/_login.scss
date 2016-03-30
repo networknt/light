@@ -47,3 +47,36 @@
   }
 }
 
+.socialButton {
+  display: inline-flex;
+}
+
+.googleLogin {
+  display: inline-block;
+  background: #d14836;
+  color: #fff;
+  width: 190px;
+  height: 40px;
+  paddingTop: 10;
+  paddingBottom: 10;
+  borderRadius: 2;
+  border: 1px solid transparent;
+  fontSize: 36;
+  fontWeight: bold;
+  fontFamily: Roboto
+}
+
+.facebookLogin {
+  display: inline-block;
+  background: #4C69BA;
+  color: #fff;
+  width: 190px;
+  height: 40px;
+  paddingTop: 10;
+  paddingBottom: 10;
+  borderRadius: 2;
+  border: 1px solid transparent;
+  fontSize: 36;
+  fontWeight: bold;
+  fontFamily: Roboto
+}

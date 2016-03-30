@@ -76,6 +76,49 @@ module.exports = {
         });
     },
 
+    googleLogin: function(data) {
+        data.clientId = ClientId;
+        let googleLogin =  {
+            category : 'user',
+            name : 'googleLogin',
+            readOnly: false,
+            data: data
+        };
+
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/api/rs',
+            data: JSON.stringify(googleLogin),
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.googleLoginResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    facebookLogin: function(data) {
+        data.clientId = ClientId;
+        let facebookLogin =  {
+            category : 'user',
+            name : 'facebookLogin',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json',
+            url: '/api/rs',
+            data: JSON.stringify(facebookLogin),
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.facebookLoginResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getMenu: function() {
         let getMenu = {
             category : 'menu',
@@ -307,6 +350,23 @@ module.exports = {
         });
     },
 
+    getForumTree: function() {
+        let getForumTree = {
+            category: 'forum',
+            name: 'getForumTree',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getForumTree))}
+        }).done(function(data) {
+            ServerActionCreators.getForumTreeResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.getForumTreeResponse(null, error);
+        });
+    },
+
     getRecentBlogPost: function(pageNo, pageSize) {
         let getRecentBlogPost = {
             category: 'blog',
@@ -346,6 +406,27 @@ module.exports = {
             ServerActionCreators.getRecentNewsPostResponse(data, null);
         }).fail(function(error) {
             ServerActionCreators.getRecentNewsPostResponse(null, error);
+        });
+    },
+
+    getRecentForumPost: function(pageNo, pageSize) {
+        let getRecentForumPost = {
+            category: 'forum',
+            name: 'getRecentPost',
+            readOnly: true,
+            data: {
+                pageSize: pageSize,
+                pageNo: pageNo
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getRecentForumPost))}
+        }).done(function(data) {
+            ServerActionCreators.getRecentForumPostResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.getRecentForumPostResponse(null, error);
         });
     },
 
@@ -395,6 +476,28 @@ module.exports = {
 
         }).fail(function(error) {
             ServerActionCreators.getNewsPostResponse(null, error);
+        });
+    },
+
+    getForumPost: function(rid, pageNo, pageSize) {
+        let getForumPost = {
+            category: 'forum',
+            name: 'getForumPost',
+            readOnly: true,
+            data: {
+                pageSize: pageSize,
+                pageNo: pageNo,
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getForumPost))}
+        }).done(function(data) {
+            ServerActionCreators.getForumPostResponse(data, null);
+        }).fail(function(error) {
+            ServerActionCreators.getForumPostResponse(null, error);
         });
     },
 
@@ -457,6 +560,23 @@ module.exports = {
         });
     },
 
+    getForum: function() {
+        let getForum = {
+            category: 'forum',
+            name: 'getForum',
+            readOnly: true
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getForum))}
+        }).done(function(data) {
+            ServerActionCreators.getForumResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
     getCatalog: function() {
         let getCatalog = {
             category: 'catalog',
@@ -513,6 +633,28 @@ module.exports = {
             dataType: 'json'
         }).done(function(data) {
             ServerActionCreators.delNewsResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delForum: function(rid) {
+        let delForum = {
+            category: 'forum',
+            name: 'delForum',
+            readOnly: false,
+            data: {
+                '@rid': rid
+            }
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delForum),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delForumResponse(data);
         }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });
@@ -1395,6 +1537,150 @@ module.exports = {
                     ErrorActionCreators.serverErrorResponse(error);
                 });
             }
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    getCommentTree: function(parentRid, pageNo, pageSize, sortedBy, sortDir) {
+        var getCommentTree = {
+            category: 'comment',
+            name: 'getCommentTree',
+            readOnly: true,
+            data: {
+                '@rid': parentRid,
+                pageNo: pageNo,
+                pageSize: pageSize,
+                sortedBy: sortedBy,
+                sortDir: sortDir
+            }
+        };
+        $.ajax({
+            type: 'GET',
+            url: '/api/rs',
+            data:  { cmd: encodeURIComponent(JSON.stringify(getCommentTree))}
+        }).done(function(data) {
+            ServerActionCreators.getCommentTreeResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    addComment: function(data) {
+        let addComment = {
+            category: 'comment',
+            name: 'addComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(addComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.addCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    updComment: function(data) {
+        let updComment = {
+            category: 'comment',
+            name: 'updComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(updComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.updCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    delComment: function(data) {
+        let delComment = {
+            category: 'comment',
+            name: 'delComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(delComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.delCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    spmComment: function(data) {
+        let spmComment = {
+            category: 'comment',
+            name: 'spmComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(spmComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.spmCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    upComment: function(data) {
+        let upComment = {
+            category: 'comment',
+            name: 'upComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(upComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.upCommentResponse(data);
+        }).fail(function(error) {
+            ErrorActionCreators.serverErrorResponse(error);
+        });
+    },
+
+    downComment: function(data) {
+        let downComment = {
+            category: 'comment',
+            name: 'downComment',
+            readOnly: false,
+            data: data
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/api/rs',
+            data:  JSON.stringify(downComment),
+            contentType: 'application/json',
+            dataType: 'json'
+        }).done(function(data) {
+            ServerActionCreators.downCommentResponse(data);
+        }).fail(function(error) {
             ErrorActionCreators.serverErrorResponse(error);
         });
     }

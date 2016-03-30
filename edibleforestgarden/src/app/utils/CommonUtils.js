@@ -57,10 +57,24 @@ function hasMenuAccess(menuItem, roles) {
     return false;
 }
 
+
+function getCommentCountString(numComments) {
+    var commentString = '';
+    commentString += numComments + ' comment';
+
+    if (numComments !== 1) {
+        commentString += 's';
+    }
+
+    return commentString;
+}
+
+
 module.exports = {
     findCategory: findCategory,
     findPost: findPost,
     findProduct: findProduct,
     findMenuItem: findMenuItem,
-    hasMenuAccess: hasMenuAccess
+    hasMenuAccess: hasMenuAccess,
+    getCommentCountString: getCommentCountString
 };

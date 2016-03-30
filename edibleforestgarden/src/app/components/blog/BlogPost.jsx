@@ -13,6 +13,7 @@ import PostStore from '../../stores/PostStore';
 import EntityStore from '../../stores/EntityStore';
 import CommonUtils from '../../utils/CommonUtils';
 import RaisedButton from 'material-ui/lib/raised-button';
+import CommentBox from '../comment/CommentBox';
 import moment from 'moment';
 
 import Toolbar from 'material-ui/lib/toolbar/toolbar';
@@ -52,6 +53,7 @@ var BlogPost = React.createClass({
         }
         //console.log('BlogPost blogPosts', BlogStore.getPosts());
         //console.log('BlogPost index ', this.props.params.index);
+        console.log('componentDidMount', post);
         this.setState({
             post: post? post : {},
             allowUpdate: BlogStore.getAllowUpdate()
@@ -66,6 +68,7 @@ var BlogPost = React.createClass({
     },
 
     _onEntityChange: function() {
+        console.log('_onEntityChange', EntityStore.getEntity());
         this.setState({
             post: EntityStore.getEntity()
         })
@@ -86,6 +89,7 @@ var BlogPost = React.createClass({
     },
 
     render: function() {
+        console.log('BlogPost.state.post', this.state.post);
         let time = moment(this.state.post.createDate).format("DD-MM-YYYY HH:mm:ss");
         let tags = '';
         if(this.state.post && this.state.post.tags) {
@@ -110,6 +114,10 @@ var BlogPost = React.createClass({
                 </ToolbarGroup>
             </Toolbar>
             : '';
+        let commentBox = '';
+        if(this.state.post && this.state.post.rid) {
+            commentBox = (<CommentBox entityRid = {this.state.post.rid}/>)
+        }
         return (
             <div>
                 <div className="leftColumn">
@@ -125,7 +133,7 @@ var BlogPost = React.createClass({
                             <Markdown text={this.state.post.content} />
                         </div>
                     </Paper>
-                    <hr />
+                    {commentBox}
                 </div>
             </div>
         )

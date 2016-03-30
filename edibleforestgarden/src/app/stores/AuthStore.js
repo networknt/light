@@ -14,7 +14,6 @@ var CHANGE_EVENT = 'change';
 // a 'remember me' using localStorage
 var _isLoggedIn = false;
 var _currentUser = { userId: '', roles: ['anonymous']};
-var _rid;
 var _rememberMe = false;
 var _accessToken = '';
 var _refreshToken = '';
@@ -56,10 +55,6 @@ var AuthStore = assign({}, EventEmitter.prototype, {
         return _currentUser.userId;
     },
 
-    getRid: function() {
-        return _rid;
-    },
-
     getRememberMe: function() {
         return _rememberMe;
     },
@@ -85,6 +80,8 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
             break;
 
         case ActionTypes.SIGNIN_USER_RESPONSE:
+        case ActionTypes.GOOGLE_LOGIN_RESPONSE:
+        case ActionTypes.FACEBOOK_LOGIN_RESPONSE:
             //console.log('Login response is callled.', payload);
             if (payload.json) {
                 // Successfully logged in and get access token back. If remember me is checked, then a refresh token is returned as well.
@@ -109,8 +106,6 @@ AuthStore.dispatchToken = AppDispatcher.register(function(payload) {
                     _refreshToken = payload.json.refreshToken;
                     localStorage.setItem('refreshToken', _refreshToken);
                 }
-                _rid = payload.json.rid;
-                //console.log('_rid = ', _rid);
                 // Redirect to the attempted url if the login page was redirected upon 401 and 403 error.
                 // httpBuffer.redirectToAttemptedUrl();
 

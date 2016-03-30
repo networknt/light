@@ -1,0 +1,16 @@
+.spam-button {
+  color: #929292;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.spam-button-spamed {
+  color: #FF8C00;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.spam-button:hover {
+  color: #777;
+  text-decoration: none;
+}

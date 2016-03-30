@@ -471,4 +471,3 @@ const Main = React.createClass({
 });
 
 export default Main;
-export default Main;

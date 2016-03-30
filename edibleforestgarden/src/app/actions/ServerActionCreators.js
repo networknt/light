@@ -15,6 +15,20 @@ module.exports = {
         });
     },
 
+    googleLoginResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GOOGLE_LOGIN_RESPONSE,
+            json: json
+        });
+    },
+
+    facebookLoginResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.FACEBOOK_LOGIN_RESPONSE,
+            json: json
+        });
+    },
+
     signUpUserResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.SIGNUP_USER_RESPONSE,
@@ -94,9 +108,33 @@ module.exports = {
         });
     },
 
+    getForumTreeResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_FORUM_TREE_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
     getBlogPostResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_BLOG_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getNewsPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_NEWS_POST_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getForumPostResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_FORUM_POST_RESPONSE,
             json: json,
             error: error
         });
@@ -118,9 +156,9 @@ module.exports = {
         });
     },
 
-    getNewsPostResponse: function(json, error) {
+    getRecentForumPostResponse: function(json, error) {
         AppDispatcher.dispatch({
-            type: ActionTypes.GET_NEWS_POST_RESPONSE,
+            type: ActionTypes.GET_RECENT_FORUM_POST_RESPONSE,
             json: json,
             error: error
         });
@@ -144,6 +182,14 @@ module.exports = {
     getNewsResponse: function(json, error) {
         AppDispatcher.dispatch({
             type: ActionTypes.GET_NEWS_RESPONSE,
+            json: json,
+            error: error
+        });
+    },
+
+    getForumResponse: function(json, error) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_FORUM_RESPONSE,
             json: json,
             error: error
         });
@@ -377,7 +423,6 @@ module.exports = {
     },
 
     delHostResponse: function(hostId) {
-        console.log('ServerActionCreators.delHostResponse', hostId);
         AppDispatcher.dispatch({
             type: ActionTypes.DEL_HOST_RESPONSE,
             hostId: hostId
@@ -422,6 +467,55 @@ module.exports = {
     uplFileResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.UPL_FILE_RESPONSE,
+            json: json
+        });
+    },
+
+    getCommentTreeResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.GET_COMMENT_TREE_RESPONSE,
+            json: json
+        });
+    },
+
+    addCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.ADD_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
+    delCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.DEL_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
+    updCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UPD_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
+    spmCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.SPM_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
+    upCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.UP_COMMENT_RESPONSE,
+            json: json
+        });
+    },
+
+    downCommentResponse: function(json) {
+        AppDispatcher.dispatch({
+            type: ActionTypes.DOWN_COMMENT_RESPONSE,
             json: json
         });
     }

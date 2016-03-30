@@ -15,6 +15,7 @@ import CommonUtils from '../utils/CommonUtils';
 import Gravatar from './Gravatar';
 import BlogSummary from './blog/BlogSummary';
 import NewsSummary from './news/NewsSummary';
+import ForumSummary from './forum/ForumSummary';
 import ProductSummary from './catalog/ProductSummary';
 import CartActionCreators from '../actions/CartActionCreators';
 
@@ -89,6 +90,12 @@ var Tag = React.createClass({
                 return (
                     <span key={index}>
                         <NewsSummary post={entity} onClick={boundClick} />
+                    </span>
+                );
+            } else if(entity.parentType === 'Forum') {
+                return (
+                    <span key={index}>
+                        <ForumSummary post={entity} onClick={boundClick} />
                     </span>
                 );
             } else if(entity.parentType === 'Catalog') {

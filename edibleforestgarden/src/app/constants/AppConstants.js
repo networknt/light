@@ -26,6 +26,8 @@ module.exports = {
         // Auth
         SIGNIN_USER_REQUEST: null,
         SIGNIN_USER_RESPONSE: null,
+        GOOGLE_LOGIN_RESPONSE: null,
+        FACEBOOK_LOGIN_RESPONSE: null,
         SIGNUP_USER_RESPONSE: null,
         REFRESH: null,
         LOGOUT: null,
@@ -94,6 +96,9 @@ module.exports = {
 
         // Forum
         GET_FORUM_TREE_RESPONSE: null,
+        GET_FORUM_POST_RESPONSE: null,
+        GET_RECENT_FORUM_POST_RESPONSE: null,
+        GET_FORUM_RESPONSE: null,
 
         // Catalog
         GET_CATALOG_TREE_RESPONSE: null,
@@ -151,7 +156,16 @@ module.exports = {
         EXEC_RULE_CMD_RESPONSE: null,
 
         // Rule
-        GET_RULE_RESPONSE: null
+        GET_RULE_RESPONSE: null,
+
+        // Comment
+        GET_COMMENT_TREE_RESPONSE: null,
+        ADD_COMMENT_RESPONSE: null,
+        UPD_COMMENT_RESPONSE: null,
+        DEL_COMMENT_RESPONSE: null,
+        SPM_COMMENT_RESPONSE: null,
+        DOWN_COMMENT_RESPONSE: null,
+        UP_COMMENT_RESPONSE: null
     }),
 
     monthNames: ["January", "February", "March", "April", "May", "June",
