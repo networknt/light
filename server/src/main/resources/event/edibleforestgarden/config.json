@@ -21,5 +21,51 @@
     "createDate": "2016-02-26T03:48:06.135",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:1",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10002,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "www.edibleforestgarden.ca",
+      "description": "google login",
+      "createUserId": "stevehu",
+      "configId": "google",
+      "properties": {
+        "client_id": "314433823054-8fkjke45eqdeqqfce4p32c4q91sd7375.apps.googleusercontent.com"
+      },
+      "createDate": "2016-03-31T02:07:17.363"
+    },
+    "name": "addHostConfig",
+    "category": "config",
+    "createDate": "2016-03-31T02:07:17.363",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "www.edibleforestgarden.ca",
+      "description": "facebook login",
+      "createUserId": "stevehu",
+      "configId": "facebook",
+      "properties": {
+        "appId": "1157784440901192"
+      },
+      "createDate": "2016-03-31T02:17:38.462"
+    },
+    "name": "addHostConfig",
+    "category": "config",
+    "createDate": "2016-03-31T02:17:38.462",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]
