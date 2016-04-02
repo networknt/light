@@ -93,38 +93,6 @@
       "description": "This file contains edibleforestgarden site catalog product data for commerce",
       "location": "event/edibleforestgarden/catalog_product.json"
     },
-
-
-    {
-      "description": "This file contains edibleforestgarden site config data",
-      "location": "event/demo.edibleforestgarden/config.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site blog category data for cms",
-      "location": "event/demo.edibleforestgarden/blog.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site blog post data for cms",
-      "location": "event/demo.edibleforestgarden/blog_post.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site news category data for cms",
-      "location": "event/demo.edibleforestgarden/news.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site news post data for cms",
-      "location": "event/demo.edibleforestgarden/news_post.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site catalog data for commerce",
-      "location": "event/demo.edibleforestgarden/catalog.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site catalog product data for commerce",
-      "location": "event/demo.edibleforestgarden/catalog_product.json"
-    },
-
-
     {
       "description": "This file contains networknt site config data",
       "location": "event/networknt/config.json"
