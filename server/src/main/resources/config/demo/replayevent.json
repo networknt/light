@@ -42,6 +42,10 @@
       "location": "event/db_commerce.json"
     },
     {
+      "description": "This file contains edibleforestgarden site menu add and update data",
+      "location": "event/demo.edibleforestgarden/menu.json"
+    },
+    {
       "description": "This file contains edibleforestgarden site config data",
       "location": "event/demo.edibleforestgarden/config.json"
     },
@@ -68,6 +72,10 @@
     {
       "description": "This file contains edibleforestgarden site catalog product data for commerce",
       "location": "event/demo.edibleforestgarden/catalog_product.json"
+    },
+    {
+      "description": "This file contains networknt site menu update data",
+      "location": "event/demo.networknt/menu.json"
     },
     {
       "description": "This file contains networknt site config data",

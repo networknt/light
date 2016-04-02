@@ -1,0 +1,23 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "addMenuItems": [
+        "cart"
+      ],
+      "updateDate": "2016-04-02T02:09:30.582",
+      "updateUserId": "stevehu",
+      "host": "demo.networknt.com"
+    },
+    "name": "updMenu",
+    "category": "menu",
+    "createDate": "2016-04-02T02:09:30.582",
+    "ipAddress": "162.252.242.224",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

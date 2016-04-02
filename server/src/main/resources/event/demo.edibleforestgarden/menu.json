@@ -1,0 +1,43 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:4",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10005,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "host": "demo.edibleforestgarden.ca",
+      "createDate": "2016-04-02T02:10:05.079"
+    },
+    "name": "addMenu",
+    "category": "menu",
+    "createDate": "2016-04-02T02:10:05.079",
+    "ipAddress": "162.252.242.224",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:6",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10007,
+    "createUserId": "stevehu",
+    "data": {
+      "addMenuItems": [
+        "main",
+        "user",
+        "cart"
+      ],
+      "updateDate": "2016-04-02T02:31:52.979",
+      "updateUserId": "stevehu",
+      "host": "demo.edibleforestgarden.ca"
+    },
+    "name": "updMenu",
+    "category": "menu",
+    "createDate": "2016-04-02T02:31:52.979",
+    "ipAddress": "162.252.242.224",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]
