@@ -7,12 +7,12 @@
     "eventId": 10033,
     "createUserId": "stevehu",
     "data": {
-      "summary": "www.networknt.com is alive in beta on Feb 15, 2016.",
+      "summary": "[www.networknt.com](www.networknt.com) is alive in beta on Feb 15, 2016.",
       "createUserId": "stevehu",
       "host": "www.networknt.com",
       "entityId": "y8ImgMe7QCu-5cuXMKb1pA",
       "title": "WWW.NETWORKNT.COM BETA SITE IS LAUNCHED",
-      "content": "The site is dedicated to promote Light Framework, Light CMS and Light Commence. The E-Commence checkout is hooked to Braintree Payment Sandbox for now. ",
+      "content": "The site [www.networknt.com](www.networknt.com) is dedicated to promote Light Framework, Light CMS and Light Commence. The E-Commence checkout is hooked to Braintree Payment Sandbox for now.",
       "parentId": "LightFramework",
       "tags": [
         "Light Framework"
@@ -33,12 +33,12 @@
     "eventId": 10034,
     "createUserId": "stevehu",
     "data": {
-      "summary": "www.edibleforestgarden.ca is alive in beta on Feb 15, 2016.",
+      "summary": "[www.edibleforestgarden.ca](www.edibleforestgarden.ca) is alive in beta on Feb 15, 2016.",
       "createUserId": "stevehu",
       "host": "www.networknt.com",
       "entityId": "sQesTWAnTwaw-Nn0oK35GA",
       "title": "WWW.EDIBLEFORESTGARDEN.CA BETA SITE IS LAUNCHED",
-      "content": "The site is dedicated to promote Light Framework, Light CMS and Light Commence. The E-Commence checkout is hooked to Braintree Payment Sandbox for now.",
+      "content": "The site [www.edibleforestgarden.ca](www.edibleforestgarden.ca) is dedicated to promote Light Framework, Light CMS and Light Commence. The E-Commence checkout is hooked to Braintree Payment Sandbox for now.",
       "parentId": "LightFramework",
       "tags": [
         "Light Framework"
@@ -48,6 +48,55 @@
     "name": "addPost",
     "category": "news",
     "createDate": "2016-02-16T20:42:47.347",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:5",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10006,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "[demo.networknt.com](demo.networknt.com) is alive on a free hosting service. It is a bit slow but functioning.",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "wOdhRau4SzKGDphrpLRNaA",
+      "title": "DEMO.NETWORKNT.COM IS LAUNCHED",
+      "content": "This site [demo.networknt.com](demo.networknt.com) is to demo some of the functionalities of [www.networknt.com](www.networknt.com) powered by Light Framework. There are two pre-created users:\n\nstevehu/123456  with owner role\n\ntest/123456 with user role\n\nOf course, you can login from Google or Facebook. You cannot register on the demo site as email server is not hooked due to security reasons. \n\nTo try the shopping cart, the following payment methods are available and you won't be charged.\n\nCredit card number: 4111111111111\n\nPaypal sandbox:: bt_buyer_us@paypal.com\n",
+      "parentId": "All",
+      "tags": [
+        "Light Framework"
+      ],
+      "createDate": "2016-04-02T12:40:50.874"
+    },
+    "name": "addPost",
+    "category": "news",
+    "createDate": "2016-04-02T12:40:50.858",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:15",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10016,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "[demo.edibleforestgarden.ca](demo.edibleforestgarden.ca) is alive on a free hosting service. It is a bit slow but functioning.",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "f6h1FTI8Q3-7UScPZDzfXA",
+      "title": "DEMO.EDIBLEFORESTGARDEN.CA IS LAUNCHED",
+      "content": "This site [demo.edibleforestgarden.ca](demo.edibleforestgarden.ca) is to demo some of the functionalities of [www.networknt.com](www.networknt.com) powered by Light Framework. There are two pre-created users:\n\nstevehu/123456 with owner role\n\ntest/123456 with user role\n\nOf course, you can login from Google or Facebook. You cannot register on the demo site as email server is not hooked due to security reasons.\n\nTo try the shopping cart, the following payment methods are available and you won't be charged.\n\nCredit card number: 4111111111111 \n\nPaypal sandbox: bt_buyer_us@paypal.com\n",
+      "parentId": "All",
+      "createDate": "2016-04-02T16:29:23.051"
+    },
+    "name": "addPost",
+    "category": "news",
+    "createDate": "2016-04-02T16:29:23.038",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
   }
