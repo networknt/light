@@ -33,7 +33,7 @@ const Markdown = React.createClass({
       tables: true,
       breaks: false,
       pedantic: false,
-      sanitize: false,
+      sanitize: true,
       smartLists: true,
       smartypants: false,
       highlight: function(code, lang) {

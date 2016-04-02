@@ -76,10 +76,10 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                     eventData.put("title", Encode.forJavaScriptSource((String)eventData.get("title")));
                 }
                 if(eventData.get("summary") != null) {
-                    eventData.put("summary", Encode.forJavaScriptSource((String)eventData.get("summary")));
+                    eventData.put("summary", eventData.get("summary"));
                 }
                 if(eventData.get("content") != null) {
-                    eventData.put("content", Encode.forJavaScriptSource((String)eventData.get("content")));
+                    eventData.put("content", eventData.get("content"));
                 }
                 if(eventData.get("originalAuthor") != null) {
                     eventData.put("originalAuthor", Encode.forJavaScriptSource((String)eventData.get("originalAuthor")));
@@ -325,8 +325,8 @@ public abstract class AbstractBfnRule extends BranchRule implements Rule {
                 eventData.put("originalAuthor", Encode.forJavaScriptSource((String)data.get("originalAuthor")));
                 eventData.put("originalSite", Encode.forJavaScriptSource((String)data.get("originalSite")));
                 eventData.put("originalUrl", Encode.forUriComponent((String)data.get("originalUrl")));
-                eventData.put("summary", Encode.forJavaScriptSource((String)data.get("summary")));
-                eventData.put("content", Encode.forJavaScriptSource((String)data.get("content")));
+                eventData.put("summary", data.get("summary"));
+                eventData.put("content", data.get("content"));
                 eventData.put("updateDate", new Date());
                 eventData.put("updateUserId", user.get("userId"));
                 // it is possible for the post to switch parent.
