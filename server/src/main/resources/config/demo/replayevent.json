@@ -42,60 +42,6 @@
       "location": "event/db_commerce.json"
     },
     {
-      "description": "This file contains exmaple site catalog data for commerce",
-      "location": "event/example/catalog.json"
-    },
-    {
-      "description": "This file contains example site catalog product data for commerce",
-      "location": "event/example/catalog_product.json"
-    },
-    {
-      "description": "This file contains example site blog category data for cms",
-      "location": "event/example/blog.json"
-    },
-    {
-      "description": "This file contains example site blog post data for cms",
-      "location": "event/example/blog_post.json"
-    },
-    {
-      "description": "This file contains example site news category data for cms",
-      "location": "event/example/news.json"
-    },
-    {
-      "description": "This file contains example site news post data for cms",
-      "location": "event/example/news_post.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site config data",
-      "location": "event/edibleforestgarden/config.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site blog category data for cms",
-      "location": "event/edibleforestgarden/blog.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site blog post data for cms",
-      "location": "event/edibleforestgarden/blog_post.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site news category data for cms",
-      "location": "event/edibleforestgarden/news.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site news post data for cms",
-      "location": "event/edibleforestgarden/news_post.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site catalog data for commerce",
-      "location": "event/edibleforestgarden/catalog.json"
-    },
-    {
-      "description": "This file contains edibleforestgarden site catalog product data for commerce",
-      "location": "event/edibleforestgarden/catalog_product.json"
-    },
-
-
-    {
       "description": "This file contains edibleforestgarden site config data",
       "location": "event/demo.edibleforestgarden/config.json"
     },
@@ -123,43 +69,41 @@
       "description": "This file contains edibleforestgarden site catalog product data for commerce",
       "location": "event/demo.edibleforestgarden/catalog_product.json"
     },
-
-
     {
       "description": "This file contains networknt site config data",
-      "location": "event/networknt/config.json"
+      "location": "event/demo.networknt/config.json"
     },
     {
       "description": "This file contains networknt site blog category data for cms",
-      "location": "event/networknt/blog.json"
+      "location": "event/demo.networknt/blog.json"
     },
     {
       "description": "This file contains networknt site blog post data for cms",
-      "location": "event/networknt/blog_post.json"
+      "location": "event/demo.networknt/blog_post.json"
     },
     {
       "description": "This file contains networknt site news category data for cms",
-      "location": "event/networknt/news.json"
+      "location": "event/demo.networknt/news.json"
     },
     {
       "description": "This file contains networknt site news post data for cms",
-      "location": "event/networknt/news_post.json"
+      "location": "event/demo.networknt/news_post.json"
     },
     {
       "description": "This file contains networknt site forum category data for cms",
-      "location": "event/networknt/forum.json"
+      "location": "event/demo.networknt/forum.json"
     },
     {
       "description": "This file contains networknt site forum post data for cms",
-      "location": "event/networknt/forum_post.json"
+      "location": "event/demo.networknt/forum_post.json"
     },
     {
       "description": "This file contains networknt site catalog data for commerce",
-      "location": "event/networknt/catalog.json"
+      "location": "event/demo.networknt/catalog.json"
     },
     {
       "description": "This file contains networknt site catalog product data for commerce",
-      "location": "event/networknt/catalog_product.json"
+      "location": "event/demo.networknt/catalog_product.json"
     }
   ]
 }

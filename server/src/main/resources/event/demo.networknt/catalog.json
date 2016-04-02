@@ -1,0 +1,22 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:27",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10028,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "demo.networknt.com",
+      "description": "Hosting",
+      "createUserId": "stevehu",
+      "categoryId": "Hosting",
+      "createDate": "2016-02-16T18:36:12.425"
+    },
+    "name": "addCatalog",
+    "category": "catalog",
+    "createDate": "2016-02-16T18:36:12.425",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

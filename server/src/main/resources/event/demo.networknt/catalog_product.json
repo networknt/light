@@ -1,0 +1,94 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:28",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10029,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "name": "API Hosting",
+      "host": "demo.networknt.com",
+      "description": "APIs provided by the Light Framework, Light Content Management and Light Commerce for your own domain. Price is on a monthly subscription basis. It is suitable for people who have their websites already and just need to add its own content management and e-commerce functions and they need to provide customized interface that fits with their existing site style.",
+      "entityId": "UFrz76lcSNSHQ9dgXGPanA",
+      "variants": [
+        {
+          "sku": "api-standard",
+          "type": "Standard",
+          "price": 5,
+          "image": "/images/hosting/light160.jpg",
+          "inventory": 5
+        },
+        {
+          "sku": "api-customized",
+          "type": "Customized",
+          "price": 50,
+          "image": "/images/hosting/light160.jpg",
+          "inventory": 5
+        }
+      ],
+      "content": "APIs out of the box without customization and this is the easiest way to bring up a site of your own that has all common functionalities along with content management and e-commence. All you need to do is to find a host for your static site - a single page React application. The React components are highly composable and can be embedded into your existing React application easily.  Another way to call the APIs is from your web server through HTTPS REST like requests. \n\n### Standard package contains the following:\n\n* All the standard APIs provided by the Framework, Content Management and E-Commerce configured for your own domain.\n* Administration interface to management your APIs with full access to your domain specific APIs.\n\n### Customized package contains the following:\n\n* Everything Standard package offers\n* Ability to deploy you own customized APIs only accessed by your own domain.\n* Can access development cloud to test your APIs\n",
+      "tags": [
+        "API",
+        "Site",
+        "Hosting",
+        "Host",
+        "Light Framework"
+      ],
+      "parentId": "Hosting",
+      "createDate": "2016-02-16T19:12:51.237"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2016-02-16T19:12:51.237",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#17:31",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10032,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "name": "Site Hosting",
+      "host": "demo.networknt.com",
+      "description": "Host your entire site including APIs and static contents. Price is on monthly subscription basis. This is suitable for new customers to build a website to interact with their users with social content management and selling products or services online. The APIs are standard for your own domain and the static content along with React single page application can be customized or even replaced with Angular. ",
+      "entityId": "PUKkvBmETRGCSPPKNvl4SA",
+      "variants": [
+        {
+          "sku": "site-standard",
+          "type": "Standard",
+          "price": 10,
+          "image": "/images/hosting/light160.jpg",
+          "inventory": 5
+        },
+        {
+          "sku": "site-customized",
+          "type": "Customized",
+          "price": 100,
+          "image": "/images/hosting/light160.jpg",
+          "inventory": 5
+        }
+      ],
+      "content": "### Standard package contains the following:\n* All the standard APIs provided by the Framework, Content Management and E-Commerce configured for your own domain.\n* Administration interface to management your APIs and Site with full access to your domain specific APIs.\n* Static Site Template with ability to customize. Default client is a single page React application currently and will provide Android and iOS native applications in the future.\n\n### Customized package contains the following:\n* Everything Standard package offers\n* Ability to deploy you own customized APIs only accessed by your own domain. \n* Can access development cloud to test your APIs and site.\n\n",
+      "parentId": "Hosting",
+      "tags": [
+        "API",
+        "Site",
+        "Hosting",
+        "Host",
+        "Light Framework"
+      ],
+      "createDate": "2016-02-16T19:22:21.170"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2016-02-16T19:22:21.170",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

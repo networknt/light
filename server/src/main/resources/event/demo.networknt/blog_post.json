@@ -1,0 +1,86 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:46",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10047,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "In this post, I am going to give several example on how to build REST like APIs with Light Framework.",
+      "createUserId": "stevehu",
+      "host": "demo.networknt.com",
+      "entityId": "n56D_kAYSzS4Facknfq_mA",
+      "title": "Build API with Light Framework",
+      "content": "Details is coming...",
+      "parentId": "LightFramework",
+      "tags": [
+        "API",
+        "Light Framework"
+      ],
+      "createDate": "2016-02-16T21:00:07.977"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-02-16T21:00:07.977",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:0",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10001,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "In this article, I will walk you through the Light Framework step by step on Linux environment in development mode. ",
+      "createUserId": "stevehu",
+      "host": "demo.networknt.com",
+      "entityId": "aQL83VuuSLOTwiVntaLIDw",
+      "title": "Start Light Framework with two demo sites in development mode",
+      "content": "### Create a project folder\n\nI am assuming you are using Linux desktop like Ubuntu but the instruction will work on Mac and Windows with some modifications. First you need to create a project folder in your home directory.\n\nFor example, my user directory is /home/steve and I will create a new folder named project and clone the light framework from github.\n\n```\nmkdir project\ncd project\ngit clone https://github.com/networknt/light.git\n```\n\n### Build Light Framework from command line\nIn order to build the framework you need to install the following software packages. \n1. Oracle JDK 1.8\n2. Apache Maven 3.3.x\n3. Node\n4. Npm\n\nNow, let's build the server and start it\n```\ncd light\nmvn clean install\ncd server/target\nsetsid java -jar light-server.jar < /dev/zero & > /dev/null &\n```\n\nNow the Light server is up and a database named lightdb will be created under your home directory by replay the events.\n\n### Start and debug server from IDE\n If you want to start server from your IDE or debug into it, open your IDE (Eclipse or Idea) and open the project from folder light. Both Eclipse and Idea will import the parent pom.xml. To server the server, navigate to server/src/main/java/com/networknt/light/server and run LightServer class. If the database doesn't exist, it will create a new one under your home directory by replaying events.\n\nOnce the server is ready, you should see the following messages on the console.\n\n```\n2016-03-09 20:23:31,396 [XNIO-1 I/O-1] DEBUG org.xnio.niorun(431) - Started channel thread 'XNIO-1 I/O-1', selector sun.nio.ch.EPollSelectorImpl@2790e59d\n2016-03-09 20:23:31,396 [XNIO-1 I/O-2] DEBUG org.xnio.niorun(431) - Started channel thread 'XNIO-1 I/O-2', selector sun.nio.ch.EPollSelectorImpl@6471ccf5\n2016-03-09 20:23:31,398 [XNIO-1 I/O-3] DEBUG org.xnio.niorun(431) - Started channel thread 'XNIO-1 I/O-3', selector sun.nio.ch.EPollSelectorImpl@72f54de2\n2016-03-09 20:23:31,399 [XNIO-1 I/O-4] DEBUG org.xnio.niorun(431) - Started channel thread 'XNIO-1 I/O-4', selector sun.nio.ch.EPollSelectorImpl@27bb2cd1\n```\n\n### Start demo.networknt.com with react hot loader\n\ndemo.networknt.com is a live site to promote the framework and hosting sites built on the framework. In order to run the site locally, you need to update your /etc/hosts to point 127.0.0.1 to it.\n\n```\nsudo gedit /etc/hosts\n```\n\nAdd the following line right after 127.0.0.1\n```\n127.0.0.1       www.edibleforestgarden.ca demo.networknt.com\n```\n\nTo start the server in hot loader mode.\n\n```\ncd ~\ncd project/light/networknt\nnpm installl\nnpm start\n```\n\n### Test and update the demo.networknt.com\nNow open your browser (Chrome or Firefox) and the address is demo.networknt.com:3000\n\nThe site will be loaded and you can login with test/123456 for normal user or you can login with stevehu/123456 as owner\n\n### Start www.edibleforestgarden.ca with react hot loader\nYou have to stop demo.networknt.com before starting www.edibleforestgarden.ca as they are listening to the same port.\n\nTo start the server in hot loader mode\n```\ncd ~\ncd project/light/edibleforestgarden\nnpm install\nnpm start\n```\nThe address for the site is www.edibleforestgarden.ca:3000\n\nYou can try to update the site with your IDE and the browser will be updated automatically with react-hot-loader.\n\n\n",
+      "parentId": "All",
+      "tags": [
+        "Light Framework",
+        "Installation"
+      ],
+      "createDate": "2016-03-10T02:30:55.103"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-03-10T02:30:55.098",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:1",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10002,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "In this article, I am going to walk through how Light Framework handles HTML History Fallback on both client side and server side. One the server side, PredicatedHandlerParser from Undertow will redirect all React-Router routes to index.html. And on the client side, certain configuration in Webpack will make React Router works on both development mode and production mode.",
+      "createUserId": "stevehu",
+      "host": "demo.networknt.com",
+      "entityId": "NQaRUgF8SGmjq3GGPRg8Ag",
+      "title": "React Webpack HTML5 History API Fallback",
+      "content": "## Overview\nFor single page application (SPA) regardless it is build with Angular or React, you have two options for client side routing - push-state and hash-based. The easiest way is to use hash-based (/#/ from showing in the browser's address bar) when using angular-router or react-router. In this way, routing is happening on the browser only and there is nothing needs to be done on the server configuration. The URL in the browser address bar looks like localhost:3000/#/ or localhost:3000/#/about. \n\nFor browsers that support HTML5 History API, we can use push-state routing. It is a little complicated and need both client and server configuration to work. However, once it is working, you application will look like a normal web application and all bookmarks for different routes will work just like server rendering.\n\n## Light Server\nHere is the logic to redirect all the server requests to index.html if it is not images, css and api calls. If it is not above listed path, then it must be client side routes and the server will serve index.html instead. This even works if you bookmark within single page application. \n\n```\n        NameVirtualHostHandler virtualHostHandler = new NameVirtualHostHandler();\n        Iterator<String> it = hostConfigMap.keySet().iterator();\n        while (it.hasNext()) {\n            String host = it.next();\n            Map<String, String> hostPropMap = (Map<String, String>)hostConfigMap.get(host);\n            String base = hostPropMap.get(\"base\");\n            String transferMinSize = hostPropMap.get(\"transferMinSize\");\n            virtualHostHandler\n                    .addHost(\n                            host,\n                            Handlers.predicates(\n                                PredicatedHandlersParser.parse(\"not path-prefix('/images', '/assets', '/api') -> rewrite('/index.html')\"\n                                , LightServer.class.getClassLoader()),\n                                    new PathHandler(resource(new FileResourceManager(\n                                            new File(base), Integer\n                                            .valueOf(transferMinSize))))\n                                            .addPrefixPath(\"/api/rs\",\n                                                    new EagerFormParsingHandler().setNext(\n                                                            new RestHandler()))\n                                            .addPrefixPath(\"/api/ws\",\n                                                    websocket(new WebSocketHandler()))\n                            ));\n        }\n\n```\n\n## React Router\nTo enable HTML5 History API, you need to set up the router to use browserHistory.\n\n```\nimport {Router, browserHistory} from 'react-router';\n\n.\n.\n.\n\nReactDOM.render(\n  <Router\n    history={browserHistory}\n    onUpdate={() => window.scrollTo(0, 0)}\n  >\n    {AppRoutes}\n  </Router>\n, document.getElementById('app'));\n\n```\n\n## WebPack Development Configuration\n\nFor development mode, I use webpack to start a server with hot loader. Webpack build path is 'src/www/assets and publicPath is /assets. When the webpack-dev-server is up, it serves app.js and style.css from /assets publicPath. Also, I use a proxy to route all API calls to API server. \n\n```\nconst webpack = require('webpack');\nconst path = require('path');\nconst buildPath = path.resolve(__dirname, 'src/www/assets');\nconst HtmlWebpackPlugin = require('html-webpack-plugin');\nconst ExtractTextPlugin = require('extract-text-webpack-plugin');\n\nconst config = {\n  //Entry point to the project\n  entry: [\n    'webpack/hot/dev-server',\n    'webpack/hot/only-dev-server',\n    path.join(__dirname, '/src/app/app.jsx')\n  ],\n  //Webpack config options on how to obtain modules\n  resolve: {\n    //When requiring, you don't need to add these extensions\n    extensions: ['', '.js', '.jsx', '.md', '.txt'],\n    //Modules will be searched for in these directories\n    modulesDirectories: [\n      // We need /docs/node_modules to be resolved before /node_modules\n      path.resolve(__dirname, 'node_modules'),\n      'node_modules',\n      path.resolve(__dirname, '../src')\n    ]\n  },\n\n  //Configuration for dev server\n  //devServer: {\n  //  contentBase: 'src/www',\n  //  devtool: 'eval',\n  //  hot: true,\n  // inline: true,\n  //  port: 3000,\n  //},\n\n  devServer: {\n    proxy:       [{\n      // proxy all requests not containing \".hot-update.js\"\n      // regex is still crappy because JS doesn't have negative lookbehind\n      path:   /\\/api(.*)/,\n      // koa running on 3001 with koa-send and isomorphic react\n      target:  'http://demo.networknt.com:8080'\n    }],\n    contentBase: 'src/www',\n    hot: true,\n    port: 3000,\n    host: '0.0.0.0',\n    historyApiFallback: true\n  },\n\n  devtool: 'eval',\n  //Output file config\n  output: {\n    path: buildPath,    //Path of output file\n    filename: 'app.js',  //Name of output file\n    publicPath: '/assets'\n  },\n  plugins: [\n    //Used to include index.html in build folder\n    new HtmlWebpackPlugin({\n      inject: false,\n      template: path.join(__dirname, '/src/www/index.html')\n    }),\n    //Allows for sync with browser while developing (like BorwserSync)\n    new webpack.HotModuleReplacementPlugin(),\n    //Allows error warninggs but does not stop compiling. Will remove when eslint is added\n    new webpack.NoErrorsPlugin(),\n    new ExtractTextPlugin('style.css' , {\n      allChunks: true\n    })\n  ],\n  externals: {\n    fs: 'js' // To remove once https://github.com/benjamn/recast/pull/238 is released\n  },\n  module: {\n    //eslint loader\n    preLoaders: [\n      {\n        test: /\\.(js|jsx)$/,\n        loader: 'eslint-loader',\n        include: [path.resolve(__dirname, '../src')],\n        exclude: [\n          path.resolve(__dirname, '../src/svg-icons'),\n          path.resolve(__dirname, '../src/utils/modernizr.custom.js')\n        ]\n      }\n    ],\n    //Allow loading of non-es\n    loaders: [\n      {\n        test: /\\.jsx$/,\n        loaders: [\n          'react-hot',\n          'babel-loader'\n        ],\n        exclude: /node_modules/\n      },\n      {\n        test: /\\.js$/,\n        loader: 'babel-loader',\n        exclude: /node_modules/\n      },\n      {\n        test: /\\.txt$/,\n        loader: 'raw-loader',\n        include: path.resolve(__dirname, 'src/app/components/raw-code')\n      },\n      {\n        test: /\\.md$/,\n        loader: 'raw-loader',\n        include: path.resolve(__dirname, 'src/app/components')\n      },\n      {\n        test: /\\.css$/,\n        loaders: [\n          \"style-loader\",\n          \"css-loader\",\n          \"autoprefixer-loader?browsers=last 2 versions\"\n        ]\n      },\n      {\n        test: /\\.scss$/,\n        loader: ExtractTextPlugin.extract(\"style-loader\", \"css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=\" + path.resolve(__dirname, \"src/www/assets/stylesheets\"))\n      }\n    ]\n  },\n  eslint: {\n    configFile: '../.eslintrc'\n  }\n};\n\nmodule.exports = config;\n\n```\n\n## WebPack Production Configuration\nProduction build will package everything into build folder, index.html will be build folder and app.js, style.css etc. will go to build/assets\n```\nconst webpack = require('webpack');\nconst path = require('path');\nconst buildPath = path.resolve(__dirname, 'build');\nconst HtmlWebpackPlugin = require('html-webpack-plugin');\nconst TransferWebpackPlugin = require('transfer-webpack-plugin');\nconst ExtractTextPlugin = require('extract-text-webpack-plugin');\n\nconst config = {\n  //Entry point to the project\n  entry: [\n    path.join(__dirname, '/src/app/app.jsx'),\n  ],\n  //Webpack config options on how to obtain modules\n  resolve: {\n    //When requiring, you don't need to add these extensions\n    extensions: ['', '.js', '.jsx', '.md', '.txt'],\n    //Modules will be searched for in these directories\n    modulesDirectories: [\n      // We need /docs/node_modules to be resolved before /node_modules\n      path.resolve(__dirname, 'node_modules'),\n      'node_modules',\n      path.resolve(__dirname, '../src')\n    ]\n  },\n  devtool: 'source-map',\n  //Configuration for server\n  devServer: {\n    contentBase: 'build',\n  },\n  //Output file config\n  output: {\n    path: buildPath,    //Path of output file\n    filename: 'assets/app.js'  //Name of output file\n  },\n  plugins: [\n    new webpack.optimize.OccurenceOrderPlugin(),\n    new webpack.optimize.DedupePlugin(),\n    new webpack.optimize.UglifyJsPlugin({\n      compress: {\n        warnings: false,\n      },\n      output: {\n        comments: false,\n      },\n    }),\n    new webpack.DefinePlugin({\n      'process.env': {\n        NODE_ENV: JSON.stringify('production'),\n      },\n    }),\n    new HtmlWebpackPlugin({\n      inject: false,\n      template: path.join(__dirname, '/src/www/index.html'),\n    }),\n    //Allows error warninggs but does not stop compiling. Will remove when eslint is added\n    new webpack.NoErrorsPlugin(),\n    //Transfer Files\n    new TransferWebpackPlugin([\n      {from: 'www/css', to: 'css'},\n      {from: 'www/images', to: 'images'},\n    ], path.resolve(__dirname, 'src')),\n    new ExtractTextPlugin('assets/style.css' , {\n      allChunks: true\n    })\n  ],\n  externals: {\n    fs: 'fs', // To remove once https://github.com/benjamn/recast/pull/238 is released\n  },\n  module: {\n    //eslint loader\n    preLoaders: [\n      {\n        test: /\\.(js|jsx)$/,\n        loader: 'eslint-loader',\n        include: [path.resolve(__dirname, '../src')],\n        exclude: [\n          path.resolve(__dirname, '../src/svg-icons'),\n          path.resolve(__dirname, '../src/utils/modernizr.custom.js'),\n        ],\n      },\n    ],\n    //Allow loading of non-es5 js files.\n    loaders: [\n      {\n        test: /\\.(js|jsx)$/,\n        loader: 'babel-loader',\n        exclude: /node_modules/,\n      },\n      {\n        test: /\\.txt$/,\n        loader: 'raw-loader',\n        include: path.resolve(__dirname, 'src/app/components/raw-code'),\n      },\n      {\n        test: /\\.md$/,\n        loader: 'raw-loader',\n        include: path.resolve(__dirname, 'src/app/components'),\n      },\n      {\n        test: /\\.css$/,\n        loaders: [\n          \"style-loader\",\n          \"css-loader\",\n          \"autoprefixer-loader?browsers=last 2 versions\"\n        ]\n      },\n      {\n        test: /\\.scss$/,\n        loader: ExtractTextPlugin.extract(\"style-loader\", \"css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?indentedSyntax=sass&includePaths[]=\" + path.resolve(__dirname, \"/src/www/assets/stylesheets\"))\n      }\n    ]\n  },\n  eslint: {\n    configFile: '../.eslintrc',\n  },\n};\n\nmodule.exports = config;\n\n```\n\n",
+      "parentId": "All",
+      "tags": [
+        "Light Framework",
+        "API",
+        "HTML5",
+        "React Router",
+        "Webpack"
+      ],
+      "createDate": "2016-03-11T20:36:47.566"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-03-11T20:36:47.557",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]

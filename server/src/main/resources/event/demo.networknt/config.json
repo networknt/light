@@ -1,0 +1,107 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#17:16",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10017,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "demo.networknt.com",
+      "description": "delivery",
+      "createUserId": "stevehu",
+      "configId": "delivery",
+      "properties": {
+        "method": "RS"
+      },
+      "createDate": "2016-02-21T03:12:30.687"
+    },
+    "name": "addHostConfig",
+    "category": "config",
+    "createDate": "2016-02-21T03:12:30.687",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:28",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10029,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "demo.networknt.com",
+      "description": "country",
+      "createUserId": "stevehu",
+      "properties": {
+        "items": [
+          {
+            "label": "Canada",
+            "value": "CA"
+          },
+          {
+            "label": "United States of America",
+            "value": "US"
+          },
+          {
+            "label": "United Kingdom",
+            "value": "GB"
+          }
+        ]
+      },
+      "configId": "country",
+      "createDate": "2016-03-01T03:39:05.203"
+    },
+    "name": "addHostConfig",
+    "category": "config",
+    "createDate": "2016-03-01T03:39:05.203",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:8",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10009,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "demo.networknt.com",
+      "description": "google login",
+      "createUserId": "stevehu",
+      "configId": "google",
+      "properties": {
+        "client_id": "314433823054-8fkjke45eqdeqqfce4p32c4q91sd7375.apps.googleusercontent.com"
+      },
+      "createDate": "2016-03-14T01:23:13.665"
+    },
+    "name": "addHostConfig",
+    "category": "config",
+    "createDate": "2016-03-14T01:23:13.665",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:9",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10010,
+    "createUserId": "stevehu",
+    "data": {
+      "host": "demo.networknt.com",
+      "description": "facebook login",
+      "createUserId": "stevehu",
+      "configId": "facebook",
+      "properties": {
+        "appId": "1003427183082449"
+      },
+      "createDate": "2016-03-14T01:25:36.338"
+    },
+    "name": "addHostConfig",
+    "category": "config",
+    "createDate": "2016-03-14T01:25:36.338",
+    "ipAddress": "127.0.0.1",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]
