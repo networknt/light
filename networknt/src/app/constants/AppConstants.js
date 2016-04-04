@@ -71,15 +71,17 @@ module.exports = {
         // Tag
         GET_TAG_ENTITY_RESPONSE: null,
 
+        // Post
+        ADD_POST_RESPONSE: null,
+        UPD_POST_RESPONSE: null,
+        DEL_POST_RESPONSE: null,
+
         // Blog
         GET_BLOG_TREE_RESPONSE: null,
         GET_BLOG_POST_RESPONSE: null,
         GET_RECENT_BLOG_POST_RESPONSE: null,
         GET_BLOG: null,
         GET_BLOG_RESPONSE: null,
-        ADD_POST_RESPONSE: null,
-        UPD_POST_RESPONSE: null,
-        DEL_POST_RESPONSE: null,
 
         LOAD_BLOGS: null,
         LOAD_BLOG: null,

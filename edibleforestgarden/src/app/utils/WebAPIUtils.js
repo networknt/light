@@ -694,9 +694,12 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            ServerActionCreators.addPostResponse(data, null);
+            ServerActionCreators.addPostResponse(data);
         }).fail(function(error) {
-            ServerActionCreators.addPostResponse(null, error);
+            if(error.status === 200) {
+                ServerActionCreators.addPostResponse(error);
+            }
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 
@@ -712,9 +715,12 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            ServerActionCreators.updPostResponse(data, null);
+            ServerActionCreators.updPostResponse(data);
         }).fail(function(error) {
-            ServerActionCreators.updPostResponse(null, error);
+            if(error.status === 200) {
+                ServerActionCreators.updPostResponse(error);
+            }
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 
@@ -739,9 +745,12 @@ module.exports = {
             contentType: 'application/json',
             dataType: 'json'
         }).done(function(data) {
-            ServerActionCreators.delPostResponse(data, null);
+            ServerActionCreators.delPostResponse(data);
         }).fail(function(error) {
-            ServerActionCreators.delPostResponse(null, error);
+            if(error.status === 200) {
+                ServerActionCreators.delPostResponse(error);
+            }
+            ErrorActionCreators.serverErrorResponse(error);
         });
     },
 

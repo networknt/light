@@ -55,8 +55,6 @@ var NewsPostAdd = React.createClass({
     },
 
     _onPostChange: function() {
-        console.log('NewsPostAdd._onPostChange', PostStore.getResult(), PostStore.getErrors());
-        // TODO display toaster
 
     },
 

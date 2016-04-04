@@ -19,6 +19,10 @@ const id = 'com.networknt.light.blog.post.update';
 
 var BlogPostUpdate = React.createClass({
 
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function() {
         return {
             error: null,
@@ -55,7 +59,7 @@ var BlogPostUpdate = React.createClass({
     },
 
     _onPostChange: function() {
-        // TODO display toaster
+        this.context.router.push('/blog');
     },
 
     _onModelChange: function(key, val) {

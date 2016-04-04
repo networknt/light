@@ -202,30 +202,24 @@ module.exports = {
         });
     },
 
-    // TODO create a toaster component to display the result.
-    delPostResponse: function(json, error) {
+    delPostResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.DEL_POST_RESPONSE,
-            json: json,
-            error: error
+            json: json
         });
     },
 
-    // TODO create a toaster component to display the result.
-    addPostResponse: function(json, error) {
+    addPostResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.ADD_POST_RESPONSE,
-            json: json,
-            error: error
+            json: json
         });
     },
 
-    // TODO create a toaster component to display the result.
-    updPostResponse: function(json, error) {
+    updPostResponse: function(json) {
         AppDispatcher.dispatch({
             type: ActionTypes.UPD_POST_RESPONSE,
-            json: json,
-            error: error
+            json: json
         });
     },
 
