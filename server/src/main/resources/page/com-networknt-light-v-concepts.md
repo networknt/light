@@ -1,0 +1,275 @@
+# Concepts
+## Key Concepts
+
+### API
+Light Framework Backend is API based and this allows the separation between Front end and back end and
+they can be evolved independently. The key concept of API can be found:
+
+[API Design](http://martinfowler.com/tags/API%20design.html)
+
+### Event Sourcing
+[Event Sourcing]()http://martinfowler.com/eaaDev/EventSourcing.html)
+
+### CQRS
+[CQRS](http://martinfowler.com/bliki/CQRS.html)
+
+### Graph Database
+[Graph Database](https://en.wikipedia.org/wiki/Graph_database)
+
+### Single Page Application
+[SPA](https://en.wikipedia.org/wiki/Single-page_application)
+
+### Create Java source dynamically, compile and call
+[resource](http://www.ibm.com/developerworks/library/j-jcomp/)
+
+### OAuth2
+[OAuth 2.0](https://tools.ietf.org/html/rfc6749)
+
+
+
+## Challenges Addressed
+Today’s software engineering approach has some challenges and the Light Framework is designed to
+address these.
+
+### Productivity
+Light Framework supports and encourages Agile Development. Agile software development is
+a software development methodology in which requirements and solutions evolve through
+collaboration between self-organizing, cross-functional teams. It promotes adaptive
+planning, evolutionary development, early and frequent delivery, continuous improvement
+and encourages rapid and flexible response to change. A group of people take responsibility
+for the entire life cycle of the software development and work with other teams for
+integration. This makes each team more productive as decisions happen locally without
+management overhead. Each team would have their own mission – to produce a reusable
+web component, view/page, application or API service. The component team would need to
+be aligned with view team and view team needs to be aligned with application team. In this
+sense they are loosely coupled but tightly aligned to the same mission.
+
+
+The framework itself provides so many reusable common components, views, applications, and
+corresponding services which are ready to be used or customized. Most applications can be
+assembled from existing components and only certain minor customization would be needed.
+Of course, you may need to build your domain specific modules but the existing ones can give
+you plenty of examples to follow. The framework also encourages brands and developers to publish
+their modules. The more people/brands using your experience, the more value you have. And the
+more developers using your modules, the more support and customization revenue you will have
+as developers.
+
+
+By using the framework, large projects can be modularized to more manageable pieces and
+continuously integrated to allow components, views, and applications to grow
+gradually. This makes the development teams scalable and reduces risks for large projects.
+
+
+### Quality Assurance
+Different teams can manage components, views, and applications independently where the
+reusability of each is the main goal in the Light framework design. All pieces have unit tests
+and end-to-end tests in order to promote and give confidence to the end users. Each team can
+also have sample applications so end users can play with the module.
+
+
+Front end ReactJS or AngularJS is known as a testable Javascript framework and backend does not
+have any container so rules can be tested as POJO. You don’t need to start a server
+to test your backend code and when it is time, you can user Apache HttpClient to test your API
+end to end with the embedded server. Debugging is easy as everything is POJO.
+
+
+Agile development practices encourages QA and DEV teams to work together as one team reaching
+the common goal. The developers are writing the unit test cases and the testers are writing
+e2e test cases. If your organization won’t allow it, then a DIT exit report can be produced by
+the development team to assist the QA team during their testing process.
+
+### Release Management
+
+The Light framework is based on event sourcing and deployment by the means of generating events
+file from your development environment and replaying these events on DIT, SIT, UAT, PAT, and PROD.
+
+Traditionally, releasing a new version of a product is so costly and risky such that some
+organizations might limit the number of releases to 3 or 4 per year. Each release will
+involve so many teams and last so long in testing since many changes will be packed into the
+same batch. An army consisting of DBAs, System Administrators, and Deployment Engineers
+will be working together during deployment time and must they follow the documentation
+step by step to get the job done. The impact to productivity by fixing defects and adding new
+features mid cycle slow the release to such an extent that meeting business needs in this
+dynamic world is rendered a much more difficult task.
+
+In the Light framework we want the benefits of agile development and continuous integration
+all the way through to production. We encourage more deployments with high frequency and short
+cycles that lead to financial success. Whereas the traditional approach might read - fewer
+deployments with big thoroughly tested batch deployments that lead to financial success.
+The above two approaches might have the same goal, but they seem to conflict with each other...
+
+How can the process be so different and lead to the same goal of financial success? To understand
+this, we need to understand how risk is calculated:
+
+`ALE (Annual Loss Expectancy) = Single Loss Expectancy * Exposure Rate * Annualized Frequency`
+
+In our software release world, we can understand it as:
+
+`Loss = Single loss of error * Percentage of deployment error * Number of deployments`
+
+For example, if one error occurs in 100 deployments, each error will cost $5000 and if there
+are 4 deployments per year, the ALE would be 0.0150004 = 200
+
+Where the traditional approach would be to reduce the number of deployments to reduce the
+loss, our approach is to increase the number of deployments and reduce the single loss of
+error and percentage of deployment error. If this can be done, we can avoid financial losses
+due to downtime, bugs, noncompliance and loss of reputation.
+
+#### Let’s look at the source of errors and try to lower the percentage of occurrence.
+
+##### Defects in code
+This can be addressed by unit test cases and e2e test cases. If we have enough coverage we
+can consistently change the code with confidence.
+
+##### Errors in assembly or packaging
+* Fast tests in continuous integration and delivery.
+* Fail slow tests and violation of architecture and coding standards.
+* Clean build everything from Git repository Deploy the same way everywhere using events.
+* Manage dependencies and versions with graph database.
+* Manage Git branch and trunk through database to map to different release and environment.
+* Basically, automate everything.
+
+##### Errors executing changes
+Make deployment the same process everywhere by replaying serial events which include database
+updates, business rule updates, data updates, template updates, apps and experience updates etc.
+Basically, we don’t need an army for deployment, it is one click at the right time and place.
+
+
+#### Now, let’s look at the cost per error and see if we can reduce it:
+
+* Zero down time deployment.
+* Database migrations and schema-less design(database change won’t break previous version of code)
+* Versioned identifiers for assets
+* Protocol versioning/Endpoint versioning
+* Decoupled architecture separating data and logic which can be deployed independently.
+* Configurable default version for every component letting the end-user choose if they want to use the updated version.
+* Employees/Prod testers try out the new version before making it default version
+* User can downgrade version if they don’t like the new one.
+* Basically the user owns their experience.
+
+
+In order to archive the above, we have the make our deployment unit as small as possible. Within
+the framework we have components, views, and apps where each of them can be
+versioned and deployed independently. Furthermore, they can be broken up to even smaller
+pieces to be deployed independently. For example, a component can have the following
+parts that can be deployed independently and versioned independently:
+
+* React or AngularJS code (front end)
+* Rules (back end)
+* Rules Data (back end)
+* Reference and configuration (back end)
+
+For example, if a form gets a new version 1.0.2 deployed on the server, one site can use
+version 1.0.1 and another site can use 1.0.2 at the same time! This allows site
+to customize the form for their channel as well. Even further, we can set form 1.0.1 as default
+so all the customers will have load the form when visiting, but we ask our
+employees to try 1.0.2 version for a while before rolling it out as the default.
+
+Although each piece can be deployed independently, they are loaded dynamically at the view level
+as part of react or angular routing.
+
+During the assembly phase the configuration data is combined with the logic and the final page
+is pre-processed. For example, the dynamic dropdown list will be generated
+at this phase for a form component.
+
+Breaking up components to this level is not mandatory and it sometimes makes sense to have simple
+components packaged together and given only one version. You only need to break it up
+if your component is so complicated and has so many moving part as to make it configurable
+and customizable.
+
+
+### Production Configuration
+To make the application configurable on production, we need to separate the logic and data.
+The framework has three levels of configuration that can be performed on
+production and they each have a different level of risk associated with them.
+
+The first level is reference data configuration like dropdowns, translations, etc. These will
+be saved into a set of schemas or tables and can be changed through the table maintenance
+application. The reference data is cached but will be refreshed once changed. This results in
+the lowest risk change on production as it will only impact the UI and can be rolled back if
+negative impact occurres. Of course, certain levels of validation have to be done as well as
+a having a submit/approve process in place.
+
+The second level is the rules data configuration. All requests are handled by Light Rule Engine
+rules designed in two parts: Data, and logic. This level addresses
+the rule data changes and is low risk as it won’t impact rule logic, where the rule logic can
+be written to validate the data for the rules. For example, the system admin
+has the right to give promotions and discount products for a certain percentage, say 10
+percent off. In this case, the 10 percent is the data, the rule might have validation
+between 1 to 99 or 1 to 55 percent ranges. This piece of data (10%) is more important then
+the reference data as it impacts application logic but is isolated from the rules.
+It can be modified easily without impacting the application.
+
+The third level is rule logic configuration. The rules are just POJOs and can be updated and
+deployed through API services. This change is bigger but risk is still manageable
+as you only need to regression the components/views/apps that depends on this rule. Rules work
+independently of each other and failures would only impact one area of the app for which
+they can be easily be rolled back. To further reduce the risk on production, a new version of
+rule can be deployed and requests from users with a betaTester role can route to the new
+version to test before switching the public to the new version.
+
+### Security
+
+API security or resource security is done by JWT token. When a user tries to access to protected
+resources, it will check if the access token is in the http request header.
+If it does not exist, it will redirect the user to a login page. The access token will be short
+lived up to 30 minutes and a 401 response along with token_expired will be sent
+back to client in order to refresh the now invalid token. If the user checks the remember me box
+when logging in, the life of the access token will be increased.
+
+Access token contains clientId, roles, and userId so that the resource server can grant access
+based on either client-based, role-based, user-based authorization, or combinations of each.
+
+Visibility control will be put into place based on the role of the users. For example, certain
+menus won’t be shown up unless you login with an admin role or certain web components
+could only show partial data based on the users role.
+
+Light Gateway server provides another layer of security for the back-end legacy system as the
+React or Angular application would not talk to the back-end API directly. Also, this layer would
+do the validation before calling the back-end API so that a lot of invalid requests can premtively
+be filtered out.
+
+### Performance
+
+### Traceability
+
+Traceability is more important with Angular applications as they are running on the end users’
+browser. The server does not have the state of the user session since only the Angular
+application would know. In this case, event sourcing is utilized to log all the events happening
+on the client/browser side. Every user action will generate an event and it is sent to
+the server along with a JWT token that is the identifier for the user. The server is logging events
+into its event store.
+
+* Un-caught runtime exceptions in Angular will be logged as an event and would be easily reproduced
+given a serial set of events leading to it for the same user in event store.
+* Server error responses can be logged on server side as it is known who sent the request. For
+example, if a 404 error response is sent to the client, the monitoring support team
+would be preempted to the issue (be it a broken link, or otherwise) and would have the complete
+facility to reproduce it. Thus fixing the issue without the client needing to submit a ticket.
+* Server side exceptions are logged with a stack trace and it can be reproduced along with events
+leading to it.
+* Security violation will be logged when the system identifies that the request is not sent from
+our Angular applicatoin but some otherwise raw requests with missing data or wrong parameters.
+
+System statistics can be viewed from the admin pages with information like current and historical
+user statistics, number of requests served over a period of time, and other usefull
+metrics that would help you understand the trending health of your system.
+
+Health check is an application that will check certain areas of the application based on the
+configuration data in order to make sure the overall system is fully functional.
+For example, it could check the connectivity with legacy systems etc. It is normally called upon
+once a new release is deployed and the system is behaving outside of expectations.
+
+User behaviour analysis is an app that analyzes (a) users online behaviour and can be very valuable
+to drive sales/customer experience. If a customer goes to the bank branch to save a check and
+the sales person knows the customer was browsing life insurance products recently, it could benefit
+both the customer and the bank to bring up the idea.
+
+Module update notifier will monitor if there are any security updates from the framework and notify
+system admins to take action.
+
+
+
+## Design Insights and Tradeoffs
+
+## Rule Engine
