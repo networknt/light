@@ -18,6 +18,7 @@ package com.networknt.light.server.handler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.light.server.ServerConstants;
 import com.networknt.light.util.JwtUtil;
 import com.networknt.light.util.ServiceLocator;
 import graphql.ExecutionResult;
@@ -32,6 +33,9 @@ import io.undertow.util.HttpString;
 import io.undertow.util.Methods;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -46,6 +50,7 @@ import static graphql.schema.GraphQLObjectType.newObject;
  */
 public class GraphqlHandler implements HttpHandler {
     static final Logger logger = LoggerFactory.getLogger(GraphqlHandler.class);
+    static final GraphqlConfig config = (GraphqlConfig)ServiceLocator.getInstance().getJsonObjectConfig("graphql", GraphqlConfig.class);
     ObjectMapper mapper = ServiceLocator.getInstance().getMapper();
 
     public GraphqlHandler() {
@@ -57,7 +62,6 @@ public class GraphqlHandler implements HttpHandler {
             exchange.dispatch(this);
             return;
         }
-
         exchange.startBlocking();
 
         // check if it is get or post
@@ -68,14 +72,12 @@ public class GraphqlHandler implements HttpHandler {
         if(Methods.GET.equals(exchange.getRequestMethod())) {
             Map params = exchange.getQueryParameters();
             logger.debug("GET is called");
-            //String cmd = ((Deque<String>)params.get("cmd")).getFirst();
-            //json = URLDecoder.decode(cmd, "UTF8");
+            String query = ((Deque<String>)params.get("query")).getFirst();
+            json = URLDecoder.decode(query, "UTF8");
         } else if (Methods.POST.equals(exchange.getRequestMethod())) {
             logger.debug("POST is called");
             json = new Scanner(exchange.getInputStream(),"UTF-8").useDelimiter("\\A").next();
         } else if (Methods.OPTIONS.equals(exchange.getRequestMethod())) {
-            // This is CORS preflight request and it will be handled here instead of forward to
-            // the individual rule.
             exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Origin"), "*");
             exchange.getResponseHeaders().put(new HttpString("Access-Control-Allow-Methods"), "GET, POST");
             exchange.getResponseHeaders().put(new HttpString("Access-Control-Max-Age"), "3600");
@@ -84,7 +86,7 @@ public class GraphqlHandler implements HttpHandler {
             exchange.getResponseHeaders().put(new HttpString("Content-Type"), "application/json; charset=utf-8");
             return;
         } else {
-            //sendErrorResponse(exchange, 400, "Invalid Request Method");
+            sendErrorResponse(exchange, 405, "GraphQL only supports GET and POST requests.");
             logger.error("Invalid Request Method: " + exchange.getRequestMethod());
             return;
         }
@@ -126,6 +128,13 @@ public class GraphqlHandler implements HttpHandler {
         if(result != null && !exchange.isResponseComplete()) {
             exchange.getResponseSender().send(ByteBuffer.wrap(mapper.writeValueAsBytes(result)));
         }
+    }
+
+    private void sendErrorResponse (HttpServerExchange exchange, int httpStatusCode, String errorMessage) throws UnsupportedEncodingException {
+        String jsonErrorMessage = "{\"error\":\"" + errorMessage + "\"}";
+        exchange.setStatusCode(httpStatusCode);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, ServerConstants.JSON_UTF8);
+        exchange.getResponseSender().send(ByteBuffer.wrap(jsonErrorMessage.getBytes("utf-8")));
     }
 
 
