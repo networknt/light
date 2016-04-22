@@ -26,6 +26,7 @@ import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import com.networknt.light.rule.RuleEngine;
 import com.networknt.light.rule.rule.AbstractRuleRule;
+import com.networknt.light.server.handler.GraphqlHandler;
 import com.networknt.light.server.handler.RestHandler;
 import com.networknt.light.server.handler.WebSocketHandler;
 import com.networknt.light.util.ServiceLocator;
@@ -118,7 +119,7 @@ public class LightServer {
                     .addHost(
                             host,
                             Handlers.predicates(
-                                PredicatedHandlersParser.parse("not path-prefix('/images', '/assets', '/api') -> rewrite('/index.html')"
+                                PredicatedHandlersParser.parse("not path-prefix('/images', '/assets', '/api', '/graphiql') -> rewrite('/index.html')"
                                 //PredicatedHandlersParser.parse("not path-suffix['.js', '.html', '.css'] -> rewrite['/index.html']"
                                 //PredicatedHandlersParser.parse("path-prefix['/home', '/page', '/form'] -> rewrite['/index.html']"
                                 , LightServer.class.getClassLoader()),
@@ -128,6 +129,8 @@ public class LightServer {
                                             .addPrefixPath("/api/rs",
                                                     new EagerFormParsingHandler().setNext(
                                                             new RestHandler()))
+                                            .addPrefixPath("/api/graphql",
+                                                            new GraphqlHandler())
                                             .addPrefixPath("/api/ws",
                                                     websocket(new WebSocketHandler()))
                             ));
