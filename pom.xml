@@ -74,6 +74,7 @@
         <google-api.version>1.19.1</google-api.version>
         <facebook-api.version>1.20.0</facebook-api.version>
         <java-encoder.version>1.2</java-encoder.version>
+        <graphql-java.version>2.0.0</graphql-java.version>
         <junit.version>4.12</junit.version>
         <easymock.version>3.2</easymock.version>
         <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
@@ -436,6 +437,11 @@
                 <groupId>org.owasp.encoder</groupId>
                 <artifactId>encoder</artifactId>
                 <version>${java-encoder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.graphql-java</groupId>
+                <artifactId>graphql-java</artifactId>
+                <version>${graphql-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
