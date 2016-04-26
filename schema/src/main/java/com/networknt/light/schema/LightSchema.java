@@ -110,36 +110,11 @@ public class LightSchema {
             .build();
 
     public static GraphQLObjectType queryType = newObject()
-            .name("QueryType")
+            .name("queryType")
             .field(newFieldDefinition()
-                    .name("hero")
-                    .type(characterInterface)
-                    .argument(newArgument()
-                            .name("episode")
-                            .description("If omitted, returns the hero of the whole saga. If provided, returns the hero of that particular episode.")
-                            .type(episodeEnum)
-                            .build())
-                    .dataFetcher(new StaticDataFetcher(StarWarsData.getArtoo()))
-                    .build())
-            .field(newFieldDefinition()
-                    .name("human")
-                    .type(humanType)
-                    .argument(newArgument()
-                            .name("id")
-                            .description("id of the human")
-                            .type(new GraphQLNonNull(GraphQLString))
-                            .build())
-                    .dataFetcher(StarWarsData.getHumanDataFetcher())
-                    .build())
-            .field(newFieldDefinition()
-                    .name("droid")
-                    .type(droidType)
-                    .argument(newArgument()
-                            .name("id")
-                            .description("id of the droid")
-                            .type(new GraphQLNonNull(GraphQLString))
-                            .build())
-                    .dataFetcher(StarWarsData.getDroidDataFetcher())
+                    .name("hello")
+                    .type(GraphQLString)
+                    .staticValue("world")
                     .build())
             .build();
 
@@ -150,15 +125,15 @@ public class LightSchema {
                     .name("signUp")
                     .type(userType)
                     .argument(newArgument()
-                            .name("Sign up user.")
+                            .name("inputUserSignUp")
                             .type(inputUserSignUpType)
                             .build())
                     .dataFetcher(new DataFetcher() {
                             @Override
                             public Object get(DataFetchingEnvironment environment) {
-                                    int newNumber = environment.getArgument("newNumber");
+                                    Object newUser = environment.getArgument("inputUserSignUp");
                                     Root root = (Root) environment.getSource();
-                                    return root.changeNumber(newNumber);
+                                    return root.userSignUp(newUser);
                             }
                     })
                     .build())
@@ -166,15 +141,15 @@ public class LightSchema {
                     .name("signIn")
                     .type(userType)
                     .argument(newArgument()
-                            .name("Sign in user.")
+                            .name("inputUserSignIn")
                             .type(inputUserSignInType)
                             .build())
                     .dataFetcher(new DataFetcher() {
                         @Override
                         public Object get(DataFetchingEnvironment environment) {
-                            int newNumber = environment.getArgument("newNumber");
+                            Object userSignIn = environment.getArgument("inputUserSignIn");
                             Root root = (Root) environment.getSource();
-                            return root.failToChangeTheNumber(newNumber);
+                            return root.userSignIn(userSignIn);
                         }
                     })
                     .build())

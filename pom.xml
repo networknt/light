@@ -278,6 +278,11 @@
                 <artifactId>client</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.networknt.light</groupId>
+                <artifactId>schema</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- External Dependencies -->
             <dependency>
