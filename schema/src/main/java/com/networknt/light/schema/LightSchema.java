@@ -2,24 +2,23 @@ package com.networknt.light.schema;
 
 import graphql.schema.*;
 
-import javax.persistence.criteria.Root;
+import java.util.HashMap;
+import java.util.Map;
 
-import static graphql.Scalars.GraphQLString;
-import static graphql.Scalars.GraphQLInt;
 import static graphql.Scalars.GraphQLBoolean;
-
+import static graphql.Scalars.GraphQLString;
 import static graphql.schema.GraphQLArgument.newArgument;
-import static graphql.schema.GraphQLEnumType.newEnum;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLInputObjectField.newInputObjectField;
-
-import static graphql.schema.GraphQLInterfaceType.newInterface;
-import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLInputObjectType.newInputObject;
+import static graphql.schema.GraphQLObjectType.newObject;
+
 /**
- * Created by steve on 4/25/2016.
+ * Created by steve on 26/04/16.
  */
 public class LightSchema {
+
+
 
     public static GraphQLObjectType userType = newObject()
             .name("User")
@@ -122,34 +121,50 @@ public class LightSchema {
             .name("mutationType")
             .description("All supported mutations.")
             .field(newFieldDefinition()
-                    .name("signUp")
+                    .name("signUpUser")
                     .type(userType)
                     .argument(newArgument()
-                            .name("inputUserSignUp")
-                            .type(inputUserSignUpType)
+                            .name("userId")
+                            .type(GraphQLString)
                             .build())
-                    .dataFetcher(new DataFetcher() {
-                            @Override
-                            public Object get(DataFetchingEnvironment environment) {
-                                    Object newUser = environment.getArgument("inputUserSignUp");
-                                    Root root = (Root) environment.getSource();
-                                    return root.userSignUp(newUser);
-                            }
-                    })
-                    .build())
-            .field(newFieldDefinition()
-                    .name("signIn")
-                    .type(userType)
                     .argument(newArgument()
-                            .name("inputUserSignIn")
-                            .type(inputUserSignInType)
+                            .name("email")
+                            .type(GraphQLString)
+                            .build())
+                    .argument(newArgument()
+                            .name("password")
+                            .type(GraphQLString)
+                            .build())
+                    .argument(newArgument()
+                            .name("passwordConfirm")
+                            .type(GraphQLString)
                             .build())
                     .dataFetcher(new DataFetcher() {
                         @Override
-                        public Object get(DataFetchingEnvironment environment) {
-                            Object userSignIn = environment.getArgument("inputUserSignIn");
-                            Root root = (Root) environment.getSource();
-                            return root.userSignIn(userSignIn);
+                        public Object get(DataFetchingEnvironment env) {
+
+
+                            Root root = (Root) env.getSource();
+                            return root.signUpUser((String)env.getArgument("userId"), (String)env.getArgument("email"), (String)env.getArgument("password"), (String)env.getArgument("passwordConfirm"));
+                        }
+                    })
+                    .build())
+            .field(newFieldDefinition()
+                    .name("signInUser")
+                    .type(userType)
+                    .argument(newArgument()
+                            .name("userId")
+                            .type(GraphQLString)
+                            .build())
+                    .argument(newArgument()
+                            .name("password")
+                            .type(GraphQLString)
+                            .build())
+                    .dataFetcher(new DataFetcher() {
+                        @Override
+                        public Object get(DataFetchingEnvironment env) {
+                            Root root = (Root) env.getSource();
+                            return root.signInUser((String)env.getArgument("userId"), (String)env.getArgument("password"));
                         }
                     })
                     .build())
@@ -161,3 +176,4 @@ public class LightSchema {
             .mutation(mutationType)
             .build();
 }
+
