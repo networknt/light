@@ -58,6 +58,10 @@
               "title": "Type",
               "type": "string"
             },
+            "currency": {
+              "title": "Currency",
+              "type": "string"
+            },
             "price": {
               "title": "Price",
               "type": "number"
@@ -74,6 +78,7 @@
           "required": [
             "sku",
             "type",
+            "currency",
             "price"
           ]
         }
@@ -135,6 +140,7 @@
       "items": [
         "variants[].sku",
         "variants[].type",
+        "variants[].currency",
         "variants[].price",
         "variants[].image",
         "variants[].inventory"

@@ -62,7 +62,7 @@ var ProductSummary = React.createClass ({
         var i = this.state.product.variantIndex;
         var inventory = variants[i].inventory;
         var price = variants[i].price.toFixed(2);
-
+        var currency = variants[i].currency;
         return (
             <Paper className="summaryPaper">
                 <Card>
@@ -73,7 +73,7 @@ var ProductSummary = React.createClass ({
                             <div className="cbp-vm-variants">
                                 {(_.size(this.state.product.variants) > 1) ?
                                     <VariantSelect variants={this.state.product.variants} onVariantSelect={this._onVariantSelect} /> :
-                                this.state.product.variants[i].type + ' $' + price}
+                                this.state.product.variants[i].type + ' ' + currency + ' ' + price}
                             </div>
                             <RaisedButton label={inventory > 0 ? 'Add to cart' : 'Sold Out!'}
                                           primary = {true}

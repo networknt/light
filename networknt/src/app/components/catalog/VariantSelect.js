@@ -24,7 +24,7 @@ var VariantSelect = React.createClass({
     render: function() {
         //console.log('VariantSelect variants', this.props.variants);
         var menuItems = this.props.variants.map(function(variant, index) {
-            return <MenuItem key={index} value={index} primaryText={variant.type + ' $' + variant.price.toFixed(2)}/>;
+            return <MenuItem key={index} value={index} primaryText={variant.type + ' ' + variant.currency + ' ' + variant.price.toFixed(2)}/>;
         });
         return (
             <DropDownMenu value={this.state.value} onChange={this._setProductVariant}>

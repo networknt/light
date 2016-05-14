@@ -99,5 +99,32 @@
     "createDate": "2016-04-02T16:29:23.038",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:1",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10002,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "For a period time, we have promotion for our open source contributors - free hosting for one year. You can have a site like www.networknt.com or www.edibleforestgarden.ca",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "4CtQdIIjSlWpF-rOCvCHIg",
+      "title": "Free e-commerce hosting for one year if you are active contributor",
+      "content": "## Steps to get you site up and running:\n\n### register your domain\n\n### get tls/ssh certificate\n\n### create a merchant account at braintree.com\n\n### clone  github.com/networknt/light.git and start customizing front end.\n\n### contact me to setup your site\n\n### start selling and billing by PayPal, credit card and bit coin etc.",
+      "parentId": "All",
+      "tags": [
+        "Light Framework",
+        "Free"
+      ],
+      "createDate": "2016-04-05T11:51:07.765"
+    },
+    "name": "addPost",
+    "category": "news",
+    "createDate": "2016-04-05T11:51:07.740",
+    "ipAddress": "184.151.190.24",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

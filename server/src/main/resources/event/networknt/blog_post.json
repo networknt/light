@@ -109,5 +109,62 @@
     "createDate": "2016-04-02T17:47:37.991",
     "ipAddress": "127.0.0.1",
     "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:2",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10003,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "Most blog/news posts are created by authorized user and the risk of XSS is low; however, forum and comment are open to all registered or Google/Facebook users. In order to eliminate XSS, all user inputs are encoded by [OWASP Java Encoder](https://www.owasp.org/index.php/OWASP_Java_Encoder_Project) except Markdown content. If we encode markdown, then it cannot be converted to HTML to display on browser any more; therefore, markdown content is sanitized on the client side in marked option. ",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "o0GABANhSTCXQ7Tfx09Wog",
+      "title": "Cross site scripting (XSS) sanitization",
+      "content": "### Risky input\n\n```\n                if(eventData.get(\"originalAuthor\") != null) {\n                    eventData.put(\"originalAuthor\", Encode.forJavaScriptSource((String)eventData.get(\"originalAuthor\")));\n                }\n\n```\n\n### URLs\n```\n                if(eventData.get(\"originalUrl\") != null) {\n                    eventData.put(\"originalUrl\", Encode.forUriComponent((String)eventData.get(\"originalUrl\")));\n                }\n\n```\n\n### Markdown content\n\nset sanitize: true\n\n```\n    marked.setOptions({\n      gfm: true,\n      tables: true,\n      breaks: false,\n      pedantic: false,\n      sanitize: true,\n      smartLists: true,\n      smartypants: false,\n      highlight: function(code, lang) {\n        if(lang) {\n          return require('highlight.js').highlight(lang, code).value;\n        } else {\n          return code;\n        }\n      }\n```\n\n### Testing Vector for Markdown\n\n[Exploiting Markdown Syntax and Telescope Persistent XSS through Markdown (CVE-2014-5144)](http://shubh.am/exploiting-markdown-syntax-and-telescope-persistent-xss-through-markdown-cve-2014-5144/)\n\n```\n[a](javascript:prompt(document.cookie))\n[a](j    a   v   a   s   c   r   i   p   t:prompt(document.cookie))\n![a](javascript:prompt(document.cookie))\\\n<javascript:prompt(document.cookie)>  \n<&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>  \n![a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)\\\n[a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)\n[a](&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29)\n![a'\"`onerror=prompt(document.cookie)](x)\\\n[citelol]: (javascript:prompt(document.cookie))\n[notmalicious](javascript:window.onerror=alert;throw%20document.cookie)\n[test](javascript://%0d%0aprompt(1))\n[test](javascript://%0d%0aprompt(1);com)\n```",
+      "parentId": "LightFramework",
+      "tags": [
+        "XSS",
+        "Markdown",
+        "Light Framework",
+        "Security"
+      ],
+      "createDate": "2016-04-07T02:05:50.960"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-04-07T02:05:50.960",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "Light Framework has its own sign up and sign in system but for most users, it might be convenient to login with his/her Google credentials or Facebook credentials. For different level of admin users, they have to register on the site and login with the registered user as they have different roles in their profiles.",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "pgUzLq3bTbyf7q2mp4w5gw",
+      "title": "Google and Facebook OAuth2 Login",
+      "content": "Google or Facebook Login integration is easy and there are too many options; however, the only safe option for both users and the site is combination of client and server solution. On the client side browser, once \"Login from Google\" or \"Login from Facebook\" button is clicked, it will be redirect to the google.com or facebook.com to login with user's credentials. Since login happens on Google.com or Facebook.com and the web server has no chance to intercept user's password. Once login is done, an id_token is returned from Google and an access token is returned from Facebook. Both tokens will be verified by Light Framework on server side against google client_id and facebook app_id. In this case, tokens generated from other site won't work here and an 401 error will be returned from the Login API. \n\n### Client side Login.jsx\n\nGet google client_id and facebook appId from server side configuration through config API.\n```\n    _onConfigStoreChange: function() {\n        this.setState({\n            googleId: ConfigStore.getConfig(googleConfigId).client_id,\n            facebookId: ConfigStore.getConfig(facebookConfigId).appId\n        });\n    },\n```\n\nRendering Google and Facebook buttons\n```\n        let socialLogin = '';\n        if(this.state.googleId && this.state.facebookId) {\n            socialLogin = (\n                <div className=\"socialButton\">\n                    <GoogleLogin\n                        clientId={this.state.googleId}\n                        callback={this._responseGoogle}\n                        cssClass=\"googleLogin\"\n                        offline={false}\n                    />\n                    <FacebookLogin\n                        appId={this.state.facebookId}\n                        autoLoad={false}\n                        scope=\"public_profile, email\"\n                        cssClass=\"facebookLogin\"\n                        callback={this._responseFacebook}\n                    />\n                </div>\n            )\n        }\n```\n\nClient side response callback when buttons are clicked\n```\n    _responseGoogle: function(response) {\n        AuthActionCreators.googleLogin(response.getAuthResponse());\n    },\n\n    _responseFacebook: function(response) {\n        AuthActionCreators.facebookLogin(response);\n    },\n\n```\n\n### Server side Rules\n\nGoogle Login\n```\n        // https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library\n        // first need to verify and get user profile from access token\n        GetConfigRule getConfigRule = new GetConfigRule();\n        String googleClientId = getConfigRule.getConfig(host, GOOGLE, \"$.properties.client_id\");\n\n        // Set up the HTTP transport and JSON factory\n        HttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();\n        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();\n\n        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)\n                .setAudience(Arrays.asList(googleClientId))\n                // If you retrieved the token on Android using the Play Services 8.3 API or newer, set\n                // the issuer to \"https://accounts.google.com\". Otherwise, set the issuer to\n                // \"accounts.google.com\". If you need to verify tokens from multiple sources, build\n                // a GoogleIdTokenVerifier for each issuer and try them both.\n                .setIssuer(\"accounts.google.com\")\n                .build();\n\n        GoogleIdToken idToken = verifier.verify(token);\n        if (idToken != null) {\n            GoogleIdToken.Payload payload = idToken.getPayload();\n\n            // Get profile information from payload\n            String email = payload.getEmail();\n            boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());\n            String name = (String) payload.get(\"name\");\n            String familyName = (String) payload.get(\"family_name\");\n            String givenName = (String) payload.get(\"given_name\");\n\n```\n\nFacebook Login\n```\n            // https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library\n            // first need to verify and get user profile from access token\n            GetConfigRule getConfigRule = new GetConfigRule();\n            //String facebookAppId = getConfigRule.getConfig(host, FACEBOOK, \"$.properties.appId\");\n            FacebookClient fbClient = new DefaultFacebookClient(token, Version.VERSION_2_5);\n            User me = fbClient.fetchObject(\"me\", User.class, Parameter.with(\"fields\", \"id,name,email,first_name, last_name, verified\"));\n\n            if (me != null) {\n                String email = me.getEmail();\n                String firstName = me.getFirstName();\n                String lastName = me.getLastName();\n                String name = me.getName();\n                Boolean verified = me.getVerified();\n\n```\n\n### Configuration on google.com and facebook.com\n\n1. Multiple sites can share the same client_id on google.com as long as your site is registered for that client_id on google\n\n2. For facebook.com, you have to create a new app_id for each new web site. \n\n3. Testing for google integration is easy as you can add http://localhost:8080 to the client_id, however, facebook doesn't support localhost. So you have to create a host entry in your /etc/hosts in order to test locally. Here is a link with local testing for Facebook Login.\nhttp://stackoverflow.com/questions/8818977/make-local-development-work-with-facebook-google-apis\n\n\n ",
+      "parentId": "LightFramework",
+      "tags": [
+        "Light Framework",
+        "Security",
+        "Login"
+      ],
+      "createDate": "2016-04-07T03:05:01.528"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-04-07T03:05:01.528",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
   }
 ]

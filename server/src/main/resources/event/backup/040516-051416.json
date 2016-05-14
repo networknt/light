@@ -1,0 +1,526 @@
+[
+  {
+    "@type": "d",
+    "@rid": "#18:1",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10002,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "For a period time, we have promotion for our open source contributors - free hosting for one year. You can have a site like www.networknt.com or www.edibleforestgarden.ca",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "4CtQdIIjSlWpF-rOCvCHIg",
+      "title": "Free e-commerce hosting for one year if you are active contributor",
+      "content": "## Steps to get you site up and running:\n\n### register your domain\n\n### get tls/ssh certificate\n\n### create a merchant account at braintree.com\n\n### clone  github.com/networknt/light.git and start customizing front end.\n\n### contact me to setup your site\n\n### start selling and billing by PayPal, credit card and bit coin etc.",
+      "parentId": "All",
+      "tags": [
+        "Light Framework",
+        "Free"
+      ],
+      "createDate": "2016-04-05T11:51:07.765"
+    },
+    "name": "addPost",
+    "category": "news",
+    "createDate": "2016-04-05T11:51:07.740",
+    "ipAddress": "184.151.190.24",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:2",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10003,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "Most blog/news posts are created by authorized user and the risk of XSS is low; however, forum and comment are open to all registered or Google/Facebook users. In order to eliminate XSS, all user inputs are encoded by [OWASP Java Encoder](https://www.owasp.org/index.php/OWASP_Java_Encoder_Project) except Markdown content. If we encode markdown, then it cannot be converted to HTML to display on browser any more; therefore, markdown content is sanitized on the client side in marked option. ",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "o0GABANhSTCXQ7Tfx09Wog",
+      "title": "Cross site scripting (XSS) sanitization",
+      "content": "### Risky input\n\n```\n                if(eventData.get(\"originalAuthor\") != null) {\n                    eventData.put(\"originalAuthor\", Encode.forJavaScriptSource((String)eventData.get(\"originalAuthor\")));\n                }\n\n```\n\n### URLs\n```\n                if(eventData.get(\"originalUrl\") != null) {\n                    eventData.put(\"originalUrl\", Encode.forUriComponent((String)eventData.get(\"originalUrl\")));\n                }\n\n```\n\n### Markdown content\n\nset sanitize: true\n\n```\n    marked.setOptions({\n      gfm: true,\n      tables: true,\n      breaks: false,\n      pedantic: false,\n      sanitize: true,\n      smartLists: true,\n      smartypants: false,\n      highlight: function(code, lang) {\n        if(lang) {\n          return require('highlight.js').highlight(lang, code).value;\n        } else {\n          return code;\n        }\n      }\n```\n\n### Testing Vector for Markdown\n\n[Exploiting Markdown Syntax and Telescope Persistent XSS through Markdown (CVE-2014-5144)](http://shubh.am/exploiting-markdown-syntax-and-telescope-persistent-xss-through-markdown-cve-2014-5144/)\n\n```\n[a](javascript:prompt(document.cookie))\n[a](j    a   v   a   s   c   r   i   p   t:prompt(document.cookie))\n![a](javascript:prompt(document.cookie))\\\n<javascript:prompt(document.cookie)>  \n<&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>  \n![a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)\\\n[a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)\n[a](&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29)\n![a'\"`onerror=prompt(document.cookie)](x)\\\n[citelol]: (javascript:prompt(document.cookie))\n[notmalicious](javascript:window.onerror=alert;throw%20document.cookie)\n[test](javascript://%0d%0aprompt(1))\n[test](javascript://%0d%0aprompt(1);com)\n```",
+      "parentId": "LightFramework",
+      "tags": [
+        "XSS",
+        "Markdown",
+        "Light Framework",
+        "Security"
+      ],
+      "createDate": "2016-04-07T02:05:50.960"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-04-07T02:05:50.960",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:3",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10004,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "Light Framework has its own sign up and sign in system but for most users, it might be convenient to login with his/her Google credentials or Facebook credentials. For different level of admin users, they have to register on the site and login with the registered user as they have different roles in their profiles.",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "pgUzLq3bTbyf7q2mp4w5gw",
+      "title": "Google and Facebook OAuth2 Login",
+      "content": "Google or Facebook Login integration is easy and there are too many options; however, the only safe option for both users and the site is combination of client and server solution. On the client side browser, once \"Login from Google\" or \"Login from Facebook\" button is clicked, it will be redirect to the google.com or facebook.com to login with user's credentials. Since login happens on Google.com or Facebook.com and the web server has no chance to intercept user's password. Once login is done, an id_token is returned from Google and an access token is returned from Facebook. Both tokens will be verified by Light Framework on server side against google client_id and facebook app_id. In this case, tokens generated from other site won't work here and an 401 error will be returned from the Login API. \n\n### Client side Login.jsx\n\nGet google client_id and facebook appId from server side configuration through config API.\n```\n    _onConfigStoreChange: function() {\n        this.setState({\n            googleId: ConfigStore.getConfig(googleConfigId).client_id,\n            facebookId: ConfigStore.getConfig(facebookConfigId).appId\n        });\n    },\n```\n\nRendering Google and Facebook buttons\n```\n        let socialLogin = '';\n        if(this.state.googleId && this.state.facebookId) {\n            socialLogin = (\n                <div className=\"socialButton\">\n                    <GoogleLogin\n                        clientId={this.state.googleId}\n                        callback={this._responseGoogle}\n                        cssClass=\"googleLogin\"\n                        offline={false}\n                    />\n                    <FacebookLogin\n                        appId={this.state.facebookId}\n                        autoLoad={false}\n                        scope=\"public_profile, email\"\n                        cssClass=\"facebookLogin\"\n                        callback={this._responseFacebook}\n                    />\n                </div>\n            )\n        }\n```\n\nClient side response callback when buttons are clicked\n```\n    _responseGoogle: function(response) {\n        AuthActionCreators.googleLogin(response.getAuthResponse());\n    },\n\n    _responseFacebook: function(response) {\n        AuthActionCreators.facebookLogin(response);\n    },\n\n```\n\n### Server side Rules\n\nGoogle Login\n```\n        // https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library\n        // first need to verify and get user profile from access token\n        GetConfigRule getConfigRule = new GetConfigRule();\n        String googleClientId = getConfigRule.getConfig(host, GOOGLE, \"$.properties.client_id\");\n\n        // Set up the HTTP transport and JSON factory\n        HttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();\n        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();\n\n        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)\n                .setAudience(Arrays.asList(googleClientId))\n                // If you retrieved the token on Android using the Play Services 8.3 API or newer, set\n                // the issuer to \"https://accounts.google.com\". Otherwise, set the issuer to\n                // \"accounts.google.com\". If you need to verify tokens from multiple sources, build\n                // a GoogleIdTokenVerifier for each issuer and try them both.\n                .setIssuer(\"accounts.google.com\")\n                .build();\n\n        GoogleIdToken idToken = verifier.verify(token);\n        if (idToken != null) {\n            GoogleIdToken.Payload payload = idToken.getPayload();\n\n            // Get profile information from payload\n            String email = payload.getEmail();\n            boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());\n            String name = (String) payload.get(\"name\");\n            String familyName = (String) payload.get(\"family_name\");\n            String givenName = (String) payload.get(\"given_name\");\n\n```\n\nFacebook Login\n```\n            // https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library\n            // first need to verify and get user profile from access token\n            GetConfigRule getConfigRule = new GetConfigRule();\n            //String facebookAppId = getConfigRule.getConfig(host, FACEBOOK, \"$.properties.appId\");\n            FacebookClient fbClient = new DefaultFacebookClient(token, Version.VERSION_2_5);\n            User me = fbClient.fetchObject(\"me\", User.class, Parameter.with(\"fields\", \"id,name,email,first_name, last_name, verified\"));\n\n            if (me != null) {\n                String email = me.getEmail();\n                String firstName = me.getFirstName();\n                String lastName = me.getLastName();\n                String name = me.getName();\n                Boolean verified = me.getVerified();\n\n```\n\n### Configuration on google.com and facebook.com\n\n1. Multiple sites can share the same client_id on google.com as long as your site is registered for that client_id on google\n\n2. For facebook.com, you have to create a new app_id for each new web site. \n\n3. Testing for google integration is easy as you can add http://localhost:8080 to the client_id, however, facebook doesn't support localhost. So you have to create a host entry in your /etc/hosts in order to test locally. Here is a link with local testing for Facebook Login.\nhttp://stackoverflow.com/questions/8818977/make-local-development-work-with-facebook-google-apis\n\n\n ",
+      "parentId": "LightFramework",
+      "tags": [
+        "Light Framework",
+        "Security",
+        "Login"
+      ],
+      "createDate": "2016-04-07T03:05:01.528"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-04-07T03:05:01.528",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:7",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10008,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "In the latest round of [TechEmpower performance test](https://www.techempower.com/benchmarks/#section=data-r12&hw=peak&test=plaintext), A GO http server - [fasthttp](https://github.com/valyala/fasthttp) performs better then Java [Undertow](https://github.com/undertow-io/undertow) server. So I decided to compare them on my own desktop. Since Go has a build-in net/http package, I put it into the comparison as a baseline. The end results are very interesting and there are a lot of questions I cannot answer.",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "CeHJjNRjRiS1dH1qqme2LQ",
+      "title": "Performance test between Undertow, Go FastHttp and Go Native Http",
+      "content": "# Environment\nJava: Oracle JDK 8\n\nGo: Go 1.6\n\nCPU: I5 4 cores 4 threads\n\nMemory: 32GB\n\n# Source code\n\n### Undertow source code\nIt's the part of the undertow example and I didn't make any change.\n```\npackage io.undertow.examples.helloworld;\n\nimport io.undertow.Undertow;\nimport io.undertow.examples.UndertowExample;\nimport io.undertow.server.HttpHandler;\nimport io.undertow.server.HttpServerExchange;\nimport io.undertow.util.Headers;\n\n/**\n * @author Stuart Douglas\n */\n@UndertowExample(\"Hello World\")\npublic class HelloWorldServer {\n\n    public static void main(final String[] args) {\n        Undertow server = Undertow.builder()\n                .addHttpListener(8080, \"localhost\")\n                .setHandler(new HttpHandler() {\n                    @Override\n                    public void handleRequest(final HttpServerExchange exchange) throws Exception {\n                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, \"text/plain\");\n                        exchange.getResponseSender().send(\"Hello World\");\n                    }\n                }).build();\n        server.start();\n    }\n\n}\n```\n\n### FastHttp source code\n```\npackage main\n\nimport (\n\t\"github.com/valyala/fasthttp\"\n\t\"github.com/valyala/fasthttp/reuseport\"\n\t\"net\"\n\t\"flag\"\n\t\"runtime\"\n\t\"log\"\n\t\"os/exec\"\n\t\"os\"\n)\n\nvar (\n\tlistenAddr = flag.String(\"listenAddr\", \":8080\", \"Address to listen to\")\n\tprefork    = flag.Bool(\"prefork\", false, \"use prefork\")\n\tchild      = flag.Bool(\"child\", false, \"is child proc\")\n)\n\nfunc main() {\n\tflag.Parse()\n\n\tvar err error\n\n\ts := &fasthttp.Server{\n\t\tHandler: mainHandler,\n\t\tName:    \"go\",\n\t}\n\tln := getListener()\n\tif err = s.Serve(ln); err != nil {\n\t\tlog.Fatalf(\"Error when serving incoming connections: %s\", err)\n\t}\n\n}\n\nfunc mainHandler(ctx *fasthttp.RequestCtx) {\n\tpath := ctx.Path()\n\tswitch string(path) {\n\tcase \"/\":\n\t\tplaintextHandler(ctx)\n\tdefault:\n\t\tctx.Error(\"unexpected path\", fasthttp.StatusBadRequest)\n\t}\n}\n\nfunc plaintextHandler(ctx *fasthttp.RequestCtx) {\n\tctx.SetContentType(\"text/plain\")\n\tctx.WriteString(\"Hello World\")\n}\n\nfunc getListener() net.Listener {\n\tif !*prefork {\n\t\truntime.GOMAXPROCS(runtime.NumCPU())\n\t\tln, err := net.Listen(\"tcp4\", *listenAddr)\n\t\tif err != nil {\n\t\t\tlog.Fatal(err)\n\t\t}\n\t\treturn ln\n\t}\n\n\tif !*child {\n\t\tchildren := make([]*exec.Cmd, runtime.NumCPU())\n\t\tfor i := range children {\n\t\t\tchildren[i] = exec.Command(os.Args[0], \"-prefork\", \"-child\")\n\t\t\tchildren[i].Stdout = os.Stdout\n\t\t\tchildren[i].Stderr = os.Stderr\n\t\t\tif err := children[i].Start(); err != nil {\n\t\t\t\tlog.Fatal(err)\n\t\t\t}\n\t\t}\n\t\tfor _, ch := range children {\n\t\t\tif err := ch.Wait(); err != nil {\n\t\t\t\tlog.Print(err)\n\t\t\t}\n\t\t}\n\t\tos.Exit(0)\n\t\tpanic(\"unreachable\")\n\t}\n\n\truntime.GOMAXPROCS(1)\n\tln, err := reuseport.Listen(\"tcp4\", *listenAddr)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\treturn ln\n}\n```\n\n### Net/Http\n```\npackage main\n\nimport (\n\t\"io\"\n\t\"net/http\"\n)\n\nfunc hello(w http.ResponseWriter, r *http.Request) {\n\tio.WriteString(w, \"Hello World\")\n}\n\nfunc main() {\n\thttp.HandleFunc(\"/\", hello)\n\thttp.ListenAndServe(\":8080\", nil)\n}\n```\n\n# First Round \nwrk -t12 -c400 -d30s http://localhost:8080\n\n12 threads with 400 concurrent request for 30 second.\n\n### Undertow\n```\nsteve@joy:~/tool/wrk$ wrk -t12 -c400 -d30s http://localhost:8080\nRunning 30s test @ http://localhost:8080\n  12 threads and 400 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     2.02ms    2.43ms 206.59ms   93.78%\n    Req/Sec    19.11k     8.62k   68.21k    86.52%\n  6831137 requests in 30.09s, 0.87GB read\nRequests/sec: 227035.27\nTransfer/sec:     29.66MB\n```\n\n### FastHttp\n```\nsteve@joy:~/tool/wrk$ wrk -t12 -c400 -d30s http://localhost:8080\nRunning 30s test @ http://localhost:8080\n  12 threads and 400 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   114.90ms  258.78ms   1.99s    87.62%\n    Req/Sec    19.15k    15.65k   63.08k    64.36%\n  6146343 requests in 30.10s, 732.70MB read\n  Socket errors: connect 0, read 0, write 0, timeout 159\nRequests/sec: 204208.09\nTransfer/sec:     24.34MB\n```\n\n### NetHttp\n```\nsteve@joy:~/tool/wrk$ wrk -t12 -c400 -d30s http://localhost:8080\nRunning 30s test @ http://localhost:8080\n  12 threads and 400 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency    10.67ms   20.72ms 261.53ms   89.17%\n    Req/Sec    10.39k     5.17k   37.74k    75.72%\n  3725567 requests in 30.09s, 458.33MB read\nRequests/sec: 123795.95\nTransfer/sec:     15.23MB\n```\n\n### First Round Summary\nUndertow performs very well with best throughput and response time. FastHttp throughput is close to Undertow but response time is very slow with 159 timeouts. Build-in net/http in Go is not bad in response time but throughput is lower.\n\n# Second Round\nsteve@joy:~/tool/wrk$ wrk -t4 -c128 -d30s http://localhost:8080 -s pipeline.lua --latency -- / 16\n\n4 threads with 128 concurrent requests for 30 seconds with pipeline.\nHere is the pipeline script.\n```\ninit = function(args)\n   request_uri = args[1]\n   depth = tonumber(args[2]) or 1\n\n   local r = {}\n   for i=1,depth do\n     r[i] = wrk.format(nil, request_uri)\n   end\n   req = table.concat(r)\nend\n\nrequest = function()\n   return req\nend\n```\n\n### Undertow\n```\nRunning 30s test @ http://localhost:8080\n  4 threads and 128 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     1.80ms    8.62ms 191.60ms   98.74%\n    Req/Sec   312.66k    53.00k  417.76k    93.31%\n  Latency Distribution\n     50%    0.89ms\n     75%    1.39ms\n     90%    2.11ms\n     99%   12.75ms\n  37235040 requests in 30.04s, 4.75GB read\nRequests/sec: 1239693.51\nTransfer/sec:    161.97MB\n```\n\n### FastHttp\n```\nRunning 30s test @ http://localhost:8080\n  4 threads and 128 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency    38.02ms   94.33ms 956.18ms   88.82%\n    Req/Sec   366.76k    59.32k  680.73k    74.69%\n  Latency Distribution\n     50%    1.51ms\n     75%    5.80ms\n     90%  152.63ms\n     99%  451.24ms\n  43827584 requests in 30.09s, 5.10GB read\nRequests/sec: 1456372.53\nTransfer/sec:    173.61MB\n```\n### NetHttp\n```\nRunning 30s test @ http://localhost:8080\n  4 threads and 128 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency    13.88ms   14.26ms 188.48ms   87.36%\n    Req/Sec    44.80k     5.41k   72.08k    72.00%\n  Latency Distribution\n     50%    9.32ms\n     75%   18.34ms\n     90%   31.67ms\n     99%   67.98ms\n  5359417 requests in 30.06s, 654.23MB read\nRequests/sec: 178288.26\nTransfer/sec:     21.76MB\n```\n \n### Second Round Summary\n\nNow we are push the server to its limit with pipeline and we see FastHttp performs the best in throughput with 1.46 million request/second but the response time is the slowest. Undertow's throughput is 1.24 million request/second with the best response time. Net/Http can only serve 178K request/second which is far behind.\n\n\n# Conclusion\n\nFastHttp is optimized for the maximum throughput and trade off response time and undertow is balanced between throughput and response time. For memory usage, Undertow uses about 5 - 10 times more memory then FastHttp which has the minimum memory foot print among three servers.\n\n# Questions\n\n. Why there are timeouts for 400 concurrent request in FastHttp test in the first round?\n. Given Go is very young and there are a lot of room to optimize and low memory usage,  should I move my framework to Go or stay in Java?\n\n",
+      "parentId": "All",
+      "tags": [
+        "Performance",
+        "Java",
+        "Go"
+      ],
+      "createDate": "2016-04-14T02:47:45.055"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-04-14T02:47:45.055",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:8",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10009,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "parentClassName": "Post",
+      "host": "www.networknt.com",
+      "rank": 0,
+      "commentId": "6e5TbiwUT2Wl1w-WoI-FCg",
+      "content": "Comments are welcomed here; however, you have to login from Facebook or Google by clicking the login icon on the up right corner.",
+      "parentId": "CeHJjNRjRiS1dH1qqme2LQ",
+      "createDate": "2016-04-14T02:56:28.619"
+    },
+    "name": "addComment",
+    "category": "comment",
+    "createDate": "2016-04-14T02:56:28.619",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:13",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10014,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "parentClassName": "Comment",
+      "host": "www.networknt.com",
+      "rank": 0,
+      "commentId": "5FdIhp2zSvCcutHxlcXz6Q",
+      "content": "It is part of the Light Framework - which provides news/blog/forum/comment for e-commerce marketing and customer support.  ",
+      "parentId": "n2HBLAniS3yGYVZ5XyRozg",
+      "createDate": "2016-04-14T03:05:38.357"
+    },
+    "name": "addComment",
+    "category": "comment",
+    "createDate": "2016-04-14T03:05:38.356",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:16",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10017,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "parentClassName": "Comment",
+      "host": "www.networknt.com",
+      "rank": 0,
+      "commentId": "FzjczQebSy2KvrCeh8wgUQ",
+      "content": "You are absolutely right. At the moment, response time is priority number one and my current HTTP server Undertow is the winner; however, Go's low memory usage and green threading is so tempting.",
+      "parentId": "nMFbiDCdSMeISEeP2ovRgg",
+      "createDate": "2016-04-14T10:49:16.358"
+    },
+    "name": "addComment",
+    "category": "comment",
+    "createDate": "2016-04-14T10:49:16.358",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:17",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10018,
+    "createUserId": "stevehu",
+    "data": {
+      "commentId": "nMFbiDCdSMeISEeP2ovRgg",
+      "userId": "stevehu"
+    },
+    "name": "upComment",
+    "category": "comment",
+    "createDate": "2016-04-14T10:49:34.338",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:18",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10019,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "In the latest round of [TechEmpower performance test](https://www.techempower.com/benchmarks/#section=data-r12&hw=peak&test=plaintext), A GO http server - [fasthttp](https://github.com/valyala/fasthttp) performs better then Java [Undertow](https://github.com/undertow-io/undertow) server. So I decided to compare them on my own desktop. Since Go has a build-in net/http package, I put it into the comparison as a baseline. The end results are very interesting and there are a lot of questions I cannot answer.",
+      "updateDate": "2016-04-14T10:50:55.558",
+      "updateUserId": "stevehu",
+      "originalSite": "null",
+      "host": "www.networknt.com",
+      "entityId": "CeHJjNRjRiS1dH1qqme2LQ",
+      "originalUrl": "null",
+      "title": "Performance test between Undertow, Go FastHttp and Go Native Http",
+      "originalAuthor": "null",
+      "content": "# Environment\nJava: Oracle JDK 8\n\nGo: Go 1.6\n\nCPU: I5 4 cores 4 threads\n\nMemory: 32GB\n\n# Source code\n\n### Undertow source code\nIt's the part of the undertow example and I didn't make any change.\n```\npackage io.undertow.examples.helloworld;\n\nimport io.undertow.Undertow;\nimport io.undertow.examples.UndertowExample;\nimport io.undertow.server.HttpHandler;\nimport io.undertow.server.HttpServerExchange;\nimport io.undertow.util.Headers;\n\n/**\n * @author Stuart Douglas\n */\n@UndertowExample(\"Hello World\")\npublic class HelloWorldServer {\n\n    public static void main(final String[] args) {\n        Undertow server = Undertow.builder()\n                .addHttpListener(8080, \"localhost\")\n                .setHandler(new HttpHandler() {\n                    @Override\n                    public void handleRequest(final HttpServerExchange exchange) throws Exception {\n                        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, \"text/plain\");\n                        exchange.getResponseSender().send(\"Hello World\");\n                    }\n                }).build();\n        server.start();\n    }\n\n}\n```\n\n### FastHttp source code\n```\npackage main\n\nimport (\n\t\"github.com/valyala/fasthttp\"\n\t\"github.com/valyala/fasthttp/reuseport\"\n\t\"net\"\n\t\"flag\"\n\t\"runtime\"\n\t\"log\"\n\t\"os/exec\"\n\t\"os\"\n)\n\nvar (\n\tlistenAddr = flag.String(\"listenAddr\", \":8080\", \"Address to listen to\")\n\tprefork    = flag.Bool(\"prefork\", false, \"use prefork\")\n\tchild      = flag.Bool(\"child\", false, \"is child proc\")\n)\n\nfunc main() {\n\tflag.Parse()\n\n\tvar err error\n\n\ts := &fasthttp.Server{\n\t\tHandler: mainHandler,\n\t\tName:    \"go\",\n\t}\n\tln := getListener()\n\tif err = s.Serve(ln); err != nil {\n\t\tlog.Fatalf(\"Error when serving incoming connections: %s\", err)\n\t}\n\n}\n\nfunc mainHandler(ctx *fasthttp.RequestCtx) {\n\tpath := ctx.Path()\n\tswitch string(path) {\n\tcase \"/\":\n\t\tplaintextHandler(ctx)\n\tdefault:\n\t\tctx.Error(\"unexpected path\", fasthttp.StatusBadRequest)\n\t}\n}\n\nfunc plaintextHandler(ctx *fasthttp.RequestCtx) {\n\tctx.SetContentType(\"text/plain\")\n\tctx.WriteString(\"Hello World\")\n}\n\nfunc getListener() net.Listener {\n\tif !*prefork {\n\t\truntime.GOMAXPROCS(runtime.NumCPU())\n\t\tln, err := net.Listen(\"tcp4\", *listenAddr)\n\t\tif err != nil {\n\t\t\tlog.Fatal(err)\n\t\t}\n\t\treturn ln\n\t}\n\n\tif !*child {\n\t\tchildren := make([]*exec.Cmd, runtime.NumCPU())\n\t\tfor i := range children {\n\t\t\tchildren[i] = exec.Command(os.Args[0], \"-prefork\", \"-child\")\n\t\t\tchildren[i].Stdout = os.Stdout\n\t\t\tchildren[i].Stderr = os.Stderr\n\t\t\tif err := children[i].Start(); err != nil {\n\t\t\t\tlog.Fatal(err)\n\t\t\t}\n\t\t}\n\t\tfor _, ch := range children {\n\t\t\tif err := ch.Wait(); err != nil {\n\t\t\t\tlog.Print(err)\n\t\t\t}\n\t\t}\n\t\tos.Exit(0)\n\t\tpanic(\"unreachable\")\n\t}\n\n\truntime.GOMAXPROCS(1)\n\tln, err := reuseport.Listen(\"tcp4\", *listenAddr)\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\treturn ln\n}\n```\n\n### Net/Http\n```\npackage main\n\nimport (\n\t\"io\"\n\t\"net/http\"\n)\n\nfunc hello(w http.ResponseWriter, r *http.Request) {\n\tio.WriteString(w, \"Hello World\")\n}\n\nfunc main() {\n\thttp.HandleFunc(\"/\", hello)\n\thttp.ListenAndServe(\":8080\", nil)\n}\n```\n\n# First Round \nwrk -t12 -c400 -d30s http://localhost:8080\n\n12 threads with 400 concurrent request for 30 second.\n\n### Undertow\n```\nsteve@joy:~/tool/wrk$ wrk -t12 -c400 -d30s http://localhost:8080\nRunning 30s test @ http://localhost:8080\n  12 threads and 400 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     2.02ms    2.43ms 206.59ms   93.78%\n    Req/Sec    19.11k     8.62k   68.21k    86.52%\n  6831137 requests in 30.09s, 0.87GB read\nRequests/sec: 227035.27\nTransfer/sec:     29.66MB\n```\n\n### FastHttp\n```\nsteve@joy:~/tool/wrk$ wrk -t12 -c400 -d30s http://localhost:8080\nRunning 30s test @ http://localhost:8080\n  12 threads and 400 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   114.90ms  258.78ms   1.99s    87.62%\n    Req/Sec    19.15k    15.65k   63.08k    64.36%\n  6146343 requests in 30.10s, 732.70MB read\n  Socket errors: connect 0, read 0, write 0, timeout 159\nRequests/sec: 204208.09\nTransfer/sec:     24.34MB\n```\n\n### NetHttp\n```\nsteve@joy:~/tool/wrk$ wrk -t12 -c400 -d30s http://localhost:8080\nRunning 30s test @ http://localhost:8080\n  12 threads and 400 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency    10.67ms   20.72ms 261.53ms   89.17%\n    Req/Sec    10.39k     5.17k   37.74k    75.72%\n  3725567 requests in 30.09s, 458.33MB read\nRequests/sec: 123795.95\nTransfer/sec:     15.23MB\n```\n\n### First Round Summary\nUndertow performs very well with best throughput and response time. FastHttp throughput is close to Undertow but response time is very slow with 159 timeouts. Build-in net/http in Go is not bad in response time but throughput is lower.\n\n# Second Round\nsteve@joy:~/tool/wrk$ wrk -t4 -c128 -d30s http://localhost:8080 -s pipeline.lua --latency -- / 16\n\n4 threads with 128 concurrent requests for 30 seconds with pipeline.\nHere is the pipeline script.\n```\ninit = function(args)\n   request_uri = args[1]\n   depth = tonumber(args[2]) or 1\n\n   local r = {}\n   for i=1,depth do\n     r[i] = wrk.format(nil, request_uri)\n   end\n   req = table.concat(r)\nend\n\nrequest = function()\n   return req\nend\n```\n\n### Undertow\n```\nRunning 30s test @ http://localhost:8080\n  4 threads and 128 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     1.80ms    8.62ms 191.60ms   98.74%\n    Req/Sec   312.66k    53.00k  417.76k    93.31%\n  Latency Distribution\n     50%    0.89ms\n     75%    1.39ms\n     90%    2.11ms\n     99%   12.75ms\n  37235040 requests in 30.04s, 4.75GB read\nRequests/sec: 1239693.51\nTransfer/sec:    161.97MB\n```\n\n### FastHttp\n```\nRunning 30s test @ http://localhost:8080\n  4 threads and 128 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency    38.02ms   94.33ms 956.18ms   88.82%\n    Req/Sec   366.76k    59.32k  680.73k    74.69%\n  Latency Distribution\n     50%    1.51ms\n     75%    5.80ms\n     90%  152.63ms\n     99%  451.24ms\n  43827584 requests in 30.09s, 5.10GB read\nRequests/sec: 1456372.53\nTransfer/sec:    173.61MB\n```\n### NetHttp\n```\nRunning 30s test @ http://localhost:8080\n  4 threads and 128 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency    13.88ms   14.26ms 188.48ms   87.36%\n    Req/Sec    44.80k     5.41k   72.08k    72.00%\n  Latency Distribution\n     50%    9.32ms\n     75%   18.34ms\n     90%   31.67ms\n     99%   67.98ms\n  5359417 requests in 30.06s, 654.23MB read\nRequests/sec: 178288.26\nTransfer/sec:     21.76MB\n```\n \n### Second Round Summary\n\nNow we are push the server to its limit with pipeline and we see FastHttp performs the best in throughput with 1.46 million request/second but the response time is the slowest. Undertow's throughput is 1.24 million request/second with the best response time. Net/Http can only serve 178K request/second which is far behind.\n\n\n# Conclusion\n\nFastHttp is optimized for the maximum throughput and trade off response time and undertow is balanced between throughput and response time. For memory usage, Undertow uses about 5 - 10 times more memory then FastHttp which has the minimum memory foot print among three servers.\n\n# Questions\n\n1 Why there are timeouts for 400 concurrent request in FastHttp test in the first round?\n\n2 Given Go is very young and there are a lot of room to optimize and low memory usage,  should I move my framework to Go or stay in Java?\n\n"
+    },
+    "name": "updPost",
+    "category": "blog",
+    "createDate": "2016-04-14T10:50:55.558",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:24",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10025,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "Light Framework supports both REST API at /api/rs and GraphQL API at /api/graphql. For easy front end development, it provides graphiql integration within front end dev environment. It can be included into production but it is optional. This article will outline the steps to integrate graphiql.",
+      "createUserId": "stevehu",
+      "host": "www.networknt.com",
+      "entityId": "qvB1S4KtQOW0H4hgCv4wLg",
+      "title": "How to integrate graphiql into Light Framework react front end",
+      "content": "GraphiQL is an excellent tool to help front end developer to discover and test queries and mutations on GraphQL endpoint on the server. In order to do that, the GraphQL server must serve static files from GraphiQL.\n\n## Build GraphiQL\n\n```\ngit clone https://github.com/graphql/graphiql\ncd graphiql\nnpm install\nnpm run build\ncd example\nnpm install\nnpm run build\n```\n## Copy GraphiQL\n\nNow you should have dist folder created under example. Copy the following three files to networknt site front end /src/www/graphiql\n```\ngraphiql.css\ngraphiql.js\nindex.html\n```\nChange the graphql endpoint in index.html. Open index.html and change the following line\n```\n        return fetch(window.location.origin + '/graphql', {\n```\nto \n```\n        return fetch(window.location.origin + '/api/graphql', {\n```\n\n## Test GraphiQL\nOpen your browser and point to http://www.networknt.com/graphiql/index.html and you will see the GraphiQL interface. You can explore the schema supported on the server and submit queries or mutations to the server.\n\n## What is behind the scene\n\nIn dev mode, the GraphiQL page is served by GraphQL server on port 3001 from webpack-dev-server. The API calls to port 8080 /api/graphql endpoint through a proxy. \n",
+      "parentId": "All",
+      "tags": [
+        "GraphQL",
+        "GraphiQL"
+      ],
+      "createDate": "2016-04-22T02:22:04.635"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-04-22T02:22:04.635",
+    "ipAddress": "198.16.252.9",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:27",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10028,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "A lot of people grow Comfrey for animal fodder and natural fertilizer. The best varieties are Russian Comfrey Bocking 14 and Bocking 4 and we grow both an use them for different purposes. ",
+      "createUserId": "stevehu",
+      "originalSite": "",
+      "host": "www.edibleforestgarden.ca",
+      "entityId": "s-0hEkDPRxGdpLI5ago8Ug",
+      "originalUrl": "",
+      "title": "Comfrey",
+      "originalAuthor": "",
+      "content": "## Common Name: \n* Comfrey\n\n## Scientific Names:\n* Symphytum asperum (Rough/Prickly Comfrey):\n* Symphytum ibericum (Dwarf Comfrey): 12-16” tall and wide\n* Symphytum grandiflorum (Large-Flowered Comfrey): 8-12” tall, 18” wide\n* Symphytum officianale (Wild/Common/Medicinal Comfrey): 3-5’ tall and wide\n* Symphytum orientale (White Comfrey): 2-3’ tall, 12-18” wide\n* Symphytum tuberosum (Tuberous Comfrey): 1-2” tall and wide\n* Symphytum x uplandicum (Russian/Caucasian/Quaker/Blue Comfrey) = natural hybrid of S. asperum and S. officinale: 1-4’ tall, 3’ wide\n\n## Family:\n\nBoraginaceae (the Borage or Forget-me-Not Family)\n\n## Description:\n\nComfrey is a fast-growing, perennial, herbaceous, clump-forming plant typically with a deep tap-root (that helps draw up nutrients), large leaves (that can be cut and dropped in place or moved to an area where you want/need those nutrients), and small, pretty flowers (that attract a large number of beneficial insects). It can grow in a wide range of growing conditions. It is an ideal \"fertilizer\" plant in the Forest Garden.\n\n![comfrey](http://4.bp.blogspot.com/-KD3jlJt96Eo/T3H7eEyxH6I/AAAAAAAABbY/s4cIOmZm7_A/s400/comfrey05.jpg \"Comfrey\")\n\n## History:\n\n* Comfrey is a native to Europe and Asia.\n* It has been cultivated since around 400 B.C.\n* Used medicinally in China for over 2,000 years.\n* First brought to Britain in 1800.\n* WIld Comfrey was shipped to North America by English immigrants and Russian Comfrey was shipped to Canada in 1954.\n\n## Trivia:\n\n* The name \"comfrey\" comes from the Latin for \"grow together\" - even ancient people understood the value of Comfrey!\n* Also known as “knitbone” after its traditional medicinal use in assisting the healing of broken bones.\n\n## Primary Uses:\n\n* Mulch – can be cut 1-2 x per year (4-5 x per year if fertilized) to about 2 inches above ground and used as a green or “chop and drop” mulch. Avoid harvest in the first season.\n* Liquid Fertilizer - steeping chopped Comfrey leaves in water for several weeks produces a thick, dark liquid that can be diluted with water and \"fed\" to plants.\n* Mineral Accumulator – high in potassium, but also phosphorus, calcium, Copper, Iron, and Magnesium\n* Ground Cover – lower growing species can tolerate some foot traffic, plant 2-3 feet apart.\n* General insect (especially bees) nectar and pollen plant\n* Lacewings prefer to lay eggs on Comfrey\n* Spiders prefer to overwinter on Comfrey\n* Parasitoid Wasps and Spiders prefer to spend time and hunt on and around Comfrey\n\n## Secondary Uses:\n\n* Fresh eating – only Symphytum officianale (Common/Medicinal Comfrey) and Symphytum x uplandicum (Russian/Quaker Comfrey). Best when cooked.\n* Forage crop for pigs, sheep, and poultry, but reportedly cattle and rabbits don't like fresh leaves (only wilted).\n* Medicinal – long history of use in aid of wound and bone healing.\n\n## Design with this plant\n\n* USDA Hardiness Zone: 4-9\n* AHS Heat Zone: No reliable information found\n* Chill Requirement: No reliable information found, but likely not required.\n* Plant Type: Small Tree to Medium-sized Herbaceous Shrub (while frost resistant, continued freezing weather will kill back above ground growth).\n* Leaf Type: Deciduous\n* Forest Garden Use: Herbaceous Layer and Ground Cover/Creeper Layer\n* Cultivars/Varieties: Many species/varieties available. \n* Pollination: Self-Pollinating/Self-Fertile\n* Flowering: May-September (depending on the species)\n* Life Span: No reliable information available\n\n## Physical Characteristics\n\n* Size: See individual species list above\n* Roots: Some have rhizomatous and others have fibrous tap roots - deep and expansive\n* Growth Rate: Fast\n\n# Growing Conditions\n\n* Light: Prefers full sun\n* Shade: Tolerates light shade (about 50%)\n* Moisture: Medium, some species can be a bit more drought tolerant. Bocking 4 and Bocking 14 don't like wet feet.\n* pH: tolerates a wide range (6.5-8.5)\n* Soil: From sand to heavy clay\n\n## Propagation:\n\n* Can be propagated through root cuttings in Winter and Spring – should be planted about 2 inches deep.\n* Division in Spring.\n* Symphytum officianale (Common/Medicinal Comfrey) can self-seed.\n\n## Maintenance: \n\n* Minimal. Common Comfrey needs to be cut before seeding in order to prevent spreading. Bocking 14 and Bocking 4 should be cut before flowering in order to encourage leaf growth.\n\n## Concerns:\n\n* Can be spreading. (Note: the use of \"Bocking 14\" cultivar is sterile and prevents its spread)\n* Can be hard to eradicate.\n* Poisonous – all parts of the plant contains pentacylic alkaloids (regular consumption can cause liver toxicity)\n* Note that leaves and stems are covered in small hairs that can irritate the skin.\n\n## Cultivars/Varieties\n\n### Bocking 14 and Bocking 4\n\nThe Bocking varieties were developed by Lawrence D Hills, founder of the Henry Doubleday Research Association, in the 1950s. There were 21 Bocking strains, most of which were different in only minor traits and were of little or no commercial importance. They were selected at his research station at Bocking in Essex (U.K.). I don’t believe Mr. Hills is still alive, but the Henry Doubleday Research Association continues to operate as \"Garden Organic\" in the U.K. Because of the health controversies surrounding the medicinal use of comfrey, I believe the HDRA (or Garden Organic) is not currently doing any further research or development on the herb. \n\nThe HDRA described No. 4 as \"the best comfrey for stock feed.\" No. 14 was described as the \"best all round comfrey for every garden -- early and rust resistant\" and was recommended for \"green manure, poultry, horses, pigs, compost, cooking and medicinal purposes.\" \n\nLawrence Hills detailed the development of his many varieties of comfrey is his book, \"Comfrey: Fodder, Food & Remedy\" (Universe Books, New York, 1976). Hills selected Bocking No. 14 from the Stephenson strain and Bocking No. 4 from the Webster strain, two commercially available strains when Hills began his work on comfrey at Bocking. In his book he described Bocking No. 4 as \"the dominant in the [Webster] strain, about 50 to 60 per cent. The flower colour is Bishops Violet 34/3 when fully open. It has strong stems and small wings. The leaves are broad and round tipped, their proportion is 5 to 10, but they have no incurling, therefore they appear far wider than a No. 1 for example. The edges are unserrated, and the veins are prominent, with bristles thickest on the underside so that they appear smooth. At the leafy stage these leaves are very large, recovering rapidly after cutting. The stems, as in all the variations under trial, are solid.\" He described No. 14 as \"the dominant in the Stephenson strain, 80 to 90 per cent. The flower stems are slender and frequent and are entirely wingless. The flowers are Imperial Purple 33/3 fading to Lilac Purple 031/3. The flowers are pointed, slightly serrated at the edges and vary in propportion from 5 to 12 and 3 to 6.\" \n\nI could not find the original source reference to \"Bica\" because our company’s earliest correspondence dating back to the 1960s and 1970s was lost to water damage a few years ago. ‘Bica’ had been mentioned in the Richters catalogue for many years as the origin of Bocking No. 4. I believe that name was taken from either a HDRA catalogue or a research report. There is no reference to \"Bica\" in either \"Comfrey: Fodder, Food & Remedy\" or his earlier book, \"Comfrey Report: The Story of the World’s Fastest Protein Builder\" (Henry Doubleday Research Association, Bocking, Essex, 1975). \n\nBocking 14 is recommended for medicinal applications while Bocking 4 is recommended for animal feed applications. Bocking 14 is high in allantoin the cell proliferant agent that helps healing. Bocking 4 is high in protein. \n\n",
+      "parentId": "Permaculture",
+      "tags": [
+        "dynamic accumulator"
+      ],
+      "createDate": "2016-05-12T01:48:25.804"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-05-12T01:48:25.793",
+    "ipAddress": "198.16.252.116",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:28",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10029,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "A lot of people grow Comfrey for animal fodder and natural fertilizer. The best varieties are Russian Comfrey Bocking 14 and Bocking 4 and we grow both and use them for different purposes. ",
+      "updateDate": "2016-05-12T01:49:12.129",
+      "updateUserId": "stevehu",
+      "originalSite": "",
+      "host": "www.edibleforestgarden.ca",
+      "entityId": "s-0hEkDPRxGdpLI5ago8Ug",
+      "originalUrl": "",
+      "title": "Comfrey",
+      "originalAuthor": "",
+      "content": "## Common Name: \n* Comfrey\n\n## Scientific Names:\n* Symphytum asperum (Rough/Prickly Comfrey):\n* Symphytum ibericum (Dwarf Comfrey): 12-16” tall and wide\n* Symphytum grandiflorum (Large-Flowered Comfrey): 8-12” tall, 18” wide\n* Symphytum officianale (Wild/Common/Medicinal Comfrey): 3-5’ tall and wide\n* Symphytum orientale (White Comfrey): 2-3’ tall, 12-18” wide\n* Symphytum tuberosum (Tuberous Comfrey): 1-2” tall and wide\n* Symphytum x uplandicum (Russian/Caucasian/Quaker/Blue Comfrey) = natural hybrid of S. asperum and S. officinale: 1-4’ tall, 3’ wide\n\n## Family:\n\nBoraginaceae (the Borage or Forget-me-Not Family)\n\n## Description:\n\nComfrey is a fast-growing, perennial, herbaceous, clump-forming plant typically with a deep tap-root (that helps draw up nutrients), large leaves (that can be cut and dropped in place or moved to an area where you want/need those nutrients), and small, pretty flowers (that attract a large number of beneficial insects). It can grow in a wide range of growing conditions. It is an ideal \"fertilizer\" plant in the Forest Garden.\n\n![comfrey](http://4.bp.blogspot.com/-KD3jlJt96Eo/T3H7eEyxH6I/AAAAAAAABbY/s4cIOmZm7_A/s400/comfrey05.jpg \"Comfrey\")\n\n## History:\n\n* Comfrey is a native to Europe and Asia.\n* It has been cultivated since around 400 B.C.\n* Used medicinally in China for over 2,000 years.\n* First brought to Britain in 1800.\n* WIld Comfrey was shipped to North America by English immigrants and Russian Comfrey was shipped to Canada in 1954.\n\n## Trivia:\n\n* The name \"comfrey\" comes from the Latin for \"grow together\" - even ancient people understood the value of Comfrey!\n* Also known as “knitbone” after its traditional medicinal use in assisting the healing of broken bones.\n\n## Primary Uses:\n\n* Mulch – can be cut 1-2 x per year (4-5 x per year if fertilized) to about 2 inches above ground and used as a green or “chop and drop” mulch. Avoid harvest in the first season.\n* Liquid Fertilizer - steeping chopped Comfrey leaves in water for several weeks produces a thick, dark liquid that can be diluted with water and \"fed\" to plants.\n* Mineral Accumulator – high in potassium, but also phosphorus, calcium, Copper, Iron, and Magnesium\n* Ground Cover – lower growing species can tolerate some foot traffic, plant 2-3 feet apart.\n* General insect (especially bees) nectar and pollen plant\n* Lacewings prefer to lay eggs on Comfrey\n* Spiders prefer to overwinter on Comfrey\n* Parasitoid Wasps and Spiders prefer to spend time and hunt on and around Comfrey\n\n## Secondary Uses:\n\n* Fresh eating – only Symphytum officianale (Common/Medicinal Comfrey) and Symphytum x uplandicum (Russian/Quaker Comfrey). Best when cooked.\n* Forage crop for pigs, sheep, and poultry, but reportedly cattle and rabbits don't like fresh leaves (only wilted).\n* Medicinal – long history of use in aid of wound and bone healing.\n\n## Design with this plant\n\n* USDA Hardiness Zone: 4-9\n* AHS Heat Zone: No reliable information found\n* Chill Requirement: No reliable information found, but likely not required.\n* Plant Type: Small Tree to Medium-sized Herbaceous Shrub (while frost resistant, continued freezing weather will kill back above ground growth).\n* Leaf Type: Deciduous\n* Forest Garden Use: Herbaceous Layer and Ground Cover/Creeper Layer\n* Cultivars/Varieties: Many species/varieties available. \n* Pollination: Self-Pollinating/Self-Fertile\n* Flowering: May-September (depending on the species)\n* Life Span: No reliable information available\n\n## Physical Characteristics\n\n* Size: See individual species list above\n* Roots: Some have rhizomatous and others have fibrous tap roots - deep and expansive\n* Growth Rate: Fast\n\n# Growing Conditions\n\n* Light: Prefers full sun\n* Shade: Tolerates light shade (about 50%)\n* Moisture: Medium, some species can be a bit more drought tolerant. Bocking 4 and Bocking 14 don't like wet feet.\n* pH: tolerates a wide range (6.5-8.5)\n* Soil: From sand to heavy clay\n\n## Propagation:\n\n* Can be propagated through root cuttings in Winter and Spring – should be planted about 2 inches deep.\n* Division in Spring.\n* Symphytum officianale (Common/Medicinal Comfrey) can self-seed.\n\n## Maintenance: \n\n* Minimal. Common Comfrey needs to be cut before seeding in order to prevent spreading. Bocking 14 and Bocking 4 should be cut before flowering in order to encourage leaf growth.\n\n## Concerns:\n\n* Can be spreading. (Note: the use of \"Bocking 14\" cultivar is sterile and prevents its spread)\n* Can be hard to eradicate.\n* Poisonous – all parts of the plant contains pentacylic alkaloids (regular consumption can cause liver toxicity)\n* Note that leaves and stems are covered in small hairs that can irritate the skin.\n\n## Cultivars/Varieties\n\n### Bocking 14 and Bocking 4\n\nThe Bocking varieties were developed by Lawrence D Hills, founder of the Henry Doubleday Research Association, in the 1950s. There were 21 Bocking strains, most of which were different in only minor traits and were of little or no commercial importance. They were selected at his research station at Bocking in Essex (U.K.). I don’t believe Mr. Hills is still alive, but the Henry Doubleday Research Association continues to operate as \"Garden Organic\" in the U.K. Because of the health controversies surrounding the medicinal use of comfrey, I believe the HDRA (or Garden Organic) is not currently doing any further research or development on the herb. \n\nThe HDRA described No. 4 as \"the best comfrey for stock feed.\" No. 14 was described as the \"best all round comfrey for every garden -- early and rust resistant\" and was recommended for \"green manure, poultry, horses, pigs, compost, cooking and medicinal purposes.\" \n\nLawrence Hills detailed the development of his many varieties of comfrey is his book, \"Comfrey: Fodder, Food & Remedy\" (Universe Books, New York, 1976). Hills selected Bocking No. 14 from the Stephenson strain and Bocking No. 4 from the Webster strain, two commercially available strains when Hills began his work on comfrey at Bocking. In his book he described Bocking No. 4 as \"the dominant in the [Webster] strain, about 50 to 60 per cent. The flower colour is Bishops Violet 34/3 when fully open. It has strong stems and small wings. The leaves are broad and round tipped, their proportion is 5 to 10, but they have no incurling, therefore they appear far wider than a No. 1 for example. The edges are unserrated, and the veins are prominent, with bristles thickest on the underside so that they appear smooth. At the leafy stage these leaves are very large, recovering rapidly after cutting. The stems, as in all the variations under trial, are solid.\" He described No. 14 as \"the dominant in the Stephenson strain, 80 to 90 per cent. The flower stems are slender and frequent and are entirely wingless. The flowers are Imperial Purple 33/3 fading to Lilac Purple 031/3. The flowers are pointed, slightly serrated at the edges and vary in propportion from 5 to 12 and 3 to 6.\" \n\nI could not find the original source reference to \"Bica\" because our company’s earliest correspondence dating back to the 1960s and 1970s was lost to water damage a few years ago. ‘Bica’ had been mentioned in the Richters catalogue for many years as the origin of Bocking No. 4. I believe that name was taken from either a HDRA catalogue or a research report. There is no reference to \"Bica\" in either \"Comfrey: Fodder, Food & Remedy\" or his earlier book, \"Comfrey Report: The Story of the World’s Fastest Protein Builder\" (Henry Doubleday Research Association, Bocking, Essex, 1975). \n\nBocking 14 is recommended for medicinal applications while Bocking 4 is recommended for animal feed applications. Bocking 14 is high in allantoin the cell proliferant agent that helps healing. Bocking 4 is high in protein. \n\n"
+    },
+    "name": "updPost",
+    "category": "blog",
+    "createDate": "2016-05-12T01:49:12.128",
+    "ipAddress": "198.16.252.116",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:29",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10030,
+    "createUserId": "stevehu",
+    "data": {
+      "summary": "Horseradish (Armoracia rusticana, syn. Cochlearia armoracia) is a perennial plant of the Brassicaceae family (which also includes mustard, wasabi, broccoli, and cabbage). It is a root vegetable used as a spice.",
+      "createUserId": "stevehu",
+      "host": "www.edibleforestgarden.ca",
+      "entityId": "DX4V_Y2oReOOCBr-GtwfXw",
+      "title": "Horseradish",
+      "content": "## Common Name:\n\n* Horseradish\n\n## Scientific Name:\n\n* Amoracia rusticana\n\n## Family:\n\n* Brassicaceae (the Mustard and Broccoli family)\n\n## Description:\n\nHorseradish is a fairly well known condiment with its spicy, sinus-clearing, pungent flavor. This plant, with its famous roots, also has edible leaves, confuses garden pests with its scent, and can be grown in almost any location. A perfect plant for the Edible Food Forest.\n\n![Horseradish](http://3.bp.blogspot.com/-uQMREOJ-PEw/UIcLe9IipYI/AAAAAAAADeE/-ZErGXBf3Do/s400/horseradish04.jpg \"Horseradish\")\n\n## History:\n\nLikely originating from southeastern Europe and western Asia, horseradish was popular with the ancient Greeks, Egyptians, and Romans. It was popular during medieval times in Europe and Britain as a food and medicine. European colonists brought horseradish to North America. Today it is used all over the world.\n\n## Trivia:\n\n* Whole Horseradish roots have almost no aroma, but once the root’s cells are ruptured (from cutting or grating), the enzymes released will convert the naturally produced root compound sinigrin into the highly aromatic allyl isothiocyanate (a.k.a. mustard oil).\n* The English name “Horseradish” likely came about through ignorance. The German name for this plant is meerrettich (meer = sea; rettich = radish). At some point this was mistakenly called mahrrettich (mahr = mare (female horse); rettich = radish). It is not a far leap for someone to mistakenly translate the mare radish to horse radish.\n\n## Primary Uses:\n\n* Roots – typically grated raw and mixed with vinegar; may be sliced and cooked like other tubers or carrots/parsnips; can be dried, then ground to a powder, but it is not as strongly flavored as fresh.\n* Leaves – “Horseradish Greens” are edible, and reportedly have a horseradish flavor. I’ve never tried them, but I think they could be used raw in small amounts in a mixed green salad or used cooked as a spinach replacement. Also used in pickling cucumbers to keep the cucumbers crunchy (as are grape leaves).\n\n## Secondary Uses:\n\n* General insect (especially bees) pollen plant\n* Aromatic Pest Confusor\n* Pioneer Species\n\n## Yield:\n\nVariable, but roots can grow to over 20 inches (50 cm) long and 2 inches (5 cm) thick.\n\n## Harvesting:\n\n* Leaves – smaller, new growth ideal for salads; older growth best cooked.\n* Roots – As desired. The plant grows the most during late Summer and early Autumn, so waiting until just before the ground freezes (depending on your location) will give you the maximum yield. Alternatively, you can harvest in the Spring. Dig a hole or trench 12-24 inches (30-60 cm) deep along the plant, then from the opposite side dig the roots back to the hole. Grab the base of the greens and pull the roots out laterally toward the hole. Use the largest taproots for processing, and use the smaller roots for Spring planting stock if harvested in Autumn or immediately if harvested in Spring. NOTE – Horseradish roots older than 2 years can get stringy and woody. In a Forest Garden, we can harvest in the Spring and replant smaller roots immediately, or we can leave a patch of horseradish growing and harvest from the outer ring or just toss the woody roots in the compost bin or in the forest to compost in place.\n\n## Processing:\n\n* Leaves – use as any other green\n* Roots – peel the brown “skin” off the root; roughly chop; add to a food processor or blender with a little bit of water or you can use a simple vegetable grater or food grinder (whatever way you choose, do so where you have a breeze to blow the fumes away!); add a tablespoon of white vinegar (white wine or distilled vinegar) and a pinch of salt for every 10 inches (25 cm) of root (or 2-3 tablespoons vinegar and ¼ - ½ teaspoon salt per each 1 cup grated horseradish). Vinegar stops the enzymes from converting the sinigrin to the hot mustard oil, so add vinegar immediately after grating for mild and wait for about 3 minutes for hot horseradish.\n\n## Storage:\n\n* Leaves – use immediately\n* Roots – Use immediately for best flavor. Can be stored in dry sand for a few months (a cooler location will keep for longer – ideally under 40 F (4 C) but above freezing); this dry sand storage is a great place to put Spring planting stock. If wrapped in plastic and placed in the coldest part of the refrigerator, it may stay good for a few months. Light will turn the roots green. Processed, refrigerated horseradish will last about a month.\n\n## Design with this plant\n\n* USDA Hardiness Zone: 2-10 (although some sources are more conservative at 5-8)\n* AHS Heat Zone: 12-1\n* Chill Requirement: Not likely, but not good information available\n* Plant Type: Large Herbaceous Plant\n* Leaf Type: Deciduous\n* Forest Garden Use: Underground Layer, Herbaceous Layer\n* Cultivars/Varieties: There are only a few named cultivars.\n* Pollination: Self-fertile\n* Flowering: Late Spring to early Summer (May-June)\n* Life Span: No good information available as we typically harvest roots of plants less than 2 years old.\n\n## Physical Characteristics\n\n* Size: 3 feet (0.9 meters) tall and as wide as you allow it to grow\n* Roots: Large taproots\n* Growth Rate: Fast\n\n\n## Growing Conditions\n\n* Light: Prefers full sun\n* Shade: Tolerates moderate shade\n* Moisture: Dry to moist soils, but prefers soil a bit more damp\n* pH: 5.1-8.5 (tolerates a wide range of soil conditions)\n* Special Considerations for Growing: Reported to inhibit brown rot if planted under apple trees.\n\n## Propagation:\n\nTypically from root cuttings or divisions in Spring; ideally at least 8 inches (20 cm) in length. Any root will likely grow to a new plant. Seed is not typically produced in plants grown in modern cultivation, but if a patch is allowed to mature, then seed will likely form. Seed is best sown in place.\n\n## Maintenance:\n\n* Minimal.\n* Root Rot can develop – just replant strong roots and compost the rest.\n* Some insects can cause extensive leaf damage in traditional gardens; this doesn’t affect the roots much and should be less of a problem in a Forest Garden.\n* A thorough digging and dividing of the roots every 3-4 years will keep a patch healthy, growing strong, and productive.\n\n## Concerns:\n\n* Poisonous – Reportedly, if one consumes a large amount of fresh roots the strong, volatile oils can be poisonous. This is not well researched, nor do I think people typically consume large amounts at any one time!\n* Spreading Habit – some sources state this plant can become invasive by spreading too fast, and other sources state that this rarely occurs.\n\n",
+      "parentId": "Permaculture",
+      "tags": [
+        "dynamic accumulator"
+      ],
+      "createDate": "2016-05-12T02:05:47.932"
+    },
+    "name": "addPost",
+    "category": "blog",
+    "createDate": "2016-05-12T02:05:47.931",
+    "ipAddress": "198.16.252.116",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:30",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10031,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-05-12T02:15:53.265",
+      "updateUserId": "stevehu",
+      "name": "Comfrey Bocking 4",
+      "host": "www.edibleforestgarden.ca",
+      "description": "Russian comfrey bocking 4\n\n[Comfrey Blog Post](https://www.edibleforestgarden.ca/blog/Permaculture/s-0hEkDPRxGdpLI5ago8Ug)\n",
+      "entityId": "cJMhhZTuRf6QEUrxKDYxFQ",
+      "variants": [
+        {
+          "sku": "comfrey_bocking4_one",
+          "type": "One root",
+          "price": 2,
+          "image": "/images/herbaceous/bocking4-160x160.jpg",
+          "inventory": 5
+        },
+        {
+          "sku": "comfrey_booking4_ten",
+          "type": "Ten roots",
+          "price": 15,
+          "image": "/images/herbaceous/bocking4-160x160.jpg",
+          "inventory": 5
+        }
+      ],
+      "content": "Comfrey Bocking 4 "
+    },
+    "name": "updProduct",
+    "category": "catalog",
+    "createDate": "2016-05-12T02:15:53.265",
+    "ipAddress": "198.16.252.116",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:31",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10032,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-05-12T02:15:58.264",
+      "updateUserId": "stevehu",
+      "name": "Comfrey Bocking 4",
+      "host": "www.edibleforestgarden.ca",
+      "description": "Russian comfrey bocking 4\n\n[Comfrey Blog Post](https://www.edibleforestgarden.ca/blog/Permaculture/s-0hEkDPRxGdpLI5ago8Ug)\n",
+      "entityId": "cJMhhZTuRf6QEUrxKDYxFQ",
+      "variants": [
+        {
+          "sku": "comfrey_bocking4_one",
+          "type": "One root",
+          "price": 2,
+          "image": "/images/herbaceous/bocking4-160x160.jpg",
+          "inventory": 5
+        },
+        {
+          "sku": "comfrey_booking4_ten",
+          "type": "Ten roots",
+          "price": 15,
+          "image": "/images/herbaceous/bocking4-160x160.jpg",
+          "inventory": 5
+        }
+      ],
+      "content": "Comfrey Bocking 4 "
+    },
+    "name": "updProduct",
+    "category": "catalog",
+    "createDate": "2016-05-12T02:15:58.264",
+    "ipAddress": "198.16.252.116",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:32",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10033,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-05-12T02:17:10.158",
+      "updateUserId": "stevehu",
+      "name": "Comfrey Bocking 14",
+      "host": "www.edibleforestgarden.ca",
+      "description": "Russian Comfrey Bocking 14\n\n[Comfrey Blog Post](https://www.edibleforestgarden.ca/blog/Permaculture/s-0hEkDPRxGdpLI5ago8Ug)",
+      "entityId": "Kit_ZByXQruXl49R8Rrq8g",
+      "variants": [
+        {
+          "sku": "comfrey_bocking14_one",
+          "type": "One root",
+          "price": 2,
+          "image": "/images/herbaceous/bocking14-160x160.jpg",
+          "inventory": 5
+        },
+        {
+          "sku": "comfrey_bocking14_ten",
+          "type": "Ten roots",
+          "price": 15,
+          "image": "/images/herbaceous/bocking14-160x160.jpg",
+          "inventory": 5
+        }
+      ],
+      "content": "Comfrey Bocking 14"
+    },
+    "name": "updProduct",
+    "category": "catalog",
+    "createDate": "2016-05-12T02:17:10.156",
+    "ipAddress": "198.16.252.116",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:33",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10034,
+    "createUserId": "stevehu",
+    "data": {
+      "createUserId": "stevehu",
+      "name": "Horseradish",
+      "host": "www.edibleforestgarden.ca",
+      "description": "Horseradish root\n\n[Horseradish Blog Post](https://www.edibleforestgarden.ca/blog/Permaculture/DX4V_Y2oReOOCBr-GtwfXw)",
+      "entityId": "_tzlNbEFRIOPSG2GtKTvZg",
+      "variants": [
+        {
+          "sku": "horseradish_one",
+          "type": "One root",
+          "price": 2,
+          "inventory": 5,
+          "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Kren_Verkauf.jpg/440px-Kren_Verkauf.jpg"
+        },
+        {
+          "sku": "horseradish_ten",
+          "type": "Ten roots",
+          "price": 15,
+          "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Kren_Verkauf.jpg/440px-Kren_Verkauf.jpg",
+          "inventory": 5
+        }
+      ],
+      "content": "Horseradish root",
+      "parentId": "Nursery",
+      "tags": [
+        "dynamic accumulator"
+      ],
+      "createDate": "2016-05-12T02:33:05.170"
+    },
+    "name": "addProduct",
+    "category": "catalog",
+    "createDate": "2016-05-12T02:33:05.170",
+    "ipAddress": "198.16.252.116",
+    "@fieldTypes": "eventId=l,createDate=t"
+  },
+  {
+    "@type": "d",
+    "@rid": "#18:34",
+    "@version": 1,
+    "@class": "Event",
+    "eventId": 10035,
+    "createUserId": "stevehu",
+    "data": {
+      "updateDate": "2016-05-12T02:47:05.498",
+      "updateUserId": "stevehu",
+      "name": "Horseradish",
+      "host": "www.edibleforestgarden.ca",
+      "description": "Horseradish root\n\n[Horseradish Blog Post](https://www.edibleforestgarden.ca/blog/Permaculture/DX4V_Y2oReOOCBr-GtwfXw)",
+      "entityId": "_tzlNbEFRIOPSG2GtKTvZg",
+      "variants": [
+        {
+          "sku": "horseradish_one",
+          "type": "One root",
+          "price": 2,
+          "inventory": 5,
+          "image": "/images/herbaceous/horseradish-160x160.jpg"
+        },
+        {
+          "sku": "horseradish_ten",
+          "type": "Ten roots",
+          "price": 15,
+          "image": "/images/herbaceous/horseradish-160x160.jpg",
+          "inventory": 5
+        }
+      ],
+      "content": "Horseradish root"
+    },
+    "name": "updProduct",
+    "category": "catalog",
+    "createDate": "2016-05-12T02:47:05.498",
+    "ipAddress": "198.16.252.116",
+    "@fieldTypes": "eventId=l,createDate=t"
+  }
+]
