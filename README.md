@@ -56,9 +56,68 @@ or both Gateway and Resource Server or Resource Server with public key.
 
 ## Installation On Linux
 
-Development Mode
 
-http://www.networknt.com/blog/All/aQL83VuuSLOTwiVntaLIDw
+```
+cd ~/networknt
+git clone git@github.com:networknt/light.git
+git checkout develop
+cd light
+cd networknt
+npm install
+```
+
+After above steps you should have a build folder in light/networknt
+
+Let's update the virtualhost.json in light/server/src/main/resources/config/dev
+
+Here is the one works on my MacBookPro
+
+```
+{
+  "www.edibleforestgarden.ca" : {
+    "base" : "/Users/stevehu/networknt/light/edibleforestgarden/build",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "www.edibleforestgarden.ca"
+  },
+  "www.networknt.com" : {
+    "base" : "/Users/stevehu/networknt/light/networknt/build",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "www.networknt.com"
+  },
+  "example" : {
+    "base" : "/Users/stevehu/networknt/light/demo/build",
+    "transferMinSize" : "100",
+    "supportDevices" : [ "Browser", "Android", "iOS" ],
+    "id" : "example"
+  }
+}
+```
+
+You need to update the base for networknt to your local absolute folder.
+
+Also, you need to update /etc/hosts to add www.networknt.com for 127.0.0.1
+
+```
+127.0.0.1       localhost example www.networknt.com
+```
+
+Now, let's build and start the server
+
+```
+cd ~/networknt
+cd light
+mvn clean install
+cd server
+java -jar target/light-server.jar
+```	
+
+Now you can access the front end from browser.
+
+http://www.networknt.com:8080
+
+To login: stevehu/123456
 
 ## Installation On Windows
 
