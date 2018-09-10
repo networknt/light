@@ -55,7 +55,7 @@ public class UpdPasswordRule extends AbstractUserRule implements Rule {
                 boolean match = checkPassword(graph, updateUser, password);
                 if(match) {
                     if(newPassword.equals(passwordConfirm)) {
-                        newPassword = HashUtil.generateStorngPasswordHash(newPassword);
+                        newPassword = HashUtil.generateStrongPasswordHash(newPassword);
                         Map eventMap = getEventMap(inputMap);
                         Map<String, Object> eventData = (Map<String, Object>)eventMap.get("data");
                         inputMap.put("eventMap", eventMap);

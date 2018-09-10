@@ -63,7 +63,7 @@ public class SignUpUserRule extends AbstractUserRule implements Rule {
                     inputMap.put("eventMap", eventMap);
                     eventData.putAll(data);
                     // replace the password with the hashed password.
-                    password = HashUtil.generateStorngPasswordHash(password);
+                    password = HashUtil.generateStrongPasswordHash(password);
                     eventData.put("password", password);
                     // set default values here.
                     eventData.put("karma", 0);

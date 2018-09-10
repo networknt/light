@@ -40,7 +40,7 @@ public class HashUtil {
         System.out.println("uuid =" + uuid);
 
         String  originalPassword = "password";
-        String generatedSecuredPasswordHash = generateStorngPasswordHash(originalPassword);
+        String generatedSecuredPasswordHash = generateStrongPasswordHash(originalPassword);
         System.out.println(generatedSecuredPasswordHash);
 
         boolean matched = validatePassword("password", generatedSecuredPasswordHash);
@@ -50,7 +50,7 @@ public class HashUtil {
         System.out.println(matched);
 
         originalPassword = "123456";
-        generatedSecuredPasswordHash = generateStorngPasswordHash(originalPassword);
+        generatedSecuredPasswordHash = generateStrongPasswordHash(originalPassword);
         System.out.println(generatedSecuredPasswordHash);
 
         matched = validatePassword("123456", generatedSecuredPasswordHash);
@@ -115,7 +115,7 @@ public class HashUtil {
         return null;
     }
 
-    public static String generateStorngPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
+    public static String generateStrongPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
     {
         int iterations = 1000;
         char[] chars = password.toCharArray();

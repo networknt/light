@@ -478,7 +478,7 @@ public class InitDatabase {
             List roles = new ArrayList<String>();
             roles.add("owner");
             roles.add("user");
-            Vertex credentialOwner = graph.addVertex("class:Credential", "password", HashUtil.generateStorngPasswordHash((String) serverConfig.get("ownerPass")));
+            Vertex credentialOwner = graph.addVertex("class:Credential", "password", HashUtil.generateStrongPasswordHash((String) serverConfig.get("ownerPass")));
             Vertex userOwner = graph.addVertex("class:User",
                     "userId", serverConfig.get("ownerId"),
                     "email", serverConfig.get("ownerEmail"),
@@ -490,7 +490,7 @@ public class InitDatabase {
 
             roles = new ArrayList<String>();
             roles.add("user");
-            Vertex credentialTest = graph.addVertex("class:Credential", "password", HashUtil.generateStorngPasswordHash((String) serverConfig.get("testPass")));
+            Vertex credentialTest = graph.addVertex("class:Credential", "password", HashUtil.generateStrongPasswordHash((String) serverConfig.get("testPass")));
             Vertex userTest = graph.addVertex("class:User",
                     "userId", serverConfig.get("testId"),
                     "host", "example",
